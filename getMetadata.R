@@ -25,40 +25,62 @@ retryAPI <- function(api_url, content_type, max_attempts = 3, timeout = 180){
   stop(paste("Failed to obtain valid response in RetryAPI for:", api_url))
 }
 
-formatForApi_filters <- functions(metadata_filters){
+#' @title formatForApi_filters
+#' 
+#' @description converts filters specified in a data frame to the format
+#' expected by the api
+#' @param metadata_filters dataframe - coulmns for property, operator, and value
+#' components of a metadata filter (value can be a string vector for "in" operators)
+#' @return filter string ready for API call
+#' @examples tibble::tribble (~property, ~operator, ~value,
+#'                            "name", "ilike", "sierra",
+#'                            "id", "in", c("11111111111","22222222222"),
+#'                            "id", "in", "22222222222",
+#'                            "code", "!null", NA,
+#'                             "code", "!null", "",
+#'                            "code", "null", NULL) %>% 
+#'                            formatForApi_filters()
+#'                            
+#'
+ 
+formatForApi_filters <- function(metadata_filters){ 
   assertthat::has_name(metadata_filters, "property")
   assertthat::has_name(metadata_filters, "operator")
   assertthat::has_name(metadata_filters, "value")
   
-# if values are a list make csv
-# concatenate each filter
+# concatenate sub components of each filter 
+# special handling for operator "in"
+# special handling for operator null
 # concatenate all filters
-  dplyr::mutate(metadata_filters, 
-                value = purrr::map_chr(value, paste0, collapse = ",")) %>%
+  metadata_filters$value[is.na(metadata_filters$value)] <- ""
+  metadata_filters$value[is.null(metadata_filters$value)] <- ""
+  
+   
+    dplyr::mutate(metadata_filters, 
+                  value = purrr::map_chr(value, paste0, collapse = ",")) %>% 
     dplyr::mutate(value = dplyr::if_else(operator %in% c("in", "!in"),
-                                         paste0("[", value, "]"), value)) %>% 
+                                         paste0("[", value, "]"),
+                                         value)) %>%
     dplyr::transmute(api_filters = paste0("&filter=",
-                            property, ":",
-                            operator, dplyr::if_else(operator %in% c("null", "!null"), "", ":"),
-                            value)) %>% 
-    .[["api_filters"]] %>% 
+                                          property, ":",
+                                          operator,
+                                          dplyr::if_else(operator %in% c("null",
+                                                                         "!null",
+                                                                         "empty"),
+                                                         "",
+                                                         ":"),
+                                          value)) %>%
+    .[["api_filters"]] %>%
     paste0(collapse = "")
-    
-  
-  purrr::map(metadata_filters, ~ print(.x[["property"]]))
-             
-             ~ paste0("&filter="
-                                       .$property, ":"
-                                       .$operator, ";",
-                                       .$value)) %>% 
-    dplyr::
-  
   }
 
 #' @export
 #' @title getMetadata
 #' 
-#' @description General utility to get metadata details from DATIM
+#' @description General utility to get metadata details from DATIM. 
+#' Note API calls are limited to roughly 3000 characters, requests that generate
+#' api calls in excess of these limits will produce an error. This function oes not try to 
+#' split up the call. 
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param end_point string - api endpoint for the metadata of interest e.g. dataElements, 
 #' organisationUnits
@@ -68,35 +90,40 @@ formatForApi_filters <- functions(metadata_filters){
 #' e.g. "name,id,items[name,id]"
 #' @return list of metadata details
 getMetadata <- function(end_point, 
-                        filters = NULL, 
+                        metadata_filters = NULL, 
                         fields = NULL,
                         verbose = FALSE,
-                        base_url = getOption("baseurl")){
-  #combine in lists
-  
-  url_filters <-  ""
-  url_fields <-  ""
-  
-  if (!is.null(filters)) {
-    url_filters <- filters %>% paste0("&filter=", ., collapse = "") %>% URLencode()
+                        base_url = getOption("baseurl"),
+                        api_version = "30"){
+  if (is.null(metadata_filters)) {
+    api_filters = ""
+  } else{
+    api_filters = formatForApi_filters(metadata_filters)
   }
   
-  if (!is.null(fields)) {
-    url_fields <- paste0("&fields=", paste(fields,sep="",collapse=",")) %>% URLencode()
+  if (is.null(fields)) {
+    api_fields = ""
+  } else{
+    api_fields = paste0(fields, collapse = ",") %>% 
+      {paste0("&fields=", .)}
   }
   
-  web_api_call <- paste0(base_url, "api/", end_point, ".json?paging=false",
-                         url_filters,
-                         url_fields)
-  r <- web_api_call %>% RetryAPI("application/json", 20)
-  # httr::GET()
-  assertthat::are_equal(r$status_code, 200L)
-  #    if (r$status_code == 200L) {
-  httr::content(r, "text")   %>%
-    jsonlite::fromJSON() %>%
-    rlist::list.extract(.,end_point) #} else {
-  #  stop("Could not retreive endpoint")
-  #}
+  
+  api_call <- glue::glue("{base_url}api/{api_version}/{end_point}.json?paging=false{api_filters}{api_fields}") %>% 
+    utils::URLencode()
+  
+  return(api_call)
+  
+  
+  # r <- web_api_call %>% RetryAPI("application/json", 20)
+  # # httr::GET()
+  # assertthat::are_equal(r$status_code, 200L)
+  # #    if (r$status_code == 200L) {
+  # httr::content(r, "text")   %>%
+  #   jsonlite::fromJSON() %>%
+  #   rlist::list.extract(.,end_point) #} else {
+  # #  stop("Could not retreive endpoint")
+  # #}
 }
 
 metadata_filters <- tibble::tribble(~property, ~operator, ~value,
@@ -104,4 +131,4 @@ metadata_filters <- tibble::tribble(~property, ~operator, ~value,
                               "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
                 "id","null",NULL)
 
-getMetadata("dataSets", filters, fields)
+getMetadata("dataSets", metadata_filters)
