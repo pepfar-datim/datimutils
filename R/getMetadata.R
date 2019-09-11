@@ -88,7 +88,7 @@ formatForApi_filters <- function(metadata_filters){
 #' defaults to the global option baseurl
 #' @param api_version string - apit version for call e.g. "30"
 #' @return list of metadata details
-#' @example datimutils::DHISLogin_Play()
+#' @examples datimutils::DHISLogin_Play()
 #'          base_url = "https://play.dhis2.org/2.30/"
 #'          metadata_filters <- tibble::tribble(~property, ~operator, ~value,
 #'                                              "id", "in", c("lyLU2wR22tC","VTdjfLXXmoi"))
@@ -103,7 +103,8 @@ getMetadata <- function(end_point,
                         fields = NULL,
                         verbose = FALSE,
                         base_url = getOption("baseurl"),
-                        api_version = "30"){
+                        api_version = "30",
+                        max_attempts = 3){
   if (is.null(metadata_filters)) {
     api_filters = ""
   } else{
@@ -118,21 +119,20 @@ getMetadata <- function(end_point,
   }
   
   
-  api_call <- glue::glue("{base_url}api/{api_version}/{end_point}.json?paging=false{api_filters}{api_fields}") 
-   # utils::URLencode()
+  api_call <- glue::glue("{base_url}api/{api_version}/{end_point}.json?paging=false{api_filters}{api_fields}") %>% 
+    utils::URLencode()
   
-  return(api_call)
+  r <- api_call %>% retryAPI(content_type =  "application/json", 
+                             max_attempts = max_attempts)
   
+  if(verbose) return(r)
   
-  # r <- web_api_call %>% RetryAPI("application/json", 20)
-  # # httr::GET()
-  # assertthat::are_equal(r$status_code, 200L)
-  # #    if (r$status_code == 200L) {
-  # httr::content(r, "text")   %>%
-  #   jsonlite::fromJSON() %>%
+  httr::content(r, "text")   %>%
+    jsonlite::fromJSON() #%>%
   #   rlist::list.extract(.,end_point) #} else {
   # #  stop("Could not retreive endpoint")
   # #}
+  
 }
 
 # metadata_filters <- tibble::tribble(~property, ~operator, ~value,
@@ -141,3 +141,22 @@ getMetadata <- function(end_point,
 #                 "id","null",NULL)
 # 
 # getMetadata("dataSets", metadata_filters)
+
+getMetadata_id <- function(ids, 
+                           end_point, 
+                           fields, 
+                           base_url = getOption("baseurl")){
+  tibble::tribble()
+  getMetadata(end_point = end_point,
+              )
+  
+}
+
+mapMetadata <- function(data, 
+                        column,
+                        end_point,
+                        from, 
+                        to,
+                        base_url = "baseurl"){
+  
+}

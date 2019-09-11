@@ -6,7 +6,7 @@
 \usage{
 getMetadata(end_point, metadata_filters = NULL, fields = NULL,
   verbose = FALSE, base_url = getOption("baseurl"),
-  api_version = "30")
+  api_version = "30", max_attempts = 3)
 }
 \arguments{
 \item{end_point}{string - api endpoint for the metadata of interest e.g. dataElements, 
@@ -33,4 +33,16 @@ General utility to get metadata details from DATIM.
 Note API calls are limited to roughly 3000 characters, requests that generate
 api calls in excess of these limits will produce an error. This function oes not try to 
 split up the call.
+}
+\examples{
+datimutils::DHISLogin_Play()
+         base_url = "https://play.dhis2.org/2.30/"
+         metadata_filters <- tibble::tribble(~property, ~operator, ~value,
+                                             "id", "in", c("lyLU2wR22tC","VTdjfLXXmoi"))
+         datimutils::getMetadata("dataSets", 
+                                 base_url = base_url)
+         datimutils::getMetadata("dataSets",
+                                 metadata_filters = metadata_filters, 
+                                 fields = c("name", "id"), 
+                                 base_url = base_url)
 }
