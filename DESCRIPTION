@@ -16,3 +16,5 @@ BugReports: https://github.com/pepfar-datim/datimutils
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    testthat (>= 2.1.0)
