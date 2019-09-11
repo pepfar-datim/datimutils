@@ -30,7 +30,7 @@ LoadConfigFile <- function(config_path = NA) {
 }
 
 #' @export
-#' @title Returns version of the API
+#' @title Returns current production version of the API
 #'
 #' @return Version of the API
 #' 
@@ -64,7 +64,7 @@ ValidateConfig<-function(dhis_config) {
 #' 
 DHISLogin<-function(dhis_config) {
   
-  url <- URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
+  url <- utils::URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(dhis_config$dhis$username, dhis_config$dhis$password),
@@ -80,7 +80,6 @@ DHISLogin<-function(dhis_config) {
 
 
 #' @export
-#' @importFrom utils URLencode
 #' @title Log into DATIM using DATIM credentials
 #'
 #' @description

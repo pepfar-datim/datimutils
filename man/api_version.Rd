@@ -2,7 +2,7 @@
 % Please edit documentation in R/loginToDATIM.R
 \name{api_version}
 \alias{api_version}
-\title{Returns version of the API}
+\title{Returns current production version of the API}
 \usage{
 api_version()
 }
@@ -10,5 +10,5 @@ api_version()
 Version of the API
 }
 \description{
-Returns version of the API
+Returns current production version of the API
 }
