@@ -7,12 +7,16 @@
 #' @param content_type string - expected type of content in reposne e.d 'application/json'
 #' @param max_attempts integer - maximum number of retries for succesful request
 #' @param timeout integer - maximum time to wait for API response
-#' @return  full api response
+#' @return  full api response when succesful
 #'
-retryAPI <- function(api_url, content_type, max_attempts = 3, timeout = 180){
+retryAPI <- function(api_url, 
+                     content_type, 
+                     max_attempts = 3, 
+                     timeout = 180){
   for(i in 1:max_attempts){
     try({
-      response <- httr::GET(api_url, httr::timeout(timeout))
+      response <- httr::GET(api_url, 
+                            httr::timeout(timeout))
       if (response$status_code == 200L && 
           response$url == api_url && 
           httr::http_type(response) == content_type){
@@ -75,6 +79,9 @@ formatForApi_filters <- function(metadata_filters){
   }
 
 #' @export
+#' @importFrom utils URLencode
+#' @importFrom glue glue
+#' @importFrom magrittr `%>%`
 #' @title getMetadata
 #' 
 #' @description General utility to get metadata details from DATIM. 
@@ -126,9 +133,9 @@ getMetadata <- function(end_point,
   # #}
 }
 
-metadata_filters <- tibble::tribble(~property, ~operator, ~value,
-                "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
-                              "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
-                "id","null",NULL)
-
-getMetadata("dataSets", metadata_filters)
+# metadata_filters <- tibble::tribble(~property, ~operator, ~value,
+#                 "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
+#                               "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
+#                 "id","null",NULL)
+# 
+# getMetadata("dataSets", metadata_filters)
