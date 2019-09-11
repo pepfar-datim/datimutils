@@ -1,0 +1,18 @@
+Package: datimutils
+Title: Utilities for interacting with the DATIM api from R
+Version: 0.0.0.9000
+Authors@R: 
+    c(
+    person("Scott", "Jackson", email = "sjackson@baosystems.com",
+        role = c("aut", "cre")),
+    person("Jason", "Pickering", email = "jason.p.pickering@gmail.com",
+        role = c("aut")),
+    person("Sam", "Garman", email = "sgarman@baosystems.com",
+        role = c("aut"))
+  )
+Description: General utilities for interacting with the DATIM api from R
+URL: https://github.com/pepfar-datim/datimutils
+BugReports: https://github.com/pepfar-datim/datimutils
+License: What license it uses
+Encoding: UTF-8
+LazyData: true
