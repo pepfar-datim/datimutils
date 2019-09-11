@@ -24,6 +24,8 @@ e.g. "name,id,items[name,id]"}
 defaults to the global option baseurl}
 
 \item{api_version}{string - apit version for call e.g. "30"}
+
+\item{max_attempts}{int - maximum number of times to retry the call if it fails}
 }
 \value{
 list of metadata details

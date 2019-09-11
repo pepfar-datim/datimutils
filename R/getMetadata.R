@@ -87,6 +87,7 @@ formatForApi_filters <- function(metadata_filters){
 #' @param base_url string - base url for call e.g. "https://www.datim.org/"
 #' defaults to the global option baseurl
 #' @param api_version string - apit version for call e.g. "30"
+#' @param max_attempts int - maximum number of times to retry the call if it fails 
 #' @return list of metadata details
 #' @examples datimutils::DHISLogin_Play()
 #'          base_url = "https://play.dhis2.org/2.30/"
