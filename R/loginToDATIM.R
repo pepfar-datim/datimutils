@@ -122,7 +122,7 @@ DHISLogin<-function(dhis_config) {
 #'    }
 #'  }
 #' }
-loginToDATIM <- function(secrets = NA) {
+loginToDATIM <- function(secrets = NULL) {
   #Load from a file
   if (is.null(secrets)) {
     s <- GetCredentialsFromConsole()
