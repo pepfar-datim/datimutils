@@ -10,11 +10,22 @@ Authors@R:
     person("Sam", "Garman", email = "sgarman@baosystems.com",
         role = c("aut"))
   )
-Description: General utilities for interacting with the DATIM api from R
+Description: General utilities for interacting with the DATIM api from R.
 URL: https://github.com/pepfar-datim/datimutils
 BugReports: https://github.com/pepfar-datim/datimutils
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
+Imports:
+    assertthat,
+    dplyr (>= 0.7.8),
+    glue,
+    httr,
+    jsonlite,
+    magrittr (>= 1.5),
+    purrr,
+    rlang,
+    tibble (>= 2.0.1)
 Suggests: 
     testthat (>= 2.1.0)
+RoxygenNote: 6.1.1

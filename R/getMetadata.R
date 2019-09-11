@@ -1,4 +1,3 @@
-#' @export
 #' @title retryAPI(api_url, content_type, max_attempts)
 #' 
 #' @description Submits specified api request up to specified maximum times
@@ -29,6 +28,8 @@ retryAPI <- function(api_url,
   stop(paste("Failed to obtain valid response in RetryAPI for:", api_url))
 }
 
+#' @importFrom magrittr %>% 
+#' @importFrom rlang .data
 #' @title formatForApi_filters
 #' 
 #' @description converts filters specified in a data frame to the format
@@ -36,17 +37,7 @@ retryAPI <- function(api_url,
 #' @param metadata_filters dataframe - coulmns for property, operator, and value
 #' components of a metadata filter (value can be a string vector for "in" operators)
 #' @return filter string ready for API call
-#' @examples tibble::tribble (~property, ~operator, ~value,
-#'                            "name", "ilike", "sierra",
-#'                            "id", "in", c("11111111111","22222222222"),
-#'                            "id", "in", "22222222222",
-#'                            "code", "!null", NA,
-#'                             "code", "!null", "",
-#'                            "code", "null", NULL) %>% 
-#'                            formatForApi_filters()
-#'                            
-#'
- 
+
 formatForApi_filters <- function(metadata_filters){ 
   assertthat::has_name(metadata_filters, "property")
   assertthat::has_name(metadata_filters, "operator")
@@ -61,41 +52,52 @@ formatForApi_filters <- function(metadata_filters){
   
    
     dplyr::mutate(metadata_filters, 
-                  value = purrr::map_chr(value, paste0, collapse = ",")) %>% 
-    dplyr::mutate(value = dplyr::if_else(operator %in% c("in", "!in"),
-                                         paste0("[", value, "]"),
-                                         value)) %>%
+                  value = purrr::map_chr(.data$value, paste0, collapse = ",")) %>% 
+    dplyr::mutate(value = dplyr::if_else(.data$operator %in% c("in", "!in"),
+                                         paste0("[", .data$value, "]"),
+                                         .data$value)) %>%
     dplyr::transmute(api_filters = paste0("&filter=",
-                                          property, ":",
-                                          operator,
-                                          dplyr::if_else(operator %in% c("null",
+                                          .data$property, ":",
+                                          .data$operator,
+                                          dplyr::if_else(.data$operator %in% c("null",
                                                                          "!null",
                                                                          "empty"),
                                                          "",
                                                          ":"),
-                                          value)) %>%
+                                          .data$value)) %>%
     .[["api_filters"]] %>%
     paste0(collapse = "")
   }
 
 #' @export
-#' @importFrom utils URLencode
-#' @importFrom glue glue
-#' @importFrom magrittr `%>%`
+#' @importFrom magrittr %>%
 #' @title getMetadata
 #' 
 #' @description General utility to get metadata details from DATIM. 
 #' Note API calls are limited to roughly 3000 characters, requests that generate
 #' api calls in excess of these limits will produce an error. This function oes not try to 
 #' split up the call. 
-#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param end_point string - api endpoint for the metadata of interest e.g. dataElements, 
 #' organisationUnits
-#' @param filters - list of strings - the parameters for  the DHIS2 metadata filter, 
+#' @param metadata_filters - list of strings - the parameters for  the DHIS2 metadata filter, 
 #' e.g. c("id:eq:1234","name:in:Kenya,Rwanda")
 #' @param fields - string for the fields to return structured as DHIS 2 expects,
 #' e.g. "name,id,items[name,id]"
+#' @param verbose returns the raw api response if TRUE
+#' @param base_url string - base url for call e.g. "https://www.datim.org/"
+#' defaults to the global option baseurl
+#' @param api_version string - apit version for call e.g. "30"
 #' @return list of metadata details
+#' @example datimutils::DHISLogin_Play()
+#'          base_url = "https://play.dhis2.org/2.30/"
+#'          metadata_filters <- tibble::tribble(~property, ~operator, ~value,
+#'                                              "id", "in", c("lyLU2wR22tC","VTdjfLXXmoi"))
+#'          datimutils::getMetadata("dataSets", 
+#'                                  base_url = base_url)
+#'          datimutils::getMetadata("dataSets",
+#'                                  metadata_filters = metadata_filters, 
+#'                                  fields = c("name", "id"), 
+#'                                  base_url = base_url)
 getMetadata <- function(end_point, 
                         metadata_filters = NULL, 
                         fields = NULL,
@@ -116,8 +118,8 @@ getMetadata <- function(end_point,
   }
   
   
-  api_call <- glue::glue("{base_url}api/{api_version}/{end_point}.json?paging=false{api_filters}{api_fields}") %>% 
-    utils::URLencode()
+  api_call <- glue::glue("{base_url}api/{api_version}/{end_point}.json?paging=false{api_filters}{api_fields}") 
+   # utils::URLencode()
   
   return(api_call)
   
