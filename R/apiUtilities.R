@@ -6,13 +6,18 @@
 #' Constructs URL for DATIM API query against specified table without paging.
 #'
 #' @param endpoint Character. DATIM API endpoint to query.
+#' @param base_url string - base url for call (preceds "api/...") e.g. "https://www.datim.org/".
+#' Defaults to the global option baseurl.
+#' @param api_version string - api version for call e.g. "30". Defaults to current production version.
 #'
 #' @return Web-encoded URL for DATIM API query.
 #'
-api_call <- function(endpoint) {
+api_call <- function(endpoint, 
+                     base_url = getOption("baseurl"),
+                     api_version = api_version()) {
 
   URL <- paste0(
-    getOption("baseurl"), "api/", api_version(),
+    base_url, "api/", api_version,
     "/",
     endpoint,
     ".json?paging=false") %>%
@@ -107,14 +112,19 @@ api_get <- function(api_call) {
 #' @param sqlView uid of sqlView table to query.
 #' @param var Variable to substitute into SQL query. Only supply if SQL view is
 #' of type query.
-#'
+#' @param base_url string - base url for call (preceds "api/...") e.g. "https://www.datim.org/".
+#' Defaults to the global option baseurl.
+#' @param api_version string - api version for call e.g. "30". Defaults to current production version.
 #' @return Web-encoded URL for DATIM API query.
 #'
-api_sql_call <- function(sqlView, var = NA) {
+api_sql_call <- function(sqlView, 
+                         var = NA, 
+                         base_url = getOption("baseurl"),
+                         api_version = api_version()) {
 
   URL <-
     paste0(
-      getOption("baseurl"),"api/",api_version(),
+      base_url,"api/", api_version,
       "/sqlViews/",
       sqlView,
       "/data.csv?",
