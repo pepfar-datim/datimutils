@@ -3,4 +3,4 @@
 #'
 #' @return Version of the DHIS2 API
 #'
-api_version <- function() { "30" }
+prod_version <- function() { "30" }

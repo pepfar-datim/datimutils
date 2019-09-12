@@ -14,7 +14,7 @@
 #'
 api_call <- function(endpoint, 
                      base_url = getOption("baseurl"),
-                     api_version = api_version()) {
+                     api_version = prod_version()) {
 
   URL <- paste0(
     base_url, "api/", api_version,
@@ -120,7 +120,7 @@ api_get <- function(api_call) {
 api_sql_call <- function(sqlView, 
                          var = NA, 
                          base_url = getOption("baseurl"),
-                         api_version = api_version()) {
+                         api_version = prod_version()) {
 
   URL <-
     paste0(
