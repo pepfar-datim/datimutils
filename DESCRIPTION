@@ -12,7 +12,7 @@ Authors@R:
     person("Sam", "Garman", email = "sgarman@baosystems.com",
         role = c("aut"))
   )
-Description: General utilities for interacting with the DATIM api from R
+Description: General utilities for interacting with the DATIM api from R.
 URL: https://github.com/pepfar-datim/datimutils
 BugReports: https://github.com/pepfar-datim/datimutils
 Depends: R (>= 3.6.0)
@@ -31,7 +31,8 @@ Imports:
     lazyeval,
     stats,
     lubridate,
-    data.table
+    data.table,
+    getPass
 Suggests:
     devtools (>= 2.0.1),
     testthat
