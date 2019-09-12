@@ -133,8 +133,8 @@ getMetadata <- function(end_point,
   if(verbose) return(r)
   
   httr::content(r, "text")   %>%
-    jsonlite::fromJSON() #%>%
-  #   rlist::list.extract(.,end_point) #} else {
+    jsonlite::fromJSON() %>%
+     rlist::list.extract(.,end_point) #} else {
   # #  stop("Could not retreive endpoint")
   # #}
   
