@@ -32,9 +32,10 @@ Imports:
     stats,
     lubridate,
     data.table,
-    rlang, 
+    rlang,
     glue,
-    assertthat
+    assertthat,
+    getPass
 Suggests:
     devtools (>= 2.0.1),
     testthat

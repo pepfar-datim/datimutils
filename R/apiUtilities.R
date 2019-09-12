@@ -1,5 +1,5 @@
 #' @export
-#' @importFrom utils URLencode
+#' @importFrom magrittr %>% 
 #' @title Start DATIM API query and specify table
 #'
 #' @description
@@ -27,7 +27,7 @@ api_call <- function(endpoint,
 }
 
 #' @export
-#' @importFrom utils URLencode
+#' @importFrom magrittr %>% 
 #' @title Filter a DATIM API query.
 #'
 #' @description
@@ -59,7 +59,7 @@ api_filter <- function(api_call, field, operation, match) {
 }
 
 #' @export
-#' @importFrom utils URLencode
+#' @importFrom magrittr %>% 
 #' @title Select fields to return from a DATIM API query.
 #'
 #' @description
@@ -104,6 +104,7 @@ api_get <- function(api_call) {
 
 
 #' @export
+#' @importFrom magrittr %>% 
 #' @title Query DATIM SQL View.
 #'
 #' @description
