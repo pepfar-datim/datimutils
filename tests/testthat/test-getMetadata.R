@@ -26,6 +26,6 @@ test_that("retryAPI", {
     testthat::expect_error(
       retryAPI("https://httpbin.org/status/403", 
                "text/html", 
-               max_attempts = 1))
+               max_attempts = 2))
     
 })
