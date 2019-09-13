@@ -34,7 +34,7 @@ Imports:
     data.table,
     rlang, 
     glue,
-    assertthat
+    assertthat,
     getPass
 Suggests:
     devtools (>= 2.0.1),
