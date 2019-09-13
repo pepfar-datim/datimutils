@@ -34,6 +34,6 @@ dataframe
 "dimension", "EYbopBOJWsW", "J5jldMd8OHv")
 # veGzholzPQm = HIV age, UOqJW6HPvvL = 15-24y, WAl0OCcIYxr = 25-49y, 
 # J5jldMd8OHv = Facility Type, uYxK4wmcPqA = CHP, EYbopBOJWsW = MCHP
-  datapackcommons::DHISLogin_Play("2.29")
-  GetData_Analytics(dimensions_sample, "https://play.dhis2.org/2.29/")
+  DHISLogin_Play()
+  GetData_Analytics(dimensions_sample, "https://play.dhis2.org/2.30/")
 }

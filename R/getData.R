@@ -34,9 +34,9 @@ FormatForApi_Dimensions <- function(data, type_col, dim_id_col, item_id_col){
   data %>% dplyr::mutate(type = data[[type_col]],
                          dim_id = data[[dim_id_col]],
                          item_id = data[[item_id_col]])  %>%
-    dplyr::select(type, dim_id, item_id) %>% unique() %>% 
+    dplyr::select(.data$type, .data$dim_id, .data$item_id) %>% unique() %>% 
     dplyr::group_by_at(c("type", "dim_id"))  %>%  
-    dplyr::summarise(items = paste0(item_id, collapse = ";")) %>% 
+    dplyr::summarise(items = paste0(.data$item_id, collapse = ";")) %>% 
     dplyr::ungroup() %>% 
     dplyr::transmute(component = glue::glue("{type}={dim_id}:{items}")) %>% 
     .[[1]] %>% 
@@ -68,14 +68,14 @@ FormatForApi_Dimensions <- function(data, type_col, dim_id_col, item_id_col){
 #' "dimension", "EYbopBOJWsW", "J5jldMd8OHv")
 #' # veGzholzPQm = HIV age, UOqJW6HPvvL = 15-24y, WAl0OCcIYxr = 25-49y, 
 #' # J5jldMd8OHv = Facility Type, uYxK4wmcPqA = CHP, EYbopBOJWsW = MCHP
-#'   datapackcommons::DHISLogin_Play("2.29")
-#'   GetData_Analytics(dimensions_sample, "https://play.dhis2.org/2.29/")
+#'   DHISLogin_Play()
+#'   GetData_Analytics(dimensions_sample, "https://play.dhis2.org/2.30/")
 
 GetData_Analytics <-  function(dimensions, 
                                base_url = getOption("baseurl")){
   api_call <- paste0(base_url,  
-                     "api/29/analytics.json?",
-                     datapackcommons::FormatForApi_Dimensions(dimensions, "type", 
+                     "api/30/analytics.json?",
+                     FormatForApi_Dimensions(dimensions, "type", 
                                                               "dim_uid", "dim_item_uid"),
                      "&outputIdScheme=UID&hierarchyMeta=true") # gives us UIDs in response                  
   response <- api_call %>% 
@@ -102,7 +102,7 @@ GetData_Analytics <-  function(dimensions,
     stringr::str_split("/")
   
   my_data <-
-    dplyr::mutate(my_data, Value = as.numeric(Value), ou_hierarchy = ou_hierarchy)
+    dplyr::mutate(my_data, Value = as.numeric(.data$Value), ou_hierarchy = ou_hierarchy)
   return(list(results = my_data, 
               api_call = response$url)
   )
