@@ -127,41 +127,50 @@ getMetadata <- function(end_point,
   api_call <- glue::glue("{base_url}api/{api_version}/{end_point}.json?paging=false{api_filters}{api_fields}") %>% 
     utils::URLencode()
   
-  r <- api_call %>% retryAPI(content_type =  "application/json", 
+  response <- api_call %>% retryAPI(content_type =  "application/json", 
                              max_attempts = max_attempts)
   
-  if(verbose) return(r)
-  
-  httr::content(r, "text")   %>%
+  metadata <- httr::content(response, "text")   %>%
     jsonlite::fromJSON() %>%
-     rlist::list.extract(.,end_point) #} else {
-  # #  stop("Could not retreive endpoint")
-  # #}
+     rlist::list.extract(.,end_point) 
   
-}
+  if(verbose) {
+    return(list(metadata = metadata, response = response))
+    } else{
+      return(metadata)
+    }
+  }
 
-# metadata_filters <- tibble::tribble(~property, ~operator, ~value,
-#                 "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
-#                               "id", "in", c("a4FRJ2P4cLf","tFBgL95CRtN"),
-#                 "id","null",NULL)
-# 
-# getMetadata("dataSets", metadata_filters)
+#' @export
+#' @importFrom magrittr %>%
+#' @title getOrgUnits
+#' 
+#' @description Gets Organisation unit details from a list of org unit uids 
+#' @param values string vector - values for lookup
+#' @param by - string - metadata field for lookup e.g. "id" or "code"
+#' @param fields - string for the fields to return structured as DHIS 2 expects,
+#' e.g. "name,id,items[name,id]"
+#' @param verbose returns the raw api response if TRUE
+#' @param base_url string - base url for call e.g. "https://www.datim.org/"
+#' defaults to the global option baseurl
+#' @param api_version string - apit version for call e.g. "30"
+#' @param max_attempts int - maximum number of times to retry the call if it fails 
+#' @return list of metadata details
 
-getMetadata_id <- function(ids, 
-                           end_point, 
-                           fields, 
-                           base_url = getOption("baseurl")){
-  tibble::tribble()
-  getMetadata(end_point = end_point,
-              )
+getOrgUnits <- function(values,
+                        by = "id",
+                        fields = "name,id",
+                        verbose = FALSE,
+                        base_url = getOption("baseurl"),
+                        api_version = "30",
+                        max_attempts = 3){
   
-}
+  metadata_filter <- tibble::tribble(~property, ~operator, ~value,
+                                     by, "in", values)
 
-mapMetadata <- function(data, 
-                        column,
-                        end_point,
-                        from, 
-                        to,
-                        base_url = "baseurl"){
+  getMetadata(end_point = "organisationUnits",
+              metadata_filters = metadata_filter,
+              fields = fields, 
+              verbose = verbose)
   
 }
