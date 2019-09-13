@@ -1,15 +1,17 @@
 #' @title GetCredentialsFromConsole()
-#' @description Obtains the credentials information from the console. 
+#' @description Obtains the credentials information from the console.
 #' @return A list of baseurl, username and password
 #'
 GetCredentialsFromConsole <- function() {
-  
+
   s <- list(dhis=list())
   s$dhis$username <- readline("Username: ")
   s$dhis$password <- getPass::getPass()
   s$dhis$baseurl <- readline("Server URL (ends with /): ")
+
   return(s)
 }
+
 
 #' @title LoadConfig(config_path)
 #'
@@ -17,9 +19,9 @@ GetCredentialsFromConsole <- function() {
 #' @param config_path Path to the DHIS2 credentials file
 #' @return A list of baseurl, username and password
 #'
-LoadConfigFile <- function(config_path = NA) {
+LoadConfigFile <- function(config_path = NULL) {
   #Load from a file
-  if (!is.na(config_path)) {
+  if (!is.null(config_path)) {
     if (file.access(config_path, mode = 4) == -1) {
       stop(paste("Cannot read configuration located at",config_path))
     }
@@ -29,30 +31,38 @@ LoadConfigFile <- function(config_path = NA) {
     stop("You must specify a credentials file!") }
 }
 
+
 #' @export
-#' @title Returns version of the API
+#' @title Returns current production version of the API
 #'
 #' @return Version of the API
-#' 
+#'
 api_version <- function() { "30" }
 
 
 #' @title Check login credentials
-#' 
+#'
 #' @description
 #' Validates login credentials to make sure they've been provided correctly.
-#' 
-#' @param dhis_config List of DATIM login credentials, including username, 
+#'
+#' @param dhis_config List of DATIM login credentials, including username,
 #' password, and login URL.
-#' 
+#'
 ValidateConfig<-function(dhis_config) {
-  
-  is.baseurl <-function(x) { grepl("^http(?:[s])?://.+datim.org/$", x)}
+
+  is.baseurl <- function(x) { grepl("^http(?:[s])?://.+datim.org/$", x)}
   is.missing <- function(x) { is.na(x) || missing(x) || x == "" }
-  
+
   if (is.missing(dhis_config$dhis$username)) {stop("Username cannot by blank.")}
   if (is.missing(dhis_config$dhis$password)) {stop("Username cannot by blank.")}
   if (!is.baseurl(dhis_config$dhis$baseurl)) {stop("The base url does not appear to be valid. It should end in /")}
+  #TODO:
+#   Logins functions should
+#
+#   Accept a config file with no slash, a slash, or multiple slashes for baseurl and mutate this to a single trailing slash
+#   All other API calls in code, should never start with a slash
+#   A utility function to a) encode all URIs and b) check if there are any double slashes (which we know will fail)
+# e.g. a wrapper around utils::urlencode that thrown an error if there is a "//" other than in "https://"
 }
 
 
@@ -60,11 +70,11 @@ ValidateConfig<-function(dhis_config) {
 #'
 #' @param dhis_config List of DHIS2 credentials
 #'
-#' @return TRUE if you are able to login to the server. 
-#' 
+#' @return TRUE if you are able to login to the server.
+#'
 DHISLogin<-function(dhis_config) {
-  
-  url <- URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
+
+  url <- utils::URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(dhis_config$dhis$username, dhis_config$dhis$password),
@@ -72,7 +82,7 @@ DHISLogin<-function(dhis_config) {
   if(r$status != 200L){
     stop("Could not authenticate you with the server!")
   } else {
-    me <- jsonlite::fromJSON(httr::content(r,as = "text"))
+    me <- jsonlite::fromJSON(httr::content(r, as = "text"))
     options("organisationUnit" = me$organisationUnits$id)
     return("Successfully logged into DATIM")
   }
@@ -123,14 +133,14 @@ DHISLogin<-function(dhis_config) {
 #'    }
 #'  }
 #' }
-loginToDATIM <- function(secrets = NA) {
+loginToDATIM <- function(secrets = NULL) {
   #Load from a file
   if (is.null(secrets)) {
     s <- GetCredentialsFromConsole()
   } else {
     s <- LoadConfigFile(secrets)
   }
-  
+
   ValidateConfig(s)
   options("baseurl" = s$dhis$baseurl)
   options("secrets" = secrets)
