@@ -21,7 +21,7 @@ e.g. "name,id,items[name,id]"}
 \item{base_url}{string - base url for call e.g. "https://www.datim.org/"
 defaults to the global option baseurl}
 
-\item{api_version}{string - apit version for call e.g. "30"}
+\item{api_version}{string - api version for call e.g. "30"}
 
 \item{max_attempts}{int - maximum number of times to retry the call if it fails}
 }
