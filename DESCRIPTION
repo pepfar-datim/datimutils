@@ -35,9 +35,10 @@ Imports:
     rlang, 
     glue,
     assertthat
+    getPass
 Suggests:
     devtools (>= 2.0.1),
-    testthat
+    testthat (>= 2.1.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
