@@ -21,8 +21,8 @@ retryAPI <- function(api_url,
           httr::http_type(response) == content_type){
         return(response)
       }
-      if (response$status_code >= 400 && 
-          response$status_code < 500){ #client error
+      if (response$status_code >= 300 && 
+          response$status_code < 500){ #client error or redirect
         break
       }
     })
