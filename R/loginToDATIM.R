@@ -57,7 +57,7 @@ ValidateConfig<-function(dhis_config) {
 #'
 DHISLogin<-function(dhis_config) {
 
-  url <- URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
+  url <- URLencode(URL = paste0(getOption("baseurl"), "api/",prod_version(),"/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(dhis_config$dhis$username, dhis_config$dhis$password),
