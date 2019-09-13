@@ -42,39 +42,6 @@ FormatForApi_Dimensions <- function(data, type_col, dim_id_col, item_id_col){
     .[[1]] %>% 
     paste0(collapse="&")
 }
-#' @title retryAPI(api_url, content_type, max_attempts)
-#' 
-#' @description Submits specified api request up to specified maximum times
-#' stopping when expected content type is returned with 200 response
-#' @param api_url string - full url for web request
-#' @param content_type string - expected type of content in reposne e.d 'application/json'
-#' @param max_attempts integer - maximum number of retries for succesful request
-#' @param timeout integer - maximum time to wait for API response
-#' @return  full api response when succesful
-#'
-retryAPI <- function(api_url, 
-                     content_type, 
-                     max_attempts = 3, 
-                     timeout = 180){
-  for(i in 1:max_attempts){
-    try({
-      response <- httr::GET(api_url, 
-                            httr::timeout(timeout))
-      if (response$status_code == 200L && 
-          response$url == api_url && 
-          httr::http_type(response) == content_type){
-        return(response)
-      }
-      if (response$status_code >= 400 && 
-          response$status_code < 500){ #client error
-        break
-      }
-    })
-    Sys.sleep(i/2 + 1)
-  }
-  # if i am here all my attempts failed
-  stop(paste("Failed to obtain valid response in RetryAPI for:", api_url))
-}
 
 #' @export
 #' @title getData_Analytics <-  function(dimensions, base_url)
@@ -89,7 +56,7 @@ retryAPI <- function(api_url,
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @return data frame with the rows of the response
 #'
-#' @example
+#' @examples
 #'  dimensions_sample <- tibble::tribble(~type, ~dim_item_uid, ~dim_uid,
 #' "filter", "vihpFUg2WTy", "dx", #PMTCT positive test rate indicator
 #' "dimension", "ImspTQPwCqd", "ou", # sierra leone
