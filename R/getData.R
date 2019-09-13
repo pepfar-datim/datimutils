@@ -69,9 +69,9 @@ FormatForApi_Dimensions <- function(data, type_col, dim_id_col, item_id_col){
 #' # veGzholzPQm = HIV age, UOqJW6HPvvL = 15-24y, WAl0OCcIYxr = 25-49y, 
 #' # J5jldMd8OHv = Facility Type, uYxK4wmcPqA = CHP, EYbopBOJWsW = MCHP
 #'   DHISLogin_Play()
-#'   GetData_Analytics(dimensions_sample, "https://play.dhis2.org/2.30/")
+#'   getData_Analytics(dimensions_sample, "https://play.dhis2.org/2.30/")
 
-GetData_Analytics <-  function(dimensions, 
+getData_Analytics <-  function(dimensions, 
                                base_url = getOption("baseurl")){
   api_call <- paste0(base_url,  
                      "api/30/analytics.json?",

@@ -2,8 +2,8 @@
 
 export(DHISLogin_Play)
 export(FormatForApi_Dimensions)
-export(GetData_Analytics)
 export(api_version)
+export(getData_Analytics)
 export(getMetadata)
 export(getOrgUnits)
 export(loginToDATIM)
