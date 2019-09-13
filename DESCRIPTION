@@ -3,7 +3,7 @@ Type: Package
 Title: Utilities for interacting with the DATIM api from R
 Version: 1.0.0
 Date: 2019-09-11
-Authors@R: 
+Authors@R:
     c(
     person("Scott", "Jackson", email = "sjackson@baosystems.com",
         role = c("aut", "cre")),
@@ -32,6 +32,9 @@ Imports:
     stats,
     lubridate,
     data.table,
+    rlang, 
+    glue,
+    assertthat,
     getPass
 Suggests:
     devtools (>= 2.0.1),
