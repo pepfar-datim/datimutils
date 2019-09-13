@@ -90,6 +90,7 @@ DHISLogin<-function(dhis_config) {
 
 
 #' @export
+#' @importFrom utils URLencode
 #' @title Log into DATIM using DATIM credentials
 #'
 #' @description
@@ -97,12 +98,12 @@ DHISLogin<-function(dhis_config) {
 #' retrieve data from DATIM as needed. Can also be used to log into
 #' non-production instances of DATIM. See Details for explanation. Where DATIM
 #' credentials are not provided, uses Console and getPass to request these.
-#'
+#' 
 #' @param secrets A local path directing to a file containing DATIM login
 #' credentials. See Details for more explanation.
 #' @return Returns a boolean value indicating that the secrets file is valid by
 #' accessing /api/me
-#'
+#' 
 #' @details
 #' To securely connect with DATIM, create a JSON file structured as follows:
 #'
@@ -115,12 +116,12 @@ DHISLogin<-function(dhis_config) {
 #'    }
 #'  }
 #' }
-#'
+#' 
 #' Replace the username and password with yours, and save this file in a secure
 #' location on your computer. For more details about how to setup a hidden
 #' folder or file on your operating system, see:
 #' https://www.howtogeek.com/194671/how-to-hide-files-and-folders-on-every-operating-system/
-#'
+#' 
 #' You can also save multiple versions of this login file to allow login to
 #' multiple instances of DATIM. For example, a document saved as devDATIM.json:
 #' \preformatted{
