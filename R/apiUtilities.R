@@ -1,18 +1,19 @@
 #' @export
-#' @importFrom magrittr %>% 
+#' @importFrom magrittr %>%
 #' @title Start DATIM API query and specify table
 #'
 #' @description
 #' Constructs URL for DATIM API query against specified table without paging.
 #'
-#' @param endpoint Character. DATIM API endpoint to query.
-#' @param base_url string - base url for call (preceds "api/...") e.g. "https://www.datim.org/".
+#' @param endpoint Character. DATIM API endpoint to query. (e.g., organisationUnits,
+#' dataElements, dataSets, etc.)
+#' @param base_url Character. Base URL for call (preceds "api/...") e.g. "https://www.datim.org/".
 #' Defaults to the global option baseurl.
-#' @param api_version string - api version for call e.g. "30". Defaults to current production version.
+#' @param api_version Character. API version for call e.g. "30". Defaults to current production version.
 #'
 #' @return Web-encoded URL for DATIM API query.
 #'
-api_call <- function(endpoint, 
+api_call <- function(endpoint,
                      base_url = getOption("baseurl"),
                      api_version = prod_version()) {
 
@@ -27,39 +28,39 @@ api_call <- function(endpoint,
 }
 
 #' @export
-#' @importFrom magrittr %>% 
+#' @importFrom magrittr %>%
 #' @title Filter a DATIM API query.
 #'
 #' @description
 #' Adds filter to DATIM API query and encodes for web.
 #'
 #' @param api_call Base DATIM API query, specifying API table and setting paging
-#' as false.
+#' as false, constructed by \code{\link{api_call}}.
 #' @param field Endpoint field aginst which to filter.
-#' @param operation Operation to apply as filter. See
+#' @param operator Operator to apply as filter. See
 #' \href{https://docs.dhis2.org/2.22/en/developer/html/ch01s08.html}{DHIS2 Web API documentation}
 #' for valid operators.
 #' @param match Text to match using \code{operator}.
 #'
 #' @return Web-encoded URL for DATIM API query.
 #'
-api_filter <- function(api_call, field, operation, match) {
+api_filter <- function(api_call, field, operator, match) {
 
   URL <- paste0(
     api_call,
     "&filter=",
     field,
     ":",
-    operation,
+    operator,
     ":",
-    ifelse(operation == "in", paste0("[",match,"]") , match)) %>% #TODO: Accommodate match coming in as character vector instead of string
+    ifelse(operator == "in", paste0("[",match,"]") , match)) %>% #TODO: Accommodate match coming in as character vector instead of string
     utils::URLencode()
 
   return(URL)
 }
 
 #' @export
-#' @importFrom magrittr %>% 
+#' @importFrom magrittr %>%
 #' @title Select fields to return from a DATIM API query.
 #'
 #' @description
@@ -104,7 +105,7 @@ api_get <- function(api_call) {
 
 
 #' @export
-#' @importFrom magrittr %>% 
+#' @importFrom magrittr %>%
 #' @title Query DATIM SQL View.
 #'
 #' @description
@@ -113,13 +114,14 @@ api_get <- function(api_call) {
 #' @param sqlView uid of sqlView table to query.
 #' @param var Variable to substitute into SQL query. Only supply if SQL view is
 #' of type query.
-#' @param base_url string - base url for call (preceds "api/...") e.g. "https://www.datim.org/".
+#' @param base_url Character. Base URL for call (preceds "api/...") e.g. "https://www.datim.org/".
 #' Defaults to the global option baseurl.
-#' @param api_version string - api version for call e.g. "30". Defaults to current production version.
+#' @param api_version Character. API version for call e.g. "30". Defaults to current production version.
+#'
 #' @return Web-encoded URL for DATIM API query.
 #'
-api_sql_call <- function(sqlView, 
-                         var = NA, 
+api_sql_call <- function(sqlView,
+                         var = NA,
                          base_url = getOption("baseurl"),
                          api_version = prod_version()) {
 

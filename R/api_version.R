@@ -1,6 +1,6 @@
 #' @export
-#' @title Returns version of the DHIS2 API
+#' @title Returns current version of the DHIS2 API used in DATIM.
 #'
-#' @return Version of the DHIS2 API
+#' @return Current version of the DHIS2 API used in DATIM.
 #'
 prod_version <- function() { "30" }
