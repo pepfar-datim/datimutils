@@ -56,6 +56,7 @@ ValidateConfig<-function(dhis_config) {
   if (is.missing(dhis_config$dhis$username)) {stop("Username cannot by blank.")}
   if (is.missing(dhis_config$dhis$password)) {stop("Username cannot by blank.")}
   if (!is.baseurl(dhis_config$dhis$baseurl)) {stop("The base url does not appear to be valid. It should end in /")}
+
   #TODO:
 #   Logins functions should
 #
@@ -63,6 +64,7 @@ ValidateConfig<-function(dhis_config) {
 #   All other API calls in code, should never start with a slash
 #   A utility function to a) encode all URIs and b) check if there are any double slashes (which we know will fail)
 # e.g. a wrapper around utils::urlencode that thrown an error if there is a "//" other than in "https://"
+
 }
 
 
@@ -72,9 +74,10 @@ ValidateConfig<-function(dhis_config) {
 #'
 #' @return TRUE if you are able to login to the server.
 #'
-DHISLogin<-function(dhis_config) {
+DHISLogin <- function(dhis_config) {
 
-  url <- utils::URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
+  url <- URLencode(URL = paste0(getOption("baseurl"), "api/",prod_version(),"/me"))
+  
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(dhis_config$dhis$username, dhis_config$dhis$password),
@@ -103,7 +106,7 @@ DHISLogin<-function(dhis_config) {
 #' credentials. See Details for more explanation.
 #' @return Returns a boolean value indicating that the secrets file is valid by
 #' accessing /api/me
-#' 
+#'
 #' @details
 #' To securely connect with DATIM, create a JSON file structured as follows:
 #'
