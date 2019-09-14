@@ -21,8 +21,8 @@ retryAPI <- function(api_url,
           httr::http_type(response) == content_type){
         return(response)
       }
-      if (response$status_code >= 400 && 
-          response$status_code < 500){ #client error
+      if (response$status_code >= 300 && 
+          response$status_code < 500){ #client error or redirect
         break
       }
     })
@@ -153,7 +153,7 @@ getMetadata <- function(end_point,
 #' @param verbose returns the raw api response if TRUE
 #' @param base_url string - base url for call e.g. "https://www.datim.org/"
 #' defaults to the global option baseurl
-#' @param api_version string - apit version for call e.g. "30"
+#' @param api_version string - api version for call e.g. "30"
 #' @param max_attempts int - maximum number of times to retry the call if it fails 
 #' @return list of metadata details
 
@@ -164,6 +164,11 @@ getOrgUnits <- function(values,
                         base_url = getOption("baseurl"),
                         api_version = "30",
                         max_attempts = 3){
+  
+  #todo intelligently split long list of values (general function)
+  #todo other default by (path with like)
+  #org unit groups
+  #todo allow return element for each element of value (including duplicates, NAs)
   
   metadata_filter <- tibble::tribble(~property, ~operator, ~value,
                                      by, "in", values)

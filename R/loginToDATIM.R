@@ -8,8 +8,10 @@ GetCredentialsFromConsole <- function() {
   s$dhis$username <- readline("Username: ")
   s$dhis$password <- getPass::getPass()
   s$dhis$baseurl <- readline("Server URL (ends with /): ")
+
   return(s)
 }
+
 
 #' @title LoadConfig(config_path)
 #'
@@ -17,9 +19,9 @@ GetCredentialsFromConsole <- function() {
 #' @param config_path Path to the DHIS2 credentials file
 #' @return A list of baseurl, username and password
 #'
-LoadConfigFile <- function(config_path = NA) {
+LoadConfigFile <- function(config_path = NULL) {
   #Load from a file
-  if (!is.na(config_path)) {
+  if (!is.null(config_path)) {
     if (file.access(config_path, mode = 4) == -1) {
       stop(paste("Cannot read configuration located at",config_path))
     }
@@ -28,6 +30,14 @@ LoadConfigFile <- function(config_path = NA) {
   } else {
     stop("You must specify a credentials file!") }
 }
+
+
+#' @export
+#' @title Returns current production version of the API
+#'
+#' @return Version of the API
+#'
+api_version <- function() { "30" }
 
 
 #' @title Check login credentials
@@ -40,12 +50,21 @@ LoadConfigFile <- function(config_path = NA) {
 #'
 ValidateConfig<-function(dhis_config) {
 
-  is.baseurl <-function(x) { grepl("^http(?:[s])?://.+datim.org/$", x)}
+  is.baseurl <- function(x) { grepl("^http(?:[s])?://.+datim.org/$", x)}
   is.missing <- function(x) { is.na(x) || missing(x) || x == "" }
 
   if (is.missing(dhis_config$dhis$username)) {stop("Username cannot by blank.")}
   if (is.missing(dhis_config$dhis$password)) {stop("Username cannot by blank.")}
   if (!is.baseurl(dhis_config$dhis$baseurl)) {stop("The base url does not appear to be valid. It should end in /")}
+
+  #TODO:
+#   Logins functions should
+#
+#   Accept a config file with no slash, a slash, or multiple slashes for baseurl and mutate this to a single trailing slash
+#   All other API calls in code, should never start with a slash
+#   A utility function to a) encode all URIs and b) check if there are any double slashes (which we know will fail)
+# e.g. a wrapper around utils::urlencode that thrown an error if there is a "//" other than in "https://"
+
 }
 
 
@@ -55,9 +74,10 @@ ValidateConfig<-function(dhis_config) {
 #'
 #' @return TRUE if you are able to login to the server.
 #'
-DHISLogin<-function(dhis_config) {
+DHISLogin <- function(dhis_config) {
 
   url <- URLencode(URL = paste0(getOption("baseurl"), "api/",prod_version(),"/me"))
+  
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(dhis_config$dhis$username, dhis_config$dhis$password),
@@ -65,7 +85,7 @@ DHISLogin<-function(dhis_config) {
   if(r$status != 200L){
     stop("Could not authenticate you with the server!")
   } else {
-    me <- jsonlite::fromJSON(httr::content(r,as = "text"))
+    me <- jsonlite::fromJSON(httr::content(r, as = "text"))
     options("organisationUnit" = me$organisationUnits$id)
     return("Successfully logged into DATIM")
   }
@@ -81,7 +101,7 @@ DHISLogin<-function(dhis_config) {
 #' retrieve data from DATIM as needed. Can also be used to log into
 #' non-production instances of DATIM. See Details for explanation. Where DATIM
 #' credentials are not provided, uses Console and getPass to request these.
-#'
+#' 
 #' @param secrets A local path directing to a file containing DATIM login
 #' credentials. See Details for more explanation.
 #' @return Returns a boolean value indicating that the secrets file is valid by
@@ -99,12 +119,12 @@ DHISLogin<-function(dhis_config) {
 #'    }
 #'  }
 #' }
-#'
+#' 
 #' Replace the username and password with yours, and save this file in a secure
 #' location on your computer. For more details about how to setup a hidden
 #' folder or file on your operating system, see:
 #' https://www.howtogeek.com/194671/how-to-hide-files-and-folders-on-every-operating-system/
-#'
+#' 
 #' You can also save multiple versions of this login file to allow login to
 #' multiple instances of DATIM. For example, a document saved as devDATIM.json:
 #' \preformatted{
@@ -116,7 +136,7 @@ DHISLogin<-function(dhis_config) {
 #'    }
 #'  }
 #' }
-loginToDATIM <- function(secrets = NA) {
+loginToDATIM <- function(secrets = NULL) {
   #Load from a file
   if (is.null(secrets)) {
     s <- GetCredentialsFromConsole()
