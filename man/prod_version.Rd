@@ -2,13 +2,13 @@
 % Please edit documentation in R/api_version.R
 \name{prod_version}
 \alias{prod_version}
-\title{Returns version of the DHIS2 API}
+\title{Returns current version of the DHIS2 API used in DATIM.}
 \usage{
 prod_version()
 }
 \value{
-Version of the DHIS2 API
+Current version of the DHIS2 API used in DATIM.
 }
 \description{
-Returns version of the DHIS2 API
+Returns current version of the DHIS2 API used in DATIM.
 }

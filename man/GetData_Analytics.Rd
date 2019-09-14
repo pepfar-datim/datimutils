@@ -7,9 +7,9 @@
 getData_Analytics(dimensions, base_url = getOption("baseurl"))
 }
 \arguments{
-\item{dimensions}{data frame - must contain columns named "type", "dim_uid", 
+\item{dimensions}{data frame - must contain columns named "type", "dim_uid",
 and "dim_item_uid". Type column contains "filter" or "dimension". dim_uid contains
-the uid of a dimension or one of the special dimension types e.g. dx, pe, ou, co. 
+the uid of a dimension or one of the special dimension types e.g. dx, pe, ou, co.
 Column dim_item_uid contains the uid of the dimension item to use which can also be
 a "special" uid such as DE_GROUP-zhdJiWlPvCz}
 
@@ -26,13 +26,13 @@ dataframe
  dimensions_sample <- tibble::tribble(~type, ~dim_item_uid, ~dim_uid,
 "filter", "vihpFUg2WTy", "dx", #PMTCT positive test rate indicator
 "dimension", "ImspTQPwCqd", "ou", # sierra leone
-"dimension", "LEVEL-2", "ou", 
+"dimension", "LEVEL-2", "ou",
 "filter", "LAST_YEAR", "pe",
 "dimension", "UOqJW6HPvvL", "veGzholzPQm",
 "dimension", "WAl0OCcIYxr", "veGzholzPQm",
 "dimension", "uYxK4wmcPqA", "J5jldMd8OHv",
 "dimension", "EYbopBOJWsW", "J5jldMd8OHv")
-# veGzholzPQm = HIV age, UOqJW6HPvvL = 15-24y, WAl0OCcIYxr = 25-49y, 
+# veGzholzPQm = HIV age, UOqJW6HPvvL = 15-24y, WAl0OCcIYxr = 25-49y,
 # J5jldMd8OHv = Facility Type, uYxK4wmcPqA = CHP, EYbopBOJWsW = MCHP
   DHISLogin_Play()
   getData_Analytics(dimensions_sample, "https://play.dhis2.org/2.30/")

@@ -12,10 +12,10 @@ FormatForApi_Dimensions(data, type_col, dim_id_col, item_id_col)
 \item{type_col}{string - name of column in data that specifies "dimension"
 or "filter"}
 
-\item{dim_id_col}{string - name of column in data that specifies 
+\item{dim_id_col}{string - name of column in data that specifies
 dimension ids - including dx, ou, etc.}
 
-\item{item_id_col}{string - name of column in data that specifies 
+\item{item_id_col}{string - name of column in data that specifies
 dimension item ids}
 }
 \value{
@@ -24,15 +24,15 @@ string ready for api call such as
 Note there is no leading "&" in string
 }
 \description{
-Uses specified columns in a data from to produce APIrequest 
+Uses specified columns in a data from to produce APIrequest
 formated dimensions e.g. &dimension=dim-id:dim-item;dim-item
 Only includes unique dimension, dim-id, dim-item tupples
 }
 \examples{
 df = tibble::tribble(~type, ~dim_id, ~item_id, ~other_col,
-"dimension",    "LFsZ8v5v7rq", "CW81uF03hvV", 
+"dimension",    "LFsZ8v5v7rq", "CW81uF03hvV",
 "Implementing Partner: AIDSRelief Consortium",
-"dimension",    "LFsZ8v5v7rq", "C6nZpLKjEJr", 
+"dimension",    "LFsZ8v5v7rq", "C6nZpLKjEJr",
 "Implementing Partner: African Medical and Research Foundation",
 "filter", "dx", "BOSZApCrBni", "ART enrollment stage 1",
 "filter", "dx", "dGdeotKpRed", "ART enrollment stage 2",

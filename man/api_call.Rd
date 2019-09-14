@@ -8,12 +8,13 @@ api_call(endpoint, base_url = getOption("baseurl"),
   api_version = prod_version())
 }
 \arguments{
-\item{endpoint}{Character. DATIM API endpoint to query.}
+\item{endpoint}{Character. DATIM API endpoint to query. (e.g., organisationUnits,
+dataElements, dataSets, etc.)}
 
-\item{base_url}{string - base url for call (preceds "api/...") e.g. "https://www.datim.org/".
+\item{base_url}{Character. Base URL for call (preceds "api/...") e.g. "https://www.datim.org/".
 Defaults to the global option baseurl.}
 
-\item{api_version}{string - api version for call e.g. "30". Defaults to current production version.}
+\item{api_version}{Character. API version for call e.g. "30". Defaults to current production version.}
 }
 \value{
 Web-encoded URL for DATIM API query.

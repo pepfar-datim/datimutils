@@ -13,10 +13,10 @@ api_sql_call(sqlView, var = NA, base_url = getOption("baseurl"),
 \item{var}{Variable to substitute into SQL query. Only supply if SQL view is
 of type query.}
 
-\item{base_url}{string - base url for call (preceds "api/...") e.g. "https://www.datim.org/".
+\item{base_url}{Character. Base URL for call (preceds "api/...") e.g. "https://www.datim.org/".
 Defaults to the global option baseurl.}
 
-\item{api_version}{string - api version for call e.g. "30". Defaults to current production version.}
+\item{api_version}{Character. API version for call e.g. "30". Defaults to current production version.}
 }
 \value{
 Web-encoded URL for DATIM API query.
