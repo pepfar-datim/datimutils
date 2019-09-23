@@ -31,7 +31,8 @@ Imports:
     lazyeval,
     stats,
     lubridate,
-    data.table
+    data.table,
+    getPass
 Suggests:
     devtools (>= 2.0.1),
     testthat (>= 2.1.0)
