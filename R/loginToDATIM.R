@@ -55,7 +55,8 @@ getCredentialsFromKeyring <- function(ring, service, username)
   return(credentials)
 }
 
-#' @title apiLogin(keyring_username = NULL,config_path=NULL, 
+#' @export
+#' @title loginToDATIM(keyring_username = NULL,config_path=NULL, 
 #'config_path_default = "dhis", base_url = getOption("baseurl"), 
 #'ring ="datimKeyring" )
 #'
@@ -67,10 +68,9 @@ getCredentialsFromKeyring <- function(ring, service, username)
 #' @param ring the name of the keyring to be created, default is datimKeyRing
 #' @return a list containing entries called password, service, and username
 #'
-apiLogin<-function(keyring_username = NULL,config_path=NULL, 
+loginToDATIM<-function(keyring_username = NULL,config_path=NULL, 
                     config_path_level = "dhis", base_url = getOption("baseurl"), 
                     ring ="datimKeyring" ) {
-  require(keyring)
   if(!is.null(config_path) & is.null(keyring_username) ){
     credentials = loadConfigFile(config_path = config_path)
     credentials = credentials[[config_path_level]]

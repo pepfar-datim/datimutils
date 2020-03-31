@@ -28,6 +28,7 @@ Imports:
     httr (>= 1.4.0),
     rlist (>= 0.4.6.1),
     magrittr (>= 1.5),
+    keyring,
     lazyeval,
     stats,
     lubridate,
