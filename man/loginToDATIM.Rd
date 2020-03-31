@@ -2,51 +2,17 @@
 % Please edit documentation in R/loginToDATIM.R
 \name{loginToDATIM}
 \alias{loginToDATIM}
-\title{Log into DATIM using DATIM credentials}
+\title{loginToDATIMfunction(ring =NULL, config_path=NULL, config_path_level = "dhis" )}
 \usage{
-loginToDATIM(secrets = NA)
+loginToDATIM(ring = NULL, config_path = NULL, config_path_level = "dhis")
 }
 \arguments{
-\item{secrets}{A local path directing to a file containing DATIM login
-credentials. See Details for more explanation.}
-}
-\value{
-Returns a boolean value indicating that the secrets file is valid by
-accessing /api/me
+\item{ring}{the name of the keyring to be used}
+
+\item{config_path}{path to a dhis config file, ring will bypass this option if not null}
+
+\item{config_path_level}{if there a multiple json entries in the config file, it will default to dhis}
 }
 \description{
-Using provided DATIM credentials, logs into DATIM to allow other functions to
-retrieve data from DATIM as needed. Can also be used to log into
-non-production instances of DATIM. See Details for explanation. Where DATIM
-credentials are not provided, uses Console and getPass to request these.
-}
-\details{
-To securely connect with DATIM, create a JSON file structured as follows:
-
-\preformatted{
-{
-  "dhis": {
-      "baseurl": "https://www.datim.org/",
-      "username": "example",
-      "password": "3x@mpl3!"
-   }
- }
-}
-
-Replace the username and password with yours, and save this file in a secure
-location on your computer. For more details about how to setup a hidden
-folder or file on your operating system, see:
-https://www.howtogeek.com/194671/how-to-hide-files-and-folders-on-every-operating-system/
-
-You can also save multiple versions of this login file to allow login to
-multiple instances of DATIM. For example, a document saved as devDATIM.json:
-\preformatted{
-{
-  "dhis": {
-      "baseurl": "https://dev.datim.org/",
-      "username": "example",
-      "password": "3x@mpl3!"
-   }
- }
-}
+logins into a datim or dhis2 api using either a keyring or a config file
 }

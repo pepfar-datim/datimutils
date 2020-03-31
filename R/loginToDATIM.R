@@ -1,3 +1,4 @@
+#' @export
 #' @title LoadConfig(config_path)
 #'
 #' @description Loads a JSON configuration file to access a DHIS2 instance
@@ -19,78 +20,60 @@ loadConfigFile <- function(config_path = NA) {
     stop("You must specify a credentials file!") }
 }
 
+#' @export
 #' @title makeKeyring(ring ="DatimLogin", service = getOption("baseurl"), username)
 #'
-#' @description makes a new keyRing with default name and default service
-#' @param ring ring name
-#' @param service baselink
+#' @description makes a new keyRing
+#' @param ring keyring name
+#' @param service baseurl
 #' @param username username 
 #' @return none
+#' @details ENTER FIRST KEYCHAIN PASSWORD THEN SECRET
 #'
 makeKeyring <- function (ring ="DatimLogin", service = getOption("baseurl"), username) 
 {
-keyring::keyring_create(ring)
-keyring::keyring_unlock(ring)
-keyring::key_set(service, username, keyring = ring)
+
+result <- try(keyring::key_list(keyring = ring),silent = T)
+  if("try-error" %in% class(result)){
+    error_type <- attr(result,"condition")
+    if(grepl("The specified keychain could not be found",error_type$message)){
+        print("enter KEYCHAIN password, then enter SECRET")
+        keyring::keyring_create(ring)
+        keyring::key_set(service, username, keyring = ring)
+        keyring::keyring_lock(ring)
+      }}else{print("keychain already exists")}  
 }
 
+#' @export
 #' @title getCredentialsFromKeyring(ring, service, username)
 #'
 #' @description retrieves username, service, and password from keyring
-#' @param ring ring name
-#' @param service baselink
-#' @param username username 
-#' @return a list containing entries called password, service, and username
+#' @param ring keyring name
+#' @return a list containing entries called password, baseurl, and username
 #'
-getCredentialsFromKeyring <- function(ring, service, username) 
+getCredentialsFromKeyring <- function(ring) 
 {
-
-  if (keyring::keyring_is_locked(ring)) {
-    keyring::keyring_unlock(ring)
-  }
-  
-  credentials = c( "password" = keyring::key_get(service,username),
-                   keyring::key_list(service = service, keyring = ring))
+  try <- as.list(keyring::key_list(keyring = ring))
+  credentials = c( "password" = keyring::key_get(try[["service"]]), try)
+  names(credentials) <- c("password", "baseurl", "username")
   keyring::keyring_lock(ring)
   return(credentials)
 }
 
 #' @export
-#' @title loginToDATIM(keyring_username = NULL,config_path=NULL, 
-#'config_path_default = "dhis", base_url = getOption("baseurl"), 
-#'ring ="datimKeyring" )
-#'
+#' @title loginToDATIMfunction(ring =NULL, config_path=NULL, config_path_level = "dhis" )
 #' @description logins into a datim or dhis2 api using either a keyring or a config file
-#' @param keyring_username the username of the keyring that will be created
-#' @param config_path path to a dhis config file, keyring_username will bypass this option if not null
+#' @param config_path path to a dhis config file, ring will bypass this option if not null
 #' @param config_path_level if there a multiple json entries in the config file, it will default to dhis
-#' @param base_url the service or base url to apend api calls
-#' @param ring the name of the keyring to be created, default is datimKeyRing
-#' @return a list containing entries called password, service, and username
+#' @param ring the name of the keyring to be used
 #'
-loginToDATIM<-function(keyring_username = NULL,config_path=NULL, 
-                    config_path_level = "dhis", base_url = getOption("baseurl"), 
-                    ring ="datimKeyring" ) {
-  if(!is.null(config_path) & is.null(keyring_username) ){
+loginToDATIM<-function(ring =NULL, config_path=NULL, config_path_level = "dhis" ) {
+  
+  if(!is.null(config_path) & is.null(ring) ){
     credentials = loadConfigFile(config_path = config_path)
     credentials = credentials[[config_path_level]]
   }else{
-    result <- try(key_list(keyring = ring),silent = T)
-    if("try-error" %in% class(result)){
-      error_type <- attr(result,"condition")
-      if(grepl("The specified keychain could not be found",error_type$message)){
-        result <- try(makeKeyring(ring =ring, service = base_url, username = keyring_username), silent = T)
-        if("try-error" %in% class(result)){
-          error_type <- attr(result,"condition")
-          if(grepl("The specified item could not be found in the keychain",error_type$message)){
-            keyring::keyring_delete(keyring = ring)
-            makeKeyring(ring =ring, service = base_url, username = keyring_username)
-          }
-        }
-      }
-    }
-      credentials = getCredentialsFromKeyring(ring = ring, service = base_url, 
-                                          username = keyring_username)
+      credentials = getCredentialsFromKeyring(ring = ring)}
       if(nchar(credentials[["username"]] ) == 0 )
       {
         print("username empty for newkeyring, please type yes to delete and try again")
@@ -98,14 +81,11 @@ loginToDATIM<-function(keyring_username = NULL,config_path=NULL,
         stop("Must provide username for new Keyring, deleting bad keyring")
       }
 
-  } 
-  
-  url <- URLencode(URL = paste0(base_url, "api","/me"))
+  url <- URLencode(URL = paste0(credentials[["baseurl"]], "api","/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(credentials[["username"]], credentials[["password"]]),
                  httr::timeout(60))
-  rm(credentials)
   if(r$status != 200L){
     stop("Could not authenticate you with the server!")
   } else {
@@ -114,3 +94,4 @@ loginToDATIM<-function(keyring_username = NULL,config_path=NULL,
     return("Successfully logged into DATIM")
   }
 }
+
