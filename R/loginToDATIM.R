@@ -19,6 +19,14 @@ loadConfigFile <- function(config_path = NA) {
     stop("You must specify a credentials file!") }
 }
 
+#' @title makeKeyring(ring ="DatimLogin", service = getOption("baseurl"), username)
+#'
+#' @description makes a new keyRing with default name and default service
+#' @param ring ring name
+#' @param service baselink
+#' @param username username 
+#' @return none
+#'
 makeKeyring <- function (ring ="DatimLogin", service = getOption("baseurl"), username) 
 {
 keyring::keyring_create(ring)
@@ -26,7 +34,15 @@ keyring::keyring_unlock(ring)
 keyring::key_set(service, username, keyring = ring)
 }
 
-getCredentialsFromKeyring <- function (ring, service, username) 
+#' @title getCredentialsFromKeyring(ring, service, username)
+#'
+#' @description retrieves username, service, and password from keyring
+#' @param ring ring name
+#' @param service baselink
+#' @param username username 
+#' @return a list containing entries called password, service, and username
+#'
+getCredentialsFromKeyring <- function(ring, service, username) 
 {
 
   if (keyring::keyring_is_locked(ring)) {
@@ -39,13 +55,25 @@ getCredentialsFromKeyring <- function (ring, service, username)
   return(credentials)
 }
 
+#' @title apiLogin(keyring_username = NULL,config_path=NULL, 
+#'config_path_default = "dhis", base_url = getOption("baseurl"), 
+#'ring ="datimKeyring" )
+#'
+#' @description logins into a datim or dhis2 api using either a keyring or a config file
+#' @param keyring_username the username of the keyring that will be created
+#' @param config_path path to a dhis config file, keyring_username will bypass this option if not null
+#' @param config_path_level if there a multiple json entries in the config file, it will default to dhis
+#' @param base_url the service or base url to apend api calls
+#' @param ring the name of the keyring to be created, default is datimKeyRing
+#' @return a list containing entries called password, service, and username
+#'
 apiLogin<-function(keyring_username = NULL,config_path=NULL, 
-                    config_path_default = "dhis", base_url = getOption("baseurl"), 
+                    config_path_level = "dhis", base_url = getOption("baseurl"), 
                     ring ="datimKeyring" ) {
-  
+  require(keyring)
   if(!is.null(config_path) & is.null(keyring_username) ){
     credentials = loadConfigFile(config_path = config_path)
-    credentials = credentials[[config_path_default]]
+    credentials = credentials[[config_path_level]]
   }else{
     result <- try(key_list(keyring = ring),silent = T)
     if("try-error" %in% class(result)){
@@ -63,9 +91,16 @@ apiLogin<-function(keyring_username = NULL,config_path=NULL,
     }
       credentials = getCredentialsFromKeyring(ring = ring, service = base_url, 
                                           username = keyring_username)
+      if(nchar(credentials[["username"]] ) == 0 )
+      {
+        print("username empty for newkeyring, please type yes to delete and try again")
+        keyring::keyring_delete(ring)
+        stop("Must provide username for new Keyring, deleting bad keyring")
+      }
+
   } 
   
-  url <- URLencode(URL = paste0(getOption("baseurl"), "api","/me"))
+  url <- URLencode(URL = paste0(base_url, "api","/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(credentials[["username"]], credentials[["password"]]),
@@ -79,9 +114,3 @@ apiLogin<-function(keyring_username = NULL,config_path=NULL,
     return("Successfully logged into DATIM")
   }
 }
-
-apiLogin(keyring_username = NULL,config_path=NULL, 
-                    config_path_default = "dhis", base_url = "https://www.datim.org/", 
-                    ring ="datimKey8" )
-#make documentation and check if it is compatible with cran
-
