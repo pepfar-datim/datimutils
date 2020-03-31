@@ -1,74 +1,76 @@
-#' @title GetCredentialsFromConsole()
-#' @description Obtains the credentials information from the console. 
-#' @return A list of baseurl, username and password
-#'
-GetCredentialsFromConsole <- function() {
-  
-  s <- list(dhis=list())
-  s$dhis$username <- readline("Username: ")
-  s$dhis$password <- getPass::getPass()
-  s$dhis$baseurl <- readline("Server URL (ends with /): ")
-  return(s)
-}
-
 #' @title LoadConfig(config_path)
 #'
 #' @description Loads a JSON configuration file to access a DHIS2 instance
 #' @param config_path Path to the DHIS2 credentials file
-#' @return A list of baseurl, username and password
+#' @return A parsed list of the configuration file. 
 #'
-LoadConfigFile <- function(config_path = NA) {
+loadConfigFile <- function(config_path = NA) {
   #Load from a file
   if (!is.na(config_path)) {
     if (file.access(config_path, mode = 4) == -1) {
       stop(paste("Cannot read configuration located at",config_path))
     }
+    
     dhis_config <- jsonlite::fromJSON(config_path)
+    options("baseurl" = dhis_config$dhis$baseurl)
+    options("config" = config_path)
     return(dhis_config)
   } else {
     stop("You must specify a credentials file!") }
 }
 
-#' @export
-#' @title Returns version of the API
-#'
-#' @return Version of the API
-#' 
-api_version <- function() { "30" }
-
-
-#' @title Check login credentials
-#' 
-#' @description
-#' Validates login credentials to make sure they've been provided correctly.
-#' 
-#' @param dhis_config List of DATIM login credentials, including username, 
-#' password, and login URL.
-#' 
-ValidateConfig<-function(dhis_config) {
-  
-  is.baseurl <-function(x) { grepl("^http(?:[s])?://.+datim.org/$", x)}
-  is.missing <- function(x) { is.na(x) || missing(x) || x == "" }
-  
-  if (is.missing(dhis_config$dhis$username)) {stop("Username cannot by blank.")}
-  if (is.missing(dhis_config$dhis$password)) {stop("Username cannot by blank.")}
-  if (!is.baseurl(dhis_config$dhis$baseurl)) {stop("The base url does not appear to be valid. It should end in /")}
+makeKeyring <- function (ring ="DatimLogin", service = getOption("baseurl"), username) 
+{
+keyring::keyring_create(ring)
+keyring::keyring_unlock(ring)
+keyring::key_set(service, username, keyring = ring)
 }
 
+getCredentialsFromKeyring <- function (ring, service, username) 
+{
 
-#' @title DHISLogin(config_path)
-#'
-#' @param dhis_config List of DHIS2 credentials
-#'
-#' @return TRUE if you are able to login to the server. 
-#' 
-DHISLogin<-function(dhis_config) {
+  if (keyring::keyring_is_locked(ring)) {
+    keyring::keyring_unlock(ring)
+  }
   
-  url <- URLencode(URL = paste0(getOption("baseurl"), "api/",api_version(),"/me"))
+  credentials = c( "password" = keyring::key_get(service,username),
+                   keyring::key_list(service = service, keyring = ring))
+  keyring::keyring_lock(ring)
+  return(credentials)
+}
+
+apiLogin<-function(keyring_username = NULL,config_path=NULL, 
+                    config_path_default = "dhis", base_url = getOption("baseurl"), 
+                    ring ="datimKeyring" ) {
+  
+  if(!is.null(config_path) & is.null(keyring_username) ){
+    credentials = loadConfigFile(config_path = config_path)
+    credentials = credentials[[config_path_default]]
+  }else{
+    result <- try(key_list(keyring = ring),silent = T)
+    if("try-error" %in% class(result)){
+      error_type <- attr(result,"condition")
+      if(grepl("The specified keychain could not be found",error_type$message)){
+        result <- try(makeKeyring(ring =ring, service = base_url, username = keyring_username), silent = T)
+        if("try-error" %in% class(result)){
+          error_type <- attr(result,"condition")
+          if(grepl("The specified item could not be found in the keychain",error_type$message)){
+            keyring::keyring_delete(keyring = ring)
+            makeKeyring(ring =ring, service = base_url, username = keyring_username)
+          }
+        }
+      }
+    }
+      credentials = getCredentialsFromKeyring(ring = ring, service = base_url, 
+                                          username = keyring_username)
+  } 
+  
+  url <- URLencode(URL = paste0(getOption("baseurl"), "api","/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
-                 httr::authenticate(dhis_config$dhis$username, dhis_config$dhis$password),
+                 httr::authenticate(credentials[["username"]], credentials[["password"]]),
                  httr::timeout(60))
+  rm(credentials)
   if(r$status != 200L){
     stop("Could not authenticate you with the server!")
   } else {
@@ -78,62 +80,8 @@ DHISLogin<-function(dhis_config) {
   }
 }
 
+apiLogin(keyring_username = NULL,config_path=NULL, 
+                    config_path_default = "dhis", base_url = "https://www.datim.org/", 
+                    ring ="datimKey8" )
+#make documentation and check if it is compatible with cran
 
-#' @export
-#' @importFrom utils URLencode
-#' @title Log into DATIM using DATIM credentials
-#'
-#' @description
-#' Using provided DATIM credentials, logs into DATIM to allow other functions to
-#' retrieve data from DATIM as needed. Can also be used to log into
-#' non-production instances of DATIM. See Details for explanation. Where DATIM
-#' credentials are not provided, uses Console and getPass to request these.
-#' 
-#' @param secrets A local path directing to a file containing DATIM login
-#' credentials. See Details for more explanation.
-#' @return Returns a boolean value indicating that the secrets file is valid by
-#' accessing /api/me
-#' 
-#' @details
-#' To securely connect with DATIM, create a JSON file structured as follows:
-#'
-#' \preformatted{
-#' {
-#'   "dhis": {
-#'       "baseurl": "https://www.datim.org/",
-#'       "username": "example",
-#'       "password": "3x@mpl3!"
-#'    }
-#'  }
-#' }
-#' 
-#' Replace the username and password with yours, and save this file in a secure
-#' location on your computer. For more details about how to setup a hidden
-#' folder or file on your operating system, see:
-#' https://www.howtogeek.com/194671/how-to-hide-files-and-folders-on-every-operating-system/
-#' 
-#' You can also save multiple versions of this login file to allow login to
-#' multiple instances of DATIM. For example, a document saved as devDATIM.json:
-#' \preformatted{
-#' {
-#'   "dhis": {
-#'       "baseurl": "https://dev.datim.org/",
-#'       "username": "example",
-#'       "password": "3x@mpl3!"
-#'    }
-#'  }
-#' }
-loginToDATIM <- function(secrets = NA) {
-  #Load from a file
-  if (is.null(secrets)) {
-    s <- GetCredentialsFromConsole()
-  } else {
-    s <- LoadConfigFile(secrets)
-  }
-  
-  ValidateConfig(s)
-  options("baseurl" = s$dhis$baseurl)
-  options("secrets" = secrets)
-  options("maxCacheAge" = "7 days")
-  DHISLogin(s)
-}
