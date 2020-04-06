@@ -1,0 +1,46 @@
+---
+title: "Introduction-to-datimutils"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction-to-datimutils}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+library(httptest)
+start_vignette("Introduction-to-datimutils")
+```
+
+```{r, echo=FALSE}
+NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
+knitr::opts_chunk$set(purl = NOT_CRAN)
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(datimutils)
+```
+# Logging In
+Logging in can be done with the `loginToDATIM` function. This function can either take the name of a keyring stored on the OS or a datim config file with credentails stored as plain text. In the case of a config file that is nested with multiple credentials, by default the function will use the one titled "dhis" but this can be changed with the `config_path_level` argument.  
+```{r, eval = NOT_CRAN}
+#logging in generates a cookie so the other funcitons can be used freely without credentials
+loginToDATIM(ring = "DatimLogin")
+```
+In the case that a keyring needs to be created it can be done with the `makeKeyring` function. This function will first ask for the **KEYRING password and then the SECRET** the dialog box that asks for said credentials however, will not look any different, so make sure to keep this in mind.
+```c
+makeKeyring(ring ="burner_key", service ="burner_url", username = "burner_name") 
+```
+
+
+
+```{r, include=FALSE}
+end_vignette()
+```

@@ -72,14 +72,7 @@ loginToDATIM<-function(ring =NULL, config_path=NULL, config_path_level = "dhis" 
   if(!is.null(config_path) & is.null(ring) ){
     credentials = loadConfigFile(config_path = config_path)
     credentials = credentials[[config_path_level]]
-  }else{
-      credentials = getCredentialsFromKeyring(ring = ring)}
-      if(nchar(credentials[["username"]] ) == 0 )
-      {
-        print("username empty for newkeyring, please type yes to delete and try again")
-        keyring::keyring_delete(ring)
-        stop("Must provide username for new Keyring, deleting bad keyring")
-      }
+  }else{credentials = getCredentialsFromKeyring(ring = ring)}
 
   url <- URLencode(URL = paste0(credentials[["baseurl"]], "api","/me"))
   #Logging in here will give us a cookie to reuse
