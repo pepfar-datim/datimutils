@@ -22,7 +22,10 @@ api_get <- function(path, baseurl = getOption("baseurl"), retry = 1, timeout = 6
   path <- sub( '(?<=.{4})', ifelse(is.null(api_version), "", paste0(api_version, "/")), 
                path, perl=TRUE )}
   url <- paste0(url = baseurl, path = path)
-  url <- paste0(url,".json?paging=false")
+  if(grepl("?",url))
+  {
+    url <-sub("(.*)(\\?)", "\\1.json?paging=false\\2", url)
+  }else{url <- paste0(url,".json?paging=false")}
   url <- gsub("//", "/",url)
   i = 1; response_code = 5
   while(i <= retry & response_code != 200 ){
