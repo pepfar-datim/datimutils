@@ -15,11 +15,15 @@
   
 api_get <- function(path, baseurl = getOption("baseurl"), retry = 1, timeout = 60,
                     api_version = NULL ) {
+  if(!(grepl("api",substr(path,1,4)))){
+      path <- paste0("api/",path)
+    }
   if(grepl("api",substr(path,1,4))){
   path <- sub( '(?<=.{4})', ifelse(is.null(api_version), "", paste0(api_version, "/")), 
                path, perl=TRUE )}
-  url <- httr::modify_url(baseurl, path = path)
+  url <- paste0(url = baseurl, path = path)
   url <- paste0(url,".json?paging=false")
+  url <- gsub("//", "/",url)
   i = 1; response_code = 5
   while(i <= retry & response_code != 200 ){
     resp <- httr::GET(url, httr::timeout(timeout))
