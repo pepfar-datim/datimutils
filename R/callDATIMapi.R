@@ -6,7 +6,7 @@
 #' 
 #' @param path Should begin with api/ and contain the query
 #' @param baseurl the url on which is added the path
-#' @rety number of times to try in case of failure, default will not try again
+#' @retry number of times to try in case of failure, default will not try again
 #' @timeout how long should a reponse be waited for
 #' @api_version defaults to current but can pass in version number
 #' 
@@ -22,10 +22,14 @@ api_get <- function(path, baseurl = getOption("baseurl"), retry = 1, timeout = 6
   path <- sub( '(?<=.{4})', ifelse(is.null(api_version), "", paste0(api_version, "/")), 
                path, perl=TRUE )}
   url <- paste0(url = baseurl, path = path)
-  if(grepl("?",url))
+  if(grepl("/?",url))
+  {
+    url <-sub("(.*)(\\//?)", "\\1.json?paging=false\\2", url)
+  }else if(grepl("?",url))
   {
     url <-sub("(.*)(\\?)", "\\1.json?paging=false\\2", url)
   }else{url <- paste0(url,".json?paging=false")}
+  url <- gsub("///", "/",url)
   url <- gsub("//", "/",url)
   i = 1; response_code = 5
   while(i <= retry & response_code != 200 ){
