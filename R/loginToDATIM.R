@@ -83,8 +83,7 @@ loginToDATIM<-function(ring =NULL, config_path=NULL, config_path_level = "dhis" 
     stop("Could not authenticate you with the server!")
   } else {
     me <- jsonlite::fromJSON(httr::content(r,as = "text"))
+    print(paste0( me$name, " is logged in"))
     options("organisationUnit" = me$organisationUnits$id)
-    return("Successfully logged into DATIM")
   }
 }
-

@@ -16,7 +16,7 @@ Description: General utilities for interacting with the DATIM api from R.
 URL: https://github.com/pepfar-datim/datimutils
 BugReports: https://github.com/pepfar-datim/datimutils
 Depends: R (>= 3.6.0)
-Imports:
+Imports: 
     dplyr (>= 0.8.3),
     tidyr (>= 0.8.3),
     readr (>= 1.3.1),
@@ -35,10 +35,14 @@ Imports:
     data.table,
     getPass,
     datimutils
-Suggests:
+Suggests: 
     devtools (>= 2.0.1),
+    httptest,
+    knitr,
+    rmarkdown,
     testthat (>= 2.1.0)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0
+VignetteBuilder: knitr
