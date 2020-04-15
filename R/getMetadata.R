@@ -8,17 +8,18 @@
 #' @param filters - the filters, which can come in any format as long as all components are present
 #' @param fields - the fields, which can come in any formt as long as all components are present
 #' @param pluck - whether to add pluck option as documented by dhis2 api developer guide
-#' @retry number of times to retry
+#' @param retry number of times to retry
 #' @return the metadata response in json format and flattened
-#' 
-#' @usage baseurl = "www.datim.org/", end_point = "dataElements" 
-#' filters <- "?filter=id:ilike:B" fields <- "name,id,numerator,denominator,categoryOptions" 
-#' getMetadata(baseurl = baseurl, end_point = end_point, filters = filters, fields = fields)
+#'
+# TODO fix examples which are breaking devtools::check() 
+# @examples baseurl = "www.datim.org/", end_point = "dataElements" 
+# filters <- "?filter=id:ilike:B" fields <- "name,id,numerator,denominator,categoryOptions" 
+# getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
 
-getMetadata <- function(baseurl = getOption("baseurl"), 
+getMetadata <- function(base_url = getOption("baseurl"), 
                         end_point, filters = NULL, fields = NULL,
                         pluck = F, retry = 1) {
-  if(!(is.null(filter)) | !(is.null(fields))){end_point <- gsub("/", "", end_point)}
+  if(!(is.null(filters)) | !(is.null(fields))){end_point <- gsub("/", "", end_point)}
   if (!(is.null(filters))){
     ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
     look <- sub("\\?filter=", "", ex)
@@ -51,7 +52,7 @@ getMetadata <- function(baseurl = getOption("baseurl"),
   }
 
   path <- paste0(ex,ef, ifelse(pluck, "~pluck", ""))
-  if(is.null(fields) & is.null(filters)){path <- endpoint}
-  api_get(path = path, baseurl = baseurl, retry = retry, timeout = 60,
+  if(is.null(fields) & is.null(filters)){path <- end_point}
+  api_get(path = path, base_url = base_url, retry = retry, timeout = 60,
                       api_version = NULL )
   }

@@ -4,11 +4,18 @@
 \alias{getMetadata}
 \title{getMetadata(base_url, end_point, filters, fields, pluck)}
 \usage{
-baseurl = "www.datim.org/", end_point = "dataElements" 
-filters <- "?filter=id:ilike:B" fields <- "name,id,numerator,denominator,categoryOptions" 
-getMetadata(baseurl = baseurl, end_point = end_point, filters = filters, fields = fields)
+getMetadata(
+  base_url = getOption("baseurl"),
+  end_point,
+  filters = NULL,
+  fields = NULL,
+  pluck = F,
+  retry = 1
+)
 }
 \arguments{
+\item{base_url}{string - base address of instance (text before api/ in URL)}
+
 \item{end_point}{string - api endpoint for the metadata of interest e.g. dataElements, 
 organisationUnits}
 
@@ -18,7 +25,7 @@ organisationUnits}
 
 \item{pluck}{- whether to add pluck option as documented by dhis2 api developer guide}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
+\item{retry}{number of times to retry}
 }
 \value{
 the metadata response in json format and flattened
