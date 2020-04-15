@@ -74,7 +74,7 @@ loginToDATIM<-function(ring =NULL, config_path=NULL, config_path_level = "dhis" 
     credentials = credentials[[config_path_level]]
   }else{credentials = getCredentialsFromKeyring(ring = ring)}
 
-  url <- URLencode(URL = paste0(credentials[["baseurl"]], "api","/me"))
+  url <- utils::URLencode(URL = paste0(credentials[["baseurl"]], "api","/me"))
   #Logging in here will give us a cookie to reuse
   r <- httr::GET(url ,
                  httr::authenticate(credentials[["username"]], credentials[["password"]]),

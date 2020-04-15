@@ -33,8 +33,7 @@ Imports:
     stats,
     lubridate,
     data.table,
-    getPass,
-    datimutils
+    getPass
 Suggests: 
     devtools (>= 2.0.1),
     httptest,
