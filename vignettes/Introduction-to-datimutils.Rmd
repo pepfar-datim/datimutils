@@ -12,11 +12,6 @@ library(httptest)
 start_vignette("Introduction-to-datimutils")
 ```
 
-```{r, echo=FALSE}
-NOT_CRAN <- identical(tolower(Sys.getenv("NOT_CRAN")), "true")
-knitr::opts_chunk$set(purl = NOT_CRAN)
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
-```
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -31,7 +26,7 @@ library(datimutils)
 ```
 # Logging In
 Logging in can be done with the `loginToDATIM` function. This function can either take the name of a keyring stored on the OS or a datim config file with credentails stored as plain text. In the case of a config file that is nested with multiple credentials, by default the function will use the one titled "dhis" but this can be changed with the `config_path_level` argument.  
-```{r, eval = NOT_CRAN}
+```{r}
 #logging in generates a cookie so the other funcitons can be used freely without credentials
 loginToDATIM(ring = "DatimLogin")
 ```
@@ -39,8 +34,25 @@ In the case that a keyring needs to be created it can be done with the `makeKeyr
 ```c
 makeKeyring(ring ="burner_key", service ="burner_url", username = "burner_name") 
 ```
+Any genric api call can use the `api_get` function, which has many wrappers. Note you can specify retry attempts directly as an argument and the api version to use. The default is the latest version. For example, to return info about the current logged in user, the following can be used.
 
+```c
+api_get(path = "api/me",  base_url = "https://www.datim.org", retry =2, api_version = 29)
+```
 
+One of the wrappers for the api_get function is `getMetadata`. This function takes an `end_point` an optional `filter`, an optional `fields` argument. These arguments can be passed in in any data type and order.
+
+```c
+baseurl = "www.datim.org/", end_point = "dataElements" 
+filters <- "?filter=id:ilike:B" fields <- "name,id,numerator,denominator,categoryOptions"
+getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
+```
+ or (as an example showing how the arguments format can change)
+```c
+baseurl = "www.datim.org/", end_point = "dataElements" 
+filters <- c(?filter,id,in,["aaa","bbb"]" fields <- "name,id,numerator,denominator,categoryOptions"
+getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
+```
 
 ```{r, include=FALSE}
 end_vignette()

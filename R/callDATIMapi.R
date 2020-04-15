@@ -11,10 +11,7 @@
 #' @param api_version defaults to current but can pass in version number
 #' 
 #' @return Result of DATIM API query returned as named list.
-
-# TODO fix example causing check to fail
-# @examples  api_get(path = "api/me",  base_url = "https://www.datim.org", retry =2, api_version = 29)
-
+#' 
 api_get <- function(path, base_url = getOption("baseurl"), retry = 1, timeout = 60,
                     api_version = NULL ) {
   if(!(grepl("api",substr(path,1,4)))){

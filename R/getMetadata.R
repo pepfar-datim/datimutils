@@ -11,10 +11,6 @@
 #' @param retry number of times to retry
 #' @return the metadata response in json format and flattened
 #'
-# TODO fix examples which are breaking devtools::check() 
-# @examples baseurl = "www.datim.org/", end_point = "dataElements" 
-# filters <- "?filter=id:ilike:B" fields <- "name,id,numerator,denominator,categoryOptions" 
-# getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
 
 getMetadata <- function(base_url = getOption("baseurl"), 
                         end_point, filters = NULL, fields = NULL,
