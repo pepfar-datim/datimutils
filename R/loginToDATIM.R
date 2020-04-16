@@ -24,13 +24,15 @@ loadConfigFile <- function(config_path = NA) {
 #' @title makeKeyring(ring ="DatimLogin", service = getOption("baseurl"), username)
 #'
 #' @description makes a new keyRing
+#' @param username username 
 #' @param ring keyring name
 #' @param service baseurl
-#' @param username username 
 #' @return none
 #' @details ENTER FIRST KEYCHAIN PASSWORD THEN SECRET
 #'
-makeKeyring <- function (ring ="DatimLogin", service = getOption("baseurl"), username) 
+makeKeyring <- function (username, 
+                         ring ="DatimLogin", 
+                         service = getOption("baseurl")) 
 {
 
 result <- try(keyring::key_list(keyring = ring),silent = T)

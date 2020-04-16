@@ -2,9 +2,9 @@
 #' @title getMetadata(base_url, end_point, filters, fields, pluck)
 #' 
 #' @description General utility to get metadata details from DATIM
-#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param end_point string - api endpoint for the metadata of interest e.g. dataElements, 
 #' organisationUnits
+#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param filters - the filters, which can come in any format as long as all components are present
 #' @param fields - the fields, which can come in any formt as long as all components are present
 #' @param pluck - whether to add pluck option as documented by dhis2 api developer guide
@@ -12,8 +12,8 @@
 #' @return the metadata response in json format and flattened
 #'
 
-getMetadata <- function(base_url = getOption("baseurl"), 
-                        end_point, filters = NULL, fields = NULL,
+getMetadata <- function(end_point, base_url = getOption("baseurl"), 
+                        filters = NULL, fields = NULL,
                         pluck = F, retry = 1) {
   if(!(is.null(filters)) | !(is.null(fields))){end_point <- gsub("/", "", end_point)}
   if (!(is.null(filters))){
