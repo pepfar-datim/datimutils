@@ -17,7 +17,8 @@ api_get(
 
 \item{base_url}{the url on which is added the path}
 
-\item{retry}{number of times to try in case of failure, default will not try again}
+\item{retry}{number of times to try in case of failure,
+default will not try again}
 
 \item{timeout}{how long should a reponse be waited for}
 

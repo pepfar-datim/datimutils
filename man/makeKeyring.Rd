@@ -2,7 +2,8 @@
 % Please edit documentation in R/loginToDATIM.R
 \name{makeKeyring}
 \alias{makeKeyring}
-\title{makeKeyring(ring ="DatimLogin", service = getOption("baseurl"), username)}
+\title{makeKeyring(ring ="DatimLogin",
+service = getOption("baseurl"), username)}
 \usage{
 makeKeyring(username, ring = "DatimLogin", service = getOption("baseurl"))
 }
