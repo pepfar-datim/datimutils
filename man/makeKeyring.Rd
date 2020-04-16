@@ -2,16 +2,17 @@
 % Please edit documentation in R/loginToDATIM.R
 \name{makeKeyring}
 \alias{makeKeyring}
-\title{makeKeyring(ring ="DatimLogin", service = getOption("baseurl"), username)}
+\title{makeKeyring(ring ="DatimLogin",
+service = getOption("baseurl"), username)}
 \usage{
-makeKeyring(ring = "DatimLogin", service = getOption("baseurl"), username)
+makeKeyring(username, ring = "DatimLogin", service = getOption("baseurl"))
 }
 \arguments{
+\item{username}{username}
+
 \item{ring}{keyring name}
 
 \item{service}{baseurl}
-
-\item{username}{username}
 }
 \value{
 none
