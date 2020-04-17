@@ -35,6 +35,7 @@ loadConfigFile <- function(config_path = NA) {
 makeKeyring <- function(username,
                         ring = "DatimLogin",
                         service = getOption("baseurl")) {
+  #checks if keyring exists and if it doesnt, it makes one and then locks it
   result <- try(keyring::key_list(keyring = ring), silent = T)
   if ("try-error" %in% class(result)) {
     error_type <- attr(result, "condition")
@@ -58,6 +59,7 @@ makeKeyring <- function(username,
 #' @return a list containing entries called password, baseurl, and username
 #'
 getCredentialsFromKeyring <- function(ring) {
+  #returns credentials from a keyring
   try <- as.list(keyring::key_list(keyring = ring))
   credentials <- c("password" = keyring::key_get(try[["service"]]), try)
   names(credentials) <- c("password", "baseurl", "username")
@@ -79,6 +81,7 @@ getCredentialsFromKeyring <- function(ring) {
 loginToDATIM <- function(ring = NULL,
                          config_path = NULL,
                          config_path_level = "dhis") {
+  #checks which authentication to use: file or keyring
   if (!is.null(config_path) & is.null(ring)) {
     credentials <- loadConfigFile(config_path = config_path)
     credentials <- credentials[[config_path_level]]
