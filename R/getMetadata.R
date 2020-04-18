@@ -28,6 +28,7 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
     #removes extraneous info
     look <- sub("\\?filter=", "", ex)
+    look <- sub("\\&filter=", "", ex)
     #extracts end_point and what is not end_point
     if (!(grepl("^id|name", look))) {
       end_point <- stringr::str_extract(look, ".+?(?=id|name)")
@@ -66,9 +67,9 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     if (substr(ex, nchar(ex), nchar(ex)) == ",") {
       ex <- substr(ex, 1, nchar(ex) - 1)
     }
-    #adds ?filter= where needed
-    ex <- sub(paste0("(.*?)(\\?filter=|", filter_item, ")"),
-              paste0("\\1?filter=", filter_item), ex)
+    #adds &filter= where needed, and : where needed
+    ex <- sub(paste0("(.*?)(\\&filter=|", filter_item, "|?filter=", ")"),
+              paste0("\\1&filter=", filter_item), ex)
     ex <- sub(paste0("(.*?)", "(", filter_item, ")"),
               paste0("\\1", filter_item, ":"), ex)
     ex <- sub(paste0("(.*?)", "(", filter_option, ")"),
@@ -84,7 +85,7 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     #flattens fields and adds ?fields= if needed
     ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
     if (!(grepl("fields", ef))) {
-      ef <- paste0("?fields=", ef)
+      ef <- paste0("&fields=", ef)
     }
   }
   #create final path

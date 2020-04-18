@@ -29,6 +29,8 @@ api_get <- function(path, base_url = getOption("baseurl"),
     url <- sub("(.*?)(\\//?)", "\\1.json?paging=false\\2", url)
   } else if (grepl("\\?", url)) {
     url <- sub("(.*?)(\\?)", "\\1.json?paging=false\\2", url)
+  } else if (grepl("&", url)) {
+    url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
   } else {
     url <- paste0(url, ".json?paging=false")
   }
