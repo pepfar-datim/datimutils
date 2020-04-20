@@ -54,6 +54,16 @@ filters <- c(?filter,id,in,["aaa","bbb"]" fields <- "name,id,numerator,denominat
 getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
 ```
 
+The getOrgUnitGroups functions can be used as wrappers to the getMetadata function, for example:
+```c
+getOrgUnitGroups(c("cNzfcPWEGSH", "nwQbMeALRjL"))
+getOrgUnitGroups(c("Country", "Military"), by = "name", fields = "name,id,organisationUnits[name,id,path]" )
+getOrgUnitGroups(c("cNzfcPWEGSH", "nwQbMeALRjL"), fields = "name,id,organisationUnits[name,id,path]" )
+getOrgUnitGroups2(filters1 = c("cNzfcPWEGSH", "nwQbMeALRjL"), filters2 = c("Military"), 
+                  by1 = "id", by2 = "name")
+```
+
+
 ```{r, include=FALSE}
 end_vignette()
 ```
