@@ -60,9 +60,13 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     one.one <- sub(paste0("(", filter_item, filter_option, ")", "(.*)"),
                    "\\2", ex)
     #takes second part of filter, i.e. ["abc"] and adds commas if filter = in
+    if(grepl("name",one)){
+      two <- gsub("(\\w)([A-Z])", "\\1,\\2",
+                one.one, perl = TRUE)
+    }else{
     two <- ifelse(grepl(",", one.one), one.one,
                   gsub("(.{11})", "\\1,",
-                       one.one, perl = TRUE))
+                       one.one, perl = TRUE))}
     ex <- paste0(end_point, one, two)
     if (substr(ex, nchar(ex), nchar(ex)) == ",") {
       ex <- substr(ex, 1, nchar(ex) - 1)
