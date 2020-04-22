@@ -2,10 +2,6 @@
 
 export(api_get)
 export(getMetadata)
-<<<<<<< HEAD
 export(getOrgUnitGroups)
 export(getOrgUnitGroups2)
-export(loadConfigFile)
-=======
->>>>>>> gh712
 export(loginToDATIM)

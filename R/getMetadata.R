@@ -1,15 +1,16 @@
 #' @title processFilters(filters)
 #' @description takes a filter argument and turns it into an api compatible string
 #' @param filters wildcard argument that can come in as any format or datatype
+#' @param end_point end point
 #' @return the processed metadata filter string compatible with DATIM api
 #'
 
-processFilters <- function(filters){
+processFilters <- function(end_point, filters){
   #takes filter argument and turns it into a single character string
   ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
   #removes extraneous info
   look <- sub("\\?filter=", "", ex)
-  look <- sub("\\&filter=", "", ex)
+  look <- sub("\\&filter=", "", look)
   #extracts end_point and what is not end_point
   if (!(grepl("^id|name", look))) {
     end_point <- stringr::str_extract(look, ".+?(?=id|name)")
@@ -95,7 +96,7 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
   }
   #filter block
   if (!(is.null(filters))) {
-    ex <- processFilters(filters)
+    ex <- processFilters(end_point = end_point, filters = filters)
   }
   if (!(is.null(fields))) {
     #flattens fields and adds ?fields= if needed

@@ -4,9 +4,11 @@
 \alias{processFilters}
 \title{processFilters(filters)}
 \usage{
-processFilters(filters)
+processFilters(end_point, filters)
 }
 \arguments{
+\item{end_point}{end point}
+
 \item{filters}{wildcard argument that can come in as any format or datatype}
 }
 \value{
