@@ -28,7 +28,7 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
     #removes extraneous info
     look <- sub("\\?filter=", "", ex)
-    look <- sub("\\&filter=", "", ex)
+    look <- sub("&filter=", "", look)
     #extracts end_point and what is not end_point
     if (!(grepl("^id|name", look))) {
       end_point <- stringr::str_extract(look, ".+?(?=id|name)")

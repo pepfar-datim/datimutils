@@ -65,15 +65,13 @@ getCredentialsFromKeyring <- function(ring) {
 }
 
 #' @export
-#' @title loginToDATIMfunction(ring=NULL, config_path=NULL,
+#' @title loginToDATIMfunction(config_path=NULL,
 #' config_path_level = "dhis" )
-#' @description logins into a datim or dhis2 api using either a keyring or a
+#' @description logins into a datim or dhis2 api using either default keyring and a
 #' config file
-#' @param config_path path to a dhis config file, ring will bypass this
-#' option if not null
+#' @param config_path path to a dhis config file
 #' @param config_path_level if there a multiple json entries in the config
 #' file, it will default to dhis
-#' @param ring the name of the keyring to be used
 #'
 loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis") {
