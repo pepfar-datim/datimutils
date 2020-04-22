@@ -2,7 +2,7 @@
 % Please edit documentation in R/getMetadata.R
 \name{getMetadata}
 \alias{getMetadata}
-\title{getMetadata(base_url, end_point, filters, fields, pluck)}
+\title{getMetadata(base_url, end_point, filters, fields, filters2 = NULL, pluck)}
 \usage{
 getMetadata(
   end_point,
