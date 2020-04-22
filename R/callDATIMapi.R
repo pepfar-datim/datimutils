@@ -39,7 +39,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   #replaces /// with /
   url <- gsub("///", "/", url)
   #replaces all // with / unless it is the // in http://
-  gsub("[^http://]//", "/", url)
+  url <- gsub("[^http://]//", "/", url)
   #retry api get block
   i <- 1
   response_code <- 5
