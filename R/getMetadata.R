@@ -1,4 +1,3 @@
-#' @export
 #' @title processFilters(filters)
 #' @description takes a filter argument and turns it into an api compatible string
 #' @param filters wildcard argument that can come in as any format or datatype

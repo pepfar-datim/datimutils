@@ -42,7 +42,7 @@ getOrgUnitGroups <- function(filters = NULL, fields = NULL, base_url = NULL, by 
 #'
 #'
 getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL, by1 = NULL, by2 = NULL,
-                        fields = NULL, base_url = "https://www.datim.org/")
+                        fields = NULL, base_url = NULL)
 {
   # process field options
   default_feilds <- if(is.null(fields)){c("name","id")}else{ fields}

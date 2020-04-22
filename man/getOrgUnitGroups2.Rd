@@ -11,7 +11,7 @@ getOrgUnitGroups2(
   by1 = NULL,
   by2 = NULL,
   fields = NULL,
-  base_url = "https://www.datim.org/"
+  base_url = NULL
 )
 }
 \arguments{
