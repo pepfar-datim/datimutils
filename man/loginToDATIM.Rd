@@ -2,21 +2,18 @@
 % Please edit documentation in R/loginToDATIM.R
 \name{loginToDATIM}
 \alias{loginToDATIM}
-\title{loginToDATIMfunction(ring =NULL, config_path=NULL,
+\title{loginToDATIMfunction(config_path=NULL,
 config_path_level = "dhis" )}
 \usage{
-loginToDATIM(ring = NULL, config_path = NULL, config_path_level = "dhis")
+loginToDATIM(config_path = NULL, config_path_level = "dhis")
 }
 \arguments{
-\item{ring}{the name of the keyring to be used}
-
-\item{config_path}{path to a dhis config file, ring will bypass this
-option if not null}
+\item{config_path}{path to a dhis config file}
 
 \item{config_path_level}{if there a multiple json entries in the config
 file, it will default to dhis}
 }
 \description{
-logins into a datim or dhis2 api using either a keyring or a
+logins into a datim or dhis2 api using either default keyring and a
 config file
 }
