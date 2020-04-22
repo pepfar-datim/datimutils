@@ -48,17 +48,19 @@ api_get <- function(path, base_url = getOption("baseurl"),
     response_code <- httr::status_code(resp)
     i <- i + 1
   }
-  #if the response comes back in html and not json it means you landed on the login page
+  
+#unknown error catching
+  if (httr::status_code(resp) != 200) {
+    stop(paste0("api query failed for url ", url))
+  }
+  
+#if the response comes back in html and not json it means you landed on the login page
   if (httr::http_type(resp) != "application/json") {
     stop(
       paste0("API did not return json, are you logged into DATIM?
          If not please use loginToDatim function \n url is "), url,
       "\n", "cookie is", httr::cookies(resp)
     )
-  }
-  #unknown error catching
-  if (httr::status_code(resp) != 200) {
-    stop(paste0("api query failed for url ", url))
   }
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), flatten = T)
   return(resp)
