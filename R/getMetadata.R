@@ -69,8 +69,7 @@ processFilters <- function(filters){
 }
 
 #' @export
-#' @title getMetadata(base_url, end_point, filters, fields, pluck)
-#'
+#' @title getMetadata(base_url, end_point, filters, fields, filters2 = NULL, pluck)
 #' @description General utility to get metadata details from DATIM
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits
