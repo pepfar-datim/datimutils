@@ -12,6 +12,8 @@
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
                     api_version = NULL) {
+  #make sure all "?" outside of the .json?paging=false are &'s
+  path <- gsub("\\?","&", path)
   #check if the word api in the path and if not add it
   if (!(grepl("api", substr(path, 1, 4)))) {
     path <- paste0("api/", path)
