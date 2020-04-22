@@ -1,4 +1,3 @@
-#' @export
 #' @title LoadConfig(config_path)
 #'
 #' @description Loads a JSON configuration file to access a DHIS2 instance
@@ -21,7 +20,6 @@ loadConfigFile <- function(config_path = NA) {
   }
 }
 
-#' @export
 #' @title makeKeyring(ring ="DatimLogin",
 #' service = getOption("baseurl"), username)
 #'
@@ -51,7 +49,6 @@ makeKeyring <- function(username,
   }
 }
 
-#' @export
 #' @title getCredentialsFromKeyring(ring, service, username)
 #'
 #' @description retrieves username, service, and password from keyring
@@ -68,7 +65,7 @@ getCredentialsFromKeyring <- function(ring) {
 }
 
 #' @export
-#' @title loginToDATIMfunction(ring =NULL, config_path=NULL,
+#' @title loginToDATIMfunction(ring=NULL, config_path=NULL,
 #' config_path_level = "dhis" )
 #' @description logins into a datim or dhis2 api using either a keyring or a
 #' config file
@@ -78,22 +75,33 @@ getCredentialsFromKeyring <- function(ring) {
 #' file, it will default to dhis
 #' @param ring the name of the keyring to be used
 #'
-loginToDATIM <- function(ring = NULL,
-                         config_path = NULL,
+loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis") {
-  #checks which authentication to use: file or keyring
-  if (!is.null(config_path) & is.null(ring)) {
-    credentials <- loadConfigFile(config_path = config_path)
-    credentials <- credentials[[config_path_level]]
-  } else {
-    credentials <- getCredentialsFromKeyring(ring = ring)
+  
+  #loads credentials from secret file
+  credentials <- loadConfigFile(config_path = config_path)
+  credentials <- credentials[[config_path_level]]
+  
+  #checks if password in file and if not checks keyring, and if not there prompts to make one
+  if(nchar(credentials[["password"]]) == 0 | is.null(credentials[["password"]]))
+  {
+    
+    password <- try(keyring::key_get(service = credentials[["baseurl"]], 
+                                   username = credentials[["username"]]))
+    if ("try-error" %in% class(password)) {
+      keyring::key_set(service = credentials[["baseurl"]], username = credentials[["username"]])
+      password <- keyring::key_get(service = credentials[["baseurl"]], 
+                                     username = credentials[["username"]])
+    }
+    
   }
-
+  
+  #form url
   url <- utils::URLencode(URL = paste0(credentials[["baseurl"]], "api", "/me"))
   # Logging in here will give us a cookie to reuse
   r <- httr::GET(
     url,
-    httr::authenticate(credentials[["username"]], credentials[["password"]]),
+    httr::authenticate(credentials[["username"]], password),
     httr::timeout(60)
   )
   if (r$status != 200L) {
