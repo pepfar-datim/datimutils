@@ -1,78 +1,80 @@
 context("make arbitrary api call DATIM")
 
-# Version of DHIS 2 assumed in these unit tests and used in mocks
-d2_version = "2.33"
-base_url <- glue::glue("https://play.dhis2.org/{d2_version}/")
+code_used_to_generate_mock_requests <- function() {
+  library(httptest)
+  httptest::start_capturing(simplify = FALSE)
+  #not logged in for this one
+  datimutils::api_get(path = "api/me?fields=notloggedin",
+          base_url = "https://play.dhis2.org/2.33/",
+          retry = 1,
+          timeout = 60,
+          api_version = NULL)
+  httptest::stop_capturing()
+  datapackcommons::DHISLogin_Play("2.33")
+  httptest::start_capturing(simplify = FALSE)
+    datimutils::api_get(path = "apii/me", 
+          base_url = "https://play.dhis2.org/2.33/",
+          retry = 1, timeout = 60,
+          api_version = NULL
+          )
+    datimutils::api_get(path = "organisationUnits?timeout",
+            base_url =  "https://play.dhis2.org/2.33/",
+            timeout = .001)
+    httptest::stop_capturing()
+  }
 
-# httptest::start_capturing()
-# #not logged in for this one
-# api_get(path = "api/me?fields=notloggedin", base_url = base_url,
-#         retry = 1, timeout = 60,
-#         api_version = NULL)
-# httptest::stop_capturing()
+ httptest::with_mock_api({
+  test_that("We get expected errors", {
+# non-json content type
+# mock built when not logged in resulting in content type of
+# html from the login page
+    testthat::expect_error(
+      api_get(path = "api/me?fields=notloggedin", 
+              base_url = "https://play.dhis2.org/2.33/",
+              retry = 1, timeout = 60, api_version = NULL
+              )
+      )
+# response status !=200    
+    testthat::expect_error(
+             api_get(path = "apii/me", 
+                     base_url = "https://play.dhis2.org/2.33/",
+                     retry = 1, timeout = 60,
+                     api_version = NULL
+                     )
+             )
+        })
+   })
+ 
+ test_that("We can issue basic api calls", {
+   datapackcommons::DHISLogin_Play("2.33")
 
+   user <- api_get(path = "api/me",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
 
-#
-# api_get(path = "api/me", base_url = base_url,
-#         retry = 1, timeout = 60,
-#         api_version = NULL)
-# api_get(path = "api/me.json", base_url = base_url,
-#         retry = 1, timeout = 60,
-#         api_version = NULL)
-# api_get(path = "api/me.xml", base_url = base_url,
-#         retry = 1, timeout = 60,
-#         api_version = NULL)
-#httptest::stop_capturing()
+   user <- api_get(path = "api/me.json",
+                   base_url =  "https://play.dhis2.org/2.33/")
+      testthat::expect_identical(user$name, "John Traore")
 
-httptest::with_mock_api({
-test_that("We get expected errors", {
-  #  Not logged in yet
-  testthat::expect_error(
-    api_get(path = "api/me?fields=notloggedin", base_url = base_url,
-            retry = 1, timeout = 60,
-            api_version = NULL))
-  
-  
-})
-  
+      user <- api_get(path = "api/me.csv",
+                      base_url =  "https://play.dhis2.org/2.33/")
+      testthat::expect_identical(user$name, "John Traore")
 
-#   test_that("We can get a user object", {
-#   
-# #  Not logged in yet
-#     testthat::expect_error(
-#       api_get(path = "api/me?fields=notloggedin", base_url = base_url,
-#               retry = 1, timeout = 60,
-#               api_version = NULL))
-#   
-#     datapackcommons::DHISLogin_Play("2.33")
-#     
-    user <- api_get(path = "api/me", base_url = base_url,
-                    retry = 1, timeout = 60,
-                    api_version = NULL)
-#     testthat::expect_identical(user$name, "John Traore")
-#     user <- api_get(path = "api/me", base_url = base_url,
-#                     retry = 1, timeout = 60,
-#                     api_version = NULL)
-#     testthat::expect_identical(user$name, "John Traore")
-#     user <- api_get(path = "api/me.json", base_url = base_url,
-#                     retry = 1, timeout = 60,
-#                     api_version = NULL)
-#     testthat::expect_identical(user$name, "John Traore")
-#     user <- api_get(path = "api/me?fields=name", base_url = base_url,
-#                     retry = 1, timeout = 60,
-#                     api_version = NULL)
-#     testthat::expect_identical(user$name, "John Traore")
-#     testthat::expect_error(
-#       api_get(path = "apii/", base_url = base_url,
-#               retry = 1, timeout = 60,
-#               api_version = NULL
-#       )
-#     )
-#     testthat::expect_error(
-#       api_get(path = "dhis-web-commons-about/about.action", base_url = base_url,
-#               retry = 1, timeout = 60,
-#               api_version = NULL
-#       )
-#     )
-#   })
+   user <- api_get(path = "api/me?fields=name",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+
+   user <- api_get(path = "api/me/",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+ })
+ 
+ test_that("Can use extra parameters", {
+   datapackcommons::DHISLogin_Play("2.33")
+   skip_if_disconnected()
+   #timeout should be short enough to trip this but an internet connection is required
+   expect_error(api_get(path = "organisationUnits?timeout",
+                        base_url =  "https://play.dhis2.org/2.33/",
+                        timeout = .001)
+                )
  })
