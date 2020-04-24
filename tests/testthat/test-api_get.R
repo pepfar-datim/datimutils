@@ -15,10 +15,11 @@ code_used_to_generate_mock_requests <- function() {
   httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false")
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name")
+  httr::GET("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
   httptest::stop_capturing()
   }
 
- httptest::with_mock_api({
+httptest::with_mock_api({
   test_that("We handle anticipated api issues", {
 # non-json content type
 # mock built when not logged in resulting in content type of
@@ -34,14 +35,14 @@ code_used_to_generate_mock_requests <- function() {
 # response status !=200   
     testthat::expect_error(
 # https://play.dhis2.org/2.33/apii/me.json?paging=false
-      api_get(path = "apii / me",
-              base_url = "https: /  / play.dhis2.org / 2.33 / ",
+      api_get(path = "apii/me",
+              base_url = "https://play.dhis2.org/2.33/",
               retry = 1, timeout = 60,
               api_version = NULL
       )
     )
   })
- })
+ 
  
  
  test_that("We can issue basic api calls", {
@@ -67,17 +68,19 @@ code_used_to_generate_mock_requests <- function() {
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
    
-   
-   
-# "https://play.dhis2.org/2.33/api/me.json?paging=false?fields=name   
+# https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name   
    user <- api_get(path = "api/me?fields=name",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
-   user <- api_get(path = "api/me?fields=name&paging=false",
+   testthat::expect_null(user$id)
+
+# standard call to indicators would have pagination
+# check we are not receiving paged results if we leave off paging=false
+# https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name   
+   ind <- api_get(path = "api/indicator?fields=name",
                    base_url =  "https://play.dhis2.org/2.33/")
-   testthat::expect_identical(user$name, "John Traore")
-
-
+   testthat::expect_null(ind$pager)
+   })
  })
  
  test_that("Can use extra parameters", {
