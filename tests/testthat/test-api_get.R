@@ -21,12 +21,12 @@ code_used_to_generate_mock_requests <- function() {
   httr::GET(paste0("https://play.dhis2.org/2.33/api/indicators.json?paging=false",
                    "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc")
             )
-  
+  httr::GET("https://play.dhis2.org/2.33/api/30/smsCommands.json?paging=false")
   httptest::stop_capturing()
   }
 
 # no mock for this test
-test_that("Can use extra parameters", {
+test_that("Can use timeout paramater", {
   skip_if_disconnected()
   # timeout should be short enough to trip this error but 
   # an internet connection is required
@@ -125,7 +125,7 @@ httptest::with_mock_api({
    rm(user)
  })
  
- test_that("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name", {
+ test_that("Pagination: https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name", {
 # standard call to indicators would have pagination
 # check we are not receiving paged results if we leave off paging=false
    ind <- api_get(path = "api/indicators?fields=name",
@@ -133,4 +133,12 @@ httptest::with_mock_api({
    testthat::expect_null(ind$pager)
    rm(ind)
  })
-})
+ 
+ test_that("Can use API versioning", {
+   data <- api_get(path = "smsCommands",
+           base_url =  "https://play.dhis2.org/2.33/",
+           api_version = "30")
+   expect_gt(length(data), 0)
+   rm(data)
+   })
+ })
