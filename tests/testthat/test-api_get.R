@@ -12,14 +12,20 @@ code_used_to_generate_mock_requests <- function() {
   datapackcommons::DHISLogin_Play("2.33")
 
   httptest::start_capturing(simplify = FALSE)
+  
   httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false")
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name")
   httr::GET("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
   httr::GET("https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false")
+  httr::GET(paste0("https://play.dhis2.org/2.33/api/indicators.json?paging=false",
+                   "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc")
+            )
+  
   httptest::stop_capturing()
   }
 
+# no mock for this test
 test_that("Can use extra parameters", {
   skip_if_disconnected()
   # timeout should be short enough to trip this error but 
@@ -54,7 +60,7 @@ httptest::with_mock_api({
     )
   })
  
- test_that("https://play.dhis2.org/2.33/api/me.json?paging=false", {
+ test_that("basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
    
    user <- api_get(path = "api/me",
                    base_url =  "https://play.dhis2.org/2.33/")
@@ -88,7 +94,7 @@ httptest::with_mock_api({
    rm(user)
  })
  
- test_that("https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false", {  
+ test_that("Specific id: https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false", {  
    
    ind <- api_get(path = "api/indicators/ReUHfIn0pTQ",
                    base_url =  "https://play.dhis2.org/2.33/")
@@ -96,7 +102,21 @@ httptest::with_mock_api({
    rm(ind)
  })
  
- test_that("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name", {  
+ test_that(paste0("Nested fields: ",
+                  "https://play.dhis2.org/2.33/api/indicators.json?paging=false",
+                  "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc"), {  
+   
+   ind <- api_get(path = 
+                    paste0("api/indicators",
+                           "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc"),
+                  base_url =  "https://play.dhis2.org/2.33/")
+   expect_type(ind[["indicators"]][["translations"]][[1]], "list")
+   expect_named(ind[["indicators"]][["indicatorGroups"]][[1]], c("name", "id"))
+   expect_true(all(grepl("[Aa][Nn][Cc]", ind$indicators$name)))
+   rm(ind)
+ })
+ 
+ test_that("Specific field: https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name", {  
    
    user <- api_get(path = "api/me?fields=name",
                    base_url =  "https://play.dhis2.org/2.33/")
