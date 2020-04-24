@@ -5,7 +5,7 @@ code_used_to_generate_mock_requests <- function() {
   library(httptest)
   
   httptest::start_capturing(simplify = FALSE)
-  #not logged in for this one, fields there just to give the call a unique httptest ID
+#not logged in for this one, fields there just to give the call a unique httptest ID
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
   httptest::stop_capturing()
   
@@ -16,6 +16,7 @@ code_used_to_generate_mock_requests <- function() {
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false")
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name")
   httr::GET("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
+  httr::GET("https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false")
   httptest::stop_capturing()
   }
 
@@ -59,26 +60,40 @@ httptest::with_mock_api({
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
    testthat::expect_identical(user$id, "xE7jOejl9FI")
+   rm(user)
    
    user <- api_get(path = "api/me.json",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
+   rm(user)
    
    user <- api_get(path = "api/me.json?paging=false",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
+   rm(user)
    
    user <- api_get(path = "api/me.csv",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
+   rm(user)
    
    user <- api_get(path = "api/me.csv?paging=false",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
+   rm(user)
    
    user <- api_get(path = "api/me/",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
+   rm(user)
+ })
+ 
+ test_that("https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false", {  
+   
+   ind <- api_get(path = "api/indicators/ReUHfIn0pTQ",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
+   rm(ind)
  })
  
  test_that("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name", {  
@@ -87,6 +102,7 @@ httptest::with_mock_api({
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
    testthat::expect_null(user$id)
+   rm(user)
  })
  
  test_that("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name", {
@@ -95,5 +111,6 @@ httptest::with_mock_api({
    ind <- api_get(path = "api/indicators?fields=name",
                   base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_null(ind$pager)
+   rm(ind)
  })
 })
