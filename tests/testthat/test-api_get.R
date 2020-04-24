@@ -5,7 +5,7 @@ code_used_to_generate_mock_requests <- function() {
   library(httptest)
   
   httptest::start_capturing(simplify = FALSE)
-  #not logged in for this one
+  #not logged in for this one, fields there just to give the call a unique httptest ID
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
   httptest::stop_capturing()
   
@@ -14,52 +14,70 @@ code_used_to_generate_mock_requests <- function() {
   httptest::start_capturing(simplify = FALSE)
   httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
   httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false")
+  httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name")
   httptest::stop_capturing()
   }
 
  httptest::with_mock_api({
-  test_that("We get expected errors", {
+  test_that("We handle anticipated api issues", {
 # non-json content type
 # mock built when not logged in resulting in content type of
 # html from the login page
     testthat::expect_error(
+# https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin
       api_get(path = "api/me?fields=notloggedin", 
               base_url = "https://play.dhis2.org/2.33/",
               retry = 1, timeout = 60, api_version = NULL
               )
       )
-# response status !=200    
+    
+# response status !=200   
     testthat::expect_error(
-             api_get(path = "apii/me", 
-                     base_url = "https://play.dhis2.org/2.33/",
-                     retry = 1, timeout = 60,
-                     api_version = NULL
-                     )
-             )
-        })
-   })
+# https://play.dhis2.org/2.33/apii/me.json?paging=false
+      api_get(path = "apii / me",
+              base_url = "https: /  / play.dhis2.org / 2.33 / ",
+              retry = 1, timeout = 60,
+              api_version = NULL
+      )
+    )
+  })
+ })
+ 
  
  test_that("We can issue basic api calls", {
 
+# "https://play.dhis2.org/2.33/api/me.json?paging=false"
    user <- api_get(path = "api/me",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
-
-   user <- api_get(path = "api/me.json",
-                   base_url =  "https://play.dhis2.org/2.33/")
-      testthat::expect_identical(user$name, "John Traore")
-
-      user <- api_get(path = "api/me.csv",
-                      base_url =  "https://play.dhis2.org/2.33/")
-      testthat::expect_identical(user$name, "John Traore")
-
-   user <- api_get(path = "api/me?fields=name",
-                   base_url =  "https://play.dhis2.org/2.33/")
-   testthat::expect_identical(user$name, "John Traore")
-
+   
    user <- api_get(path = "api/me/",
                    base_url =  "https://play.dhis2.org/2.33/")
    testthat::expect_identical(user$name, "John Traore")
+   
+   user <- api_get(path = "api/me.json",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+   
+   user <- api_get(path = "api/me.csv",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+   
+   user <- api_get(path = "api/me.csv?paging=false",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+   
+   
+   
+# "https://play.dhis2.org/2.33/api/me.json?paging=false?fields=name   
+   user <- api_get(path = "api/me?fields=name",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+   user <- api_get(path = "api/me?fields=name&paging=false",
+                   base_url =  "https://play.dhis2.org/2.33/")
+   testthat::expect_identical(user$name, "John Traore")
+
+
  })
  
  test_that("Can use extra parameters", {
