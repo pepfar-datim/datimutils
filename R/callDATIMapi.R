@@ -14,6 +14,11 @@ api_get <- function(path, base_url = getOption("baseurl"),
                     api_version = NULL) {
   #make sure all "?" outside of the .json?paging=false are &'s
   path <- gsub("\\?","&", path)
+  #remove trailing / from path
+  if(substr(path, nchar(path), nchar(path)) == "/")
+  {
+    path <- substr(path, 1, nchar(path)-1)
+  }
   #check if the word api in the path and if not add it
   if (!(grepl("api", substr(path, 1, 4)))) {
     path <- paste0("api/", path)
@@ -25,8 +30,11 @@ api_get <- function(path, base_url = getOption("baseurl"),
     path,
     perl = TRUE
     )
+    
   url <- paste0(url = base_url, path = path)
   #this if else block will add .json?paging=false where it is needed, depending on the path
+  if(!(grepl("json|csv", url)))
+       {
   if (grepl("\\/\\?", url)) {
     url <- sub("(.*?)(\\//?)", "\\1.json?paging=false\\2", url)
   } else if (grepl("\\?", url)) {
@@ -35,6 +43,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
     url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
   } else {
     url <- paste0(url, ".json?paging=false")
+    }
   }
   #replaces /// with /
   url <- gsub("///", "/", url)
