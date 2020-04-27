@@ -88,20 +88,6 @@ httptest::with_mock_api({
     rm(user)
 
     user <- api_get(
-      path = "api/me.csv",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(user$name, "John Traore")
-    rm(user)
-
-    user <- api_get(
-      path = "api/me.csv?paging=false",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(user$name, "John Traore")
-    rm(user)
-
-    user <- api_get(
       path = "api/me/",
       base_url = "https://play.dhis2.org/2.33/"
     )
