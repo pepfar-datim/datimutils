@@ -24,6 +24,7 @@ library(httptest)
 #   )
 # )
 # httr::GET("https://play.dhis2.org/2.33/api/30/smsCommands.json?paging=false")
+
 # httptest::stop_capturing()
 
 # no mock for this test
@@ -36,6 +37,34 @@ test_that("Can use timeout paramater", {
     base_url = "https://play.dhis2.org/2.33/",
     timeout = .001
   ))
+})
+
+# no mock for this test - no httr requests should actually be issued
+# for these resonse formats
+# we expect only json requests
+test_that("We reject request for non-json response formats", {
+  formats <- c(
+    ".jsonp", ".html", ".xml", ".pdf",
+    ".xls", ".csv", ".html+css", ".adx"
+  )
+  helper <- function(x) {
+    # we should get an error for unsupported response format in URL
+    expected_error <- expect_error(
+      api_get(
+        path = paste0(
+          "api/analytics", x,
+          "?dimension=dx:fbfJHSPpUQD",
+          "&dimension=pe:LAST_12_MONTHS",
+          "&filter=ou:ImspTQPwCqd"
+        ),
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+    )
+    # when run with_internet the error message should start with GET
+    # see details of httptest::with_internet
+    expect_false(grepl("GET ", expected_error$message))
+  }
+  without_internet(lapply(formats, helper))
 })
 
 httptest::with_mock_api({
@@ -64,7 +93,8 @@ httptest::with_mock_api({
     )
   })
 
-  test_that("basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
+  test_that(
+    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
     user <- api_get(
       path = "api/me",
       base_url = "https://play.dhis2.org/2.33/"
@@ -95,26 +125,25 @@ httptest::with_mock_api({
     rm(user)
   })
 
-  test_that("Specific id: https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false", {
-    ind <- api_get(
-      path = "api/indicators/ReUHfIn0pTQ",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
-    rm(ind)
-  })
+  test_that(
+    paste0("Specific id: https://play.dhis2.org/2.33/",
+           "api/indicators/ReUHfIn0pTQ.json?paging=false"), {
+             ind <- api_get(
+               path = "api/indicators/ReUHfIn0pTQ",
+               base_url = "https://play.dhis2.org/2.33/"
+               )
+             testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
+             rm(ind)
+             })
 
   test_that(paste0(
     "Nested fields: ",
     "https://play.dhis2.org/2.33/api/indicators.json?paging=false",
-    "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc"
-  ), {
-    ind <- api_get(
-      path =
-        paste0(
-          "api/indicators",
-          "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc"
-        ),
+    "&fields=name,id,translations[locale,value],indicatorGroups[id,name]",
+    "&filter=name:ilike:anc"), {
+      ind <- api_get(
+      path = paste0("api/indicators&fields=name,id,translations[locale,value],",
+                    "indicatorGroups[id,name]&filter=name:ilike:anc"),
       base_url = "https://play.dhis2.org/2.33/"
     )
     expect_type(ind[["indicators"]][["translations"]][[1]], "list")
@@ -123,7 +152,8 @@ httptest::with_mock_api({
     rm(ind)
   })
 
-  test_that("Specific field: https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name", {
+  test_that(paste0("Specific field: https://play.dhis2.org/2.33/",
+                   "api/me.json?paging=false&fields=name"), {
     user <- api_get(
       path = "api/me?fields=name",
       base_url = "https://play.dhis2.org/2.33/"
@@ -133,7 +163,8 @@ httptest::with_mock_api({
     rm(user)
   })
 
-  test_that("Pagination: https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name", {
+  test_that(paste0("Pagination: https://play.dhis2.org/2.33/",
+                   "api/indicators.json?paging=false&fields=name"), {
     # standard call to indicators would have pagination
     # check we are not receiving paged results if we leave off paging=false
     ind <- api_get(
