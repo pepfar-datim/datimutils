@@ -60,7 +60,7 @@ test_that("We reject request for non-json response formats", {
         base_url = "https://play.dhis2.org/2.33/"
       )
     )
-    # when run with_internet the error message should start with GET
+    # when run without_internet the error message should start with GET
     # see details of httptest::with_internet
     expect_false(grepl("GET ", expected_error$message))
   }
