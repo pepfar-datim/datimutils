@@ -45,6 +45,11 @@ api_get <- function(path, base_url = getOption("baseurl"),
     url <- paste0(url, ".json?paging=false")
     }
   }
+  #this block adds pagin=false in the case that only .json was passed in
+  if(grepl("json", url) & !(grepl("paging", url)))
+  {
+  url <- sub(".json", ".json?paging=false", url)
+  }
   #replaces /// with /
   url <- gsub("///", "/", url)
   #replaces all // with / unless it is the // in http://
