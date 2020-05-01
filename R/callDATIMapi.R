@@ -12,8 +12,15 @@
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
                     api_version = NULL) {
+  #error if unsported file format desired
+  if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
+     |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
+  {
+    stop("invalid file extension, either pass in a link with json or a link without a file format")
+  }
   #make sure all "?" outside of the .json?paging=false are &'s
   path <- gsub("\\?","&", path)
+  path <- gsub("json&","json?", path)
   #remove trailing / from path
   if(substr(path, nchar(path), nchar(path)) == "/")
   {
@@ -33,7 +40,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
     
   url <- paste0(url = base_url, path = path)
   #this if else block will add .json?paging=false where it is needed, depending on the path
-  if(!(grepl("json|csv", url)))
+  if(!(grepl("json", url)))
        {
   if (grepl("\\/\\?", url)) {
     url <- sub("(.*?)(\\//?)", "\\1.json?paging=false\\2", url)
