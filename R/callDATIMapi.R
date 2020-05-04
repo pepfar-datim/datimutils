@@ -12,8 +12,20 @@
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
                     api_version = NULL) {
+  #error if unsported file format desired
+  if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
+     |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
+  {
+    stop("invalid file extension, either pass in a link with json or a link without a file format")
+  }
   #make sure all "?" outside of the .json?paging=false are &'s
   path <- gsub("\\?","&", path)
+  path <- gsub("json&","json?", path)
+  #remove trailing / from path
+  if(substr(path, nchar(path), nchar(path)) == "/")
+  {
+    path <- substr(path, 1, nchar(path)-1)
+  }
   #check if the word api in the path and if not add it
   if (!(grepl("api", substr(path, 1, 4)))) {
     path <- paste0("api/", path)
@@ -25,8 +37,11 @@ api_get <- function(path, base_url = getOption("baseurl"),
     path,
     perl = TRUE
     )
+    
   url <- paste0(url = base_url, path = path)
   #this if else block will add .json?paging=false where it is needed, depending on the path
+  if(!(grepl("json", url)))
+       {
   if (grepl("\\/\\?", url)) {
     url <- sub("(.*?)(\\//?)", "\\1.json?paging=false\\2", url)
   } else if (grepl("\\?", url)) {
@@ -35,6 +50,12 @@ api_get <- function(path, base_url = getOption("baseurl"),
     url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
   } else {
     url <- paste0(url, ".json?paging=false")
+    }
+  }
+  #this block adds pagin=false in the case that only .json was passed in
+  if(grepl("json", url) & !(grepl("paging", url)))
+  {
+  url <- sub(".json", ".json?paging=false", url)
   }
   #replaces /// with /
   url <- gsub("///", "/", url)
@@ -48,17 +69,19 @@ api_get <- function(path, base_url = getOption("baseurl"),
     response_code <- httr::status_code(resp)
     i <- i + 1
   }
-  #if the response comes back in html and not json it means you landed on the login page
+  
+#unknown error catching
+  if (httr::status_code(resp) != 200) {
+    stop(paste0("api query failed for url ", url))
+  }
+  
+#if the response comes back in html and not json it means you landed on the login page
   if (httr::http_type(resp) != "application/json") {
     stop(
       paste0("API did not return json, are you logged into DATIM?
          If not please use loginToDatim function \n url is "), url,
       "\n", "cookie is", httr::cookies(resp)
     )
-  }
-  #unknown error catching
-  if (httr::status_code(resp) != 200) {
-    stop(paste0("api query failed for url ", url))
   }
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), flatten = T)
   return(resp)
