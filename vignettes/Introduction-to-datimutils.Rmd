@@ -49,10 +49,21 @@ getMetadata(base_url = base_url, end_point = end_point, filters = filters, field
 ```
  or (as an example showing how the arguments format can change)
 ```c
-baseurl = "www.datim.org/", end_point = "dataElements" 
-filters <- c(?filter,id,in,["aaa","bbb"]" fields <- "name,id,numerator,denominator,categoryOptions"
+baseurl = "www.datim.org/"; end_point = "dataElements" 
+filters <- c('?filter','id','in','["aaa","bbb"]'); fields<-"name,id,numerator,denominator,categoryOptions"
 getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
 ```
+
+It can take an unlimited number of filters with the dots argument
+```c
+ baseurl = "www.datim.org/"; end_point = "dataElements" 
+ filters <- c('?filter','id','in','[aaa,bbb]'); fields <- "name,id,numerator,denominator,categoryOptions"
+ filters2 <- c('?filter','name','in','[fff,zzz]')
+ filters3 <- c('?filter','name','in','[ccc,ddd]')
+ getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields, 
+             pluck = F, retry = 1, filters2, filters3)
+```
+
 
 The getOrgUnitGroups functions can be used as wrappers to the getMetadata function, for example:
 ```c

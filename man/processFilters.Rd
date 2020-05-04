@@ -2,7 +2,7 @@
 % Please edit documentation in R/getMetadata.R
 \name{processFilters}
 \alias{processFilters}
-\title{processFilters(filters)}
+\title{processFilters(end_point, filters)}
 \usage{
 processFilters(end_point, filters)
 }

@@ -9,9 +9,9 @@ getMetadata(
   base_url = getOption("baseurl"),
   filters = NULL,
   fields = NULL,
-  filters2 = NULL,
   pluck = F,
-  retry = 1
+  retry = 1,
+  ...
 )
 }
 \arguments{
@@ -26,13 +26,12 @@ components are present}
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}
 
-\item{filters2}{- the other filters, which can come in any format as long as all
-components are present}
-
 \item{pluck}{- whether to add pluck option as documented by dhis2 api
 developer guide}
 
 \item{retry}{number of times to retry}
+
+\item{...}{can pass unlimited number of filter arguments here}
 }
 \value{
 the metadata response in json format and flattened

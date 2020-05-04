@@ -1,4 +1,4 @@
-#' @title processFilters(filters)
+#' @title processFilters(end_point, filters)
 #' @description takes a filter argument and turns it into an api compatible string
 #' @param filters wildcard argument that can come in as any format or datatype
 #' @param end_point end point
@@ -8,9 +8,9 @@
 processFilters <- function(end_point, filters){
   #takes filter argument and turns it into a single character string
   ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
-  #removes extraneous info
-  look <- sub("\\?filter=", "", ex)
-  look <- sub("\\&filter=", "", look)
+  #removes extraneous info (will be added later anyway for consistency)
+  look <- sub("\\?filter=|\\?filter", "", ex)
+  look <- sub("\\&filter=|\\&filter", "", look)
   #extracts end_point and what is not end_point
   if (!(grepl("^id|name", look))) {
     end_point <- stringr::str_extract(look, ".+?(?=id|name)")
@@ -79,17 +79,16 @@ processFilters <- function(end_point, filters){
 #' components are present
 #' @param fields - the fields, which can come in any formt as long as all
 #' components are present
-#' @param filters2 - the other filters, which can come in any format as long as all
-#' components are present
 #' @param pluck - whether to add pluck option as documented by dhis2 api
 #' developer guide
 #' @param retry number of times to retry
+#' @param ... can pass unlimited number of filter arguments here 
 #' @return the metadata response in json format and flattened
 #'
 
 getMetadata <- function(end_point, base_url = getOption("baseurl"),
-                        filters = NULL, fields = NULL, filters2 = NULL,
-                        pluck = F, retry = 1) {
+                        filters = NULL, fields = NULL,
+                        pluck = F, retry = 1, ...) {
   #if no filters or fields are specified, just use endpoint as path
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
@@ -106,14 +105,23 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     }
   }
   
+  #set up storage for multiple filter arguments
+  filter_storage <- list()
   #check if there are other filter arguments than just the firtst filter and process them
-  if(!(is.null(filters2))) {
-    ex2 <- processFilters(filters2)
-    ex2 <- sub(end_point, "", ex2)
+  if(length(list(...)) != 0) {
+    filters2 <- list(...)
+    for(i in 1:length(filters2))
+    {
+      ex2 <- processFilters(end_point = NULL, filters = filters2[[i]])
+      ex2 <- sub(end_point, "", ex2)
+      filter_storage[[i]] <- ex2
+    }
+    filter_storage <- unlist(filter_storage)
+    filter_storage <- stringr::str_flatten(filter_storage)
   }
   
   #create final path
-  path <- paste0(ex, ifelse(is.null(filters2), "", ex2), ef,
+  path <- paste0(ex, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
                  ifelse(pluck, "~pluck", ""))
   if (is.null(fields) & is.null(filters)) {
     path <- end_point

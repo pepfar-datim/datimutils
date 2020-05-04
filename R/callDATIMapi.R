@@ -1,4 +1,5 @@
 #' @export
+#' 
 #' @title Execute and return a DATIM API query.
 #' @description Gets and flattens DATIM API query as dataframe.
 #' @param path Should begin with api/ and contain the query
@@ -42,11 +43,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   #this if else block will add .json?paging=false where it is needed, depending on the path
   if(!(grepl("json", url)))
        {
-  if (grepl("\\/\\?", url)) {
-    url <- sub("(.*?)(\\//?)", "\\1.json?paging=false\\2", url)
-  } else if (grepl("\\?", url)) {
-    url <- sub("(.*?)(\\?)", "\\1.json?paging=false\\2", url)
-  } else if (grepl("&", url)) {
+    if (grepl("&", url)) {
     url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
   } else {
     url <- paste0(url, ".json?paging=false")
@@ -61,20 +58,23 @@ api_get <- function(path, base_url = getOption("baseurl"),
   url <- gsub("///", "/", url)
   #replaces all // with / unless it is the // in http://
   url <- gsub("[^http://]//", "/", url)
-  #retry api get block
-  i <- 1
-  response_code <- 5
-  while (i <= retry & response_code != 200) {
+  #retry api get block, only retries if reponse code not in 400s
+  i <- 1; response_code <- 5
+  while (i <= retry & (response_code < 400 | response_code >= 500 )) {
     resp <- httr::GET(url, httr::timeout(timeout))
     response_code <- httr::status_code(resp)
     i <- i + 1
   }
-  
-#unknown error catching
-  if (httr::status_code(resp) != 200) {
-    stop(paste0("api query failed for url ", url))
+
+#unknown error catching which returns message and response code
+  if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500 ) {
+    stop(paste0("client error returned by url, this normally means a malformed link", url,
+                " response code: ", httr::status_code(resp) ))
+  } else if (httr::status_code(resp) != 200) {
+    stop(paste0("api query failed for url ", url ,
+                " response code: ", httr::status_code(resp)))
   }
-  
+
 #if the response comes back in html and not json it means you landed on the login page
   if (httr::http_type(resp) != "application/json") {
     stop(
