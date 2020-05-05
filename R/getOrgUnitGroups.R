@@ -57,7 +57,7 @@ getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL, by1 = NULL, by2 
   #call getMetadata with info above
   getMetadata(base_url = base_url, end_point = "organisationUnitGroups", 
               filters = c(default_filter_item1, default_filter_option1,filters1), 
-              fields = default_feilds, filters2 = c(default_filter_item2, 
+              fields = default_feilds, pluck = F, retry = 1, c(default_filter_item2, 
               default_filter_option2,filters2) )
 }
 
