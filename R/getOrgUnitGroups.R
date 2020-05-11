@@ -20,8 +20,8 @@ getOrgUnitGroups <- function(filters = NULL, fields = NULL, base_url = NULL, by 
   #process first filter option (in, eq, like, etc.)
   default_filter_option = "in"
   #call getMetadata with info above
-  getMetadata(base_url = base_url, end_point = "organisationUnitGroups",filters = c(default_filter_item, default_filter_option,filters), 
-              fields = default_feilds)
+  getMetadata(end_point = "organisationUnitGroups", base_url = base_url, filters = c(default_filter_item, default_filter_option,filters), 
+              fields = default_feilds,  pluck = F, retry = 1)
 }
 
 

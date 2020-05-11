@@ -93,10 +93,14 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
   }
+  #if the if loop doesnt get activated this will still create a variable for path
+  ex <- ""
   #filter block
   if (!(is.null(filters))) {
     ex <- processFilters(end_point = end_point, filters = filters)
   }
+  #if the if loop doesnt get activated this will still create a variable for path
+  ef <- ""
   if (!(is.null(fields))) {
     #flattens fields and adds ?fields= if needed
     ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
@@ -104,7 +108,7 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
       ef <- paste0("&fields=", ef)
     }
   }
-  
+ # print(length(list(...)))
   #set up storage for multiple filter arguments
   filter_storage <- list()
   #check if there are other filter arguments than just the firtst filter and process them
