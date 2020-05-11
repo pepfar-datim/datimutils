@@ -14,7 +14,7 @@
 getOrgUnitGroups <- function(filters = NULL, fields = NULL, base_url = NULL, by = NULL)
 {
   # process field options
-  default_feilds <- ifelse(is.null(fields),c("name","id"), fields)
+  default_feilds <- if(is.null(fields)){c("name","id")}else{ fields}
   #process first filter item (id, name, etc.)
   default_filter_item = ifelse(is.null(by),"id", by)
   #process first filter option (in, eq, like, etc.)

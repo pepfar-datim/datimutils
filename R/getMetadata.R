@@ -108,7 +108,6 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
       ef <- paste0("&fields=", ef)
     }
   }
- # print(length(list(...)))
   #set up storage for multiple filter arguments
   filter_storage <- list()
   #check if there are other filter arguments than just the firtst filter and process them
