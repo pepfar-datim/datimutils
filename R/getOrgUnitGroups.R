@@ -2,16 +2,16 @@
 #' @title getOrgUnitGroups(filters = NULL, fields = NULL, base_url = NULL, by = NULL)
 #'
 #' @description wrapper to getMetadata that retrieves org units
-#' @param base_url string - base address of instance (text before api/ in URL)
-#' @param filters - the filters, which can come in any format as long as all
-#' components are present
+#' @param x - string vector of identifiers that will be used in the filter
+#' e.g. vector of uids, names, or codes.
+#' @param by - what to filter by, i.e. id or name, default is id
 #' @param fields - the fields, which can come in any formt as long as all
 #' components are present
-#' @param by - what to filter by, i.e. id or name, default is id
+#' @param base_url string - base address of instance (text before api/ in URL)
 #' @return the metadata response in json format and flattened
 #'
 #'
-getOrgUnitGroups <- function(filters = NULL, fields = NULL, base_url = NULL, by = NULL)
+getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL, base_url = NULL)
 {
   # process field options
   default_feilds <- if(is.null(fields)){c("name","id")}else{ fields}
@@ -20,7 +20,8 @@ getOrgUnitGroups <- function(filters = NULL, fields = NULL, base_url = NULL, by 
   #process first filter option (in, eq, like, etc.)
   default_filter_option = "in"
   #call getMetadata with info above
-  getMetadata(end_point = "organisationUnitGroups", base_url = base_url, filters = c(default_filter_item, default_filter_option,filters), 
+  getMetadata(end_point = "organisationUnitGroups", base_url = base_url, 
+              filters = c(default_filter_item, default_filter_option, x), 
               fields = default_feilds,  pluck = F, retry = 1)
 }
 
