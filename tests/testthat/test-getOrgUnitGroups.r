@@ -56,7 +56,7 @@ test_that("Uses default base_url", {
     options("baseurl" = "https://play.dhis2.org/2.33/")
     data <- datimutils::getOrgUnitGroups("CXw2yu5fodb")
     testthat::expect_equal(data$id, "CXw2yu5fodb")
-    options("baseurl" = original_base_url)
+    options("baseurl" = original_baseurl)
     rm(data)
   })
 

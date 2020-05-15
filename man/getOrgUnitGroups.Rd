@@ -5,7 +5,12 @@
 \title{getOrgUnitGroups(filters = NULL, fields = NULL,
 base_url = NULL, by = NULL)}
 \usage{
-getOrgUnitGroups(x = NULL, by = NULL, fields = NULL, base_url = NULL)
+getOrgUnitGroups(
+  x = NULL,
+  by = NULL,
+  fields = NULL,
+  base_url = getOption("baseurl")
+)
 }
 \arguments{
 \item{x}{- string vector of identifiers that will be used in the filter

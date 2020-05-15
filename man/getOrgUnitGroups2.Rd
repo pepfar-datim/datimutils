@@ -11,7 +11,7 @@ getOrgUnitGroups2(
   by1 = NULL,
   by2 = NULL,
   fields = NULL,
-  base_url = NULL
+  base_url = getOption("baseurl")
 )
 }
 \arguments{

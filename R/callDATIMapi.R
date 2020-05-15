@@ -6,11 +6,12 @@
 #' default will not try again
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
+#' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
-                    api_version = NULL) {
+                    api_version = NULL, wrapper_reduce = NULL) {
   #error if unsported file format desired
   if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
      |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
@@ -82,5 +83,10 @@ api_get <- function(path, base_url = getOption("baseurl"),
     )
   }
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), flatten = T)
+
+  #if a wrapper is used here it will pass df and not list
+  if(!(is.null(wrapper_reduce))){
+  resp <- resp[[wrapper_reduce]]}
+
   return(resp)
 }

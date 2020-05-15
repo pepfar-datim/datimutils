@@ -12,7 +12,7 @@
 #' @return the metadata response in json format and flattened
 #'
 getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
-                             base_url = NULL) {
+                             base_url = getOption("baseurl")) {
   # process field options
   default_feilds <- if (is.null(fields)) {
     c("name", "id")
@@ -27,7 +27,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,
     filters = c(default_filter_item, default_filter_option, x),
-    fields = default_feilds, pluck = F, retry = 1
+    fields = default_feilds, pluck = F, retry = 1, wrapper_reduce = "organisationUnitGroups"
   )
 }
 
@@ -51,7 +51,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
 
 getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
                               by1 = NULL, by2 = NULL,
-                              fields = NULL, base_url = NULL) {
+                              fields = NULL, base_url = getOption("baseurl")) {
   # process field options
   default_feilds <- if (is.null(fields)) {
     c("name", "id")
@@ -70,9 +70,10 @@ getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
   getMetadata(
     base_url = base_url, end_point = "organisationUnitGroups",
     filters = c(default_filter_item1, default_filter_option1, filters1),
-    fields = default_feilds, pluck = F, retry = 1, c(
-      default_filter_item2,
+    fields = default_feilds, pluck = F, retry = 1,
+    wrapper_reduce = "organisationUnitGroups", c(default_filter_item2,
       default_filter_option2, filters2
     )
   )
 }
+

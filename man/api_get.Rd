@@ -9,7 +9,8 @@ api_get(
   base_url = getOption("baseurl"),
   retry = 1,
   timeout = 60,
-  api_version = NULL
+  api_version = NULL,
+  wrapper_reduce = NULL
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ default will not try again}
 \item{timeout}{how long should a reponse be waited for}
 
 \item{api_version}{defaults to current but can pass in version number}
+
+\item{wrapper_reduce}{indicator passed in by wrappers to reduce list to data.frame}
 }
 \value{
 Result of DATIM API query returned as named list.

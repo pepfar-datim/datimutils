@@ -11,6 +11,7 @@ getMetadata(
   fields = NULL,
   pluck = F,
   retry = 1,
+  wrapper_reduce = NULL,
   ...
 )
 }
@@ -30,6 +31,8 @@ components are present}
 developer guide}
 
 \item{retry}{number of times to retry}
+
+\item{wrapper_reduce}{indicator passed in by wrappers to reduce list to data.frame}
 
 \item{...}{can pass unlimited number of filter arguments here}
 }

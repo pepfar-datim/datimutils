@@ -6,23 +6,25 @@
 #'
 
 processFilters <- function(end_point, filters){
+  
   #takes filter argument and turns it into a single character string
   ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
   #removes extraneous info (will be added later anyway for consistency)
   look <- sub("\\?filter=|\\?filter", "", ex)
   look <- sub("\\&filter=|\\&filter", "", look)
   #extracts end_point and what is not end_point
-  if (!(grepl("^id|name", look))) {
-    end_point <- stringr::str_extract(look, ".+?(?=id|name)")
-    look <- sub("(.*)(\\id|name)", "\\2", look)
+  if (!(grepl("^id|name|groupSets\\.id", look))) {
+    end_point <- stringr::str_extract(look, ".+?(?=groupSets\\.id|id|name|)")
+    look <- sub("(.*)(\\groupSets\\.id|id|name)", "\\2", look)
     end_point <- gsub("/", "", end_point)
   }
   #extracts the original filter 
   filter_option_orig <-
-    stringr::str_extract(substr(look, 1, 10),
+    stringr::str_extract(substr(sub("groupSets|name","",look), 1, 10),
                          "!ilike|!like|ilike|!in|!eq|in|eq|like")
   #extracts either id or name from filter
-  filter_item <- stringr::str_extract(substr(look, 1, 10), "id|name")
+  filter_item <- stringr::str_extract(substr(look, 1, 12), 
+                                      "groupSets\\.id|id|name")
   #this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
   if (grepl("eq", filter_option_orig)) {
     filter_option <- sub("eq", "in", filter_option_orig)
@@ -36,6 +38,10 @@ processFilters <- function(end_point, filters){
                substr(look, 6, nchar(look)))
   #removes :
   ex <- gsub(":", "", ex)
+  #special handling for groupsets.id
+  if(filter_item == "groupSets.id"){
+    filter_item <- "groupSets\\.id"
+  }
   #takes first part of filter, i.e. idin
   one <- sub(paste0("(", filter_item, filter_option, ")", "(.*)"),
              "\\1", ex)
@@ -43,8 +49,10 @@ processFilters <- function(end_point, filters){
                  "\\2", ex)
   #takes second part of filter, i.e. ["abc"] and adds commas if filter = in
   if(grepl("name",one)){
-    two <- gsub("(\\w)([A-Z])", "\\1,\\2",
-                one.one, perl = TRUE)
+    # two <- gsub("(\\w)([A-Z])", "\\1,\\2",
+    #             one.one, perl = TRUE)
+    try <- unlist(stringi::stri_extract_all_regex(str = one.one, pattern = filters ))
+    two <- paste0(try[!is.na(try)], collapse = ",")
   }else{
     two <- ifelse(grepl(",", one.one), one.one,
                   gsub("(.{11})", "\\1,",
@@ -82,13 +90,14 @@ processFilters <- function(end_point, filters){
 #' @param pluck - whether to add pluck option as documented by dhis2 api
 #' developer guide
 #' @param retry number of times to retry
+#' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
 #' @param ... can pass unlimited number of filter arguments here 
 #' @return the metadata response in json format and flattened
 #'
 
 getMetadata <- function(end_point, base_url = getOption("baseurl"),
                         filters = NULL, fields = NULL,
-                        pluck = F, retry = 1, ...) {
+                        pluck = F, retry = 1, wrapper_reduce = NULL, ...) {
   #if no filters or fields are specified, just use endpoint as path
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
@@ -132,6 +141,6 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
   #pass path in api_get
   api_get(
     path = path, base_url = base_url, retry = retry, timeout = 60,
-    api_version = NULL
+    api_version = NULL, wrapper_reduce = wrapper_reduce
   )
 }
