@@ -2,7 +2,7 @@
 % Please edit documentation in R/getOrgUnitGroups.R
 \name{getOrgUnitGroups2}
 \alias{getOrgUnitGroups2}
-\title{getOrgUnitGroups2(filters1 = NULL, filters2 = NULL, fields = NULL, 
+\title{getOrgUnitGroups2(filters1 = NULL, filters2 = NULL, fields = NULL,
 base_url = NULL, by1 = NULL, by2 = NULL)}
 \usage{
 getOrgUnitGroups2(
@@ -21,9 +21,11 @@ components are present}
 \item{filters2}{- the filters, which can come in any format as long as all
 components are present}
 
-\item{by1}{- what to filter by, i.e. id or name, default is id, applies to filter1}
+\item{by1}{- what to filter by, i.e. id or name, default is id,
+applies to filter1}
 
-\item{by2}{- what to filter by, i.e. id or name, default is id, applies to filter2}
+\item{by2}{- what to filter by, i.e. id or name, default is id,
+applies to filter2}
 
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}

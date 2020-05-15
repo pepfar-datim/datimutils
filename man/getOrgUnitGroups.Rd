@@ -2,20 +2,21 @@
 % Please edit documentation in R/getOrgUnitGroups.R
 \name{getOrgUnitGroups}
 \alias{getOrgUnitGroups}
-\title{getOrgUnitGroups(filters = NULL, fields = NULL, base_url = NULL, by = NULL)}
+\title{getOrgUnitGroups(filters = NULL, fields = NULL,
+base_url = NULL, by = NULL)}
 \usage{
-getOrgUnitGroups(filters = NULL, fields = NULL, base_url = NULL, by = NULL)
+getOrgUnitGroups(x = NULL, by = NULL, fields = NULL, base_url = NULL)
 }
 \arguments{
-\item{filters}{- the filters, which can come in any format as long as all
-components are present}
+\item{x}{- string vector of identifiers that will be used in the filter
+e.g. vector of uids, names, or codes.}
+
+\item{by}{- what to filter by, i.e. id or name, default is id}
 
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}
 
 \item{base_url}{string - base address of instance (text before api/ in URL)}
-
-\item{by}{- what to filter by, i.e. id or name, default is id}
 }
 \value{
 the metadata response in json format and flattened

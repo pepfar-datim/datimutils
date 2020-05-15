@@ -1,5 +1,3 @@
-#' @export
-#' 
 #' @title Execute and return a DATIM API query.
 #' @description Gets and flattens DATIM API query as dataframe.
 #' @param path Should begin with api/ and contain the query
