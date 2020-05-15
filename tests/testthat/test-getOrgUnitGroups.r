@@ -101,3 +101,20 @@ test_that(
            #testthat::expect_equal(data$id, "CXw2yu5fodb")
            rm(data)
          })
+
+test_that(
+  paste0("getOrgUnitGroups can handle a large input list"), {
+    groups <- datimutils::getMetadata("organisationUnitGroups",
+                                      base_url = "https://play.dhis2.org/2.33/"
+    )
+    #groups <- groups$organisationUnitGroups$id
+    groups <- rep(groups, 100)
+    data <-
+      datimutils::getOrgUnitGroups(groups, fields = "id",
+                                   base_url = "https://play.dhis2.org/2.33/"
+      )
+    #data <- tibble::as_tibble(data$organisationUnitGroups)
+    testthat::expect_equal(NROW(data), 1800)
+    testthat::expect_identical(groups, data$id)
+    rm(data)
+         })
