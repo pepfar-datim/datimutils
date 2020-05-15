@@ -48,7 +48,17 @@ test_that(
            testthat::expect_equal(NROW(data), 1)
            testthat::expect_named(data, c("name", "id"))
            testthat::expect_equal(data$id, "CXw2yu5fodb")
+           rm(data)
 })
+
+test_that("Uses default base_url", {
+    original_baseurl = getOption("baseurl")
+    options("baseurl" = "https://play.dhis2.org/2.33/")
+    data <- datimutils::getOrgUnitGroups("CXw2yu5fodb")
+    testthat::expect_equal(data$id, "CXw2yu5fodb")
+    options("baseurl" = original_base_url)
+    rm(data)
+  })
 
 test_that(
   paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
@@ -67,6 +77,7 @@ test_that(
            testthat::expect_equal(NROW(data), 2)
            testthat::expect_named(data, c("code", "id"))
            #testthat::expect_equal(data$id, "CXw2yu5fodb")
+           rm(data)
          })
 
 test_that(
@@ -88,4 +99,5 @@ test_that(
            testthat::expect_equal(NROW(data), 2)
            #testthat::expect_named(data, c("code", "id"))
            #testthat::expect_equal(data$id, "CXw2yu5fodb")
+           rm(data)
          })
