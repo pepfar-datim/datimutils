@@ -34,8 +34,8 @@ processFilters <- function(end_point, filters){
     filter_option <- filter_option_orig
   }
   #creates a basic filter path
-  ex <- paste0(gsub(filter_option_orig, filter_option, substr(look, 1, 5)),
-               substr(look, 6, nchar(look)))
+  ex <- paste0(gsub(filter_option_orig, filter_option, substr(look, 1, 8)),
+               substr(look, 9, nchar(look)))
   #removes :
   ex <- gsub(":", "", ex)
   #special handling for groupsets.id
@@ -51,6 +51,9 @@ processFilters <- function(end_point, filters){
   if(grepl("name",one)){
     # two <- gsub("(\\w)([A-Z])", "\\1,\\2",
     #             one.one, perl = TRUE)
+    filters <- gsub("\\?","\\\\?",filters) 
+    filters <- gsub("\\[","\\\\[",filters) 
+    filters <- gsub("\\]","\\\\]",filters) 
     try <- unlist(stringi::stri_extract_all_regex(str = one.one, pattern = filters ))
     two <- paste0(try[!is.na(try)], collapse = ",")
   }else{
