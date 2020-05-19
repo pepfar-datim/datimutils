@@ -79,9 +79,12 @@ loginToDATIM <- function(config_path = NULL,
   #loads credentials from secret file
   credentials <- loadConfigFile(config_path = config_path)
   credentials <- credentials[[config_path_level]]
-  
+  password <- credentials[["password"]]
+  if(is.null(password)) {
+    password = ""
+  }
   #checks if password in file and if not checks keyring, and if not there prompts to make one
-  if(nchar(credentials[["password"]]) == 0 | is.null(credentials[["password"]]))
+  if(nchar(password) == 0)
   {
     
     password <- try(keyring::key_get(service = credentials[["baseurl"]], 
