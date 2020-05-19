@@ -7,11 +7,12 @@
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
 #' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
+#' @param expand dataframe to know how to expand result in case of duplicate filters
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
-                    api_version = NULL, wrapper_reduce = NULL) {
+                    api_version = NULL, wrapper_reduce = NULL, expand = NULL) {
   #error if unsported file format desired
   if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
      |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
@@ -87,6 +88,24 @@ api_get <- function(path, base_url = getOption("baseurl"),
   #if a wrapper is used here it will pass df and not list
   if(!(is.null(wrapper_reduce))){
   resp <- resp[[wrapper_reduce]]}
-
+  
+  #this will add the duplicates to the dataframe if duplicates were in the filter
+  if(!(is.null(expand))){
+  expand <- expand[expand$x %in% resp[,1],]
+  bindlist <- list()
+  for(i in 1:nrow(expand))
+  {
+    bindlist[[i]] <- rep(resp[i,],expand[expand$x == resp[i,1], "Freq"]-1)
+ 
+  }
+  bind <- as.data.frame(c(do.call("rbind", bindlist)))
+  colnames(bind) <- colnames(resp)
+  resp <- rbind(resp,bind) 
+  }
+  
   return(resp)
 }
+
+
+
+

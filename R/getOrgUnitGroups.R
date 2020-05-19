@@ -23,11 +23,23 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   default_filter_item <- ifelse(is.null(by), "id", by)
   # process first filter option (in, eq, like, etc.)
   default_filter_option <- "in"
+ 
+  #make dataframe to know how to expand result in case of duplicate filters
+  n_occur <- data.frame(table(x), stringsAsFactors = F)
+  if(all(n_occur$Freq == 1))
+  {
+    n_occur <- NULL
+  }
+  
+  #make filters
+  filters = c(default_filter_item, default_filter_option, unique(x))
+ 
   # call getMetadata with info above
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,
-    filters = c(default_filter_item, default_filter_option, x),
-    fields = default_feilds, pluck = F, retry = 1, wrapper_reduce = "organisationUnitGroups"
+    filters = filters,
+    fields = default_feilds, pluck = F, retry = 1, wrapper_reduce = "organisationUnitGroups",
+    expand = n_occur
   )
 }
 
@@ -71,9 +83,8 @@ getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
     base_url = base_url, end_point = "organisationUnitGroups",
     filters = c(default_filter_item1, default_filter_option1, filters1),
     fields = default_feilds, pluck = F, retry = 1,
-    wrapper_reduce = "organisationUnitGroups", c(default_filter_item2,
-      default_filter_option2, filters2
-    )
+    wrapper_reduce = "organisationUnitGroups",expand = NULL,
+    c(default_filter_item2, default_filter_option2, filters2)
   )
 }
 

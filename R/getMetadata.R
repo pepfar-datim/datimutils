@@ -13,18 +13,18 @@ processFilters <- function(end_point, filters){
   look <- sub("\\?filter=|\\?filter", "", ex)
   look <- sub("\\&filter=|\\&filter", "", look)
   #extracts end_point and what is not end_point
-  if (!(grepl("^id|name|groupSets\\.id", look))) {
-    end_point <- stringr::str_extract(look, ".+?(?=groupSets\\.id|id|name|)")
-    look <- sub("(.*)(\\groupSets\\.id|id|name)", "\\2", look)
-    end_point <- gsub("/", "", end_point)
-  }
+  end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
+  end_point <- ifelse(is.na(end_point_tentative), end_point, end_point_tentative)
+  end_point <- gsub("/", "", end_point)
+  look <- sub("(.*)(id|name)", "\\2", look)
+  
   #extracts the original filter 
   filter_option_orig <-
-    stringr::str_extract(substr(sub("groupSets|name","",look), 1, 10),
-                         "!ilike|!like|ilike|!in|!eq|in|eq|like")
+    stringr::str_extract(substr(sub("name","",look), 1, 8),
+                         "!ilike|!like|ilike|like|!in|!eq|in|eq")
   #extracts either id or name from filter
-  filter_item <- stringr::str_extract(substr(look, 1, 12), 
-                                      "groupSets\\.id|id|name")
+  filter_item <- stringr::str_extract(substr(look, 1, 4), 
+                                      "name|id")
   #this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
   if (grepl("eq", filter_option_orig)) {
     filter_option <- sub("eq", "in", filter_option_orig)
@@ -38,10 +38,7 @@ processFilters <- function(end_point, filters){
                substr(look, 9, nchar(look)))
   #removes :
   ex <- gsub(":", "", ex)
-  #special handling for groupsets.id
-  if(filter_item == "groupSets.id"){
-    filter_item <- "groupSets\\.id"
-  }
+  
   #takes first part of filter, i.e. idin
   one <- sub(paste0("(", filter_item, filter_option, ")", "(.*)"),
              "\\1", ex)
@@ -65,8 +62,9 @@ processFilters <- function(end_point, filters){
     ex <- substr(ex, 1, nchar(ex) - 1)
   }
   #adds &filter= where needed, and : where needed
-  ex <- sub(paste0("(.*?)(\\&filter=|", filter_item, "|?filter=", ")"),
-            paste0("\\1&filter=", filter_item), ex)
+  middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point,filter_item))
+  ex <- sub(paste0("(.*?)(\\&filter=|", middle, "|?filter=", ")"),
+            paste0("\\1&filter=", middle), ex)
   ex <- sub(paste0("(.*?)", "(", filter_item, ")"),
             paste0("\\1", filter_item, ":"), ex)
   ex <- sub(paste0("(.*?)", "(", filter_option, ")"),
@@ -94,13 +92,15 @@ processFilters <- function(end_point, filters){
 #' developer guide
 #' @param retry number of times to retry
 #' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
+#' @param expand dataframe to know how to expand result in case of duplicate filters
 #' @param ... can pass unlimited number of filter arguments here 
 #' @return the metadata response in json format and flattened
 #'
 
 getMetadata <- function(end_point, base_url = getOption("baseurl"),
                         filters = NULL, fields = NULL,
-                        pluck = F, retry = 1, wrapper_reduce = NULL, ...) {
+                        pluck = F, retry = 1, wrapper_reduce = NULL,
+                        expand = NULL, ...) {
   #if no filters or fields are specified, just use endpoint as path
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
@@ -142,8 +142,9 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     path <- end_point
   }
   #pass path in api_get
+  print(path)
   api_get(
     path = path, base_url = base_url, retry = retry, timeout = 60,
-    api_version = NULL, wrapper_reduce = wrapper_reduce
+    api_version = NULL, wrapper_reduce = wrapper_reduce, expand = expand
   )
 }

@@ -105,9 +105,10 @@ test_that(
 test_that(
   paste0("getOrgUnitGroups can handle a large input list"), {
     groups <- datimutils::getMetadata("organisationUnitGroups",
-                                      base_url = "https://play.dhis2.org/2.33/"
+                                      base_url = "https://play.dhis2.org/2.33/",
+                                      wrapper_reduce = "organisationUnitGroups"
     )
-    #groups <- groups$organisationUnitGroups$id
+    groups <- groups$id
     groups <- rep(groups, 100)
     data <-
       datimutils::getOrgUnitGroups(groups, fields = "id",

@@ -12,6 +12,7 @@ getMetadata(
   pluck = F,
   retry = 1,
   wrapper_reduce = NULL,
+  expand = NULL,
   ...
 )
 }
@@ -33,6 +34,8 @@ developer guide}
 \item{retry}{number of times to retry}
 
 \item{wrapper_reduce}{indicator passed in by wrappers to reduce list to data.frame}
+
+\item{expand}{dataframe to know how to expand result in case of duplicate filters}
 
 \item{...}{can pass unlimited number of filter arguments here}
 }
