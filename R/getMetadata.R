@@ -142,7 +142,6 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     path <- end_point
   }
   #pass path in api_get
-  print(path)
   api_get(
     path = path, base_url = base_url, retry = retry, timeout = 60,
     api_version = NULL, wrapper_reduce = wrapper_reduce, expand = expand
