@@ -68,10 +68,9 @@ httptest::with_mock_api({
                  fields = c("id", "code"),
                  base_url = "https://play.dhis2.org/2.33/"
                )
-             
              testthat::expect_equal(NROW(data), 2)
              testthat::expect_named(data, c("code", "id"))
-             #testthat::expect_equal(data$id, "CXw2yu5fodb")
+             testthat::expect_true(is.na(data[[2,1]]))
              rm(data)
            })
   
@@ -90,8 +89,12 @@ httptest::with_mock_api({
              
              testthat::expect_s3_class(data, "data.frame")
              testthat::expect_equal(NROW(data), 2)
-             #testthat::expect_named(data, c("code", "id"))
-             #testthat::expect_equal(data$id, "CXw2yu5fodb")
+             testthat::expect_named(data, c("name", "id", "groupSets",
+                                            "organisationUnits"))
+             testthat::expect_equal(NROW(tidyr::unnest(data, 
+                                                       organisationUnits,
+                                                       names_sep = "_")),
+                                    655)
              rm(data)
            })
 
