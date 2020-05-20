@@ -1,16 +1,14 @@
 context("make arbitrary api call with getorgunitgroups")
 
 # code to create/update mocks
-library(httptest)
-
-#httptest::start_capturing(simplify = FALSE)
+# library(httptest)
+# 
+# httptest::start_capturing(simplify = FALSE)
 # httr::content(
 #   httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #                  "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id"),
 #           httr::authenticate("admin", "district"))
 # )
-# datimutils::getOrgUnitGroups("CXw2yu5fodb", 
-#                              base_url = "https://play.dhis2.org/2.33/")
 # 
 # httr::content(
 #   httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
@@ -18,10 +16,6 @@ library(httptest)
 #                  "&fields=id,code"),
 #           httr::authenticate("admin", "district"))
 # )
-# datimutils::getOrgUnitGroups(c("CHP", "Rural"),
-#                              by = "name",
-#                              fields = c("id", "code"),
-#                              base_url = "https://play.dhis2.org/2.33/")
 # 
 # httr::content(
 #   httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
@@ -29,21 +23,23 @@ library(httptest)
 #                    "&fields=name,id,organisationUnits[name,id],groupSets[name,id]"),
 #             httr::authenticate("admin", "district"))
 # )
-# datimutils::getOrgUnitGroups(
-#   c("CHP", "Rural"),
-#   by = "name",
-#   fields = "name,id,organisationUnits[name,id],groupSets[name,id]",
-#   base_url = "https://play.dhis2.org/2.33/")
-#httptest::stop_capturing()
+# 
+# httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#        "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
+#        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
+#        "&fields=id"))
+# 
+# httptest::stop_capturing()
 
 httptest::with_mock_api({
   test_that(
     paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
            "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id"), {
              
-             data <- datimutils::getOrgUnitGroups("CXw2yu5fodb", 
-                                                  base_url = "https://play.dhis2.org/2.33/")
-             #data <- tibble::as_tibble(data$organisationUnitGroups)
+             data <- datimutils::getOrgUnitGroups(
+               "CXw2yu5fodb", 
+               base_url = "https://play.dhis2.org/2.33/")
+  
              testthat::expect_s3_class(data, "data.frame")
              testthat::expect_equal(NROW(data), 1)
              testthat::expect_named(data, c("name", "id"))
@@ -73,7 +69,6 @@ httptest::with_mock_api({
                  base_url = "https://play.dhis2.org/2.33/"
                )
              
-             #data <- tibble::as_tibble(data$organisationUnitGroups)
              testthat::expect_equal(NROW(data), 2)
              testthat::expect_named(data, c("code", "id"))
              #testthat::expect_equal(data$id, "CXw2yu5fodb")
@@ -84,7 +79,6 @@ httptest::with_mock_api({
     paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
            "paging=false&filter=name:in:[CHP,Rural]",
            "&fields=name,id,organisationUnits[name,id],groupSets[name,id]"), {
-             
              data <-
                datimutils::getOrgUnitGroups(
                  c("CHP", "Rural"),
@@ -94,29 +88,25 @@ httptest::with_mock_api({
                  base_url = "https://play.dhis2.org/2.33/"
                )
              
-             #data <- tibble::as_tibble(data$organisationUnitGroups)
              testthat::expect_s3_class(data, "data.frame")
              testthat::expect_equal(NROW(data), 2)
              #testthat::expect_named(data, c("code", "id"))
              #testthat::expect_equal(data$id, "CXw2yu5fodb")
              rm(data)
            })
-})  
+
   test_that(
-    paste0("getOrgUnitGroups can handle a large input list"), {
-      groups <- datimutils::getMetadata("organisationUnitGroups",
-                                        base_url = "https://play.dhis2.org/2.33/",
-                                        wrapper_reduce = "organisationUnitGroups"
-      )
-      groups <- groups$id
-      groups <- rep(groups, 100)
+    paste0("getOrgUnitGroups can handle repeated values"), {
+      groups <- rep(c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
+                      "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb"), 
+                    300)
       data <-
-        datimutils::getOrgUnitGroups(groups, fields = "id",
-                                     base_url = "https://play.dhis2.org/2.33/"
-        )
-      #data <- tibble::as_tibble(data$organisationUnitGroups)
+        datimutils::getOrgUnitGroups(
+          groups, fields = "id",
+          base_url = "https://play.dhis2.org/2.33/")
+      
       testthat::expect_equal(NROW(data), 1800)
       testthat::expect_identical(groups, data$id)
       rm(data)
     })
-
+})
