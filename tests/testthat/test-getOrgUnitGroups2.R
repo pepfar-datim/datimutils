@@ -12,6 +12,7 @@ library(httptest)
 # )
 #httptest::stop_capturing()
 
+httptest::with_mock_api({
 test_that(
   paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
          "paging=false&filter=id:in:[CXw2yu5fodb,gzcv65VyaGq]",
@@ -28,4 +29,5 @@ test_that(
            testthat::expect_equal(NROW(data), 1)
            testthat::expect_equal(data$code, "CHC")
            rm(data)
-})
+           })
+  })
