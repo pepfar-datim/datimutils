@@ -24,16 +24,21 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   # process first filter option (in, eq, like, etc.)
   default_filter_option <- "in"
  
+  #make filters
+  uniquex <- unique(x)
+  filters = c(default_filter_item, default_filter_option, uniquex)
+  
   #make dataframe to know how to expand result in case of duplicate filters
   n_occur <- data.frame(table(x), stringsAsFactors = F)
+  n_occur <- n_occur[match(uniquex, n_occur$x),]
+  
   if(all(n_occur$Freq == 1))
   {
     n_occur <- NULL
   }
   
-  #make filters
-  filters = c(default_filter_item, default_filter_option, unique(x))
- 
+
+
   # call getMetadata with info above
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,

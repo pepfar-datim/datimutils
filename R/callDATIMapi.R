@@ -88,19 +88,21 @@ api_get <- function(path, base_url = getOption("baseurl"),
   #if a wrapper is used here it will pass df and not list
   if(!(is.null(wrapper_reduce))){
   resp <- resp[[wrapper_reduce]]}
+  print(url)
   
   #this will add the duplicates to the dataframe if duplicates were in the filter
   if(!(is.null(expand))){
+  resp <- resp[match(expand$x, resp[,1]), ,drop = F]
   expand <- expand[expand$x %in% resp[,1],]
   bindlist <- list()
   for(i in 1:nrow(expand))
   {
     bindlist[[i]] <- rep(resp[i,],expand[expand$x == resp[i,1], "Freq"]-1)
- 
+
   }
   bind <- as.data.frame(c(do.call("rbind", bindlist)))
   colnames(bind) <- colnames(resp)
-  resp <- rbind(resp,bind) 
+  resp <- rbind(resp,bind)
   }
   
   return(resp)
