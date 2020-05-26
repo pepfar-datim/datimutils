@@ -147,3 +147,145 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     api_version = NULL, wrapper_reduce = wrapper_reduce, expand = expand
   )
 }
+
+#' @export
+#' @title id_eq
+#' @examples 
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' 
+#' api_filter <- id_eq("FTRrcoaog83")
+#' 
+#' print(api_filter)
+#' 
+#' getMetadata("dataElements", api_filter, base_url= base_url)
+#' 
+id_eq <- function(x){
+  paste0("id:eq:", x)
+}
+
+#' @export
+#' @title id_not_eq
+#' @examples 
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' 
+#' api_filter <- id_not_eq("lxAQ7Zs9VYR")
+#' print(api_filter)
+#' 
+#' getMetadata("programs", 
+#'             api_filter, 
+#'             base_url= base_url)
+#' 
+id_not_eq <- function(x){
+  paste0("id:!eq:", x)
+}
+
+#' @export
+#' @title id_in
+#' @examples 
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' ids_vctr <- c("lxAQ7Zs9VYR", "IpHINAT79UW")
+#' ids_str <- "lxAQ7Zs9VYR,IpHINAT79UW"
+#' api_filter <- id_in(ids_vctr)
+#' print(api_filter)
+#' 
+#' getMetadata("programs", 
+#'             api_filter, 
+#'             base_url= base_url)
+#'             
+#' api_filter = id_in(ids_str)
+#' print(api_filter)
+#' 
+#' getMetadata("programs", 
+#'             api_filter, 
+#'             base_url= base_url)
+id_in <- function(x){
+  paste0("id:in:[",
+         paste0(x, collapse = ",")
+         ,"]")
+}
+
+#' @export
+#' @title id_not_in
+#' @examples 
+#' base_url <-  "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' ids_vctr <- c("lxAQ7Zs9VYR", "IpHINAT79UW")
+#' ids_str <- "lxAQ7Zs9VYR,IpHINAT79UW"
+#' api_filter <-  id_not_in(ids_vctr)
+#' print(api_filter)
+#' 
+#' getMetadata("programs", 
+#'             api_filter, 
+#'             base_url= base_url)
+#'             
+#' api_filter <-  id_not_in(ids_str)
+#' print(api_filter)
+#' 
+#' getMetadata("programs", 
+#'             api_filter, 
+#'             base_url= base_url)
+#'             
+id_not_in <- function(x){
+  paste0("id:!in:[",
+         paste0(x, collapse = ",")
+         ,"]")
+}
+
+#' @export
+#' @title .id_eq
+#' @examples 
+#' base_url = "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' 
+#' api_filter = .id_eq(path = "organisationUnits",
+#'                     x    = "bVZTNrnfn9G")
+#' 
+#' print(api_filter)
+#' 
+#' getMetadata("programs", api_filter, base_url= base_url)
+#' 
+.id_eq <- function(path, x){
+  paste0(path, ".id:eq:", x)
+}
+
+#' @export
+#' @title name_like
+#' @examples 
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' 
+#' api_filter <- name_like("Antenatal")
+#' 
+#' print(api_filter)
+#' 
+#' getMetadata("programs", api_filter, base_url= base_url)
+#' 
+name_like <- function(x){
+  paste0("name:like:", x)
+}
+
+#' @export
+#' @title name_like
+#' @examples 
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"), 
+#'           httr::authenticate("admin", "district"))
+#' 
+#' api_filter <- name_ilike("antenatal")
+#' 
+#' print(api_filter)
+#' 
+#' getMetadata("programs", api_filter, base_url= base_url)
+#' 
+name_ilike <- function(x){
+  paste0("name:ilike:", x)
+}
