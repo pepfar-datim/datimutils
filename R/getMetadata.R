@@ -242,15 +242,15 @@ id_not_in <- function(values) {
 #' httr::GET(paste0(base_url, "api/me"),
 #'           httr::authenticate("admin", "district"))
 #'
-#' api_filter = .id_eq(path = "organisationUnits",
+#' api_filter = .id_eq(property_prefix = "organisationUnits",
 #'                     value    = "bVZTNrnfn9G")
 #'
 #' print(api_filter)
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-.id_eq <- function(path, value) {
-  paste0(path, ".id:eq:", value)
+.id_eq <- function(property_prefix, value) {
+  paste0(property_prefix, ".id:eq:", value)
 }
 
 #' @export
