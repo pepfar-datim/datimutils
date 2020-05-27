@@ -161,8 +161,8 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
 #'
 #' getMetadata("dataElements", api_filter, base_url= base_url)
 #'
-id_eq <- function(x) {
-  paste0("id:eq:", x)
+id_eq <- function(value) {
+  paste0("id:eq:", value)
 }
 
 #' @export
@@ -179,8 +179,8 @@ id_eq <- function(x) {
 #'             api_filter,
 #'             base_url= base_url)
 #'
-id_not_eq <- function(x) {
-  paste0("id:!eq:", x)
+id_not_eq <- function(value) {
+  paste0("id:!eq:", value)
 }
 
 #' @export
@@ -205,8 +205,8 @@ id_not_eq <- function(x) {
 #'             api_filter,
 #'             base_url= base_url)
 #'
-id_in <- function(x) {
-  IN("id", x)
+id_in <- function(values) {
+  IN("id", values)
 }
 
 #' @export
@@ -231,8 +231,8 @@ id_in <- function(x) {
 #'             api_filter,
 #'             base_url= base_url)
 #'
-id_not_in <- function(x) {
-  notIN("id", x)
+id_not_in <- function(values) {
+  notIN("id", values)
   }
 
 #' @export
@@ -243,14 +243,14 @@ id_not_in <- function(x) {
 #'           httr::authenticate("admin", "district"))
 #'
 #' api_filter = .id_eq(path = "organisationUnits",
-#'                     x    = "bVZTNrnfn9G")
+#'                     value    = "bVZTNrnfn9G")
 #'
 #' print(api_filter)
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-.id_eq <- function(path, x) {
-  paste0(path, ".id:eq:", x)
+.id_eq <- function(path, value) {
+  paste0(path, ".id:eq:", value)
 }
 
 #' @export
@@ -266,8 +266,8 @@ id_not_in <- function(x) {
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-name_like <- function(x) {
-  paste0("name:like:", x)
+name_like <- function(value) {
+  paste0("name:like:", value)
 }
 
 #' @export
@@ -283,8 +283,8 @@ name_like <- function(x) {
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-name_ilike <- function(x) {
-  paste0("name:ilike:", x)
+name_ilike <- function(value) {
+  paste0("name:ilike:", value)
 }
 
 #' @export
