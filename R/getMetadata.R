@@ -206,7 +206,7 @@ id_not_eq <- function(value) {
 #'             base_url= base_url)
 #'
 id_in <- function(values) {
-  IN("id", values)
+  IN(values, "id")
 }
 
 #' @export
@@ -232,7 +232,7 @@ id_in <- function(values) {
 #'             base_url= base_url)
 #'
 id_not_in <- function(values) {
-  notIN("id", values)
+  notIN(values, "id")
   }
 
 #' @export
@@ -294,13 +294,13 @@ name_ilike <- function(value) {
 #' httr::GET(paste0(base_url, "api/me"),
 #'           httr::authenticate("admin", "district"))
 #'
-#' api_filter <- IN("id", c("lxAQ7Zs9VYR", "IpHINAT79UW"))
+#' api_filter <- IN(c("lxAQ7Zs9VYR", "IpHINAT79UW"), "id")
 #'
 #' print(api_filter)
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-IN <- function(property, values) {
+IN <- function(values, property) {
   paste0(property, ":in:[",
          paste0(values, collapse = ","), 
          "]")
@@ -313,13 +313,13 @@ IN <- function(property, values) {
 #' httr::GET(paste0(base_url, "api/me"),
 #'           httr::authenticate("admin", "district"))
 #'
-#' api_filter <- notIN("id", c("lxAQ7Zs9VYR", "IpHINAT79UW"))
+#' api_filter <- notIN(c("lxAQ7Zs9VYR", "IpHINAT79UW"), "id")
 #'
 #' print(api_filter)
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-notIN <- function(property, values) {
+notIN <- function(values, property) {
   paste0(property, ":!in:[",
          paste0(values, collapse = ","), 
          "]")
