@@ -249,7 +249,7 @@ id_not_in <- function(values) {
 #'
 #' getMetadata("programs", api_filter, base_url= base_url)
 #'
-.id_eq <- function(property_prefix, value) {
+.id_eq <- function(value, property_prefix) {
   paste0(property_prefix, ".id:eq:", value)
 }
 
