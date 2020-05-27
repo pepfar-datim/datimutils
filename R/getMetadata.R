@@ -206,9 +206,7 @@ id_not_eq <- function(x) {
 #'             base_url= base_url)
 #'
 id_in <- function(x) {
-  paste0("id:in:[",
-         paste0(x, collapse = ","), 
-         "]")
+  IN("id", x)
 }
 
 #' @export
@@ -234,10 +232,8 @@ id_in <- function(x) {
 #'             base_url= base_url)
 #'
 id_not_in <- function(x) {
-  paste0("id:!in:[",
-         paste0(x, collapse = ","),
-         "]")
-}
+  notIN("id", x)
+  }
 
 #' @export
 #' @title .id_eq
@@ -289,4 +285,42 @@ name_like <- function(x) {
 #'
 name_ilike <- function(x) {
   paste0("name:ilike:", x)
+}
+
+#' @export
+#' @title IN
+#' @examples
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"),
+#'           httr::authenticate("admin", "district"))
+#'
+#' api_filter <- IN("id", c("lxAQ7Zs9VYR", "IpHINAT79UW"))
+#'
+#' print(api_filter)
+#'
+#' getMetadata("programs", api_filter, base_url= base_url)
+#'
+IN <- function(property, values) {
+  paste0(property, ":in:[",
+         paste0(values, collapse = ","), 
+         "]")
+}
+
+#' @export
+#' @title notIN
+#' @examples
+#' base_url <- "https://play.dhis2.org/2.34/"
+#' httr::GET(paste0(base_url, "api/me"),
+#'           httr::authenticate("admin", "district"))
+#'
+#' api_filter <- notIN("id", c("lxAQ7Zs9VYR", "IpHINAT79UW"))
+#'
+#' print(api_filter)
+#'
+#' getMetadata("programs", api_filter, base_url= base_url)
+#'
+notIN <- function(property, values) {
+  paste0(property, ":!in:[",
+         paste0(values, collapse = ","), 
+         "]")
 }
