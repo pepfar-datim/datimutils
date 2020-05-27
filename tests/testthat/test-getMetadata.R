@@ -1,15 +1,184 @@
-context("make arbitrary api call DATIM")
+context("getMetadata")
 
-with_mock_api({
-  test_that("We can get a metadataresponse", {
-    base_url <- "www.datim.org/"
-    end_point <- "dataElements"
-    filters <- "?filter=id:ilike:B"
-    fields <- "name,id,numerator,denominator,categoryOptions"
-    see <- getMetadata(
-      base_url = base_url, end_point = end_point,
-      filters = filters, fields = fields
+# code to create/update mocks
+library(httptest)
+
+# httptest::start_capturing(simplify = FALSE)
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/indicators.json?",
+#            "paging=false&filter=id:eq:ReUHfIn0pTQ",
+#            "&fields=name,id,numerator,denominator"
+#            ),
+#     httr::authenticate("admin", "district")
+#     )
+#   )
+# 
+# httptest::stop_capturing()
+
+# with_mock_api({
+
+   httr::GET(
+     paste0("https://play.dhis2.org/2.33/api/me"),
+    httr::authenticate("admin", "district")
     )
-    expect_identical(see$dataElements$id, "sAxSUTFc5tp")
-  })
-})
+   
+   
+   test_that(paste0("Basic eq call: ",
+                    "https://play.dhis2.org/2.33/api/dataElements.json?",
+                    "paging=false&filter=id:eq:FTRrcoaog83"
+                    ), {
+     data <- getMetadata(
+       end_point = "dataElements",
+       filters = "id:eq:FTRrcoaog83", 
+       base_url = "https://play.dhis2.org/2.33/"
+     )
+     # data <- data[["dataElements"]]
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 1)
+     testthat::expect_named(data, c("id", "displayName"))
+     testthat::expect_equal(data$id, "FTRrcoaog83")
+     rm(data)
+   })
+   
+   test_that(paste0("List Column: ",
+                    "https://play.dhis2.org/2.33/api/dimensions.json?",
+                    "paging=false&filter=id:eq:gtuVl6NbXQV",
+                    "&fields=items[name,id]"
+   ), {
+     data <- getMetadata(
+       end_point = "dimensions",
+       filters = "id:eq:gtuVl6NbXQV", 
+       base_url = "https://play.dhis2.org/2.33/",
+       fields = "items[name,id]"
+     )
+     # data <- data[["dimensions"]]
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 1)
+     testthat::expect_named(data, "items")
+     data <- tidyr::unnest(data, cols = items)
+     testthat::expect_named(data, c("name", "id"))
+     testthat::expect_equal(NROW(data), 3)
+     rm(data)
+   })
+   
+   test_that(paste0("Basic in call: ",
+                    "https://play.dhis2.org/2.33/api/dimensions.json?",
+                    "paging=false&filter=id:in:[yY2bQYqNt0o,gtuVl6NbXQV]",
+                    "&fields=items[name,id]"
+                    ), {
+     data <- getMetadata(
+       end_point = "dimensions",
+       filters = "id:in:[yY2bQYqNt0o,gtuVl6NbXQV]", 
+       base_url = "https://play.dhis2.org/2.33/",
+       fields = "items[name,id]"
+     )
+     # data <- data[["dimensions"]]
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 2)
+     testthat::expect_named(data, "items")
+     data <- tidyr::unnest(data, cols = items)
+     testthat::expect_named(data, c("name", "id"))
+     testthat::expect_equal(NROW(data), 7)
+     rm(data)
+   })
+  
+   test_that(paste0("No Filter: ", 
+                    "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+                    "paging=false"), {
+     data <- getMetadata(
+       end_point = "organisationUnitGroups", 
+       base_url = "https://play.dhis2.org/2.33/"
+     )
+     # data <- data[["organisationUnitGroups"]]
+     testthat::expect_equal(NROW(data), 18)
+     rm(data)
+   })
+   
+   test_that(paste0("Filter with path: ", 
+                    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+                    "paging=false",
+                    "&filter=organisationUnitGroups.id:eq:RpbiCJpIYEj",
+                    "&fields=id,name,level,ancestors[id,name]"), {
+                      data <- getMetadata(
+                        end_point = "organisationUnits",
+                        filters = "organisationUnitGroups.id:eq:RpbiCJpIYEj",
+                        fields = "id,name,level,ancestors[id,name]",
+                        base_url = "https://play.dhis2.org/2.33/"
+                      )
+                      # data <- data[["organisationUnits"]]
+                      testthat::expect_equal(NROW(data), 1)
+                      rm(data)
+                    })
+   
+   test_that(paste0("Two Filters: ", 
+                    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+                    "paging=false",
+                    "&filter=organisationUnitGroups.name:eq:District",
+                    "&filter=children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"), {
+                      data <- getMetadata(
+                        end_point = "organisationUnits",
+                        filters = c("organisationUnitGroups.name:eq:District",
+                                    "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"),
+                        fields = "id,name,level,ancestors[id,name]",
+                        base_url = "https://play.dhis2.org/2.33/"
+                      )
+                      # data <- data[["organisationUnits"]]
+                      testthat::expect_equal(NROW(data), 2)
+                      rm(data)
+                    })
+   
+   test_that(paste0("String like: ",
+                    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+                    "paging=false&filter=name:like:Baoma"
+                    ), {
+                      data <- getMetadata(
+                        end_point = "organisationUnits",
+                        filters = "name:like:Baoma",
+                        base_url = "https://play.dhis2.org/2.33/")
+
+                      # testthat::expect_s3_class(data, "data.frame")
+                       testthat::expect_equal(NROW(data), 10)
+                      # testthat::expect_named(data, "items")
+                      # data <- tidyr::unnest(data, cols = items)
+                      # testthat::expect_named(data, c("name", "id"))
+                      # testthat::expect_equal(NROW(data), 7)
+                      rm(data)
+   })
+
+   test_that(paste0("Filter with less common property: ", 
+                    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+                    "paging=false&filter=name:like:Baoma",
+                    "&filter=level:eq:3&fields=:all"
+   ), {
+     data <- getMetadata(
+       end_point = "organisationUnits",
+       filters = c("name:like:Baoma",
+                   "level:eq:3"),
+       fields = ":all",
+       base_url = "https://play.dhis2.org/2.33/")
+
+     # testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 1)
+     # testthat::expect_named(data, "items")
+     # data <- tidyr::unnest(data, cols = items)
+     # testthat::expect_named(data, c("name", "id"))
+     # testthat::expect_equal(NROW(data), 7)
+     rm(data)
+   })
+
+  test_that(paste0("Call with indicator endpoint: ",
+                   "https://play.dhis2.org/2.33/api/indicators.json?",
+                   "paging=false&filter=id:eq:ReUHfIn0pTQ",
+                   "&fields=name,id,numerator,denominator"
+                   ), {
+                     data <- getMetadata(
+                       end_point = "indicators",
+                       filters = "id:eq:ReUHfIn0pTQ",
+                       fields = "name,id,numerator,denominator",
+                       base_url = "https://play.dhis2.org/2.33/"
+                     )
+                   })
+
+
+# })
