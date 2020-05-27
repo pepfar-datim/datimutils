@@ -11,9 +11,7 @@ getMetadata(
   fields = NULL,
   pluck = F,
   retry = 1,
-  wrapper_reduce = NULL,
-  expand = NULL,
-  ...
+  expand = NULL
 )
 }
 \arguments{
@@ -22,22 +20,16 @@ e.g. dataElements, organisationUnits}
 
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
-\item{filters}{- the filters, which can come in any format as long as all
-components are present}
+\item{filters}{- the filters}
 
-\item{fields}{- the fields, which can come in any formt as long as all
-components are present}
+\item{fields}{- the fields}
 
 \item{pluck}{- whether to add pluck option as documented by dhis2 api
 developer guide}
 
 \item{retry}{number of times to retry}
 
-\item{wrapper_reduce}{indicator passed in by wrappers to reduce list to data.frame}
-
 \item{expand}{dataframe to know how to expand result in case of duplicate filters}
-
-\item{...}{can pass unlimited number of filter arguments here}
 }
 \value{
 the metadata response in json format and flattened

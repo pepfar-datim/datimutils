@@ -26,8 +26,11 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
  
   #make filters
   uniquex <- unique(x)
-  filters = c(default_filter_item, default_filter_option, uniquex)
   
+  #this option is more robust but would need to change mocks
+  #filters = paste0(default_filter_item, default_filter_option, uniquex)
+  filters = paste0(default_filter_item, default_filter_option, paste0(uniquex, collapse = ","))
+
   #make dataframe to know how to expand result in case of duplicate filters
   n_occur <- data.frame(table(x), stringsAsFactors = F)
   n_occur <- n_occur[match(uniquex, n_occur$x),]
@@ -37,17 +40,14 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
     n_occur <- NULL
   }
   
-
-
   # call getMetadata with info above
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,
     filters = filters,
-    fields = default_feilds, pluck = F, retry = 1, wrapper_reduce = "organisationUnitGroups",
+    fields = default_feilds, pluck = F, retry = 1,
     expand = n_occur
   )
 }
-
 
 #' @export
 #' @title getOrgUnitGroups2(filters1 = NULL, filters2 = NULL, fields = NULL,
@@ -86,10 +86,9 @@ getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
   # call getMetadata with info above
   getMetadata(
     base_url = base_url, end_point = "organisationUnitGroups",
-    filters = c(default_filter_item1, default_filter_option1, filters1),
-    fields = default_feilds, pluck = F, retry = 1,
-    wrapper_reduce = "organisationUnitGroups",expand = NULL,
-    c(default_filter_item2, default_filter_option2, filters2)
+    filters = list(paste0(default_filter_item1, default_filter_option1, filters1),
+                   paste0(default_filter_item2, default_filter_option2, filters2)),
+    fields = default_feilds, pluck = F, retry = 1, expand = NULL
   )
 }
 

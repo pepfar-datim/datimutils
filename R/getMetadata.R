@@ -14,7 +14,8 @@ processFilters <- function(end_point, filters){
   look <- sub("\\&filter=|\\&filter", "", look)
   #extracts end_point and what is not end_point
   end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
-  end_point <- ifelse(is.na(end_point_tentative), end_point, end_point_tentative)
+  end_point <- ifelse(is.na(end_point_tentative), 
+                      ifelse(is.na(end_point), "", end_point), end_point_tentative)
   end_point <- gsub("/", "", end_point)
   look <- sub("(.*)(id|name)", "\\2", look)
   
@@ -28,14 +29,12 @@ processFilters <- function(end_point, filters){
   #this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
   if (grepl("eq", filter_option_orig)) {
     filter_option <- sub("eq", "in", filter_option_orig)
-  } else if ("like" == filter_option_orig) {
-    filter_option <- sub("like", "ilike", filter_option_orig)
   } else {
     filter_option <- filter_option_orig
   }
   #creates a basic filter path
-  ex <- paste0(gsub(filter_option_orig, filter_option, substr(look, 1, 8)),
-               substr(look, 9, nchar(look)))
+  ex <- paste0(gsub(filter_option_orig, filter_option, substr(look, 1, 9)),
+               substr(look, 10, nchar(look)))
   #removes :
   ex <- gsub(":", "", ex)
   
@@ -46,18 +45,17 @@ processFilters <- function(end_point, filters){
                  "\\2", ex)
   #takes second part of filter, i.e. ["abc"] and adds commas if filter = in
   if(grepl("name",one)){
-    # two <- gsub("(\\w)([A-Z])", "\\1,\\2",
-    #             one.one, perl = TRUE)
     filters <- gsub("\\?","\\\\?",filters) 
     filters <- gsub("\\[","\\\\[",filters) 
     filters <- gsub("\\]","\\\\]",filters) 
     try <- unlist(stringi::stri_extract_all_regex(str = one.one, pattern = filters ))
+    if(is.na(try)){try <- one.one}
     two <- paste0(try[!is.na(try)], collapse = ",")
   }else{
     two <- ifelse(grepl(",", one.one), one.one,
                   gsub("(.{11})", "\\1,",
                        one.one, perl = TRUE))}
-  ex <- paste0(end_point, one, two)
+  ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
   if (substr(ex, nchar(ex), nchar(ex)) == ",") {
     ex <- substr(ex, 1, nchar(ex) - 1)
   }
@@ -84,50 +82,33 @@ processFilters <- function(end_point, filters){
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits
 #' @param base_url string - base address of instance (text before api/ in URL)
-#' @param filters - the filters, which can come in any format as long as all
-#' components are present
-#' @param fields - the fields, which can come in any formt as long as all
-#' components are present
+#' @param filters - the filters
+#' @param fields - the fields
 #' @param pluck - whether to add pluck option as documented by dhis2 api
 #' developer guide
 #' @param retry number of times to retry
-#' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
 #' @param expand dataframe to know how to expand result in case of duplicate filters
-#' @param ... can pass unlimited number of filter arguments here 
 #' @return the metadata response in json format and flattened
 #'
 
 getMetadata <- function(end_point, base_url = getOption("baseurl"),
                         filters = NULL, fields = NULL,
-                        pluck = F, retry = 1, wrapper_reduce = NULL,
-                        expand = NULL, ...) {
+                        pluck = F, retry = 1,
+                        expand = NULL) {
   #if no filters or fields are specified, just use endpoint as path
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
   }
-  #if the if loop doesnt get activated this will still create a variable for path
-  ex <- ""
-  #filter block
-  if (!(is.null(filters))) {
-    ex <- processFilters(end_point = end_point, filters = filters)
-  }
-  #if the if loop doesnt get activated this will still create a variable for path
-  ef <- ""
-  if (!(is.null(fields))) {
-    #flattens fields and adds ?fields= if needed
-    ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
-    if (!(grepl("fields", ef))) {
-      ef <- paste0("&fields=", ef)
-    }
-  }
   #set up storage for multiple filter arguments
   filter_storage <- list()
-  #check if there are other filter arguments than just the firtst filter and process them
-  if(length(list(...)) != 0) {
-    filters2 <- list(...)
+  #check if there are other filter arguments than just the first filter and process them
+  if(!(is.null(filters))) {
+    filters2 <- as.list(filters)
     for(i in 1:length(filters2))
     {
-      ex2 <- processFilters(end_point = NULL, filters = filters2[[i]])
+      if(i == 1){ex2 <- processFilters(end_point = end_point, filters = filters2[[i]])
+      }else{ex2 <- processFilters(end_point = NULL, filters = filters2[[i]])}
+    
       ex2 <- sub(end_point, "", ex2)
       filter_storage[[i]] <- ex2
     }
@@ -135,8 +116,27 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     filter_storage <- stringr::str_flatten(filter_storage)
   }
   
+  #if the if loop doesnt get activated this will still create a variable for path
+  ef <- ""
+  #fields block
+  if (!(is.null(fields))) {
+    #flattens fields and adds ?fields= if needed
+    ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
+    if (!(grepl("fields", ef))) {
+      ef <- paste0("&fields=", ef)
+    }
+  }
+  
+  if(length(filter_storage) != 0){ex <- filter_storage[[1]]
+  }else {ex = ""}
+  
+  #end point manipulation
+  if(grepl(end_point, substr(ex,1,nchar(end_point)))){
+    end_point = ""
+  }
+  
   #create final path
-  path <- paste0(ex, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
+  path <- paste0(end_point, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
                  ifelse(pluck, "~pluck", ""))
   if (is.null(fields) & is.null(filters)) {
     path <- end_point
@@ -144,6 +144,6 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
   #pass path in api_get
   api_get(
     path = path, base_url = base_url, retry = retry, timeout = 60,
-    api_version = NULL, wrapper_reduce = wrapper_reduce, expand = expand
+    api_version = NULL, expand = expand
   )
 }

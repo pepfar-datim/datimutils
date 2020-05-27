@@ -146,9 +146,9 @@ httptest::with_mock_api({
                     "indicatorGroups[id,name]&filter=name:ilike:anc"),
       base_url = "https://play.dhis2.org/2.33/"
     )
-    expect_type(ind[["indicators"]][["translations"]][[1]], "list")
-    expect_named(ind[["indicators"]][["indicatorGroups"]][[1]], c("name", "id"))
-    expect_true(all(grepl("[Aa][Nn][Cc]", ind$indicators$name)))
+    expect_type(ind$translations[[1]], "list")
+    expect_named(ind$indicatorGroups[[1]], c("name", "id"))
+    expect_true(all(grepl("[Aa][Nn][Cc]", ind$name)))
     rm(ind)
   })
 

@@ -6,13 +6,12 @@
 #' default will not try again
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
-#' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
 #' @param expand dataframe to know how to expand result in case of duplicate filters
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
-                    api_version = NULL, wrapper_reduce = NULL, expand = NULL) {
+                    api_version = NULL, expand = NULL) {
   #error if unsported file format desired
   if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
      |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
@@ -40,6 +39,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
     )
     
   url <- paste0(url = base_url, path = path)
+ 
   #this if else block will add .json?paging=false where it is needed, depending on the path
   if(!(grepl("json", url)))
        {
@@ -58,6 +58,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   url <- gsub("///", "/", url)
   #replaces all // with / unless it is the // in http://
   url <- gsub("[^http://]//", "/", url)
+  print(url)
   #retry api get block, only retries if reponse code not in 400s
   i <- 1; response_code <- 5
   while (i <= retry & (response_code < 400 | response_code >= 500 )) {
@@ -68,7 +69,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
 
 #unknown error catching which returns message and response code
   if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500 ) {
-    stop(paste0("client error returned by url, this normally means a malformed link", url,
+    stop(paste0("client error returned by url, this normally means a malformed link ", url,
                 " response code: ", httr::status_code(resp) ))
   } else if (httr::status_code(resp) != 200) {
     stop(paste0("api query failed for url ", url ,
@@ -83,11 +84,10 @@ api_get <- function(path, base_url = getOption("baseurl"),
       "\n", "cookie is", httr::cookies(resp)
     )
   }
-  resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), flatten = T)
+  #extract text response from api response
+  resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), simplifyDataFrame = T,
+                             flatten = T)
 
-  #if a wrapper is used here it will pass df and not list
-  if(!(is.null(wrapper_reduce))){
-  resp <- resp[[wrapper_reduce]]}
 
   #this will add the duplicates to the dataframe if duplicates were in the filter
   if(!(is.null(expand))){
@@ -102,6 +102,33 @@ api_get <- function(path, base_url = getOption("baseurl"),
   bind <- as.data.frame(c(do.call("rbind", bindlist)))
   colnames(bind) <- colnames(resp)
   resp <- rbind(resp,bind)
+  }
+  
+  
+  # reduce to dataframe accounting for nested list and nested dataframe structures
+  if(class(resp) == "list" & length(resp) == 1){
+    possible_resp <- resp
+    continue = T
+    while(continue){
+      if(class(possible_resp) == "character"){
+        continue = F
+      }else if(class(possible_resp) == "list")
+    {possible_resp <- possible_resp[[1]]
+    }else if(dim(possible_resp)[1] == 1 & dim(possible_resp)[2] == 1){
+      possible_resp <- possible_resp[[1]]
+          } else {continue = F}
+    }
+    if(class(possible_resp) == "data.frame"){
+      if(!(("list" %in% apply(possible_resp,2, typeof)))){
+      resp <- possible_resp
+      } else{
+        if(!(length(possible_resp[,sapply(possible_resp,class) == "list"][[1]]) == 0)){
+        resp <- try(tidyr::unnest(possible_resp,cols = colnames(possible_resp)), silent = T)
+        if ("try-error" %in% class(resp)){
+          resp <- possible_resp
+        }}
+      }
+    }
   }
   
   return(resp)

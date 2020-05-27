@@ -52,13 +52,9 @@ library(httptest)
        base_url = "https://play.dhis2.org/2.33/",
        fields = "items[name,id]"
      )
-     # data <- data[["dimensions"]]
      testthat::expect_s3_class(data, "data.frame")
-     testthat::expect_equal(NROW(data), 1)
-     testthat::expect_named(data, "items")
-     data <- tidyr::unnest(data, cols = items)
-     testthat::expect_named(data, c("name", "id"))
      testthat::expect_equal(NROW(data), 3)
+     testthat::expect_named(data, c("name", "id"))
      rm(data)
    })
    
@@ -73,11 +69,7 @@ library(httptest)
        base_url = "https://play.dhis2.org/2.33/",
        fields = "items[name,id]"
      )
-     # data <- data[["dimensions"]]
      testthat::expect_s3_class(data, "data.frame")
-     testthat::expect_equal(NROW(data), 2)
-     testthat::expect_named(data, "items")
-     data <- tidyr::unnest(data, cols = items)
      testthat::expect_named(data, c("name", "id"))
      testthat::expect_equal(NROW(data), 7)
      rm(data)
