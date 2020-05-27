@@ -107,7 +107,8 @@ library(httptest)
                     "https://play.dhis2.org/2.33/api/organisationUnits.json?",
                     "paging=false",
                     "&filter=organisationUnitGroups.name:eq:District",
-                    "&filter=children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"), {
+                    "&filter=children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
+                    "&fields=id,name,level,ancestors[id,name]"), {
                       data <- getMetadata(
                         end_point = "organisationUnits",
                         filters = c("organisationUnitGroups.name:eq:District",
@@ -115,7 +116,6 @@ library(httptest)
                         fields = "id,name,level,ancestors[id,name]",
                         base_url = "https://play.dhis2.org/2.33/"
                       )
-                      # data <- data[["organisationUnits"]]
                       testthat::expect_equal(NROW(data), 2)
                       rm(data)
                     })
@@ -128,13 +128,7 @@ library(httptest)
                         end_point = "organisationUnits",
                         filters = "name:like:Baoma",
                         base_url = "https://play.dhis2.org/2.33/")
-
-                      # testthat::expect_s3_class(data, "data.frame")
                        testthat::expect_equal(NROW(data), 10)
-                      # testthat::expect_named(data, "items")
-                      # data <- tidyr::unnest(data, cols = items)
-                      # testthat::expect_named(data, c("name", "id"))
-                      # testthat::expect_equal(NROW(data), 7)
                       rm(data)
    })
 
