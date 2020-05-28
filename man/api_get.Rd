@@ -9,8 +9,7 @@ api_get(
   base_url = getOption("baseurl"),
   retry = 1,
   timeout = 60,
-  api_version = NULL,
-  expand = NULL
+  api_version = NULL
 )
 }
 \arguments{
@@ -24,8 +23,6 @@ default will not try again}
 \item{timeout}{how long should a reponse be waited for}
 
 \item{api_version}{defaults to current but can pass in version number}
-
-\item{expand}{dataframe to know how to expand result in case of duplicate filters}
 }
 \value{
 Result of DATIM API query returned as named list.

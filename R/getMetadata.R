@@ -1,3 +1,63 @@
+#' @title duplicateResponse(resp)
+#' @description adds in duplicates to the response if they were in the filter
+#' @param resp api response after simplification of data structure
+#' @param expand a table with the number of times to duplicate each specific row
+#' @return the same api reponse that entered but with added records
+#'
+
+duplicateResponse <- function(resp, expand)
+if(!(is.null(expand))){
+  resp <- resp[match(expand$x, resp[,1]), ,drop = F]
+  expand <- expand[expand$x %in% resp[,1],]
+  bindlist <- list()
+  for(i in 1:nrow(expand))
+  {
+    bindlist[[i]] <- rep(resp[i,],expand[expand$x == resp[i,1], "Freq"]-1)
+    
+  }
+  bind <- as.data.frame(c(do.call("rbind", bindlist)))
+  colnames(bind) <- colnames(resp)
+  resp <- rbind(resp,bind)
+  
+  return(resp)
+}
+
+#' @title simplifyStructure(resp)
+#' @description takes a api response and simplifies it down to the most basic data structure
+#' @param resp raw text response recieved from datim api
+#' @return api response reduced to most simple data structure
+#'
+
+simplifyStructure <-function(resp){
+if(class(resp) == "list" & length(resp) == 1){
+  possible_resp <- resp
+  continue = T
+  while(continue){
+    if(class(possible_resp) == "character"){
+      continue = F
+    }else if(class(possible_resp) == "list")
+    {possible_resp <- possible_resp[[1]]
+    }else if(dim(possible_resp)[1] == 1 & dim(possible_resp)[2] == 1){
+      possible_resp <- possible_resp[[1]]
+    } else {continue = F}
+  }
+  if(class(possible_resp) == "data.frame"){
+    if(!(("list" %in% apply(possible_resp, 2, typeof)))){
+      resp <- possible_resp
+    } else{
+      if(!(length(possible_resp[,sapply(possible_resp,class) == "list"][[1]]) == 0)){
+        resp <- try(tidyr::unnest(possible_resp,cols = colnames(possible_resp)), silent = T)
+        if ("try-error" %in% class(resp)){
+          resp <- possible_resp
+        }}
+    }
+  }else if(class(possible_resp) == "character"){
+    resp <- possible_resp
+    }
+}
+  return(resp)
+}
+
 #' @title processFilters(end_point, filters)
 #' @description takes a filter argument and turns it into an api compatible string
 #' @param filters wildcard argument that can come in as any format or datatype
@@ -95,13 +155,16 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
                         filters = NULL, fields = NULL,
                         pluck = F, retry = 1,
                         expand = NULL) {
+  
   #if no filters or fields are specified, just use endpoint as path
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
   }
+  
   #set up storage for multiple filter arguments
   filter_storage <- list()
-  #check if there are other filter arguments than just the first filter and process them
+  
+  #process filter arguments
   if(!(is.null(filters))) {
     filters2 <- as.list(filters)
     for(i in 1:length(filters2))
@@ -127,6 +190,7 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
     }
   }
   
+  #if filter_storage is empty create placeholder for path string creation
   if(length(filter_storage) != 0){ex <- filter_storage[[1]]
   }else {ex = ""}
   
@@ -141,9 +205,20 @@ getMetadata <- function(end_point, base_url = getOption("baseurl"),
   if (is.null(fields) & is.null(filters)) {
     path <- end_point
   }
+  
   #pass path in api_get
-  api_get(
+  resp <- api_get(
     path = path, base_url = base_url, retry = retry, timeout = 60,
-    api_version = NULL, expand = expand
+    api_version = NULL
   )
+  
+  #simplify data structure
+  resp <- simplifyStructure(resp)
+  
+  #add in duplicates if needed
+  if(!(is.null(expand))){
+  resp <- duplicateResponse(resp, expand)
+  }
+  
+  return(resp)
 }

@@ -6,12 +6,11 @@
 #' default will not try again
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
-#' @param expand dataframe to know how to expand result in case of duplicate filters
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
-                    api_version = NULL, expand = NULL) {
+                    api_version = NULL) {
   #error if unsported file format desired
   if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
      |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
@@ -59,6 +58,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   #replaces all // with / unless it is the // in http://
   url <- gsub("[^http://]//", "/", url)
   print(url)
+  
   #retry api get block, only retries if reponse code not in 400s
   i <- 1; response_code <- 5
   while (i <= retry & (response_code < 400 | response_code >= 500 )) {
@@ -67,7 +67,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
     i <- i + 1
   }
 
-#unknown error catching which returns message and response code
+  #unknown error catching which returns message and response code
   if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500 ) {
     stop(paste0("client error returned by url, this normally means a malformed link ", url,
                 " response code: ", httr::status_code(resp) ))
@@ -76,7 +76,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
                 " response code: ", httr::status_code(resp)))
   }
 
-#if the response comes back in html and not json it means you landed on the login page
+  #if the response comes back in html and not json it means you landed on the login page
   if (httr::http_type(resp) != "application/json") {
     stop(
       paste0("API did not return json, are you logged into DATIM?
@@ -84,54 +84,10 @@ api_get <- function(path, base_url = getOption("baseurl"),
       "\n", "cookie is", httr::cookies(resp)
     )
   }
+  
   #extract text response from api response
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), simplifyDataFrame = T,
                              flatten = T)
-
-
-  #this will add the duplicates to the dataframe if duplicates were in the filter
-  if(!(is.null(expand))){
-  resp <- resp[match(expand$x, resp[,1]), ,drop = F]
-  expand <- expand[expand$x %in% resp[,1],]
-  bindlist <- list()
-  for(i in 1:nrow(expand))
-  {
-    bindlist[[i]] <- rep(resp[i,],expand[expand$x == resp[i,1], "Freq"]-1)
-
-  }
-  bind <- as.data.frame(c(do.call("rbind", bindlist)))
-  colnames(bind) <- colnames(resp)
-  resp <- rbind(resp,bind)
-  }
-  
-  
-  # reduce to dataframe accounting for nested list and nested dataframe structures
-  if(class(resp) == "list" & length(resp) == 1){
-    possible_resp <- resp
-    continue = T
-    while(continue){
-      if(class(possible_resp) == "character"){
-        continue = F
-      }else if(class(possible_resp) == "list")
-    {possible_resp <- possible_resp[[1]]
-    }else if(dim(possible_resp)[1] == 1 & dim(possible_resp)[2] == 1){
-      possible_resp <- possible_resp[[1]]
-          } else {continue = F}
-    }
-    if(class(possible_resp) == "data.frame"){
-      if(!(("list" %in% apply(possible_resp,2, typeof)))){
-      resp <- possible_resp
-      } else{
-        if(!(length(possible_resp[,sapply(possible_resp,class) == "list"][[1]]) == 0)){
-        resp <- try(tidyr::unnest(possible_resp,cols = colnames(possible_resp)), silent = T)
-        if ("try-error" %in% class(resp)){
-          resp <- possible_resp
-        }}
-      }
-    }else if(class(possible_resp) == "character"){
-      resp <- possible_resp
-    }
-  }
   
   return(resp)
 }
