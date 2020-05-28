@@ -158,8 +158,7 @@ httptest::with_mock_api({
       path = "api/me?fields=name",
       base_url = "https://play.dhis2.org/2.33/"
     )
-    testthat::expect_identical(user$name, "John Traore")
-    testthat::expect_null(user$id)
+    testthat::expect_identical(user, "John Traore")
     rm(user)
   })
 

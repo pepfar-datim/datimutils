@@ -128,6 +128,8 @@ api_get <- function(path, base_url = getOption("baseurl"),
           resp <- possible_resp
         }}
       }
+    }else if(class(possible_resp) == "character"){
+      resp <- possible_resp
     }
   }
   

@@ -29,6 +29,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   
   #this option is more robust but would need to change mocks
   #filters = paste0(default_filter_item, default_filter_option, uniquex)
+  
   filters = paste0(default_filter_item, default_filter_option, paste0(uniquex, collapse = ","))
 
   #make dataframe to know how to expand result in case of duplicate filters
@@ -86,8 +87,8 @@ getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
   # call getMetadata with info above
   getMetadata(
     base_url = base_url, end_point = "organisationUnitGroups",
-    filters = list(paste0(default_filter_item1, default_filter_option1, filters1),
-                   paste0(default_filter_item2, default_filter_option2, filters2)),
+    filters = list(paste0(default_filter_item1, default_filter_option1, paste0(filters1, collapse = ",")),
+                   paste0(default_filter_item2, default_filter_option2, paste0(filters2, collapse = ","))),
     fields = default_feilds, pluck = F, retry = 1, expand = NULL
   )
 }

@@ -24,10 +24,7 @@ test_that(
                                                  "groupSets.id",
                                                  c("code"),
                                                  "https://play.dhis2.org/2.33/")
-           #data <- tibble::as_tibble(data$organisationUnitGroups)
-           testthat::expect_s3_class(data, "data.frame")
-           testthat::expect_equal(NROW(data), 1)
-           testthat::expect_equal(data$code, "CHC")
+           testthat::expect_equal(data, "CHC")
            rm(data)
            })
   })
