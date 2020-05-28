@@ -11,72 +11,80 @@
 api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
                     api_version = NULL) {
-  #error if unsported file format desired
-  if(grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path )
-     |grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url))
-  {
+
+  # error if unsported file format desired
+  if (grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path)
+  | grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url)) {
     stop("invalid file extension, either pass in a link with json or a link without a file format")
   }
-  #make sure all "?" outside of the .json?paging=false are &'s
-  path <- gsub("\\?","&", path)
-  path <- gsub("json&","json?", path)
-  #remove trailing / from path
-  if(substr(path, nchar(path), nchar(path)) == "/")
-  {
-    path <- substr(path, 1, nchar(path)-1)
+
+  # make sure all "?" outside of the .json?paging=false are &'s
+  path <- gsub("\\?", "&", path)
+  path <- gsub("json&", "json?", path)
+
+  # remove trailing / from path
+  if (substr(path, nchar(path), nchar(path)) == "/") {
+    path <- substr(path, 1, nchar(path) - 1)
   }
-  #check if the word api in the path and if not add it
+
+  # check if the word api in the path and if not add it
   if (!(grepl("api", substr(path, 1, 4)))) {
     path <- paste0("api/", path)
   }
-  #if api_version is specified, add it in to the path
-    path <- sub("(?<=.{4})", ifelse(is.null(api_version), "",
-      paste0(api_version, "/")
-    ),
-    path,
-    perl = TRUE
-    )
-    
+
+  # if api_version is specified, add it in to the path
+  path <- sub("(?<=.{4})", ifelse(is.null(api_version), "",
+    paste0(api_version, "/")
+  ),
+  path,
+  perl = TRUE
+  )
+
   url <- paste0(url = base_url, path = path)
- 
-  #this if else block will add .json?paging=false where it is needed, depending on the path
-  if(!(grepl("json", url)))
-       {
+
+  # this if else block will add .json?paging=false where it is needed, depending on the path
+  if (!(grepl("json", url))) {
     if (grepl("&", url)) {
-    url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
-  } else {
-    url <- paste0(url, ".json?paging=false")
+      url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
+    } else {
+      url <- paste0(url, ".json?paging=false")
     }
   }
-  #this block adds pagin=false in the case that only .json was passed in
-  if(grepl("json", url) & !(grepl("paging", url)))
-  {
-  url <- sub(".json", ".json?paging=false", url)
+
+  # this block adds pagin=false in the case that only .json was passed in
+  if (grepl("json", url) & !(grepl("paging", url))) {
+    url <- sub(".json", ".json?paging=false", url)
   }
-  #replaces /// with /
+
+  # replaces /// with /
   url <- gsub("///", "/", url)
-  #replaces all // with / unless it is the // in http://
+
+  # replaces all // with / unless it is the // in http://
   url <- gsub("[^http://]//", "/", url)
-  print(url)
-  
-  #retry api get block, only retries if reponse code not in 400s
-  i <- 1; response_code <- 5
-  while (i <= retry & (response_code < 400 | response_code >= 500 )) {
+
+  # retry api get block, only retries if reponse code not in 400s
+  i <- 1
+  response_code <- 5
+  while (i <= retry & (response_code < 400 | response_code >= 500)) {
     resp <- httr::GET(url, httr::timeout(timeout))
     response_code <- httr::status_code(resp)
     i <- i + 1
   }
 
-  #unknown error catching which returns message and response code
-  if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500 ) {
-    stop(paste0("client error returned by url, this normally means a malformed link ", url,
-                " response code: ", httr::status_code(resp) ))
+  # unknown error catching which returns message and response code
+  if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500) {
+    stop(paste0(
+      "client error returned by url, this normally means a malformed link ", url,
+      " response code: ", httr::status_code(resp)
+    ))
   } else if (httr::status_code(resp) != 200) {
-    stop(paste0("api query failed for url ", url ,
-                " response code: ", httr::status_code(resp)))
+    stop(paste0(
+      "api query failed for url ", url,
+      " response code: ", httr::status_code(resp)
+    ))
   }
 
-  #if the response comes back in html and not json it means you landed on the login page
+  # if the response comes back in html and not json it means you landed on the login page
   if (httr::http_type(resp) != "application/json") {
     stop(
       paste0("API did not return json, are you logged into DATIM?
@@ -84,14 +92,12 @@ api_get <- function(path, base_url = getOption("baseurl"),
       "\n", "cookie is", httr::cookies(resp)
     )
   }
-  
-  #extract text response from api response
-  resp <- jsonlite::fromJSON(httr::content(resp, as = "text"), simplifyDataFrame = T,
-                             flatten = T)
-  
+
+  # extract text response from api response
+  resp <- jsonlite::fromJSON(httr::content(resp, as = "text"),
+    simplifyDataFrame = T,
+    flatten = T
+  )
+
   return(resp)
 }
-
-
-
-
