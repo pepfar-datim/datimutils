@@ -168,7 +168,7 @@ processFilters <- function(end_point, filters) {
     paste0("\\1", filter_item, ":"), ex
   )
   ex <- sub(
-    paste0("(.*?)", "(", filter_option, ")"),
+    paste0("(", filter_item, ".*?)", "(", filter_option, ")"),
     paste0("\\1", filter_option, ":"), ex
   )
 

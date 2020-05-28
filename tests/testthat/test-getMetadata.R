@@ -132,7 +132,7 @@ library(httptest)
                       rm(data)
    })
 
-   test_that(paste0("Filter with less common property: ", 
+   test_that(paste0("Filter with less common property: ",
                     "https://play.dhis2.org/2.33/api/organisationUnits.json?",
                     "paging=false&filter=name:like:Baoma",
                     "&filter=level:eq:3&fields=:all"
@@ -153,7 +153,8 @@ library(httptest)
      rm(data)
    })
 
-  test_that(paste0("Call with indicator endpoint: ",
+  
+   test_that(paste0("Call with indicator endpoint: ",
                    "https://play.dhis2.org/2.33/api/indicators.json?",
                    "paging=false&filter=id:eq:ReUHfIn0pTQ",
                    "&fields=name,id,numerator,denominator"
