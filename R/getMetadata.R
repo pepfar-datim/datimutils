@@ -82,11 +82,35 @@ processFilters <- function(end_point, filters) {
 
   # takes filter argument and turns it into a single character string
   ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
-
+  
   # removes extraneous info (will be added later anyway for consistency)
   look <- sub("\\?filter=|\\?filter", "", ex)
   look <- sub("\\&filter=|\\&filter", "", look)
-
+  
+  #if the format comes in correct
+  if(stringr::str_count(look, pattern = ":") == 2){
+    filter_option_orig <- stringr::str_extract(look, '(?<=:).*(?=:)')    
+    filter_item <- stringr::str_extract(look, '^[^:]*')
+    rest <- stringr::str_extract(look, '[^:]+$')
+    end_point <- ifelse(is.na(end_point), "", end_point)
+    end_point_tentative = ""
+    
+    
+    # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
+    if (grepl("eq", filter_option_orig)) {
+      filter_option <- sub("eq", "in", filter_option_orig)
+    } else {
+      filter_option <- filter_option_orig
+    }
+    
+    # creates a basic filter path
+    ex <- 
+      gsub(filter_option_orig, filter_option, paste0(filter_item,
+                                                     filter_option_orig,
+                                                     rest))
+    
+  } else{
+  
   # extracts end_point and what is not end_point
   end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
   end_point <- ifelse(is.na(end_point_tentative),
@@ -107,20 +131,22 @@ processFilters <- function(end_point, filters) {
     substr(look, 1, 4),
     "name|id"
   )
-
+  
   # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
   if (grepl("eq", filter_option_orig)) {
     filter_option <- sub("eq", "in", filter_option_orig)
   } else {
     filter_option <- filter_option_orig
   }
-
+  
   # creates a basic filter path
   ex <- paste0(
     gsub(filter_option_orig, filter_option, substr(look, 1, 9)),
     substr(look, 10, nchar(look))
   )
 
+  }
+  
   # removes :
   ex <- gsub(":", "", ex)
 
