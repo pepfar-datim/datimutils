@@ -35,7 +35,7 @@ duplicateResponse <- function(resp, expand) {
 simplifyStructure <- function(resp) {
 
   # only enter if class is list and length one, other wise it is already simplified
-  if (class(resp) == "list" & length(resp) == 1) {
+  if (class(resp) == "list" & length(resp) == 1 & length(resp[[1]]) != 0) {
     possible_resp <- resp
     continue <- T
 
