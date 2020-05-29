@@ -33,12 +33,14 @@ loadConfigFile <- function(config_path = NA) {
 makeKeyring <- function(username,
                         ring = "DatimLogin",
                         service = getOption("baseurl")) {
-  #checks if keyring exists and if it doesnt, it makes one and then locks it
+  # checks if keyring exists and if it doesnt, it makes one and then locks it
   result <- try(keyring::key_list(keyring = ring), silent = T)
   if ("try-error" %in% class(result)) {
     error_type <- attr(result, "condition")
-    if (grepl("The specified keychain could not be found",
-              error_type$message)) {
+    if (grepl(
+      "The specified keychain could not be found",
+      error_type$message
+    )) {
       print("enter KEYCHAIN password, then enter SECRET")
       keyring::keyring_create(ring)
       keyring::key_set(service, username, keyring = ring)
@@ -56,7 +58,7 @@ makeKeyring <- function(username,
 #' @return a list containing entries called password, baseurl, and username
 #'
 getCredentialsFromKeyring <- function(ring) {
-  #returns credentials from a keyring
+  # returns credentials from a keyring
   try <- as.list(keyring::key_list(keyring = ring))
   credentials <- c("password" = keyring::key_get(try[["service"]]), try)
   names(credentials) <- c("password", "baseurl", "username")
@@ -75,29 +77,30 @@ getCredentialsFromKeyring <- function(ring) {
 #'
 loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis") {
-  
-  #loads credentials from secret file
+
+  # loads credentials from secret file
   credentials <- loadConfigFile(config_path = config_path)
   credentials <- credentials[[config_path_level]]
   password <- credentials[["password"]]
-  if(is.null(password)) {
-    password = ""
+  if (is.null(password)) {
+    password <- ""
   }
-  #checks if password in file and if not checks keyring, and if not there prompts to make one
-  if(nchar(password) == 0)
-  {
-    
-    password <- try(keyring::key_get(service = credentials[["baseurl"]], 
-                                   username = credentials[["username"]]))
+  # checks if password in file and if not checks keyring, and if not there prompts to make one
+  if (nchar(password) == 0) {
+    password <- try(keyring::key_get(
+      service = credentials[["baseurl"]],
+      username = credentials[["username"]]
+    ))
     if ("try-error" %in% class(password)) {
       keyring::key_set(service = credentials[["baseurl"]], username = credentials[["username"]])
-      password <- keyring::key_get(service = credentials[["baseurl"]], 
-                                     username = credentials[["username"]])
+      password <- keyring::key_get(
+        service = credentials[["baseurl"]],
+        username = credentials[["username"]]
+      )
     }
-    
   }
-  
-  #form url
+
+  # form url
   url <- utils::URLencode(URL = paste0(credentials[["baseurl"]], "api", "/me"))
   # Logging in here will give us a cookie to reuse
   r <- httr::GET(

@@ -1,3 +1,76 @@
+#' @title duplicateResponse(resp)
+#' @description adds in duplicates to the response if they were in the filter
+#' @param resp api response after simplification of data structure
+#' @param expand a table with the number of times to duplicate each specific row
+#' @return the same api reponse that entered but with added records
+#'
+
+duplicateResponse <- function(resp, expand) {
+
+  # match rows of resp to rows of expand
+  resp <- resp[match(expand$x, resp[, 1]), , drop = F]
+  expand <- expand[expand$x %in% resp[, 1], ]
+  bindlist <- list()
+
+  # create the duplicates and store in a list
+  for (i in 1:nrow(expand))
+  {
+    bindlist[[i]] <- rep(resp[i, ], expand[expand$x == resp[i, 1], "Freq"] - 1)
+  }
+
+  # add in the duplicates to the final response
+  bind <- as.data.frame(c(do.call("rbind", bindlist)))
+  colnames(bind) <- colnames(resp)
+  resp <- rbind(resp, bind)
+
+  return(resp)
+}
+
+#' @title simplifyStructure(resp)
+#' @description takes a api response and simplifies it down to the most basic data structure
+#' @param resp raw text response recieved from datim api
+#' @return api response reduced to most simple data structure
+#'
+
+simplifyStructure <- function(resp) {
+
+  # only enter if class is list and length one, other wise it is already simplified
+  if (class(resp) == "list" & length(resp) == 1 & length(resp[[1]]) != 0) {
+    possible_resp <- resp
+    continue <- T
+
+    # the while bloack reduces the structure till it cant
+    while (continue) {
+      if (class(possible_resp) == "character") {
+        continue <- F
+      } else if (class(possible_resp) == "list") {
+        possible_resp <- possible_resp[[1]]
+      } else if (dim(possible_resp)[1] == 1 & dim(possible_resp)[2] == 1) {
+        possible_resp <- possible_resp[[1]]
+      } else {
+        continue <- F
+      }
+    }
+
+    # if it is a data frame check if it is nested or standard
+    if (class(possible_resp) == "data.frame") {
+      if (!(("list" %in% apply(possible_resp, 2, typeof)))) {
+        resp <- possible_resp
+      } else {
+        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)) {
+          resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = T)
+          if ("try-error" %in% class(resp)) {
+            resp <- possible_resp
+          }
+        }
+      }
+    } else if (class(possible_resp) == "character") {
+      resp <- possible_resp
+    }
+  }
+  return(resp)
+}
+
 #' @title processFilters(end_point, filters)
 #' @description takes a filter argument and turns it into an api compatible string
 #' @param filters wildcard argument that can come in as any format or datatype
@@ -5,76 +78,134 @@
 #' @return the processed metadata filter string compatible with DATIM api
 #'
 
-processFilters <- function(end_point, filters){
-  
-  #takes filter argument and turns it into a single character string
+processFilters <- function(end_point, filters) {
+
+  # takes filter argument and turns it into a single character string
   ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
-  #removes extraneous info (will be added later anyway for consistency)
+  
+  # removes extraneous info (will be added later anyway for consistency)
   look <- sub("\\?filter=|\\?filter", "", ex)
   look <- sub("\\&filter=|\\&filter", "", look)
-  #extracts end_point and what is not end_point
+  
+  #if the format comes in correct
+  if(stringr::str_count(look, pattern = ":") == 2){
+    filter_option_orig <- stringr::str_extract(look, '(?<=:).*(?=:)')    
+    filter_item <- stringr::str_extract(look, '^[^:]*')
+    rest <- stringr::str_extract(look, '[^:]+$')
+    end_point <- ifelse(is.na(end_point), "", end_point)
+    end_point_tentative = ""
+    
+    
+    # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
+    if (grepl("eq", filter_option_orig)) {
+      filter_option <- sub("eq", "in", filter_option_orig)
+    } else {
+      filter_option <- filter_option_orig
+    }
+    
+    # creates a basic filter path
+    ex <- 
+      gsub(filter_option_orig, filter_option, paste0(filter_item,
+                                                     filter_option_orig,
+                                                     rest))
+    
+  } else{
+  
+  # extracts end_point and what is not end_point
   end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
-  end_point <- ifelse(is.na(end_point_tentative), end_point, end_point_tentative)
+  end_point <- ifelse(is.na(end_point_tentative),
+    ifelse(is.na(end_point), "", end_point), end_point_tentative
+  )
   end_point <- gsub("/", "", end_point)
   look <- sub("(.*)(id|name)", "\\2", look)
-  
-  #extracts the original filter 
+
+  # extracts the original filter
   filter_option_orig <-
-    stringr::str_extract(substr(sub("name","",look), 1, 8),
-                         "!ilike|!like|ilike|like|!in|!eq|in|eq")
-  #extracts either id or name from filter
-  filter_item <- stringr::str_extract(substr(look, 1, 4), 
-                                      "name|id")
-  #this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
+    stringr::str_extract(
+      substr(sub("name", "", look), 1, 8),
+      "!ilike|!like|ilike|like|!in|!eq|in|eq"
+    )
+
+  # extracts either id or name from filter
+  filter_item <- stringr::str_extract(
+    substr(look, 1, 4),
+    "name|id"
+  )
+  
+  # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
   if (grepl("eq", filter_option_orig)) {
     filter_option <- sub("eq", "in", filter_option_orig)
-  } else if ("like" == filter_option_orig) {
-    filter_option <- sub("like", "ilike", filter_option_orig)
   } else {
     filter_option <- filter_option_orig
   }
-  #creates a basic filter path
-  ex <- paste0(gsub(filter_option_orig, filter_option, substr(look, 1, 8)),
-               substr(look, 9, nchar(look)))
-  #removes :
-  ex <- gsub(":", "", ex)
   
-  #takes first part of filter, i.e. idin
-  one <- sub(paste0("(", filter_item, filter_option, ")", "(.*)"),
-             "\\1", ex)
-  one.one <- sub(paste0("(", filter_item, filter_option, ")", "(.*)"),
-                 "\\2", ex)
-  #takes second part of filter, i.e. ["abc"] and adds commas if filter = in
-  if(grepl("name",one)){
-    # two <- gsub("(\\w)([A-Z])", "\\1,\\2",
-    #             one.one, perl = TRUE)
-    filters <- gsub("\\?","\\\\?",filters) 
-    filters <- gsub("\\[","\\\\[",filters) 
-    filters <- gsub("\\]","\\\\]",filters) 
-    try <- unlist(stringi::stri_extract_all_regex(str = one.one, pattern = filters ))
+  # creates a basic filter path
+  ex <- paste0(
+    gsub(filter_option_orig, filter_option, substr(look, 1, 9)),
+    substr(look, 10, nchar(look))
+  )
+
+  }
+  
+  # removes :
+  ex <- gsub(":", "", ex)
+
+  # takes first part of filter, i.e. idin
+  one <- sub(
+    paste0("(", filter_item, filter_option, ")", "(.*)"),
+    "\\1", ex
+  )
+  one.one <- sub(
+    paste0("(", filter_item, filter_option, ")", "(.*)"),
+    "\\2", ex
+  )
+
+  # takes second part of filter, i.e. ["abc"] and adds commas if filter = in
+  if (grepl("name", one)) {
+    filters <- gsub("\\?", "\\\\?", filters)
+    filters <- gsub("\\[", "\\\\[", filters)
+    filters <- gsub("\\]", "\\\\]", filters)
+    try <- unlist(stringi::stri_extract_all_regex(str = one.one, pattern = filters))
+    if (is.na(try)) {
+      try <- one.one
+    }
     two <- paste0(try[!is.na(try)], collapse = ",")
-  }else{
+  } else {
     two <- ifelse(grepl(",", one.one), one.one,
-                  gsub("(.{11})", "\\1,",
-                       one.one, perl = TRUE))}
-  ex <- paste0(end_point, one, two)
+      gsub("(.{11})", "\\1,",
+        one.one,
+        perl = TRUE
+      )
+    )
+  }
+  ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
   if (substr(ex, nchar(ex), nchar(ex)) == ",") {
     ex <- substr(ex, 1, nchar(ex) - 1)
   }
-  #adds &filter= where needed, and : where needed
-  middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point,filter_item))
-  ex <- sub(paste0("(.*?)(\\&filter=|", middle, "|?filter=", ")"),
-            paste0("\\1&filter=", middle), ex)
-  ex <- sub(paste0("(.*?)", "(", filter_item, ")"),
-            paste0("\\1", filter_item, ":"), ex)
-  ex <- sub(paste0("(.*?)", "(", filter_option, ")"),
-            paste0("\\1", filter_option, ":"), ex)
-  #special processing for "in" filter
+
+  # adds &filter= where needed, and : where needed
+  middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))
+  ex <- sub(
+    paste0("(.*?)(\\&filter=|", middle, "|?filter=", ")"),
+    paste0("\\1&filter=", middle), ex
+  )
+  ex <- sub(
+    paste0("(.*?)", "(", filter_item, ")"),
+    paste0("\\1", filter_item, ":"), ex
+  )
+  ex <- sub(
+    paste0("(", filter_item, ".*?)", "(", filter_option, ")"),
+    paste0("\\1", filter_option, ":"), ex
+  )
+
+  # special processing for "in" filter
   if (grepl("in", filter_option) & !(grepl("\\[", ex))) {
     ex <- paste0(sub("(.*?)(in:)", "\\1in:[", ex), "]")
   }
-  #removes whitespace
+
+  # removes whitespace
   ex <- gsub(" ", "", ex)
+
   return(ex)
 }
 
@@ -84,68 +215,94 @@ processFilters <- function(end_point, filters){
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits
 #' @param base_url string - base address of instance (text before api/ in URL)
-#' @param filters - the filters, which can come in any format as long as all
-#' components are present
-#' @param fields - the fields, which can come in any formt as long as all
-#' components are present
+#' @param filters - the filters
+#' @param fields - the fields
 #' @param pluck - whether to add pluck option as documented by dhis2 api
 #' developer guide
 #' @param retry number of times to retry
-#' @param wrapper_reduce indicator passed in by wrappers to reduce list to data.frame
 #' @param expand dataframe to know how to expand result in case of duplicate filters
-#' @param ... can pass unlimited number of filter arguments here 
 #' @return the metadata response in json format and flattened
 #'
 
 getMetadata <- function(end_point, base_url = getOption("baseurl"),
                         filters = NULL, fields = NULL,
-                        pluck = F, retry = 1, wrapper_reduce = NULL,
-                        expand = NULL, ...) {
-  #if no filters or fields are specified, just use endpoint as path
+                        pluck = F, retry = 1,
+                        expand = NULL) {
+
+  # if no filters or fields are specified, just use endpoint as path
   if (!(is.null(filters)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
   }
-  #if the if loop doesnt get activated this will still create a variable for path
-  ex <- ""
-  #filter block
-  if (!(is.null(filters))) {
-    ex <- processFilters(end_point = end_point, filters = filters)
-  }
-  #if the if loop doesnt get activated this will still create a variable for path
-  ef <- ""
-  if (!(is.null(fields))) {
-    #flattens fields and adds ?fields= if needed
-    ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
-    if (!(grepl("fields", ef))) {
-      ef <- paste0("&fields=", ef)
-    }
-  }
-  #set up storage for multiple filter arguments
+
+  # set up storage for multiple filter arguments
   filter_storage <- list()
-  #check if there are other filter arguments than just the firtst filter and process them
-  if(length(list(...)) != 0) {
-    filters2 <- list(...)
-    for(i in 1:length(filters2))
+
+  # process filter arguments
+  if (!(is.null(filters))) {
+    filters2 <- as.list(filters)
+    for (i in 1:length(filters2))
     {
-      ex2 <- processFilters(end_point = NULL, filters = filters2[[i]])
+      if (i == 1) {
+        ex2 <- processFilters(end_point = end_point, filters = filters2[[i]])
+      } else {
+        ex2 <- processFilters(end_point = NULL, filters = filters2[[i]])
+      }
+
       ex2 <- sub(end_point, "", ex2)
       filter_storage[[i]] <- ex2
     }
     filter_storage <- unlist(filter_storage)
     filter_storage <- stringr::str_flatten(filter_storage)
   }
-  
-  #create final path
-  path <- paste0(ex, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
-                 ifelse(pluck, "~pluck", ""))
+
+  # if the if loop doesnt get activated this will still create a variable for path
+  ef <- ""
+
+  # fields block
+  if (!(is.null(fields))) {
+    # flattens fields and adds ?fields= if needed
+    ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
+    if (!(grepl("fields", ef))) {
+      ef <- paste0("&fields=", ef)
+    }
+  }
+
+  # if filter_storage is empty create placeholder for path string creation
+  if (length(filter_storage) != 0) {
+    ex <- filter_storage[[1]]
+  } else {
+    ex <- ""
+  }
+
+  # end point manipulation
+  if (grepl(end_point, substr(ex, 1, nchar(end_point)))) {
+    end_point <- ""
+  }
+
+  # create final path
+  path <- paste0(
+    end_point, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
+    ifelse(pluck, "~pluck", "")
+  )
   if (is.null(fields) & is.null(filters)) {
     path <- end_point
   }
-  #pass path in api_get
-  api_get(
+
+  # pass path in api_get
+  resp <- api_get(
     path = path, base_url = base_url, retry = retry, timeout = 60,
-    api_version = NULL, wrapper_reduce = wrapper_reduce, expand = expand
+    api_version = NULL
   )
+
+  # simplify data structure
+  resp <- simplifyStructure(resp)
+
+  # add in duplicates if needed
+  if (!(is.null(expand))) {
+    resp <- duplicateResponse(resp, expand)
+  }
+
+  return(resp)
 }
 
 #' @export
