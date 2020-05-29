@@ -127,20 +127,22 @@ library(httptest)
    test_that(paste0("Basic in call: ",
                     "https://play.dhis2.org/2.33/api/dimensions.json?",
                     "paging=false&filter=id:in:[yY2bQYqNt0o,gtuVl6NbXQV]",
-                    "&fields=items[name,id]"
+                    "&fields=name,id,code"
                     ), {
      data <- getMetadata(
        end_point = "dimensions",
        filters = "id:in:[yY2bQYqNt0o,gtuVl6NbXQV]", 
        base_url = "https://play.dhis2.org/2.33/",
-       fields = "items[name,id]"
+       fields = "name,id,code"
      )
      testthat::expect_s3_class(data, "data.frame")
-     testthat::expect_named(data, c("name", "id"))
-     testthat::expect_equal(NROW(data), 7)
+     testthat::expect_named(data, c("code","name", "id"))
+     testthat::expect_equal(NROW(data), 2)
      rm(data)
    })
   
+   
+   
    test_that(paste0("No Filter: ", 
                     "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
                     "paging=false"), {
@@ -231,6 +233,10 @@ library(httptest)
                        fields = "name,id,numerator,denominator",
                        base_url = "https://play.dhis2.org/2.33/"
                      )
+                     
+                     expect_equal(NROW(data),1)
+                     expect_named(data, c("name", "id",
+                                          "numerator", "denominator"))
                    })
 
 
