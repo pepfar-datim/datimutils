@@ -41,11 +41,12 @@ library(httptest)
      rm(data)
    })
    
-   test_that(paste0("List Column: ",
-                    "https://play.dhis2.org/2.33/api/dimensions.json?",
-                    "paging=false&filter=id:eq:gtuVl6NbXQV",
-                    "&fields=items[name,id]"
-   ), {
+   test_that("List Columns: ", {
+     # paste0("List Columns: ",
+     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
+     #        "paging=false&filter=id:eq:gtuVl6NbXQV",
+     #        "&fields=items[name,id]"
+     # )
      data <- getMetadata(
        end_point = "dimensions",
        filters = "id:eq:gtuVl6NbXQV", 
@@ -56,25 +57,92 @@ library(httptest)
      testthat::expect_equal(NROW(data), 3)
      testthat::expect_named(data, c("name", "id"))
      rm(data)
+     
+     # paste0("List Columns: ",
+     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
+     #        "paging=false&filter=id:eq:gtuVl6NbXQV",
+     #        "&fields=name,id,items[name,id]"
+     # )
+     data <- getMetadata(
+       end_point = "dimensions",
+       filters = "id:eq:gtuVl6NbXQV", 
+       base_url = "https://play.dhis2.org/2.33/",
+       fields = "name,id,items[name,id]"
+     )
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 1)	
+     testthat::expect_named(data, c("name", "id", "items"))	
+     data <- tidyr::unnest(data, cols = items, names_sep = ".")	
+     testthat::expect_named(data, c("name", "id", 
+                                    "items.name", "items.id"))	
+     testthat::expect_equal(NROW(data), 3)
+     rm(data)
+     
+     # paste0("List Columns: ",
+     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
+     #        "paging=false&filter=id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
+     #        "&fields=items[name,id]"
+     # )
+     data <- getMetadata(
+       end_point = "dimensions",
+       filters = "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]", 
+       base_url = "https://play.dhis2.org/2.33/",
+       fields = "items[name,id]"
+     )
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 7)	
+     testthat::expect_named(data, c("name", "id"))	
+     rm(data)
+     
+     # paste0("List Columns: ",
+     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
+     #        "paging=false&filter=id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
+     #        "&fields=name,id,items[:all]"
+     # )
+     data <- getMetadata(
+       end_point = "dimensions",
+       filters = "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]", 
+       base_url = "https://play.dhis2.org/2.33/",
+       fields = "name,id,items[:all]"
+     )
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 2)	
+     testthat::expect_named(data, c("name", "id", "items"))
+     data <- tidyr::unnest(data, cols = items, names_sep = ".")
+     testthat::expect_equal(NCOL(data), 30)
+     rm(data)
+     
+     data <- getMetadata(
+       end_point = "indicators",
+       filters = "code:in:[IN_52462,IN_52486]",
+       base_url = "https://play.dhis2.org/2.33/",
+       fields = ":all"
+       )
+     testthat::expect_s3_class(data, "data.frame")
+     testthat::expect_equal(NROW(data), 2)	
+     testthat::expect_equal(NCOL(data), 41)
+     rm(data)
    })
    
    test_that(paste0("Basic in call: ",
                     "https://play.dhis2.org/2.33/api/dimensions.json?",
                     "paging=false&filter=id:in:[yY2bQYqNt0o,gtuVl6NbXQV]",
-                    "&fields=items[name,id]"
+                    "&fields=name,id,code"
                     ), {
      data <- getMetadata(
        end_point = "dimensions",
        filters = "id:in:[yY2bQYqNt0o,gtuVl6NbXQV]", 
        base_url = "https://play.dhis2.org/2.33/",
-       fields = "items[name,id]"
+       fields = "name,id,code"
      )
      testthat::expect_s3_class(data, "data.frame")
-     testthat::expect_named(data, c("name", "id"))
-     testthat::expect_equal(NROW(data), 7)
+     testthat::expect_named(data, c("code","name", "id"))
+     testthat::expect_equal(NROW(data), 2)
      rm(data)
    })
   
+   
+   
    test_that(paste0("No Filter: ", 
                     "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
                     "paging=false"), {
@@ -165,6 +233,10 @@ library(httptest)
                        fields = "name,id,numerator,denominator",
                        base_url = "https://play.dhis2.org/2.33/"
                      )
+                     
+                     expect_equal(NROW(data),1)
+                     expect_named(data, c("name", "id",
+                                          "numerator", "denominator"))
                    })
 
 
