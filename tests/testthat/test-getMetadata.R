@@ -6,24 +6,117 @@ library(httptest)
 # httptest::start_capturing(simplify = FALSE)
 # httr::content(
 #   httr::GET(
+#     paste0(
+#       "https://play.dhis2.org/2.33/api/dataElements.json?",
+#       "paging=false&filter=id:eq:FTRrcoaog83"
+#     ),
+#     httr::authenticate("admin", "district")
+#   )
+# )
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/dimensions.json?",
+#            "paging=false&filter=id:eq:gtuVl6NbXQV",
+#            "&fields=items[name,id]"
+#     ),
+#     httr::authenticate("admin", "district")
+#   )
+# )
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/dimensions.json?",
+#            "paging=false&filter=id:eq:gtuVl6NbXQV",
+#            "&fields=name,id,items[name,id]"
+#     ),
+#     httr::authenticate("admin", "district")
+#   )
+# )  
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/dimensions.json?",
+#            "paging=false&filter=id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
+#            "&fields=items[name,id]"
+#     ),
+#     httr::authenticate("admin", "district")
+#   ))
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/dimensions.json?",
+#            "paging=false&filter=id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
+#            "&fields=name,id,items[:all]"
+#     ),
+#     httr::authenticate("admin", "district")
+#   ))
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/indicators.json?",
+#            "paging=false&filter=code:in:[IN_52462,IN_52486]",
+#            "&fields=:all"
+#     ),
+#     httr::authenticate("admin", "district")
+#   ))          
+# httr::content(
+#   httr::GET(
+#     paste0(
+#       "https://play.dhis2.org/2.33/api/dimensions.json?",
+#       "paging=false&filter=id:in:[yY2bQYqNt0o,gtuVl6NbXQV]",
+#       "&fields=name,id,code"
+#     ),
+#     httr::authenticate("admin", "district")
+#   ))
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#            "paging=false"),
+#     httr::authenticate("admin", "district")
+#   ))
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#            "paging=false",
+#            "&filter=organisationUnitGroups.id:eq:RpbiCJpIYEj",
+#            "&fields=id,name,level,ancestors[id,name]"),
+#     httr::authenticate("admin", "district")
+#   ))
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#            "paging=false",
+#            "&filter=organisationUnitGroups.name:eq:District",
+#            "&filter=children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
+#            "&fields=id,name,level,ancestors[id,name]"),
+#     httr::authenticate("admin", "district")
+#   )
+# )
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#            "paging=false&filter=name:like:Baoma"
+#     ),
+#     httr::authenticate("admin", "district")
+#   )
+# )
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#            "paging=false&filter=name:like:Baoma",
+#            "&filter=level:eq:3&fields=:all"),
+#     httr::authenticate("admin", "district")
+#   )
+# )
+# httr::content(
+#   httr::GET(
 #     paste0("https://play.dhis2.org/2.33/api/indicators.json?",
 #            "paging=false&filter=id:eq:ReUHfIn0pTQ",
 #            "&fields=name,id,numerator,denominator"
-#            ),
+#     ),
 #     httr::authenticate("admin", "district")
-#     )
 #   )
+# )
 # 
 # httptest::stop_capturing()
 
-# with_mock_api({
-
-   httr::GET(
-     paste0("https://play.dhis2.org/2.33/api/me"),
-    httr::authenticate("admin", "district")
-    )
-   
-   
+with_mock_api({
    test_that(paste0("Basic eq call: ",
                     "https://play.dhis2.org/2.33/api/dataElements.json?",
                     "paging=false&filter=id:eq:FTRrcoaog83"
@@ -240,4 +333,4 @@ library(httptest)
                    })
 
 
-# })
+})
