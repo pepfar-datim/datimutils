@@ -110,7 +110,7 @@ processFilters <- function(end_point, filters) {
   look <- sub("(.*)(id|name)", "\\2", look)
 
   # extracts the original filter
-  filter_option_orig <-
+  filter_option <-
     stringr::str_extract(
       substr(sub("name", "", look), 1, 8),
       "!ilike|!like|ilike|like|!in|!eq|in|eq"
@@ -121,19 +121,8 @@ processFilters <- function(end_point, filters) {
     substr(look, 1, 4),
     "name|id"
   )
-  
-  # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
-  if (grepl("eq", filter_option_orig)) {
-    filter_option <- sub("eq", "in", filter_option_orig)
-  } else {
-    filter_option <- filter_option_orig
-  }
-  
-  # creates a basic filter path
-  ex <- paste0(
-    gsub(filter_option_orig, filter_option, substr(look, 1, 9)),
-    substr(look, 10, nchar(look))
-  )
+
+  ex <- look
 
   }
   
