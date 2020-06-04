@@ -214,9 +214,9 @@ processFilters <- function(end_point, filters) {
 #' @description General utility to get metadata details from DATIM
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits
-#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param filters - the filters
 #' @param fields - the fields
+#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param pluck - whether to add pluck option as documented by dhis2 api
 #' developer guide
 #' @param retry number of times to retry
@@ -224,8 +224,9 @@ processFilters <- function(end_point, filters) {
 #' @return the metadata response in json format and flattened
 #'
 
-getMetadata <- function(end_point, base_url = getOption("baseurl"),
+getMetadata <- function(end_point,
                         filters = NULL, fields = NULL,
+                        base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
                         expand = NULL) {
 

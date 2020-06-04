@@ -6,9 +6,9 @@
 \usage{
 getMetadata(
   end_point,
-  base_url = getOption("baseurl"),
   filters = NULL,
   fields = NULL,
+  base_url = getOption("baseurl"),
   pluck = F,
   retry = 1,
   expand = NULL
@@ -18,11 +18,11 @@ getMetadata(
 \item{end_point}{string - api endpoint for the metadata of interest
 e.g. dataElements, organisationUnits}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
-
 \item{filters}{- the filters}
 
 \item{fields}{- the fields}
+
+\item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{pluck}{- whether to add pluck option as documented by dhis2 api
 developer guide}
