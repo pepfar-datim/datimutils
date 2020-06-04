@@ -89,27 +89,17 @@ processFilters <- function(end_point, filters) {
   
   #if the format comes in correct
   if(stringr::str_count(look, pattern = ":") == 2){
-    filter_option_orig <- stringr::str_extract(look, '(?<=:).*(?=:)')    
+    filter_option <- stringr::str_extract(look, '(?<=:).*(?=:)')    
     filter_item <- stringr::str_extract(look, '^[^:]*')
     rest <- stringr::str_extract(look, '[^:]+$')
     end_point <- ifelse(is.na(end_point), "", end_point)
     end_point_tentative = ""
     
-    
-    # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
-    if (grepl("eq", filter_option_orig)) {
-      filter_option <- sub("eq", "in", filter_option_orig)
-    } else {
-      filter_option <- filter_option_orig
-    }
-    
     # creates a basic filter path
-    ex <- 
-      gsub(filter_option_orig, filter_option, paste0(filter_item,
-                                                     filter_option_orig,
-                                                     rest))
-    
-  } else{
+    ex <- paste0(filter_item,
+                 filter_option,
+                 rest)
+    } else{
   
   # extracts end_point and what is not end_point
   end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
