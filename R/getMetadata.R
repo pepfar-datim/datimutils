@@ -89,27 +89,17 @@ processFilters <- function(end_point, filters) {
   
   #if the format comes in correct
   if(stringr::str_count(look, pattern = ":") == 2){
-    filter_option_orig <- stringr::str_extract(look, '(?<=:).*(?=:)')    
+    filter_option <- stringr::str_extract(look, '(?<=:).*(?=:)')    
     filter_item <- stringr::str_extract(look, '^[^:]*')
     rest <- stringr::str_extract(look, '[^:]+$')
     end_point <- ifelse(is.na(end_point), "", end_point)
     end_point_tentative = ""
     
-    
-    # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
-    if (grepl("eq", filter_option_orig)) {
-      filter_option <- sub("eq", "in", filter_option_orig)
-    } else {
-      filter_option <- filter_option_orig
-    }
-    
     # creates a basic filter path
-    ex <- 
-      gsub(filter_option_orig, filter_option, paste0(filter_item,
-                                                     filter_option_orig,
-                                                     rest))
-    
-  } else{
+    ex <- paste0(filter_item,
+                 filter_option,
+                 rest)
+    } else{
   
   # extracts end_point and what is not end_point
   end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
@@ -120,7 +110,7 @@ processFilters <- function(end_point, filters) {
   look <- sub("(.*)(id|name)", "\\2", look)
 
   # extracts the original filter
-  filter_option_orig <-
+  filter_option <-
     stringr::str_extract(
       substr(sub("name", "", look), 1, 8),
       "!ilike|!like|ilike|like|!in|!eq|in|eq"
@@ -131,19 +121,8 @@ processFilters <- function(end_point, filters) {
     substr(look, 1, 4),
     "name|id"
   )
-  
-  # this block replaces the filter with one more adequate (eq=in, like=ilike, etc.)
-  if (grepl("eq", filter_option_orig)) {
-    filter_option <- sub("eq", "in", filter_option_orig)
-  } else {
-    filter_option <- filter_option_orig
-  }
-  
-  # creates a basic filter path
-  ex <- paste0(
-    gsub(filter_option_orig, filter_option, substr(look, 1, 9)),
-    substr(look, 10, nchar(look))
-  )
+
+  ex <- look
 
   }
   
@@ -214,9 +193,9 @@ processFilters <- function(end_point, filters) {
 #' @description General utility to get metadata details from DATIM
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits
-#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param filters - the filters
 #' @param fields - the fields
+#' @param base_url string - base address of instance (text before api/ in URL)
 #' @param pluck - whether to add pluck option as documented by dhis2 api
 #' developer guide
 #' @param retry number of times to retry
@@ -224,8 +203,9 @@ processFilters <- function(end_point, filters) {
 #' @return the metadata response in json format and flattened
 #'
 
-getMetadata <- function(end_point, base_url = getOption("baseurl"),
+getMetadata <- function(end_point,
                         filters = NULL, fields = NULL,
+                        base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
                         expand = NULL) {
 
