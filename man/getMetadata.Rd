@@ -6,7 +6,7 @@
 \usage{
 getMetadata(
   end_point,
-  filters = NULL,
+  ...,
   fields = NULL,
   base_url = getOption("baseurl"),
   pluck = F,
@@ -18,7 +18,7 @@ getMetadata(
 \item{end_point}{string - api endpoint for the metadata of interest
 e.g. dataElements, organisationUnits}
 
-\item{filters}{- the filters}
+\item{...}{- the filters}
 
 \item{fields}{- the fields}
 

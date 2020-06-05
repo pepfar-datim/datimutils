@@ -123,7 +123,7 @@ with_mock_api({
                     ), {
      data <- getMetadata(
        end_point = "dataElements",
-       filters = "id:eq:FTRrcoaog83", 
+       id %deq% "FTRrcoaog83",
        base_url = "https://play.dhis2.org/2.33/"
      )
      # data <- data[["dataElements"]]
@@ -142,7 +142,7 @@ with_mock_api({
      # )
      data <- getMetadata(
        end_point = "dimensions",
-       filters = "id:eq:gtuVl6NbXQV", 
+       "id:eq:gtuVl6NbXQV", 
        base_url = "https://play.dhis2.org/2.33/",
        fields = "items[name,id]"
      )
@@ -158,7 +158,7 @@ with_mock_api({
      # )
      data <- getMetadata(
        end_point = "dimensions",
-       filters = "id:eq:gtuVl6NbXQV", 
+       "id:eq:gtuVl6NbXQV", 
        base_url = "https://play.dhis2.org/2.33/",
        fields = "name,id,items[name,id]"
      )
@@ -178,7 +178,7 @@ with_mock_api({
      # )
      data <- getMetadata(
        end_point = "dimensions",
-       filters = "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]", 
+       "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]", 
        base_url = "https://play.dhis2.org/2.33/",
        fields = "items[name,id]"
      )
@@ -194,7 +194,7 @@ with_mock_api({
      # )
      data <- getMetadata(
        end_point = "dimensions",
-       filters = "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]", 
+       "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]", 
        base_url = "https://play.dhis2.org/2.33/",
        fields = "name,id,items[:all]"
      )
@@ -207,7 +207,7 @@ with_mock_api({
      
      data <- getMetadata(
        end_point = "indicators",
-       filters = "code:in:[IN_52462,IN_52486]",
+       "code:in:[IN_52462,IN_52486]",
        base_url = "https://play.dhis2.org/2.33/",
        fields = ":all"
        )
@@ -224,7 +224,7 @@ with_mock_api({
                     ), {
      data <- getMetadata(
        end_point = "dimensions",
-       filters = "id:in:[yY2bQYqNt0o,gtuVl6NbXQV]", 
+       id %din% c("yY2bQYqNt0o","gtuVl6NbXQV"),
        base_url = "https://play.dhis2.org/2.33/",
        fields = "name,id,code"
      )
@@ -255,7 +255,7 @@ with_mock_api({
                     "&fields=id,name,level,ancestors[id,name]"), {
                       data <- getMetadata(
                         end_point = "organisationUnits",
-                        filters = "organisationUnitGroups.id:eq:RpbiCJpIYEj",
+                        organisationUnitGroups.id %deq% "RpbiCJpIYEj",
                         fields = "id,name,level,ancestors[id,name]",
                         base_url = "https://play.dhis2.org/2.33/"
                       )
@@ -272,7 +272,7 @@ with_mock_api({
                     "&fields=id,name,level,ancestors[id,name]"), {
                       data <- getMetadata(
                         end_point = "organisationUnits",
-                        filters = c("organisationUnitGroups.name:eq:District",
+                        c("organisationUnitGroups.name:eq:District",
                                     "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"),
                         fields = "id,name,level,ancestors[id,name]",
                         base_url = "https://play.dhis2.org/2.33/"
@@ -287,7 +287,7 @@ with_mock_api({
                     ), {
                       data <- getMetadata(
                         end_point = "organisationUnits",
-                        filters = "name:like:Baoma",
+                        name %dlike% "Baoma",
                         base_url = "https://play.dhis2.org/2.33/")
                        testthat::expect_equal(NROW(data), 10)
                       rm(data)
@@ -300,7 +300,7 @@ with_mock_api({
    ), {
      data <- getMetadata(
        end_point = "organisationUnits",
-       filters = c("name:like:Baoma",
+       c("name:like:Baoma",
                    "level:eq:3"),
        fields = ":all",
        base_url = "https://play.dhis2.org/2.33/")
@@ -322,7 +322,7 @@ with_mock_api({
                    ), {
                      data <- getMetadata(
                        end_point = "indicators",
-                       filters = "id:eq:ReUHfIn0pTQ",
+                       "id:eq:ReUHfIn0pTQ",
                        fields = "name,id,numerator,denominator",
                        base_url = "https://play.dhis2.org/2.33/"
                      )

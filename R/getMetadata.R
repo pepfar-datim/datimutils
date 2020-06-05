@@ -193,7 +193,7 @@ processFilters <- function(end_point, filters) {
 #' @description General utility to get metadata details from DATIM
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits
-#' @param filters - the filters
+#' @param ... - the filters
 #' @param fields - the fields
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param pluck - whether to add pluck option as documented by dhis2 api
@@ -204,13 +204,13 @@ processFilters <- function(end_point, filters) {
 #'
 
 getMetadata <- function(end_point,
-                        filters = NULL, fields = NULL,
+                        ..., fields = NULL,
                         base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
                         expand = NULL) {
 
   # if no filters or fields are specified, just use endpoint as path
-  if (!(is.null(filters)) | !(is.null(fields))) {
+  if (!(missing(...)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
   }
 
@@ -218,8 +218,8 @@ getMetadata <- function(end_point,
   filter_storage <- list()
 
   # process filter arguments
-  if (!(is.null(filters))) {
-    filters2 <- as.list(filters)
+  if (!(missing(...))) {
+    filters2 <- as.list(...)
     for (i in 1:length(filters2))
     {
       if (i == 1) {
@@ -264,7 +264,7 @@ getMetadata <- function(end_point,
     end_point, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
     ifelse(pluck, "~pluck", "")
   )
-  if (is.null(fields) & is.null(filters)) {
+  if (is.null(fields) & missing(...)) {
     path <- end_point
   }
 
@@ -285,416 +285,78 @@ getMetadata <- function(end_point,
   return(resp)
 }
 
-######################################################################################
-
 #' @export
-#' @title id_eq
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter <- id_eq("FTRrcoaog83")
-#'
-#' print(api_filter)
-#'
-#' getMetadata("dataElements", api_filter, base_url= base_url)
-#'
-id_eq <- function(value) {
-  paste0("id:eq:", value)
-}
+#' @title metadataFilter(values, property, operator)
+#' @description used to format filter strings for metadata calls
+#' @param values the values in property:operator:value
+#' @param property the property in property:operator:value
+#' @param operator the operator in property:operator:value
+#' @return property:operator:value
+#' @usage 
+#' 
+#' metadataFilter(values, property, operator)
+#' 
+#' property %deq% value
+#' 
+#' property %d!eq% value
+#' 
+#' property %dlike% value
+#' 
+#' property %d!like% value
+#' 
+#' property %din% values
+#' 
+#' property %d!in% values
 
-#' @export
-#' @title id_not_eq
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter <- id_not_eq("lxAQ7Zs9VYR")
-#' print(api_filter)
-#'
-#' getMetadata("programs",
-#'             api_filter,
-#'             base_url= base_url)
-#'
-id_not_eq <- function(value) {
-  paste0("id:!eq:", value)
-}
-
-#' @export
-#' @title id_in
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#' ids_vctr <- c("lxAQ7Zs9VYR", "IpHINAT79UW")
-#' ids_str <- "lxAQ7Zs9VYR,IpHINAT79UW"
-#' api_filter <- id_in(ids_vctr)
-#' print(api_filter)
-#'
-#' getMetadata("programs",
-#'             api_filter,
-#'             base_url= base_url)
-#'
-#' api_filter = id_in(ids_str)
-#' print(api_filter)
-#'
-#' getMetadata("programs",
-#'             api_filter,
-#'             base_url= base_url)
-#'
-id_in <- function(values) {
-  IN(values, "id")
-}
-
-#' @export
-#' @title id_not_in
-#' @examples
-#' base_url <-  "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#' ids_vctr <- c("lxAQ7Zs9VYR", "IpHINAT79UW")
-#' ids_str <- "lxAQ7Zs9VYR,IpHINAT79UW"
-#' api_filter <-  id_not_in(ids_vctr)
-#' print(api_filter)
-#'
-#' getMetadata("programs",
-#'             api_filter,
-#'             base_url= base_url)
-#'
-#' api_filter <-  id_not_in(ids_str)
-#' print(api_filter)
-#'
-#' getMetadata("programs",
-#'             api_filter,
-#'             base_url= base_url)
-#'
-id_not_in <- function(values) {
-  notIN(values, "id")
+metadataFilter <- function(values, property, operator){
+  if(length(values) > 1){
+    return(paste0(property, ":", operator ,":[",
+                  paste0(values, collapse = ","), 
+                  "]"))  
+  } else {
+    return(paste0(property,":",operator,":",values))
   }
-
-#' @export
-#' @title .id_eq
-#' @examples
-#' base_url = "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter = .id_eq(property_prefix = "organisationUnits",
-#'                     value    = "bVZTNrnfn9G")
-#'
-#' print(api_filter)
-#'
-#' getMetadata("programs", api_filter, base_url= base_url)
-#'
-.id_eq <- function(value, property_prefix) {
-  paste0(property_prefix, ".id:eq:", value)
 }
 
 #' @export
-#' @title name_like
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter <- name_like("Antenatal")
-#'
-#' print(api_filter)
-#'
-#' getMetadata("programs", api_filter, base_url= base_url)
-#'
-name_like <- function(value) {
-  paste0("name:like:", value)
-}
-
-#' @export
-#' @title name_like
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter <- name_ilike("antenatal")
-#'
-#' print(api_filter)
-#'
-#' getMetadata("programs", api_filter, base_url= base_url)
-#'
-name_ilike <- function(value) {
-  paste0("name:ilike:", value)
-}
-
-#' @export
-#' @title IN
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter <- IN(c("lxAQ7Zs9VYR", "IpHINAT79UW"), "id")
-#'
-#' print(api_filter)
-#'
-#' getMetadata("programs", api_filter, base_url= base_url)
-#'
-IN <- function(values, property) {
-  paste0(property, ":in:[",
-         paste0(values, collapse = ","), 
-         "]")
-}
-
-#' @export
-#' @title notIN
-#' @examples
-#' base_url <- "https://play.dhis2.org/2.34/"
-#' httr::GET(paste0(base_url, "api/me"),
-#'           httr::authenticate("admin", "district"))
-#'
-#' api_filter <- notIN(c("lxAQ7Zs9VYR", "IpHINAT79UW"), "id")
-#'
-#' print(api_filter)
-#'
-#' getMetadata("programs", api_filter, base_url= base_url)
-#'
-notIN <- function(values, property) {
-  paste0(property, ":!in:[",
-         paste0(values, collapse = ","), 
-         "]")
-}
-
-
-
-### This is what I showed in demo the other day
-
-
-
-library(tidyverse)
-
-groups <- c("RXL3lPSK8oG", #clinics
-            "tDZVQ1WtwpA"  #hospitals
-)
-district <- "Bo"
-
-
-# "standard" functions to help create :in: filters for metadata calls
-# uses non-standard evaluation of the property so our code can have name and id
-# instead of "name" and "in" when specifying filter property, examples below
-IN <- function(values, property) {
-  # ensym used to allow for non standard evaluation
-  # property accepts a symbol or a string
-  property <- rlang::as_string(rlang::ensym(property))
-  paste0(property, ":in:[",
-         paste0(values, collapse = ","), 
-         "]")
-}
-
-IN(groups, id)
-groups %>% IN(id)
-IN(groups, "id")
-groups %>% IN("id")
-
-IN(groups, organisationUnitGroups.id)
-groups %>% IN(organisationUnitGroups.id)
-IN(groups, "organisationUnitGroups.id")
-groups %>% IN("organisationUnitGroups.id")
-
-# infix version of previous 
-# allows for creating filters like 
-# id %IN% uid_vctr
-'%IN%' <- function(property, values){
+#' @rdname metadataFilter
+'%din%' <- function(property, values){
   property <- rlang::ensym(property)
-  IN(values, !!property)
+  metadataFilter(values, property, "in")
 } 
 
-id %IN% groups
-"id" %IN% groups
-
-organisationUnitGroups.id %IN% groups
-"organisationUnitGroups.id" %IN% groups
-
-# helpers for common properties
-# would be like idIN(uid_vctr) or uid_vctr %>% idIN
-# these are nice because rstudio can auto code complete the function names
-# super useful for use from the commandline
-# the .id allows for reaching into collections in the json e.g.
-# organisationUnit.id:in:[sadg,asfg]
-# probably good for name, shortName, code, id, path ???
-
-name_IN <- function(values, property_prefix) {
-  property_prefix <- rlang::as_string(rlang::ensym(property_prefix))
-  if (property_prefix == ""){
-    property <- "name"
-  } else{
-    property <- paste0(property_prefix, ".name")
-  }
-  (!!property) %IN% values
-}
-
-id_IN <- function(values, property_prefix) {
-  property_prefix <- rlang::as_string(rlang::ensym(property_prefix))
-  if (property_prefix == ""){
-    property <- "id"
-  } else{
-    property <- paste0(property_prefix, ".id")
-  }
-  (!!property) %IN% values
+#' @export
+#' @rdname metadataFilter
+'%d!in%' <- function(property, values){
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!in")
 } 
 
-id_IN(groups)
-
-# as above for a different metadata filter operator
-# we could easily have these for all possible operators
-LIKE <- function(value, property) {
-  property <- rlang::as_string(rlang::ensym(property))
-  paste0(property, ":like:", value)
-}
-
-'%LIKE%' <- function(property, value) {
+#' @export
+#' @rdname metadataFilter
+'%dlike%' <- function(property, values){
   property <- rlang::ensym(property)
-  LIKE(value, !!property)
-}
+  metadataFilter(values, property, "like")
+} 
 
-name_LIKE <- function(value, property_prefix) {
-  property_prefix <- rlang::as_string(rlang::ensym(property_prefix))
-  if (property_prefix == ""){
-    property <- "name"
-  } else{
-    property <- paste0(property_prefix, ".name")
-  }
-  (!!property) %LIKE% value
-}  
+#' @export
+#' @rdname metadataFilter
+'%d!like%' <- function(property, values){
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!like")
+} 
 
-path_LIKE <- function(value, property_prefix) {
-  property_prefix <- rlang::as_string(rlang::ensym(property_prefix))
-  if (property_prefix == ""){
-    property <- "path"
-  } else{
-    property <- paste0(property_prefix, ".path")
-  }
-  (!!property) %LIKE% value
-}  
+#' @export
+#' @rdname metadataFilter
+'%deq%' <- function(property, values){
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "eq")
+} 
 
-
-# examples
-district  <-  "Bo"
-LIKE(district, "name")
-LIKE(district, name)
-"name" %LIKE% district
-name %LIKE% district
-name_LIKE(district)
-name_LIKE(district, organisationUnit)
-
-# storing the propery in a variable first
-var = "name"
-(!!var) %LIKE% district
-
-path %LIKE% district
-path_LIKE(district)
-
-
-groups <- c("RXL3lPSK8oG", #clinics
-            "tDZVQ1WtwpA"  #hospitals
-)
-
-groups %>% id_IN()
-groups %>% IN(id)
-id %IN% groups
-
-groups %>% id_IN(organisationUnitGroups)
-groups %>% IN(organisationUnitGroups.id)
-organisationUnitGroups.id %IN% groups
-
-c(organisationUnitGroups.id %IN% groups,
-  name %LIKE% district)
-
-c(id_IN(groups, organisationUnit),
-  name %LIKE% district)
-
-
-name %LIKE% district
-district %>% name_LIKE()
-name_LIKE(district)
-LIKE(district, name)
-
-name %LIKE% "Bo"
-"Bo" %>% name_LIKE()
-name_LIKE("Bo")
-LIKE("Bo", name)
-
-organisationUnit.name %LIKE% district
-
-district %>% LIKE(organisationUnit.name)
-
-
-filters <- c(path %LIKE% "Bo", 
-             organisationUnitGroups.id %IN% groups)
-print(filters)
-filters <- c(path_LIKE("Bo"),
-             id_IN(groups, organisationUnitGroups))
-print(filters)
-
-
-# examples grabbing metadata with any number of filters built
-# using the helpers
-# end_point parameter supported by non-standard evaluation
-
-getMetadata <- function(end_point, ..., fields = NULL){
-  end_point <- rlang::ensym(end_point)
-  filters = paste("", ..., sep = "&filter=")
-  if (!is.null(fields)){
-    fields = paste0("&fields=", paste0(fields, collapse = ","))}
-  
-  call <- paste0("https://play.dhis2.org/2.33/api/",
-                 end_point, ".json",
-                 "?paging=false",
-                 filters,
-                 fields)
-  print(call)
-  
-  httr::content(httr::GET(call, httr::authenticate("admin","district")), as = "parsed")
-}
-
-filters <- c(path_LIKE("Bo"),
-             id_IN(groups, organisationUnitGroups))
-print(filters)
-groups <- c("RXL3lPSK8oG", #clinics
-            "tDZVQ1WtwpA"  #hospitals
-)
-getMetadata(organisationUnits,
-            path_LIKE("Bo"),
-            id_IN(groups, organisationUnitGroups))
-
-
-getMetadata(organisationUnits,
-            name %LIKE% "Bo", 
-            organisationUnitGroups.id %IN% groups,
-            fields = "name,id,path")
-
-getMetadata(organisationUnits,
-            name_LIKE("Bo"), 
-            organisationUnitGroups.id %IN% groups,
-            fields = "name,id,path")
-
-getMetadata(organisationUnits,
-            id %IN% groups)
-
-
-# these were made for piping an mutating
-
-#default takes ID and retuns name
-getOrgUnits(id_vctr) #returns name vector
-dplyr::mutate(data, name = getOrgUnits(ids)) # adds column with names
-
-data %>% dplyr::mutate(name = getOrgUnits(ids)) # adds column with names
-
-# but can always modfy defauls
-getOrgUnits(id_vctr, fields = "name,id,path") # exta fields
-getOrgUnits(id_vctr, oganisationUnitGroups.id, fields = "name,id,path") modified filter
-getOrgUnits(name_vctr, name)
-getOrgUnits(code_vctr, code)
-
-id_vctr %>% getOrgUnits()
-country_vctr %>% getPSNUs() # list of PSNUs for specified countries
+#' @export
+#' @rdname metadataFilter
+'%d!eq%' <- function(property, values){
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!eq")
+} 
 
