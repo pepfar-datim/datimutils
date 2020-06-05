@@ -318,7 +318,7 @@ with_mock_api({
        end_point = "organisationUnits",
        name %dlike% "Sierra Leone",
        base_url = "https://play.dhis2.org/2.33/")
-     testthat::expect_equal(NROW(data), 10)
+     testthat::expect_equal(NROW(data), 1)
      rm(data)
    })
 
