@@ -114,6 +114,14 @@ library(httptest)
 #   )
 # )
 # 
+# httr::content(
+#   httr::GET(
+#     paste0("https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#            "paging=false&filter=name:like:Sierra%20Leone"
+#     ),
+#     httr::authenticate("admin", "district")
+#   )
+# )
 # httptest::stop_capturing()
 
 with_mock_api({
@@ -234,8 +242,6 @@ with_mock_api({
      rm(data)
    })
   
-   
-   
    test_that(paste0("No Filter: ", 
                     "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
                     "paging=false"), {
@@ -270,10 +276,21 @@ with_mock_api({
                     "&filter=organisationUnitGroups.name:eq:District",
                     "&filter=children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
                     "&fields=id,name,level,ancestors[id,name]"), {
+                      # filters sent as list
                       data <- getMetadata(
                         end_point = "organisationUnits",
                         c("organisationUnitGroups.name:eq:District",
                                     "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"),
+                        fields = "id,name,level,ancestors[id,name]",
+                        base_url = "https://play.dhis2.org/2.33/"
+                      )
+                      testthat::expect_equal(NROW(data), 2)
+                      rm(data)
+                      # filters sent as ...
+                      data <- getMetadata(
+                        end_point = "organisationUnits",
+                        "organisationUnitGroups.name:eq:District",
+                        "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
                         fields = "id,name,level,ancestors[id,name]",
                         base_url = "https://play.dhis2.org/2.33/"
                       )
@@ -291,6 +308,18 @@ with_mock_api({
                         base_url = "https://play.dhis2.org/2.33/")
                        testthat::expect_equal(NROW(data), 10)
                       rm(data)
+   })
+   
+   test_that(paste0("URL encoding: ",
+                    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+                    "paging=false&filter=name:like:Sierra%20Leone"
+   ), {
+     data <- getMetadata(
+       end_point = "organisationUnits",
+       name %dlike% "Sierra Leone",
+       base_url = "https://play.dhis2.org/2.33/")
+     testthat::expect_equal(NROW(data), 1)
+     rm(data)
    })
 
    test_that(paste0("Filter with less common property: ",

@@ -27,7 +27,7 @@ context("make arbitrary api call with getorgunitgroups")
 # httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #        "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
 #        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
-#        "&fields=id"))
+#        "&fields=code,name,id"))
 # 
 # httptest::stop_capturing()
 
@@ -99,13 +99,23 @@ httptest::with_mock_api({
            })
 
   test_that(
-    paste0("getOrgUnitGroups can handle repeated values"), {
+    paste0("getOrgUnitGroups can handle repeated values and sorting based on input"), {
+
+# play.dhis2.org will return results in a different order than the order in groups      
       groups <- rep(c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
-                      "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb"), 
+                      "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb"))
+      data <-
+        datimutils::getOrgUnitGroups(
+          groups, fields = "code,name,id",
+          base_url = "https://play.dhis2.org/2.33/")
+      testthat::expect_identical(groups, data$id)
+      rm(data)
+      
+      groups <- rep(groups, 
                     300)
       data <-
         datimutils::getOrgUnitGroups(
-          groups, fields = "id",
+          groups, fields = "code,name,id",
           base_url = "https://play.dhis2.org/2.33/")
       
       testthat::expect_equal(NROW(data), 1800)
