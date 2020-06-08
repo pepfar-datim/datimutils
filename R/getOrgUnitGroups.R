@@ -36,10 +36,6 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   n_occur <- data.frame(table(x), stringsAsFactors = F)
   n_occur <- n_occur[match(uniquex, n_occur$x), ]
 
-  if (all(n_occur$Freq == 1)) {
-    n_occur <- NULL
-  }
-
   # call getMetadata with info above
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,

@@ -7,22 +7,45 @@
 
 duplicateResponse <- function(resp, expand) {
 
-  # match rows of resp to rows of expand
-  resp <- resp[match(expand$x, resp[, 1]), , drop = F]
-  expand <- expand[expand$x %in% resp[, 1], ]
-  bindlist <- list()
+  #every column of resp in expand, whcih one has a true make choose
+  
+  fill <- as.data.frame(apply(resp,2, function(y) y %in% expand$x))
+  
 
+    if(nrow(fill) > 1)
+    {
+      fill <- fill[1,]
+    }
+  
+  choose <- resp[, as.logical(fill), drop = T]
+  
+  # match rows of resp to rows of expand
+  
+  if(!(anyNA(choose)))
+  {
+    temp <- match(expand$x, choose)
+    if(!(all(is.na(temp)))){
+    
+    resp <- resp[temp, , drop = F]
+    
+  bindlist <- list()
   # create the duplicates and store in a list
+  if(all(expand$Freq != 1)){
+    
+  expand <- expand[expand$x %in% choose[temp], ]
+    
   for (i in 1:nrow(expand))
   {
-    bindlist[[i]] <- rep(resp[i, ], expand[expand$x == resp[i, 1], "Freq"] - 1)
-  }
-
+    bindlist[[i]] <- rep(i, times = expand$Freq[i])
+    }
+  
   # add in the duplicates to the final response
-  bind <- as.data.frame(c(do.call("rbind", bindlist)))
-  colnames(bind) <- colnames(resp)
-  resp <- rbind(resp, bind)
-
+  resp <- resp[c(do.call("rbind", bindlist)),]
+  
+  }
+  
+    }
+  }
   return(resp)
 }
 
@@ -182,9 +205,6 @@ processFilters <- function(end_point, filters) {
     ex <- paste0(sub("(.*?)(in:)", "\\1in:[", ex), "]")
   }
 
-  # removes whitespace
-  ex <- gsub(" ", "", ex)
-
   return(ex)
 }
 
@@ -219,7 +239,15 @@ getMetadata <- function(end_point,
 
   # process filter arguments
   if (!(missing(...))) {
+    
+    filter_check <- list(...)
     filters2 <- as.list(...)
+    
+    if(length(filter_check) > length(filters2))
+    {
+      filters2 <- filter_check
+    }
+      
     for (i in 1:length(filters2))
     {
       if (i == 1) {
@@ -277,7 +305,7 @@ getMetadata <- function(end_point,
   # simplify data structure
   resp <- simplifyStructure(resp)
 
-  # add in duplicates if needed
+  # #add in duplicates if needed
   if (!(is.null(expand))) {
     resp <- duplicateResponse(resp, expand)
   }
