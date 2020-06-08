@@ -1,30 +1,55 @@
-structure(list(url = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.json?paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]&fields=code,name,id", 
-    status_code = 200L, headers = structure(list(server = "nginx/1.17.9", 
-        date = "Fri, 05 Jun 2020 17:43:08 GMT", `content-type` = "application/json;charset=UTF-8", 
-        `transfer-encoding` = "chunked", connection = "keep-alive", 
-        `cache-control` = "no-cache, private", `x-xss-protection` = "1; mode=block", 
-        `x-frame-options` = "SAMEORIGIN", `x-content-type-options` = "nosniff", 
-        etag = "W/\"0d0bd5b2eb5d0e8f656a7077b9a7fcf61\"", `strict-transport-security` = "max-age=15768000", 
-        `content-encoding` = "gzip"), class = c("insensitive", 
-    "list")), all_headers = list(list(status = 302L, version = "HTTP/1.1", 
-        headers = structure(list(server = "nginx/1.17.9", date = "Fri, 05 Jun 2020 17:43:08 GMT", 
-            `content-type` = "text/html", `content-length` = "145", 
-            connection = "keep-alive", location = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.json?paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]&fields=code,name,id", 
-            `strict-transport-security` = "max-age=15768000"), class = c("insensitive", 
-        "list"))), list(status = 200L, version = "HTTP/1.1", 
-        headers = structure(list(server = "nginx/1.17.9", date = "Fri, 05 Jun 2020 17:43:08 GMT", 
-            `content-type` = "application/json;charset=UTF-8", 
-            `transfer-encoding` = "chunked", connection = "keep-alive", 
-            `cache-control` = "no-cache, private", `x-xss-protection` = "1; mode=block", 
-            `x-frame-options` = "SAMEORIGIN", `x-content-type-options` = "nosniff", 
-            etag = "W/\"0d0bd5b2eb5d0e8f656a7077b9a7fcf61\"", 
-            `strict-transport-security` = "max-age=15768000", 
-            `content-encoding` = "gzip"), class = c("insensitive", 
-        "list")))), cookies = structure(list(domain = "#HttpOnly_play.dhis2.org", 
-        flag = FALSE, path = "/2.33.4", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
-        "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
-    -1L), class = "data.frame"), content = charToRaw("{\"organisationUnitGroups\":[{\"code\":\"CHC\",\"name\":\"CHC\",\"id\":\"CXw2yu5fodb\"},{\"code\":\"Chiefdom\",\"name\":\"Chiefdom\",\"id\":\"gzcv65VyaGq\"},{\"code\":\"CHP\",\"name\":\"CHP\",\"id\":\"uYxK4wmcPqA\"},{\"code\":\"Clinic\",\"name\":\"Clinic\",\"id\":\"RXL3lPSK8oG\"},{\"code\":\"Country\",\"name\":\"Country\",\"id\":\"RpbiCJpIYEj\"},{\"code\":\"District\",\"name\":\"District\",\"id\":\"w1Atoz18PCL\"}]}"), 
-    date = structure(1591378988, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0.133787, namelookup = 4.6e-05, 
-    connect = 4.9e-05, pretransfer = 0.000112, starttransfer = 0.059197, 
-    total = 0.193022)), class = "response")
+structure(list(
+  url = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.json?paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]&fields=code,name,id",
+  status_code = 200L, headers = structure(list(
+    server = "nginx/1.17.9",
+    date = "Fri, 05 Jun 2020 17:43:08 GMT", `content-type` = "application/json;charset=UTF-8",
+    `transfer-encoding` = "chunked", connection = "keep-alive",
+    `cache-control` = "no-cache, private", `x-xss-protection` = "1; mode=block",
+    `x-frame-options` = "SAMEORIGIN", `x-content-type-options` = "nosniff",
+    etag = "W/\"0d0bd5b2eb5d0e8f656a7077b9a7fcf61\"", `strict-transport-security` = "max-age=15768000",
+    `content-encoding` = "gzip"
+  ), class = c(
+    "insensitive",
+    "list"
+  )), all_headers = list(list(
+    status = 302L, version = "HTTP/1.1",
+    headers = structure(list(
+      server = "nginx/1.17.9", date = "Fri, 05 Jun 2020 17:43:08 GMT",
+      `content-type` = "text/html", `content-length` = "145",
+      connection = "keep-alive", location = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.json?paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]&fields=code,name,id",
+      `strict-transport-security` = "max-age=15768000"
+    ), class = c(
+      "insensitive",
+      "list"
+    ))
+  ), list(
+    status = 200L, version = "HTTP/1.1",
+    headers = structure(list(
+      server = "nginx/1.17.9", date = "Fri, 05 Jun 2020 17:43:08 GMT",
+      `content-type` = "application/json;charset=UTF-8",
+      `transfer-encoding` = "chunked", connection = "keep-alive",
+      `cache-control` = "no-cache, private", `x-xss-protection` = "1; mode=block",
+      `x-frame-options` = "SAMEORIGIN", `x-content-type-options` = "nosniff",
+      etag = "W/\"0d0bd5b2eb5d0e8f656a7077b9a7fcf61\"",
+      `strict-transport-security` = "max-age=15768000",
+      `content-encoding` = "gzip"
+    ), class = c(
+      "insensitive",
+      "list"
+    ))
+  )), cookies = structure(list(
+    domain = "#HttpOnly_play.dhis2.org",
+    flag = FALSE, path = "/2.33.4", secure = TRUE, expiration = structure(Inf, class = c(
+      "POSIXct",
+      "POSIXt"
+    )), name = "JSESSIONID", value = "REDACTED"
+  ), row.names = c(
+    NA,
+    -1L
+  ), class = "data.frame"), content = charToRaw("{\"organisationUnitGroups\":[{\"code\":\"CHC\",\"name\":\"CHC\",\"id\":\"CXw2yu5fodb\"},{\"code\":\"Chiefdom\",\"name\":\"Chiefdom\",\"id\":\"gzcv65VyaGq\"},{\"code\":\"CHP\",\"name\":\"CHP\",\"id\":\"uYxK4wmcPqA\"},{\"code\":\"Clinic\",\"name\":\"Clinic\",\"id\":\"RXL3lPSK8oG\"},{\"code\":\"Country\",\"name\":\"Country\",\"id\":\"RpbiCJpIYEj\"},{\"code\":\"District\",\"name\":\"District\",\"id\":\"w1Atoz18PCL\"}]}"),
+  date = structure(1591378988, class = c("POSIXct", "POSIXt"), tzone = "GMT"), times = c(
+    redirect = 0.133787, namelookup = 4.6e-05,
+    connect = 4.9e-05, pretransfer = 0.000112, starttransfer = 0.059197,
+    total = 0.193022
+  )
+), class = "response")

@@ -61,13 +61,13 @@ api_get <- function(path, base_url = getOption("baseurl"),
 
   # replaces all // with / unless it is the // in http://
   url <- gsub("[^http://]//", "/", url)
-  
-  #encodes url
-  url <-  URLencode(url)
-  
+
+  # encodes url
+  url <- URLencode(url)
+
   # removes whitespace
   url <- gsub(" ", "", url)
-  
+
   print(url)
   # retry api get block, only retries if reponse code not in 400s
   i <- 1

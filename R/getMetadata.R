@@ -7,43 +7,37 @@
 
 duplicateResponse <- function(resp, expand) {
 
-  #every column of resp in expand, whcih one has a true make choose
-  
-  fill <- as.data.frame(apply(resp,2, function(y) y %in% expand$x))
-  
+  # every column of resp in expand, whcih one has a true make choose
 
-    if(nrow(fill) > 1)
-    {
-      fill <- fill[1,]
-    }
-  
-  choose <- resp[, as.logical(fill), drop = T]
-  
-  # match rows of resp to rows of expand
-  
-  if(!(anyNA(choose)))
-  {
-    temp <- match(expand$x, choose)
-    if(!(all(is.na(temp)))){
-    
-    resp <- resp[temp, , drop = F]
-    
-  bindlist <- list()
-  # create the duplicates and store in a list
-  if(all(expand$Freq != 1)){
-    
-  expand <- expand[expand$x %in% choose[temp], ]
-    
-  for (i in 1:nrow(expand))
-  {
-    bindlist[[i]] <- rep(i, times = expand$Freq[i])
-    }
-  
-  # add in the duplicates to the final response
-  resp <- resp[c(do.call("rbind", bindlist)),]
-  
+  fill <- as.data.frame(apply(resp, 2, function(y) y %in% expand$x))
+
+
+  if (nrow(fill) > 1) {
+    fill <- fill[1, ]
   }
-  
+
+  choose <- resp[, as.logical(fill), drop = T]
+
+  # match rows of resp to rows of expand
+
+  if (!(anyNA(choose))) {
+    temp <- match(expand$x, choose)
+    if (!(all(is.na(temp)))) {
+      resp <- resp[temp, , drop = F]
+
+      bindlist <- list()
+      # create the duplicates and store in a list
+      if (all(expand$Freq != 1)) {
+        expand <- expand[expand$x %in% choose[temp], ]
+
+        for (i in 1:nrow(expand))
+        {
+          bindlist[[i]] <- rep(i, times = expand$Freq[i])
+        }
+
+        # add in the duplicates to the final response
+        resp <- resp[c(do.call("rbind", bindlist)), ]
+      }
     }
   }
   return(resp)
@@ -105,50 +99,51 @@ processFilters <- function(end_point, filters) {
 
   # takes filter argument and turns it into a single character string
   ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
-  
+
   # removes extraneous info (will be added later anyway for consistency)
   look <- sub("\\?filter=|\\?filter", "", ex)
   look <- sub("\\&filter=|\\&filter", "", look)
-  
-  #if the format comes in correct
-  if(stringr::str_count(look, pattern = ":") == 2){
-    filter_option <- stringr::str_extract(look, '(?<=:).*(?=:)')    
-    filter_item <- stringr::str_extract(look, '^[^:]*')
-    rest <- stringr::str_extract(look, '[^:]+$')
-    end_point <- ifelse(is.na(end_point), "", end_point)
-    end_point_tentative = ""
-    
-    # creates a basic filter path
-    ex <- paste0(filter_item,
-                 filter_option,
-                 rest)
-    } else{
-  
-  # extracts end_point and what is not end_point
-  end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
-  end_point <- ifelse(is.na(end_point_tentative),
-    ifelse(is.na(end_point), "", end_point), end_point_tentative
-  )
-  end_point <- gsub("/", "", end_point)
-  look <- sub("(.*)(id|name)", "\\2", look)
 
-  # extracts the original filter
-  filter_option <-
-    stringr::str_extract(
-      substr(sub("name", "", look), 1, 8),
-      "!ilike|!like|ilike|like|!in|!eq|in|eq"
+  # if the format comes in correct
+  if (stringr::str_count(look, pattern = ":") == 2) {
+    filter_option <- stringr::str_extract(look, "(?<=:).*(?=:)")
+    filter_item <- stringr::str_extract(look, "^[^:]*")
+    rest <- stringr::str_extract(look, "[^:]+$")
+    end_point <- ifelse(is.na(end_point), "", end_point)
+    end_point_tentative <- ""
+
+    # creates a basic filter path
+    ex <- paste0(
+      filter_item,
+      filter_option,
+      rest
+    )
+  } else {
+
+    # extracts end_point and what is not end_point
+    end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
+    end_point <- ifelse(is.na(end_point_tentative),
+      ifelse(is.na(end_point), "", end_point), end_point_tentative
+    )
+    end_point <- gsub("/", "", end_point)
+    look <- sub("(.*)(id|name)", "\\2", look)
+
+    # extracts the original filter
+    filter_option <-
+      stringr::str_extract(
+        substr(sub("name", "", look), 1, 8),
+        "!ilike|!like|ilike|like|!in|!eq|in|eq"
+      )
+
+    # extracts either id or name from filter
+    filter_item <- stringr::str_extract(
+      substr(look, 1, 4),
+      "name|id"
     )
 
-  # extracts either id or name from filter
-  filter_item <- stringr::str_extract(
-    substr(look, 1, 4),
-    "name|id"
-  )
-
-  ex <- look
-
+    ex <- look
   }
-  
+
   # removes :
   ex <- gsub(":", "", ex)
 
@@ -239,15 +234,13 @@ getMetadata <- function(end_point,
 
   # process filter arguments
   if (!(missing(...))) {
-    
     filter_check <- list(...)
     filters2 <- as.list(...)
-    
-    if(length(filter_check) > length(filters2))
-    {
+
+    if (length(filter_check) > length(filters2)) {
       filters2 <- filter_check
     }
-      
+
     for (i in 1:length(filters2))
     {
       if (i == 1) {
@@ -320,71 +313,72 @@ getMetadata <- function(end_point,
 #' @param property the property in property:operator:value
 #' @param operator the operator in property:operator:value
 #' @return property:operator:value
-#' @usage 
-#' 
+#' @usage
+#'
 #' metadataFilter(values, property, operator)
-#' 
+#'
 #' property %deq% value
-#' 
+#'
 #' property %d!eq% value
-#' 
+#'
 #' property %dlike% value
-#' 
+#'
 #' property %d!like% value
-#' 
+#'
 #' property %din% values
-#' 
+#'
 #' property %d!in% values
 
-metadataFilter <- function(values, property, operator){
-  if(length(values) > 1){
-    return(paste0(property, ":", operator ,":[",
-                  paste0(values, collapse = ","), 
-                  "]"))  
+metadataFilter <- function(values, property, operator) {
+  if (length(values) > 1) {
+    return(paste0(
+      property, ":", operator, ":[",
+      paste0(values, collapse = ","),
+      "]"
+    ))
   } else {
-    return(paste0(property,":",operator,":",values))
+    return(paste0(property, ":", operator, ":", values))
   }
 }
 
 #' @export
 #' @rdname metadataFilter
-'%din%' <- function(property, values){
+"%din%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "in")
-} 
+}
 
 #' @export
 #' @rdname metadataFilter
-'%d!in%' <- function(property, values){
+"%d!in%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "!in")
-} 
+}
 
 #' @export
 #' @rdname metadataFilter
-'%dlike%' <- function(property, values){
+"%dlike%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "like")
-} 
+}
 
 #' @export
 #' @rdname metadataFilter
-'%d!like%' <- function(property, values){
+"%d!like%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "!like")
-} 
+}
 
 #' @export
 #' @rdname metadataFilter
-'%deq%' <- function(property, values){
+"%deq%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "eq")
-} 
+}
 
 #' @export
 #' @rdname metadataFilter
-'%d!eq%' <- function(property, values){
+"%d!eq%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "!eq")
-} 
-
+}

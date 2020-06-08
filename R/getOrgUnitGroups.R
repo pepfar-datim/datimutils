@@ -61,7 +61,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
 #' #' @param by2 - what to filter by, i.e. id or name, default is id,
 #' #' applies to filter2
 #' #' @return the metadata response in json format and flattened
-#' 
+#'
 #' getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
 #'                               by1 = NULL, by2 = NULL,
 #'                               fields = NULL, base_url = getOption("baseurl")) {

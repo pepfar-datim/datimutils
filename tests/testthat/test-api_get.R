@@ -94,56 +94,65 @@ httptest::with_mock_api({
   })
 
   test_that(
-    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
-    user <- api_get(
-      path = "api/me",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(user$name, "John Traore")
-    testthat::expect_identical(user$id, "xE7jOejl9FI")
-    rm(user)
+    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false",
+    {
+      user <- api_get(
+        path = "api/me",
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(user$name, "John Traore")
+      testthat::expect_identical(user$id, "xE7jOejl9FI")
+      rm(user)
 
-    user <- api_get(
-      path = "api/me.json",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(user$name, "John Traore")
-    rm(user)
+      user <- api_get(
+        path = "api/me.json",
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(user$name, "John Traore")
+      rm(user)
 
-    user <- api_get(
-      path = "api/me.json?paging=false",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(user$name, "John Traore")
-    rm(user)
+      user <- api_get(
+        path = "api/me.json?paging=false",
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(user$name, "John Traore")
+      rm(user)
 
-    user <- api_get(
-      path = "api/me/",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-    testthat::expect_identical(user$name, "John Traore")
-    rm(user)
-  })
+      user <- api_get(
+        path = "api/me/",
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(user$name, "John Traore")
+      rm(user)
+    }
+  )
 
   test_that(
-    paste0("Specific id: https://play.dhis2.org/2.33/",
-           "api/indicators/ReUHfIn0pTQ.json?paging=false"), {
-             ind <- api_get(
-               path = "api/indicators/ReUHfIn0pTQ",
-               base_url = "https://play.dhis2.org/2.33/"
-               )
-             testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
-             rm(ind)
-             })
+    paste0(
+      "Specific id: https://play.dhis2.org/2.33/",
+      "api/indicators/ReUHfIn0pTQ.json?paging=false"
+    ),
+    {
+      ind <- api_get(
+        path = "api/indicators/ReUHfIn0pTQ",
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
+      rm(ind)
+    }
+  )
 
   test_that(paste0(
     "Nested fields: ",
     "https://play.dhis2.org/2.33/api/indicators.json?paging=false",
     "&fields=name,id,translations[locale,value],indicatorGroups[id,name]",
-    "&filter=name:ilike:anc"), {
-      ind <- api_get(
-      path = paste0("api/indicators&fields=name,id,translations[locale,value],",
-                    "indicatorGroups[id,name]&filter=name:ilike:anc"),
+    "&filter=name:ilike:anc"
+  ), {
+    ind <- api_get(
+      path = paste0(
+        "api/indicators&fields=name,id,translations[locale,value],",
+        "indicatorGroups[id,name]&filter=name:ilike:anc"
+      ),
       base_url = "https://play.dhis2.org/2.33/"
     )
     expect_type(ind[["indicators"]][["translations"]][[1]], "list")
@@ -152,8 +161,10 @@ httptest::with_mock_api({
     rm(ind)
   })
 
-  test_that(paste0("Specific field: https://play.dhis2.org/2.33/",
-                   "api/me.json?paging=false&fields=name"), {
+  test_that(paste0(
+    "Specific field: https://play.dhis2.org/2.33/",
+    "api/me.json?paging=false&fields=name"
+  ), {
     user <- api_get(
       path = "api/me?fields=name",
       base_url = "https://play.dhis2.org/2.33/"
@@ -163,8 +174,10 @@ httptest::with_mock_api({
     rm(user)
   })
 
-  test_that(paste0("Pagination: https://play.dhis2.org/2.33/",
-                   "api/indicators.json?paging=false&fields=name"), {
+  test_that(paste0(
+    "Pagination: https://play.dhis2.org/2.33/",
+    "api/indicators.json?paging=false&fields=name"
+  ), {
     # standard call to indicators would have pagination
     # check we are not receiving paged results if we leave off paging=false
     ind <- api_get(
