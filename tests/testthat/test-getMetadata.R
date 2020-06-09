@@ -125,11 +125,12 @@ library(httptest)
 # httptest::stop_capturing()
 
 with_mock_api({
-  test_that(paste0(
-    "Basic eq call: ",
-    "https://play.dhis2.org/2.33/api/dataElements.json?",
-    "paging=false&filter=id:eq:FTRrcoaog83"
-  ), {
+  test_that("Basic eq call: ", {
+  
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/dataElements.json?",
+#   "paging=false&filter=id:eq:FTRrcoaog83&fields=name,id")))
+    
     data <- getMetadata(
       end_point = "dataElements",
       id %deq% "FTRrcoaog83",
@@ -138,7 +139,7 @@ with_mock_api({
     # data <- data[["dataElements"]]
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_named(data, c("id", "displayName"))
+    testthat::expect_named(data, c("name", "id"))
     testthat::expect_equal(data$id, "FTRrcoaog83")
     rm(data)
   })
@@ -246,11 +247,12 @@ with_mock_api({
     rm(data)
   })
 
-  test_that(paste0(
-    "No Filter: ",
-    "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-    "paging=false"
-  ), {
+  test_that("No Filter: ", {
+
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&fields=name,id")))
+    
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       base_url = "https://play.dhis2.org/2.33/"
@@ -310,11 +312,12 @@ with_mock_api({
     rm(data)
   })
 
-  test_that(paste0(
-    "String like: ",
-    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
-    "paging=false&filter=name:like:Baoma"
-  ), {
+  test_that("String like: ", {
+    
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#   "paging=false&filter=name:like:Baoma&fields=name,id")))
+    
     data <- getMetadata(
       end_point = "organisationUnits",
       name %dlike% "Baoma",
@@ -324,11 +327,12 @@ with_mock_api({
     rm(data)
   })
 
-  test_that(paste0(
-    "URL encoding: ",
-    "https://play.dhis2.org/2.33/api/organisationUnits.json?",
-    "paging=false&filter=name:like:Sierra%20Leone"
-  ), {
+  test_that("URL encoding: ",{
+    
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnits.json?",
+#   "paging=false&filter=name:like:Sierra%20Leone&fields=name,id")))
+
     data <- getMetadata(
       end_point = "organisationUnits",
       name %dlike% "Sierra Leone",
