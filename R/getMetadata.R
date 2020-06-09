@@ -222,7 +222,7 @@ processFilters <- function(end_point, filters) {
 #'
 
 getMetadata <- function(end_point,
-                        ..., fields = NULL,
+                        ..., fields = "name,id",
                         base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
                         expand = NULL) {
