@@ -32,10 +32,15 @@ context("make arbitrary api call with getorgunitgroups")
 # httptest::stop_capturing()
 
 httptest::with_mock_api({
-  test_that(paste0("Default behavior, provide id get back name"), {
+  test_that(paste0("Default behavior, given id return name"), {
+
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id")))
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name")))
+    
       data <- datimutils::getOrgUnitGroups(
         "CXw2yu5fodb",
         base_url = "https://play.dhis2.org/2.33/")
@@ -44,13 +49,14 @@ httptest::with_mock_api({
       })
   
   test_that(
-    paste0("Default behavior, provide name get back id (with standard",
+    paste0("Default behavior, given name return id (using standard",
            "evaluation of by): "), {
              
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHC]&fields=id")))
-      data <- datimutils::getOrgUnitGroups(
+             
+      data <- getOrgUnitGroups(
         "CHC", by = "name",
         base_url = "https://play.dhis2.org/2.33/")
       
@@ -60,7 +66,7 @@ httptest::with_mock_api({
   )
   
   test_that(
-    paste0("Default behavior, provide name get back id", 
+    paste0("Default behavior, provide name get back id ", 
            "(non standard evaluation of by):"
            ), {
              
@@ -78,7 +84,7 @@ httptest::with_mock_api({
   )
 
   test_that(
-    paste0("Default behavior, if provide filter property other than name or", 
+    paste0("Default behavior, if provide filter property other than name or ", 
            "id then name and id returned by default: "), {
   
 # httr::content(httr::GET(
@@ -100,17 +106,18 @@ httptest::with_mock_api({
   test_that(
     paste0("Provide vector of unique IDs and get back ordered",
            "character vector of names based on input order"), {
-        
+             
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]")))
-      data <- datimutils::getOrgUnitGroups(
-        c("w1Atoz18PCL","CXw2yu5fodb"),
-        base_url = "https://play.dhis2.org/2.33/"
-      )
-      testthat::expect_identical(data, c("District","CHC"))
-      rm(data)
-      })
+#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
+#   "&fields=name")))
+             data <- datimutils::getOrgUnitGroups(
+               c("w1Atoz18PCL","CXw2yu5fodb"),
+               base_url = "https://play.dhis2.org/2.33/"
+             )
+             testthat::expect_identical(data, c("District","CHC"))
+             rm(data)
+           })
   
   test_that(
     paste0("Provide vector of non-unique IDs and get back ordered",
@@ -181,7 +188,7 @@ httptest::with_mock_api({
 
   test_that("Get collections as lists", {
     
-# httr::content(httr::GET(paste0(    
+# httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHP,Rural]",
 #   "&fields=name,id,organisationUnits[name,id],groupSets[name,id]")))
@@ -232,7 +239,7 @@ httptest::with_mock_api({
 # httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #        "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
 #        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
-#        "&fields=code,name,id"))      
+#        "&fields=code,name,id"))
       data <-
         datimutils::getOrgUnitGroups(
           groups,
