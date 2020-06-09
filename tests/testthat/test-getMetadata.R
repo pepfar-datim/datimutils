@@ -311,7 +311,7 @@ with_mock_api({
   })
 
   test_that(paste0(
-    "Non standard String like: ",
+    "String like: ",
     "https://play.dhis2.org/2.33/api/organisationUnits.json?",
     "paging=false&filter=name:like:Baoma"
   ), {
