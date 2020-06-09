@@ -110,7 +110,12 @@ httptest::with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
+#   "&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
 #   "&fields=name")))
+             
              data <- getOrgUnitGroups(
                c("w1Atoz18PCL","CXw2yu5fodb"),
                base_url = "https://play.dhis2.org/2.33/"
@@ -125,7 +130,8 @@ httptest::with_mock_api({
              
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]")))
+#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
+#   "&fields=name,id")))
              
       data <- getOrgUnitGroups(
         c("w1Atoz18PCL","CXw2yu5fodb", 
@@ -146,7 +152,11 @@ httptest::with_mock_api({
 
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#   "paging=false&filter=name:in:[District,CHC]")))
+#   "paging=false&filter=name:in:[District,CHC]&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=name:in:[District,CHC]&fields=id")))
+             
       data <- getOrgUnitGroups(
         c("District","CHC"), by = name,
         base_url = "https://play.dhis2.org/2.33/"
