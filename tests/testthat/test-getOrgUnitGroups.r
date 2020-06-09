@@ -32,31 +32,28 @@ context("make arbitrary api call with getorgunitgroups")
 # httptest::stop_capturing()
 
 httptest::with_mock_api({
-  test_that(
-    paste0("Default behavior, provide id get back name",
-           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-           "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name"
-    ), {
+  test_that(paste0("Default behavior, provide id get back name"), {
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name")))
       data <- datimutils::getOrgUnitGroups(
         "CXw2yu5fodb",
-        base_url = "https://play.dhis2.org/2.33/"
-      )
+        base_url = "https://play.dhis2.org/2.33/")
       testthat::expect_equal(data, "CHC")
       rm(data)
-    }
-  )
+      })
   
   test_that(
     paste0("Default behavior, provide name get back id (with standard",
-           "evaluation of by): ",
-           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-           "paging=false&filter=id:in:[CHC]&fields=id"
-    ),
-    {
+           "evaluation of by): "), {
+             
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=name:in:[CHC]&fields=id")))
       data <- datimutils::getOrgUnitGroups(
         "CHC", by = "name",
-        base_url = "https://play.dhis2.org/2.33/"
-      )
+        base_url = "https://play.dhis2.org/2.33/")
+      
       testthat::expect_equal(data, "CXw2yu5fodb")
       rm(data)
     }
@@ -64,62 +61,65 @@ httptest::with_mock_api({
   
   test_that(
     paste0("Default behavior, provide name get back id", 
-           "(non standard evaluation of by):",
-           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-           "paging=false&filter=id:in:[CHC]&fields=id"
-    ), {
-      # with non standard evaluation for by
-      data <- datimutils::getOrgUnitGroups(
-        "CHC", by = name,
-        base_url = "https://play.dhis2.org/2.33/"
-      )
-      testthat::expect_equal(data, "CXw2yu5fodb")
-      rm(data)
+           "(non standard evaluation of by):"
+           ), {
+             
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#          "paging=false&filter=name:in:[CHC]&fields=id")))
+      
+             data <- datimutils::getOrgUnitGroups(
+               "CHC", by = name,
+               base_url = "https://play.dhis2.org/2.33/")
+             
+             testthat::expect_equal(data, "CXw2yu5fodb")
+             rm(data)
     }
   )
 
   test_that(
     paste0("Default behavior, if provide filter property other than name or", 
-           "id then name and id returned by default: ",
-           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-           "paging=false&filter=code:in:[CHC]&fields=name,id"
-    ), {
-      test_that::expect_error(
-        datimutils::getOrgUnitGroups(
-          "CHC", by = code,
-          base_url = "https://play.dhis2.org/2.33/"
-          )
-        )
-      
-      testthat::expect_equal(NROW(data), 1)
-      testthat::expect_named(data, c("name", "id"))
-      rm(data)
-      }
+           "id then name and id returned by default: "), {
+  
+# httr::content(httr::GET(
+#   paste0(
+#          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#          "paging=false&filter=code:in:[CHC]&fields=name,id")))
+             
+             data <- datimutils::getOrgUnitGroups(
+               "CHC", by = code,
+               base_url = "https://play.dhis2.org/2.33/"
+             )
+             
+             testthat::expect_equal(NROW(data), 1)
+             testthat::expect_named(data, c("name", "id"))
+             rm(data)
+           }
   )
   
   test_that(
     paste0("Provide vector of unique IDs and get back ordered",
-           "character vector of names based on input order",
-      "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-      "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]"
-    ),{
+           "character vector of names based on input order"), {
+        
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]")))
       data <- datimutils::getOrgUnitGroups(
         c("w1Atoz18PCL","CXw2yu5fodb"),
         base_url = "https://play.dhis2.org/2.33/"
       )
       testthat::expect_identical(data, c("District","CHC"))
       rm(data)
-      
-    }
-  )
+      })
   
   test_that(
     paste0("Provide vector of non-unique IDs and get back ordered",
-           "character vector of names based on input order",
-           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-           "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]"
-    ),
-    {
+           "character vector of names based on input order"), {
+             
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]")))
+             
       data <- datimutils::getOrgUnitGroups(
         c("w1Atoz18PCL","CXw2yu5fodb", 
           "w1Atoz18PCL","w1Atoz18PCL",
@@ -135,11 +135,11 @@ httptest::with_mock_api({
   
   test_that(
     paste0("Provide vector of non-repeating names and get back ordered",
-           "character vector of ids: ",
-           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-           "paging=false&filter=name:in:[District,CHC]"
-    ),
-    {
+           "character vector of ids: "),{
+
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=name:in:[District,CHC]")))
       data <- datimutils::getOrgUnitGroups(
         c("District","CHC"), by = name,
         base_url = "https://play.dhis2.org/2.33/"
@@ -149,7 +149,7 @@ httptest::with_mock_api({
     }
   )
 
-  test_that("Uses default base_url", {
+  test_that("Uses default base_url: ", {
     original_baseurl <- getOption("baseurl")
     options("baseurl" = "https://play.dhis2.org/2.33/")
     data <- datimutils::getOrgUnitGroups("CXw2yu5fodb")
@@ -158,13 +158,13 @@ httptest::with_mock_api({
     rm(data)
   })
 
-  test_that(
-    paste0(
-      "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-      "paging=false&filter=name:in:[CHP,Rural]",
-      "&fields=id,code"
-    ),
-    {
+  test_that("Can specify non-default fields", {
+        
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=name:in:[CHP,Rural]",
+#   "&fields=id,code")))
+
       data <-
         datimutils::getOrgUnitGroups(
           c("CHP", "Rural"),
@@ -179,13 +179,13 @@ httptest::with_mock_api({
     }
   )
 
-  test_that(
-    paste0(
-      "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-      "paging=false&filter=name:in:[CHP,Rural]",
-      "&fields=name,id,organisationUnits[name,id],groupSets[name,id]"
-    ),
-    {
+  test_that("Get collections as lists", {
+    
+# httr::content(httr::GET(paste0(    
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=name:in:[CHP,Rural]",
+#   "&fields=name,id,organisationUnits[name,id],groupSets[name,id]")))
+    
       data <-
         datimutils::getOrgUnitGroups(
           c("CHP", "Rural"),
@@ -215,27 +215,24 @@ httptest::with_mock_api({
   )
 
   test_that(
-    paste0("getOrgUnitGroups can handle repeated values and sorting based on input"),
-    {
+    paste0("getOrgUnitGroups can handle repeated values and sorting based on input",
+           "with multiple fields"), {
 
-      # play.dhis2.org will return results in a different order than the order in groups
       groups <- rep(c(
         "gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
         "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb"
-      ))
-      data <-
-        datimutils::getOrgUnitGroups(
-          groups,
-          fields = "code,name,id",
-          base_url = "https://play.dhis2.org/2.33/"
-        )
-      testthat::expect_identical(groups, data$id)
-      rm(data)
+      ), 19)
 
-      groups <- rep(
-        groups,
-        300
-      )
+# randomize order of uids
+      rows <- sample(length(groups))
+      groups <- c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
+                  "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb",
+                  groups[rows])
+
+# httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#        "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
+#        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
+#        "&fields=code,name,id"))      
       data <-
         datimutils::getOrgUnitGroups(
           groups,
@@ -243,7 +240,7 @@ httptest::with_mock_api({
           base_url = "https://play.dhis2.org/2.33/"
         )
 
-      testthat::expect_equal(NROW(data), 1800)
+      testthat::expect_equal(NROW(data), 120)
       testthat::expect_identical(groups, data$id)
       rm(data)
     }
