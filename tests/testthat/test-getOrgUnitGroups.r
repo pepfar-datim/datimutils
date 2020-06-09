@@ -33,16 +33,118 @@ context("make arbitrary api call with getorgunitgroups")
 
 httptest::with_mock_api({
   test_that(
-    paste0(
-      "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-      "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name"
-    ),
-    {
+    paste0("Default behavior, provide id get back name",
+           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+           "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name"
+    ), {
       data <- datimutils::getOrgUnitGroups(
         "CXw2yu5fodb",
         base_url = "https://play.dhis2.org/2.33/"
       )
       testthat::expect_equal(data, "CHC")
+      rm(data)
+    }
+  )
+  
+  test_that(
+    paste0("Default behavior, provide name get back id (with standard",
+           "evaluation of by): ",
+           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+           "paging=false&filter=id:in:[CHC]&fields=id"
+    ),
+    {
+      data <- datimutils::getOrgUnitGroups(
+        "CHC", by = "name",
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_equal(data, "CXw2yu5fodb")
+      rm(data)
+    }
+  )
+  
+  test_that(
+    paste0("Default behavior, provide name get back id", 
+           "(non standard evaluation of by):",
+           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+           "paging=false&filter=id:in:[CHC]&fields=id"
+    ), {
+      # with non standard evaluation for by
+      data <- datimutils::getOrgUnitGroups(
+        "CHC", by = name,
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_equal(data, "CXw2yu5fodb")
+      rm(data)
+    }
+  )
+
+  test_that(
+    paste0("Default behavior, if provide filter property other than name or", 
+           "id then name and id returned by default: ",
+           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+           "paging=false&filter=code:in:[CHC]&fields=name,id"
+    ), {
+      test_that::expect_error(
+        datimutils::getOrgUnitGroups(
+          "CHC", by = code,
+          base_url = "https://play.dhis2.org/2.33/"
+          )
+        )
+      
+      testthat::expect_equal(NROW(data), 1)
+      testthat::expect_named(data, c("name", "id"))
+      rm(data)
+      }
+  )
+  
+  test_that(
+    paste0("Provide vector of unique IDs and get back ordered",
+           "character vector of names based on input order",
+      "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+      "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]"
+    ),{
+      data <- datimutils::getOrgUnitGroups(
+        c("w1Atoz18PCL","CXw2yu5fodb"),
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(data, c("District","CHC"))
+      rm(data)
+      
+    }
+  )
+  
+  test_that(
+    paste0("Provide vector of non-unique IDs and get back ordered",
+           "character vector of names based on input order",
+           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+           "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]"
+    ),
+    {
+      data <- datimutils::getOrgUnitGroups(
+        c("w1Atoz18PCL","CXw2yu5fodb", 
+          "w1Atoz18PCL","w1Atoz18PCL",
+          "CXw2yu5fodb","CXw2yu5fodb"),
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(data, c("District","CHC",
+                                         "District","District",
+                                         "CHC","CHC"))
+      rm(data)
+    }
+  )
+  
+  test_that(
+    paste0("Provide vector of non-repeating names and get back ordered",
+           "character vector of ids: ",
+           "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+           "paging=false&filter=name:in:[District,CHC]"
+    ),
+    {
+      data <- datimutils::getOrgUnitGroups(
+        c("District","CHC"), by = name,
+        base_url = "https://play.dhis2.org/2.33/"
+      )
+      testthat::expect_identical(data,  c("w1Atoz18PCL","CXw2yu5fodb"))
       rm(data)
     }
   )
