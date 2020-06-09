@@ -311,12 +311,12 @@ with_mock_api({
   })
 
   test_that(paste0(
-    "String like: ",
+    "Non standard String like: ",
     "https://play.dhis2.org/2.33/api/organisationUnits.json?",
     "paging=false&filter=name:like:Baoma"
   ), {
     data <- getMetadata(
-      end_point = "organisationUnits",
+      end_point = organisationUnits,
       name %dlike% "Baoma",
       base_url = "https://play.dhis2.org/2.33/"
     )

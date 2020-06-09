@@ -13,14 +13,22 @@
 #'
 getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
                              base_url = getOption("baseurl")) {
-  # process field options
-  default_feilds <- if (is.null(fields)) {
-    c("name", "id")
-  } else {
-    fields
-  }
+
+  
+  by_ns <- try(rlang::ensym(by), silent=TRUE)
+  
   # process first filter item (id, name, etc.)
-  default_filter_item <- ifelse(is.null(by), "id", by)
+  default_filter_item <- ifelse(class(by_ns) == "try-error", "id", by_ns)
+  
+  
+  # process field options
+  default_feilds <- if (default_filter_item == "name" & is.null(fields)) {
+    "id"
+  } else if (is.null(fields)) {
+    "name"
+  } else {fields}
+  
+
   # process first filter option (in, eq, like, etc.)
   default_filter_option <- "in"
 

@@ -1,5 +1,5 @@
 structure(list(
-  url = "https://play.dhis2.org/2.33.3/api/organisationUnitGroups.json?paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id",
+  url = "https://play.dhis2.org/2.33.3/api/organisationUnitGroups.json?paging=false&filter=id:in:[CXw2yu5fodb]&fields=name",
   status_code = 200L, headers = structure(list(
     server = "nginx/1.17.9",
     date = "Wed, 20 May 2020 11:16:26 GMT", `content-type` = "application/json;charset=UTF-8",
@@ -16,7 +16,7 @@ structure(list(
     headers = structure(list(
       server = "nginx/1.17.9", date = "Wed, 20 May 2020 11:16:26 GMT",
       `content-type` = "text/html", `content-length` = "145",
-      connection = "keep-alive", location = "https://play.dhis2.org/2.33.3/api/organisationUnitGroups.json?paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id",
+      connection = "keep-alive", location = "https://play.dhis2.org/2.33.3/api/organisationUnitGroups.json?paging=false&filter=id:in:[CXw2yu5fodb]&fields=name",
       `strict-transport-security` = "max-age=15768000"
     ), class = c(
       "insensitive",
@@ -46,7 +46,7 @@ structure(list(
   ), row.names = c(
     NA,
     -1L
-  ), class = "data.frame"), content = charToRaw("{\"organisationUnitGroups\":[{\"name\":\"CHC\",\"id\":\"CXw2yu5fodb\"}]}"),
+  ), class = "character"), content = charToRaw("{\"organisationUnitGroups\":[{\"name\":\"CHC\"}]}"),
   date = structure(1589973386, class = c("POSIXct", "POSIXt"), tzone = "GMT"), times = c(
     redirect = 0.044546, namelookup = 2.9e-05,
     connect = 3e-05, pretransfer = 5.6e-05, starttransfer = 0.050114,

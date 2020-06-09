@@ -35,18 +35,14 @@ httptest::with_mock_api({
   test_that(
     paste0(
       "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-      "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id"
+      "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name"
     ),
     {
       data <- datimutils::getOrgUnitGroups(
         "CXw2yu5fodb",
         base_url = "https://play.dhis2.org/2.33/"
       )
-
-      testthat::expect_s3_class(data, "data.frame")
-      testthat::expect_equal(NROW(data), 1)
-      testthat::expect_named(data, c("name", "id"))
-      testthat::expect_equal(data$id, "CXw2yu5fodb")
+      testthat::expect_equal(data, "CHC")
       rm(data)
     }
   )
@@ -55,7 +51,7 @@ httptest::with_mock_api({
     original_baseurl <- getOption("baseurl")
     options("baseurl" = "https://play.dhis2.org/2.33/")
     data <- datimutils::getOrgUnitGroups("CXw2yu5fodb")
-    testthat::expect_equal(data$id, "CXw2yu5fodb")
+    testthat::expect_equal(data, "CHC")
     options("baseurl" = original_baseurl)
     rm(data)
   })
