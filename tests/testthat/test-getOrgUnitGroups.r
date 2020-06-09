@@ -41,7 +41,7 @@ httptest::with_mock_api({
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name")))
     
-      data <- datimutils::getOrgUnitGroups(
+      data <- getOrgUnitGroups(
         "CXw2yu5fodb",
         base_url = "https://play.dhis2.org/2.33/")
       testthat::expect_equal(data, "CHC")
@@ -74,7 +74,7 @@ httptest::with_mock_api({
 #   paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=name:in:[CHC]&fields=id")))
       
-             data <- datimutils::getOrgUnitGroups(
+             data <- getOrgUnitGroups(
                "CHC", by = name,
                base_url = "https://play.dhis2.org/2.33/")
              
@@ -92,7 +92,7 @@ httptest::with_mock_api({
 #          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=code:in:[CHC]&fields=name,id")))
              
-             data <- datimutils::getOrgUnitGroups(
+             data <- getOrgUnitGroups(
                "CHC", by = code,
                base_url = "https://play.dhis2.org/2.33/"
              )
@@ -111,7 +111,7 @@ httptest::with_mock_api({
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
 #   "&fields=name")))
-             data <- datimutils::getOrgUnitGroups(
+             data <- getOrgUnitGroups(
                c("w1Atoz18PCL","CXw2yu5fodb"),
                base_url = "https://play.dhis2.org/2.33/"
              )
@@ -127,7 +127,7 @@ httptest::with_mock_api({
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]")))
              
-      data <- datimutils::getOrgUnitGroups(
+      data <- getOrgUnitGroups(
         c("w1Atoz18PCL","CXw2yu5fodb", 
           "w1Atoz18PCL","w1Atoz18PCL",
           "CXw2yu5fodb","CXw2yu5fodb"),
@@ -147,7 +147,7 @@ httptest::with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[District,CHC]")))
-      data <- datimutils::getOrgUnitGroups(
+      data <- getOrgUnitGroups(
         c("District","CHC"), by = name,
         base_url = "https://play.dhis2.org/2.33/"
       )
@@ -159,7 +159,7 @@ httptest::with_mock_api({
   test_that("Uses default base_url: ", {
     original_baseurl <- getOption("baseurl")
     options("baseurl" = "https://play.dhis2.org/2.33/")
-    data <- datimutils::getOrgUnitGroups("CXw2yu5fodb")
+    data <- getOrgUnitGroups("CXw2yu5fodb")
     testthat::expect_equal(data, "CHC")
     options("baseurl" = original_baseurl)
     rm(data)
@@ -173,7 +173,7 @@ httptest::with_mock_api({
 #   "&fields=id,code")))
 
       data <-
-        datimutils::getOrgUnitGroups(
+        getOrgUnitGroups(
           c("CHP", "Rural"),
           by = "name",
           fields = c("id", "code"),
@@ -194,7 +194,7 @@ httptest::with_mock_api({
 #   "&fields=name,id,organisationUnits[name,id],groupSets[name,id]")))
     
       data <-
-        datimutils::getOrgUnitGroups(
+        getOrgUnitGroups(
           c("CHP", "Rural"),
           by = "name",
           fields = c(
@@ -241,7 +241,7 @@ httptest::with_mock_api({
 #        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
 #        "&fields=code,name,id"))
       data <-
-        datimutils::getOrgUnitGroups(
+        getOrgUnitGroups(
           groups,
           fields = "code,name,id",
           base_url = "https://play.dhis2.org/2.33/"
