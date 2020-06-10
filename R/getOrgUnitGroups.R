@@ -22,7 +22,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   
   
   # process field options
-  default_feilds <- if (default_filter_item == "name" & is.null(fields)) {
+  default_fields <- if (default_filter_item == "name" & is.null(fields)) {
     "id"
   } else if (is.null(fields)) {
     "name"
@@ -48,7 +48,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,
     filters,
-    fields = default_feilds, pluck = F, retry = 1,
+    fields = default_fields, pluck = F, retry = 1,
     expand = n_occur
   )
 }
@@ -74,7 +74,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
 #'                               by1 = NULL, by2 = NULL,
 #'                               fields = NULL, base_url = getOption("baseurl")) {
 #'   # process field options
-#'   default_feilds <- if (is.null(fields)) {
+#'   default_fields <- if (is.null(fields)) {
 #'     c("name", "id")
 #'   } else {
 #'     fields
@@ -94,6 +94,6 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
 #'       paste0(default_filter_item1, default_filter_option1, paste0(filters1, collapse = ",")),
 #'       paste0(default_filter_item2, default_filter_option2, paste0(filters2, collapse = ","))
 #'     ),
-#'     fields = default_feilds, pluck = F, retry = 1, expand = NULL
+#'     fields = default_fields, pluck = F, retry = 1, expand = NULL
 #'   )
 #' }
