@@ -91,18 +91,17 @@ httptest::with_mock_api({
 #   paste0(
 #          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=code:in:[CHC]&fields=name,id")))
-httr::content(httr::GET(
-  paste0(
-         "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-         "paging=false&filter=code:in:[CHC]&fields=name")))
+# httr::content(httr::GET(
+#   paste0(
+#          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#          "paging=false&filter=code:in:[CHC]&fields=name")))
              
-             sdata <- getOrgUnitGroups(
+             data <- getOrgUnitGroups(
                "CHC", by = code,
                base_url = "https://play.dhis2.org/2.33/"
              )
              
              testthat::expect_equal(NROW(data), 1)
-             testthat::expect_named(data, c("name"))
              rm(data)
            }
   )
