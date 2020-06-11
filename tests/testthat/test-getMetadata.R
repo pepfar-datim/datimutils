@@ -301,6 +301,8 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 2)
+    testthat::expect_named(data, c("level", "name", 
+                                   "id", "ancestors"))
     rm(data)
     # filters sent as ...
     data <- getMetadata(
@@ -311,6 +313,8 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 2)
+    testthat::expect_named(data, c("level", "name", 
+                                   "id", "ancestors"))
     rm(data)
   })
 
@@ -341,6 +345,7 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c("name", "id"))
     rm(data)
   })
 
@@ -359,13 +364,10 @@ with_mock_api({
       fields = ":all",
       base_url = "https://play.dhis2.org/2.33/"
     )
-
-    # testthat::expect_s3_class(data, "data.frame")
+    
     testthat::expect_equal(NROW(data), 1)
-    # testthat::expect_named(data, "items")
-    # data <- tidyr::unnest(data, cols = items)
-    # testthat::expect_named(data, c("name", "id"))
-    # testthat::expect_equal(NROW(data), 7)
+    testthat::expect_equal(NCOL(data), 38)
+    
     rm(data)
   })
 
@@ -383,8 +385,8 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
 
-    expect_equal(NROW(data), 1)
-    expect_named(data, c(
+    testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c(
       "name", "id",
       "numerator", "denominator"
     ))
