@@ -144,7 +144,7 @@ with_mock_api({
     rm(data)
   })
 
-  test_that("List Columns: ", {
+  test_that("Single List Column becomes DF: ", {
     # paste0("List Columns: ",
     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
     #        "paging=false&filter=id:eq:gtuVl6NbXQV",
@@ -277,6 +277,8 @@ with_mock_api({
     )
     # data <- data[["organisationUnits"]]
     testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c("level", "name", 
+                                   "id", "ancestors"))
     rm(data)
   })
 
