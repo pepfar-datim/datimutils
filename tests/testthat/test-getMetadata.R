@@ -126,11 +126,11 @@ library(httptest)
 
 with_mock_api({
   test_that("Basic eq call: ", {
-  
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/dataElements.json?",
 #   "paging=false&filter=id:eq:FTRrcoaog83&fields=name,id")))
-    
+  
     data <- getMetadata(
       end_point = "dataElements",
       id %deq% "FTRrcoaog83",
@@ -252,7 +252,7 @@ with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&fields=name,id")))
-  
+
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       base_url = "https://play.dhis2.org/2.33/"
@@ -327,7 +327,7 @@ with_mock_api({
     rm(data)
   })
 
-  test_that("URL encoding: ",{
+  test_that("URL encoding: ", {
 
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnits.json?",
