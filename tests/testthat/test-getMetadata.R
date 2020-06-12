@@ -267,6 +267,9 @@ with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&fields=name")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroupSets.json?",
+#   "paging=false&fields=organisationUnitGroups[name]")))
     
     data <- getMetadata(
       end_point = "organisationUnitGroups",
@@ -285,6 +288,15 @@ with_mock_api({
     )
     testthat::expect_equal(NROW(data), 18)
     testthat::expect_named(data, c("name"))
+    rm(data)
+    
+    data <- getMetadata(
+      end_point = "organisationUnitGroupSets",
+      fields = "organisationUnitGroups[name]",
+      base_url = "https://play.dhis2.org/2.33/")
+    
+    testthat::expect_equal(NROW(data), 15)
+    testthat::expect_named(data, NULL)
     rm(data)
   })
 

@@ -306,10 +306,17 @@ getMetadata <- function(end_point,
 
 # If we only request one singular field and that is what we got back
 # return atomic vector unless as_vector = FALSE
+# when reaching in to collection handle the fact that the returned name
+# is in []
   if (as_vector == TRUE && 
       NCOL(resp) == 1 &&
-      names(resp) == fields){
-    return(resp[[fields]])
+      length(fields) == 1 &&
+      !grepl(",", fields) && (
+        names(resp) == fields || 
+        grepl(paste0("[", names(resp), "]"), 
+              fields)
+        )){
+    return(resp[[1]])
   }
 
   return(resp)
