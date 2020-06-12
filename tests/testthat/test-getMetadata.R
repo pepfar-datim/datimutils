@@ -125,11 +125,14 @@ library(httptest)
 # httptest::stop_capturing()
 
 with_mock_api({
-  test_that("Basic eq call: ", {
+  test_that("Basic eq and sinlge element in call: ", {
 
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/dataElements.json?",
 #   "paging=false&filter=id:eq:FTRrcoaog83&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/dataElements.json?",
+#   "paging=false&filter=id:in:[FTRrcoaog83]&fields=name,id")))
   
     data <- getMetadata(
       end_point = "dataElements",
@@ -141,6 +144,13 @@ with_mock_api({
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c("name", "id"))
     testthat::expect_equal(data$id, "FTRrcoaog83")
+    rm(data)
+    expect_identical(data,
+                     getMetadata(
+                       end_point = "dataElements",
+                       id %din% "FTRrcoaog83",
+                       base_url = "https://play.dhis2.org/2.33/"
+                     ))
     rm(data)
   })
 
