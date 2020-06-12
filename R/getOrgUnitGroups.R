@@ -15,23 +15,22 @@
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @return the metadata response in json format and flattened
 #'
-getOrgUnitGroups <- function(values = NULL, 
+getOrgUnitGroups <- function(values, 
                              by = "id", 
                              fields = NULL,
-                             strict = TRUE,
                              base_url = getOption("baseurl")) {
   function_name <- "getOrgUnitGroups"
   end_point <-  "organisationUnitGroups"
 
   default_filter_item <- rlang::as_string(rlang::ensym(by))
+  
   identifiable_properties <- c("name", "id", "code", "shortName")
   
-  if (!(default_filter_item %in% identifiable_properties) &&  
-        strict == TRUE){
-    stop(paste0("When strict = TRUE ", getOrgUnitGroups,
+  if (!(default_filter_item %in% identifiable_properties)){
+    stop(paste0(function_name,
                 " expects a by parameter of id (the default), name, code, or ",
-                "shortName. Consider setting strict = FALSE, or utilizing the ",
-                "more general getMetadata function."
+                "shortName. Use the ",
+                "more general getMetadata function for other scenarios."
     ))
   }
   
@@ -40,29 +39,60 @@ getOrgUnitGroups <- function(values = NULL,
     "id"
   } else if (is.null(fields)) {
     "name"
-  } else {fields}
+  } else {
+# no property names have spaces so remove any whitespace in fields
+    stringr::str_remove(fields, " ")
+  } 
+ 
+# check if fields contains by as a distinct element
+# \\b represents a non word character so by must be a distinct element
+  by_in_fields <- any(grepl(paste0("\\b", default_filter_item, "\\b"), 
+                            default_fields))
 
+  print(by_in_fields)
+  # in order to ensure matching with input vector we must have the by 
+# column in our results  
+  if (!by_in_fields){
+    default_fields <- c(default_filter_item, default_fields)
+  }
+  
   # make filters
   unique_values <- unique(values)
-
-  # this option is more robust but would need to change mocks
-  # filters = paste0(default_filter_item, default_filter_option, unique_values)
 
   filters <- datimutils::metadataFilter(unique_values,
                                         default_filter_item,
                                         "in")
-     print(filters)
+  
   # make dataframe to know how to expand result in case of duplicate filters
   n_occur <- data.frame(table(values), stringsAsFactors = F)
   n_occur <- n_occur[match(unique_values, n_occur$values), ]
 
   # call getMetadata with info above
-  getMetadata(
-    end_point = !!end_point, base_url = base_url,
-    filters,
-    fields = default_fields, pluck = F, retry = 1,
-    expand = n_occur
+  data <- getMetadata(end_point = !!end_point, 
+              base_url = base_url,
+              filters,
+              fields = default_fields, pluck = F, retry = 1,
+              expand = n_occur
   )
+  
+#  put values in a data frame
+  values <- stats::setNames(data.frame(values), default_filter_item)
+
+# join results to input vector columns will have the same name as the
+# are a common property
+print(names(data))
+print(names(values))
+  data <- dplyr::left_join(values, data, copy = TRUE)
+  
+  if (!by_in_fields){
+    return(dplyr::select(data, -default_filter_item))
+  }
+  return(data)
+  
+  # if (NROW(data) != length(values)){
+  #   stop(paste0(function_name, " resulting in a different number",
+  #               "of input and output items"))
+  # }
 }
 
 #' #' @export
