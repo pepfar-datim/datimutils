@@ -215,6 +215,8 @@ processFilters <- function(end_point, filters) {
 #' developer guide
 #' @param retry number of times to retry
 #' @param expand dataframe to know how to expand result in case of duplicate filters
+#' @param as_vector attempt to return an atomic vector when only a single field
+#' is requested and returned. Defaults to TRUE.
 #' @return the metadata response in json format and flattened
 #'
 
