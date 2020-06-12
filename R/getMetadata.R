@@ -222,7 +222,8 @@ getMetadata <- function(end_point,
                         ..., fields = "name,id",
                         base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
-                        expand = NULL) {
+                        expand = NULL,
+                        as_vector = TRUE) {
 
   # if no filters or fields are specified, just use endpoint as path
   if (!(missing(...)) | !(is.null(fields))) {
@@ -301,6 +302,14 @@ getMetadata <- function(end_point,
   # #add in duplicates if needed
   if (!(is.null(expand))) {
     resp <- duplicateResponse(resp, expand)
+  }
+
+# If we only request one singular field and that is what we got back
+# return atomic vector unless as_vector = FALSE
+  if (as_vector == TRUE && 
+      NCOL(resp) == 1 &&
+      names(resp) == fields){
+    return(resp[[fields]])
   }
 
   return(resp)
