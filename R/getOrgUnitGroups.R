@@ -32,16 +32,16 @@ getOrgUnitGroups <- function(values = NULL,
   default_filter_option <- "in"
 
   # make filters
-  uniquex <- unique(values)
+  unique_values <- unique(values)
 
   # this option is more robust but would need to change mocks
-  # filters = paste0(default_filter_item, default_filter_option, uniquex)
+  # filters = paste0(default_filter_item, default_filter_option, unique_values)
 
-  filters <- paste0(default_filter_item, default_filter_option, paste0(uniquex, collapse = ","))
+  filters <- paste0(default_filter_item, default_filter_option, paste0(unique_values, collapse = ","))
 
   # make dataframe to know how to expand result in case of duplicate filters
   n_occur <- data.frame(table(values), stringsAsFactors = F)
-  n_occur <- n_occur[match(uniquex, n_occur$values), ]
+  n_occur <- n_occur[match(unique_values, n_occur$values), ]
 
   # call getMetadata with info above
   getMetadata(
