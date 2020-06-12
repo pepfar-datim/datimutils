@@ -63,7 +63,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   url <- gsub("[^http://]//", "/", url)
 
   # encodes url
-  url <- URLencode(url)
+  url <- utils::URLencode(url)
 
   # removes whitespace
   url <- gsub(" ", "", url)

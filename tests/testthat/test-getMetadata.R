@@ -126,11 +126,11 @@ library(httptest)
 
 with_mock_api({
   test_that("Basic eq call: ", {
-  
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/dataElements.json?",
 #   "paging=false&filter=id:eq:FTRrcoaog83&fields=name,id")))
-    
+  
     data <- getMetadata(
       end_point = "dataElements",
       id %deq% "FTRrcoaog83",
@@ -252,7 +252,7 @@ with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&fields=name,id")))
-    
+
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       base_url = "https://play.dhis2.org/2.33/"
@@ -319,11 +319,11 @@ with_mock_api({
   })
 
   test_that("String like: ", {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnits.json?",
 #   "paging=false&filter=name:like:Baoma&fields=name,id")))
-    
+
     data <- getMetadata(
       end_point = organisationUnits,
       name %dlike% "Baoma",
@@ -333,8 +333,8 @@ with_mock_api({
     rm(data)
   })
 
-  test_that("URL encoding: ",{
-    
+  test_that("URL encoding: ", {
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnits.json?",
 #   "paging=false&filter=name:like:Sierra%20Leone&fields=name,id")))
@@ -371,7 +371,6 @@ with_mock_api({
     rm(data)
   })
 
-
   test_that(paste0(
     "Call with indicator endpoint: ",
     "https://play.dhis2.org/2.33/api/indicators.json?",
@@ -391,4 +390,59 @@ with_mock_api({
       "numerator", "denominator"
     ))
   })
-})
+
+  test_that("Metadata filter format helpers", {
+
+# standard call
+    expect_identical(metadataFilter("V", "P", "O"),
+                     "P:O:V")
+
+# value null if and only if operator is null, !null or empty
+    expect_identical(metadataFilter(NULL, "P", "null"),
+                     "P:null:")
+    expect_identical(metadataFilter(NULL, "P", "!null"),
+                     "P:!null:")
+    expect_identical(metadataFilter(NULL, "P", "empty"),
+                     "P:empty:")
+    expect_error(metadataFilter("V", "P", "null"))
+    expect_error(metadataFilter("V", "P", "!null"))
+    expect_error(metadataFilter("V", "P", "empty"))
+    expect_error(metadataFilter(NULL, "P", "O"))
+
+# values can have length > 1 only if operator is in or !in
+# and values for in and !in always enclosed in square brackets
+    expect_identical(metadataFilter(c(1, 2), "P", "in"),
+                     "P:in:[1,2]")
+    expect_identical(metadataFilter(c("1", "2"), "P", "!in"),
+                     "P:!in:[1,2]")
+    expect_identical(metadataFilter(1, "P", "in"),
+                     "P:in:[1]")
+    expect_identical(metadataFilter("2", "P", "!in"),
+                     "P:!in:[2]")
+    expect_error(metadataFilter(c("1", "2"), "P", "O"))
+
+# standard and non standard eval
+    expect_identical(id %deq% "V",
+                     "id" %deq% "V")
+    expect_identical(id %din% c("V1", "V2"),
+                     "id" %din% c("V1", "V2"))
+
+# %din% and %!din%
+    expect_identical(P %din% "V",
+                     "P:in:[V]")
+    expect_identical(P %d!in% "V",
+                     "P:!in:[V]")
+    expect_identical(P %din% c("V_1", "V_2"),
+                     "P:in:[V_1,V_2]")
+    expect_identical(P %d!in% c("V_1", "V_2"),
+                     "P:!in:[V_1,V_2]")
+
+# %deq% and %d!eq%
+    expect_identical(P %deq% "V", "P:eq:V")
+    expect_identical(P %d!eq% "V", "P:!eq:V")
+
+# %dlike% and %d!like%
+    expect_identical(P %dlike% "V", "P:like:V")
+    expect_identical(P %d!like% "V", "P:!like:V")
+    })
+  })

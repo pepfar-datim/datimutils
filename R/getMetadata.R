@@ -336,7 +336,24 @@ getMetadata <- function(end_point,
 #' property %d!in% values
 
 metadataFilter <- function(values, property, operator) {
-  if (length(values) > 1) {
+  
+  # check values is a vector only for in and !in operators 
+  if (length(values) > 1 &&
+      !(operator %in% c("in", "!in"))) {
+    stop("A vector of values is only supported for in and !in operators")
+  }
+  
+  if (is.null(values) &&
+      !(operator %in% c("null", "!null", "empty"))) {
+    stop("NULL values are only supported for null, !null and empty operators")
+  }
+  
+  if (!is.null(values) &&
+      operator %in% c("null", "!null", "empty")) {
+    stop("NULL values required for null, !null and empty operators")
+  }
+  
+  if (operator %in% c("in", "!in")) {
     return(paste0(
       property, ":", operator, ":[",
       paste0(values, collapse = ","),
