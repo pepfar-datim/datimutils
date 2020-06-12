@@ -9,7 +9,9 @@
 #' components are present
 #' @param strict boolean - when strict is TRUE, the default, this function
 #' requires a 1:1 mapping between the input values and the api results. Any values
-#' missing from the API response are inserted as NA.
+#' missing from the API response are inserted as NA. When true the by parameter 
+#' must be one of the identifiable properties {name, code, id, shortName}, 
+#' note id is the default by parameter
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @return the metadata response in json format and flattened
 #'
@@ -18,8 +20,20 @@ getOrgUnitGroups <- function(values = NULL,
                              fields = NULL,
                              strict = TRUE,
                              base_url = getOption("baseurl")) {
+  function_name <- "getOrgUnitGroups"
+  end_point <-  "organisationUnitGroups"
 
-  default_filter_item <- rlang::ensym(by)
+  default_filter_item <- rlang::as_string(rlang::ensym(by))
+  identifiable_properties <- c("name", "id", "code", "shortName")
+  
+  if (!(default_filter_item %in% identifiable_properties) &&  
+        strict == TRUE){
+    stop(paste0("When strict = TRUE ", getOrgUnitGroups,
+                " expects a by parameter of id (the default), name, code, or ",
+                "shortName. Consider setting strict = FALSE, or utilizing the ",
+                "more general getMetadata function."
+    ))
+  }
   
   # process field options
   default_fields <- if (default_filter_item == "name" & is.null(fields)) {
@@ -28,24 +42,23 @@ getOrgUnitGroups <- function(values = NULL,
     "name"
   } else {fields}
 
-  # process first filter option (in, eq, like, etc.)
-  default_filter_option <- "in"
-
   # make filters
   unique_values <- unique(values)
 
   # this option is more robust but would need to change mocks
   # filters = paste0(default_filter_item, default_filter_option, unique_values)
 
-  filters <- paste0(default_filter_item, default_filter_option, paste0(unique_values, collapse = ","))
-
+  filters <- datimutils::metadataFilter(unique_values,
+                                        default_filter_item,
+                                        "in")
+     print(filters)
   # make dataframe to know how to expand result in case of duplicate filters
   n_occur <- data.frame(table(values), stringsAsFactors = F)
   n_occur <- n_occur[match(unique_values, n_occur$values), ]
 
   # call getMetadata with info above
   getMetadata(
-    end_point = "organisationUnitGroups", base_url = base_url,
+    end_point = !!end_point, base_url = base_url,
     filters,
     fields = default_fields, pluck = F, retry = 1,
     expand = n_occur
