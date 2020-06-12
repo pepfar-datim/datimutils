@@ -7,7 +7,7 @@
 getMetadata(
   end_point,
   ...,
-  fields = NULL,
+  fields = "name,id",
   base_url = getOption("baseurl"),
   pluck = F,
   retry = 1,
