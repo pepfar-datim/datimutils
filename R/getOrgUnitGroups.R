@@ -1,9 +1,8 @@
 #' @export
-#' @title getOrgUnitGroups(filters = NULL, fields = NULL,
-#' base_url = NULL, by = NULL)
+#' @title getOrgUnitGroups
 #'
 #' @description wrapper to getMetadata that retrieves org units
-#' @param x - string vector of identifiers that will be used in the filter
+#' @param values - string vector of identifiers that will be used in the filter
 #' e.g. vector of uids, names, or codes.
 #' @param by - what to filter by, i.e. id or name, default is id
 #' @param fields - the fields, which can come in any formt as long as all
@@ -11,7 +10,7 @@
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @return the metadata response in json format and flattened
 #'
-getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
+getOrgUnitGroups <- function(values = NULL, by = NULL, fields = NULL,
                              base_url = getOption("baseurl")) {
 
   
@@ -33,7 +32,7 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   default_filter_option <- "in"
 
   # make filters
-  uniquex <- unique(x)
+  uniquex <- unique(values)
 
   # this option is more robust but would need to change mocks
   # filters = paste0(default_filter_item, default_filter_option, uniquex)
@@ -41,8 +40,8 @@ getOrgUnitGroups <- function(x = NULL, by = NULL, fields = NULL,
   filters <- paste0(default_filter_item, default_filter_option, paste0(uniquex, collapse = ","))
 
   # make dataframe to know how to expand result in case of duplicate filters
-  n_occur <- data.frame(table(x), stringsAsFactors = F)
-  n_occur <- n_occur[match(uniquex, n_occur$x), ]
+  n_occur <- data.frame(table(values), stringsAsFactors = F)
+  n_occur <- n_occur[match(uniquex, n_occur$values), ]
 
   # call getMetadata with info above
   getMetadata(
