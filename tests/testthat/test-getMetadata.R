@@ -153,6 +153,54 @@ with_mock_api({
                      ))
     rm(data)
   })
+  
+  test_that("getMetadata can handle operator of null, !null, empty, : ", {
+    
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:null&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:!null:&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=legendSets:empty&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=legendSets:empty:&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:null:NA&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:!null:NA&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=legendSets:empty:NA&fields=name,id")))
+    
+    data <- getMetadata(end_point = "indicators",
+                        "code:null",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(NROW(data), 39)
+    rm(data)
+    data <- getMetadata(end_point = "indicators",
+                        "code:!null:",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_named(data, c("name", "id"))
+    testthat::expect_equal(NROW(data), 38)
+    rm(data)
+    data <- getMetadata(end_point = "indicators",
+                        "legendSets:empty",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(NROW(data), 59)
+    rm(data)
+    rm(data)
+    data <- getMetadata(end_point = "indicators",
+                        "legendSets:empty:",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(NROW(data), 59)
+    rm(data)
+  })
 
   test_that("List Columns: ", {
     # paste0("List Columns: ",
