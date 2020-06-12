@@ -21,12 +21,14 @@ getOrgUnitGroups <- function(values,
                              base_url = getOption("baseurl")) {
   function_name <- "getOrgUnitGroups"
   end_point <-  "organisationUnitGroups"
-
-  default_filter_item <- rlang::as_string(rlang::ensym(by))
-  
   identifiable_properties <- c("name", "id", "code", "shortName")
-  
-  if (!(default_filter_item %in% identifiable_properties)){
+
+# by can come in as string or NSE, convert to string
+  by <- rlang::as_string(rlang::ensym(by))
+
+# by parameter restricted to being an identifiable property
+# as defined in DHIS2 docs
+  if (!(by %in% identifiable_properties)){
     stop(paste0(function_name,
                 " expects a by parameter of id (the default), name, code, or ",
                 "shortName. Use the ",
@@ -35,7 +37,7 @@ getOrgUnitGroups <- function(values,
   }
   
   # process field options
-  default_fields <- if (default_filter_item == "name" & is.null(fields)) {
+  default_fields <- if (by == "name" & is.null(fields)) {
     "id"
   } else if (is.null(fields)) {
     "name"
@@ -46,23 +48,22 @@ getOrgUnitGroups <- function(values,
  
 # check if fields contains by as a distinct element
 # \\b represents a non word character so by must be a distinct element
-  by_in_fields <- any(grepl(paste0("\\b", default_filter_item, "\\b"), 
+  by_in_fields <- any(grepl(paste0("\\b", by, "\\b"), 
                             default_fields))
 
-  print(by_in_fields)
-  # in order to ensure matching with input vector we must have the by 
-# column in our results  
+# in order to ensure matching with input vector we must have the by 
+# column in our results, so add to fields if not requested  
   if (!by_in_fields){
-    default_fields <- c(default_filter_item, default_fields)
+    default_fields <- c(by, default_fields)
   }
   
   # make filters
   unique_values <- unique(values)
 
-  filters <- datimutils::metadataFilter(unique_values,
-                                        default_filter_item,
-                                        "in")
-  
+  filters <- datimutils::metadataFilter(values = unique_values, 
+                                        property = by, 
+                                        operator = "in")
+
   # make dataframe to know how to expand result in case of duplicate filters
   n_occur <- data.frame(table(values), stringsAsFactors = F)
   n_occur <- n_occur[match(unique_values, n_occur$values), ]
@@ -75,24 +76,33 @@ getOrgUnitGroups <- function(values,
               expand = n_occur
   )
   
-#  put values in a data frame
-  values <- stats::setNames(data.frame(values), default_filter_item)
+#  put input values in a data frame so we can join with results
+# give the singular column the by property title
+  values <- stats::setNames(data.frame(values), by)
 
 # join results to input vector columns will have the same name as the
 # are a common property
-print(names(data))
-print(names(values))
-  data <- dplyr::left_join(values, data, copy = TRUE)
-  
+  data <- dplyr::left_join(values, data)
+
+# if user didn't request by property in fields, drop the column  
   if (!by_in_fields){
-    return(dplyr::select(data, -default_filter_item))
+    data <- dplyr::select(data, -by)
   }
-  return(data)
   
-  # if (NROW(data) != length(values)){
-  #   stop(paste0(function_name, " resulting in a different number",
-  #               "of input and output items"))
-  # }
+   if (NROW(data) != NROW(values)){
+     stop(paste0(function_name, " resulting in a different number",
+                 "of input and output items"))
+   }
+  
+# If we only have one column of data, return as an atomic vector 
+  if (NCOL(data) == 1){
+    return(data[[1]])
+  } else {
+    return(data)
+    }
+  
+  
+  
 }
 
 #' #' @export
