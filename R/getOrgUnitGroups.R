@@ -7,18 +7,19 @@
 #' @param by - what to filter by, i.e. id or name, default is id
 #' @param fields - the fields, which can come in any formt as long as all
 #' components are present
+#' @param strict boolean - when strict is TRUE, the default, this function
+#' requires a 1:1 mapping between the input values and the api results. Any values
+#' missing from the API response are inserted as NA.
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @return the metadata response in json format and flattened
 #'
-getOrgUnitGroups <- function(values = NULL, by = NULL, fields = NULL,
+getOrgUnitGroups <- function(values = NULL, 
+                             by = "id", 
+                             fields = NULL,
+                             strict = TRUE,
                              base_url = getOption("baseurl")) {
 
-  
-  by_ns <- try(rlang::ensym(by), silent=TRUE)
-  
-  # process first filter item (id, name, etc.)
-  default_filter_item <- ifelse(class(by_ns) == "try-error", "id", by_ns)
-  
+  default_filter_item <- rlang::ensym(by)
   
   # process field options
   default_fields <- if (default_filter_item == "name" & is.null(fields)) {
@@ -26,7 +27,6 @@ getOrgUnitGroups <- function(values = NULL, by = NULL, fields = NULL,
   } else if (is.null(fields)) {
     "name"
   } else {fields}
-  
 
   # process first filter option (in, eq, like, etc.)
   default_filter_option <- "in"
