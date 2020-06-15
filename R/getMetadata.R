@@ -118,7 +118,7 @@ processFilters <- function(end_point, filters) {
       ifelse(is.na(filter_option), "", filter_option),
       rest
     )
-  }  else {
+  } else {
 
     # extracts end_point and what is not end_point
     end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
@@ -170,16 +170,18 @@ processFilters <- function(end_point, filters) {
   } else {
     two <- ifelse(grepl(",", one.one), one.one,
       gsub("(.{11})", "\\1,",
-           gsub("\\[|\\]","",one.one),
+        gsub("\\[|\\]", "", one.one),
         perl = TRUE
       )
     )
   }
-  if(one == one.one){ex <- paste0(ifelse(is.na(end_point), "", end_point), one)
-  middle <- one
-  }else{
+  if (one == one.one) {
+    ex <- paste0(ifelse(is.na(end_point), "", end_point), one)
+    middle <- one
+  } else {
     ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
-    middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))}
+    middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))
+  }
   if (substr(ex, nchar(ex), nchar(ex)) == ",") {
     ex <- substr(ex, 1, nchar(ex) - 1)
   }
@@ -309,18 +311,20 @@ getMetadata <- function(end_point,
     resp <- duplicateResponse(resp, expand)
   }
 
-# If we only request one singular field and that is what we got back
-# return atomic vector unless as_vector = FALSE
-# when reaching in to collection handle the fact that the returned name
-# is in []
-  if (as_vector == TRUE && 
-      NCOL(resp) == 1 &&
-      length(fields) == 1 &&
-      !grepl(",", fields) && (
-        names(resp) == fields || 
-        grepl(paste0("[", names(resp), "]"), 
-              fields)
-        )){
+  # If we only request one singular field and that is what we got back
+  # return atomic vector unless as_vector = FALSE
+  # when reaching in to collection handle the fact that the returned name
+  # is in []
+  if (as_vector == TRUE &&
+    NCOL(resp) == 1 &&
+    length(fields) == 1 &&
+    !grepl(",", fields) && (
+    names(resp) == fields ||
+      grepl(
+        paste0("[", names(resp), "]"),
+        fields
+      )
+  )) {
     return(resp[[1]])
   }
 
@@ -351,23 +355,23 @@ getMetadata <- function(end_point,
 #' property %d!in% values
 
 metadataFilter <- function(values, property, operator) {
-  
-  # check values is a vector only for in and !in operators 
+
+  # check values is a vector only for in and !in operators
   if (length(values) > 1 &&
-      !(operator %in% c("in", "!in"))) {
+    !(operator %in% c("in", "!in"))) {
     stop("A vector of values is only supported for in and !in operators")
   }
-  
+
   if (is.null(values) &&
-      !(operator %in% c("null", "!null", "empty"))) {
+    !(operator %in% c("null", "!null", "empty"))) {
     stop("NULL values are only supported for null, !null and empty operators")
   }
-  
+
   if (!is.null(values) &&
-      operator %in% c("null", "!null", "empty")) {
+    operator %in% c("null", "!null", "empty")) {
     stop("NULL values required for null, !null and empty operators")
   }
-  
+
   if (operator %in% c("in", "!in")) {
     return(paste0(
       property, ":", operator, ":[",
