@@ -144,7 +144,6 @@ with_mock_api({
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c("name", "id"))
     testthat::expect_equal(data$id, "FTRrcoaog83")
-    rm(data)
     expect_identical(data,
                      getMetadata(
                        end_point = "dataElements",
@@ -191,12 +190,6 @@ with_mock_api({
     rm(data)
     data <- getMetadata(end_point = "indicators",
                         "legendSets:empty",
-                        base_url = "https://play.dhis2.org/2.33/")
-    testthat::expect_equal(NROW(data), 59)
-    rm(data)
-    rm(data)
-    data <- getMetadata(end_point = "indicators",
-                        "legendSets:empty:",
                         base_url = "https://play.dhis2.org/2.33/")
     testthat::expect_equal(NROW(data), 59)
     rm(data)

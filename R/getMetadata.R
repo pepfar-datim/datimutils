@@ -105,7 +105,7 @@ processFilters <- function(end_point, filters) {
   look <- sub("\\&filter=|\\&filter", "", look)
 
   # if the format comes in correct
-  if (stringr::str_count(look, pattern = ":") == 2) {
+  if (stringr::str_count(look, pattern = ":") >= 1) {
     filter_option <- stringr::str_extract(look, "(?<=:).*(?=:)")
     filter_item <- stringr::str_extract(look, "^[^:]*")
     rest <- stringr::str_extract(look, "[^:]+$")
@@ -115,10 +115,10 @@ processFilters <- function(end_point, filters) {
     # creates a basic filter path
     ex <- paste0(
       filter_item,
-      filter_option,
+      ifelse(is.na(filter_option), "", filter_option),
       rest
     )
-  } else {
+  }  else {
 
     # extracts end_point and what is not end_point
     end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
@@ -170,18 +170,21 @@ processFilters <- function(end_point, filters) {
   } else {
     two <- ifelse(grepl(",", one.one), one.one,
       gsub("(.{11})", "\\1,",
-        one.one,
+           gsub("\\[|\\]","",one.one),
         perl = TRUE
       )
     )
   }
-  ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
+  if(one == one.one){ex <- paste0(ifelse(is.na(end_point), "", end_point), one)
+  middle <- one
+  }else{
+    ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
+    middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))}
   if (substr(ex, nchar(ex), nchar(ex)) == ",") {
     ex <- substr(ex, 1, nchar(ex) - 1)
   }
 
   # adds &filter= where needed, and : where needed
-  middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))
   ex <- sub(
     paste0("(.*?)(\\&filter=|", middle, "|?filter=", ")"),
     paste0("\\1&filter=", middle), ex
