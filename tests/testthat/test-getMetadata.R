@@ -125,11 +125,14 @@ library(httptest)
 # httptest::stop_capturing()
 
 with_mock_api({
-  test_that("Basic eq call: ", {
+  test_that("Basic eq and sinlge element in call: ", {
 
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/dataElements.json?",
 #   "paging=false&filter=id:eq:FTRrcoaog83&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/dataElements.json?",
+#   "paging=false&filter=id:in:[FTRrcoaog83]&fields=name,id")))
   
     data <- getMetadata(
       end_point = "dataElements",
@@ -141,6 +144,54 @@ with_mock_api({
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c("name", "id"))
     testthat::expect_equal(data$id, "FTRrcoaog83")
+    expect_identical(data,
+                     getMetadata(
+                       end_point = "dataElements",
+                       id %din% "FTRrcoaog83",
+                       base_url = "https://play.dhis2.org/2.33/"
+                     ))
+    rm(data)
+  })
+  
+  test_that("getMetadata can handle operator of null, !null, empty, : ", {
+    
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:null&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:!null:&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=legendSets:empty&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=legendSets:empty:&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:null:NA&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=code:!null:NA&fields=name,id")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/indicators.json?",
+#   "paging=false&filter=legendSets:empty:NA&fields=name,id")))
+    
+    data <- getMetadata(end_point = "indicators",
+                        "code:null",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(NROW(data), 39)
+    rm(data)
+    data <- getMetadata(end_point = "indicators",
+                        "code:!null:",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_named(data, c("name", "id"))
+    testthat::expect_equal(NROW(data), 38)
+    rm(data)
+    data <- getMetadata(end_point = "indicators",
+                        "legendSets:empty",
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(NROW(data), 59)
     rm(data)
   })
 
@@ -259,6 +310,44 @@ with_mock_api({
     )
     # data <- data[["organisationUnitGroups"]]
     testthat::expect_equal(NROW(data), 18)
+    rm(data)
+  })
+  
+  test_that("as_vector parameter works: ", {
+    
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&fields=name")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroupSets.json?",
+#   "paging=false&fields=organisationUnitGroups[name]")))
+    
+    data <- getMetadata(
+      end_point = "organisationUnitGroups",
+      fields = "name",
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+    testthat::expect_equal(NROW(data), 18)
+    testthat::expect_named(data, NULL)
+    rm(data)
+    
+    data <- getMetadata(
+      end_point = "organisationUnitGroups",
+      fields = "name",
+      as_vector = FALSE,
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+    testthat::expect_equal(NROW(data), 18)
+    testthat::expect_named(data, c("name"))
+    rm(data)
+    
+    data <- getMetadata(
+      end_point = "organisationUnitGroupSets",
+      fields = "organisationUnitGroups[name]",
+      base_url = "https://play.dhis2.org/2.33/")
+    
+    testthat::expect_equal(NROW(data), 15)
+    testthat::expect_named(data, NULL)
     rm(data)
   })
 

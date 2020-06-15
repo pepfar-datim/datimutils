@@ -11,7 +11,8 @@ getMetadata(
   base_url = getOption("baseurl"),
   pluck = F,
   retry = 1,
-  expand = NULL
+  expand = NULL,
+  as_vector = TRUE
 )
 }
 \arguments{
@@ -30,6 +31,9 @@ developer guide}
 \item{retry}{number of times to retry}
 
 \item{expand}{dataframe to know how to expand result in case of duplicate filters}
+
+\item{as_vector}{attempt to return an atomic vector when only a single field
+is requested and returned. Defaults to TRUE.}
 }
 \value{
 the metadata response in json format and flattened
