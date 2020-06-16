@@ -13,7 +13,7 @@ duplicateResponse <- function(resp, expand) {
 
   if(class(fill) != "try-error")
   {
-  
+
     if (nrow(fill) > 1) {
     fill <- fill[1, ]
   }
@@ -108,7 +108,7 @@ processFilters <- function(end_point, filters) {
   look <- sub("\\&filter=|\\&filter", "", look)
 
   # if the format comes in correct
-  if (stringr::str_count(look, pattern = ":") == 2) {
+  if (stringr::str_count(look, pattern = ":") >= 1) {
     filter_option <- stringr::str_extract(look, "(?<=:).*(?=:)")
     filter_item <- stringr::str_extract(look, "^[^:]*")
     rest <- stringr::str_extract(look, "[^:]+$")
@@ -118,7 +118,7 @@ processFilters <- function(end_point, filters) {
     # creates a basic filter path
     ex <- paste0(
       filter_item,
-      filter_option,
+      ifelse(is.na(filter_option), "", filter_option),
       rest
     )
   } else {
@@ -173,18 +173,23 @@ processFilters <- function(end_point, filters) {
   } else {
     two <- ifelse(grepl(",", one.one), one.one,
       gsub("(.{11})", "\\1,",
-        one.one,
+        gsub("\\[|\\]", "", one.one),
         perl = TRUE
       )
     )
   }
-  ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
+  if (one == one.one) {
+    ex <- paste0(ifelse(is.na(end_point), "", end_point), one)
+    middle <- one
+  } else {
+    ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
+    middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))
+  }
   if (substr(ex, nchar(ex), nchar(ex)) == ",") {
     ex <- substr(ex, 1, nchar(ex) - 1)
   }
 
   # adds &filter= where needed, and : where needed
-  middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))
   ex <- sub(
     paste0("(.*?)(\\&filter=|", middle, "|?filter=", ")"),
     paste0("\\1&filter=", middle), ex
@@ -218,6 +223,8 @@ processFilters <- function(end_point, filters) {
 #' developer guide
 #' @param retry number of times to retry
 #' @param expand dataframe to know how to expand result in case of duplicate filters
+#' @param as_vector attempt to return an atomic vector when only a single field
+#' is requested and returned. Defaults to TRUE.
 #' @return the metadata response in json format and flattened
 #'
 
@@ -225,11 +232,12 @@ getMetadata <- function(end_point,
                         ..., fields = "name,id",
                         base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
-                        expand = NULL) {
-  
+                        expand = NULL,
+                        as_vector = TRUE) {
+
   #non-standard evaluation for end_point
-  end_point <- rlang::ensym(end_point)  
-  
+  end_point <- rlang::ensym(end_point)
+
   # if no filters or fields are specified, just use endpoint as path
   if (!(missing(...)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
@@ -308,6 +316,28 @@ getMetadata <- function(end_point,
   if (!(is.null(expand))) {
     resp <- duplicateResponse(resp, expand)
   }
+  
+# do we have single value to return?
+  if (is.atomic(resp) && length(resp) == 1){
+    return(resp)
+    }
+
+  # If we only request one singular field and that is what we got back
+  # return atomic vector unless as_vector = FALSE
+  # when reaching in to collection handle the fact that the returned name
+  # is in []
+  if (as_vector == TRUE &&
+    NCOL(resp) == 1 &&
+    length(fields) == 1 &&
+    !grepl(",", fields) && (
+    names(resp) == fields ||
+      grepl(
+        paste0("[", names(resp), "]"),
+        fields
+      )
+  )) {
+    return(resp[[1]])
+  }
 
   return(resp)
 }
@@ -336,23 +366,23 @@ getMetadata <- function(end_point,
 #' property %d!in% values
 
 metadataFilter <- function(values, property, operator) {
-  
-  # check values is a vector only for in and !in operators 
+
+  # check values is a vector only for in and !in operators
   if (length(values) > 1 &&
-      !(operator %in% c("in", "!in"))) {
+    !(operator %in% c("in", "!in"))) {
     stop("A vector of values is only supported for in and !in operators")
   }
-  
+
   if (is.null(values) &&
-      !(operator %in% c("null", "!null", "empty"))) {
+    !(operator %in% c("null", "!null", "empty"))) {
     stop("NULL values are only supported for null, !null and empty operators")
   }
-  
+
   if (!is.null(values) &&
-      operator %in% c("null", "!null", "empty")) {
+    operator %in% c("null", "!null", "empty")) {
     stop("NULL values required for null, !null and empty operators")
   }
-  
+
   if (operator %in% c("in", "!in")) {
     return(paste0(
       property, ":", operator, ":[",
