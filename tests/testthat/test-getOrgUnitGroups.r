@@ -40,6 +40,9 @@ httptest::with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name")))
+# httr::content(httr::GET(paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=id,name")))
     
       data <- getOrgUnitGroups(
         "CXw2yu5fodb",
