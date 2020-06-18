@@ -195,7 +195,7 @@ with_mock_api({
     rm(data)
   })
 
-  test_that("List Columns: ", {
+  test_that("Single List Column becomes DF: ", {
     # paste0("List Columns: ",
     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
     #        "paging=false&filter=id:eq:gtuVl6NbXQV",
@@ -366,6 +366,8 @@ with_mock_api({
     )
     # data <- data[["organisationUnits"]]
     testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c("level", "name", 
+                                   "id", "ancestors"))
     rm(data)
   })
 
@@ -388,6 +390,8 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 2)
+    testthat::expect_named(data, c("level", "name", 
+                                   "id", "ancestors"))
     rm(data)
     # filters sent as ...
     data <- getMetadata(
@@ -398,6 +402,8 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 2)
+    testthat::expect_named(data, c("level", "name", 
+                                   "id", "ancestors"))
     rm(data)
   })
 
@@ -408,7 +414,7 @@ with_mock_api({
 #   "paging=false&filter=name:like:Baoma&fields=name,id")))
 
     data <- getMetadata(
-      end_point = "organisationUnits",
+      end_point = organisationUnits,
       name %dlike% "Baoma",
       base_url = "https://play.dhis2.org/2.33/"
     )
@@ -428,6 +434,7 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c("name", "id"))
     rm(data)
   })
 
@@ -446,13 +453,10 @@ with_mock_api({
       fields = ":all",
       base_url = "https://play.dhis2.org/2.33/"
     )
-
-    # testthat::expect_s3_class(data, "data.frame")
+    
     testthat::expect_equal(NROW(data), 1)
-    # testthat::expect_named(data, "items")
-    # data <- tidyr::unnest(data, cols = items)
-    # testthat::expect_named(data, c("name", "id"))
-    # testthat::expect_equal(NROW(data), 7)
+    testthat::expect_equal(NCOL(data), 38)
+    
     rm(data)
   })
 
@@ -469,8 +473,8 @@ with_mock_api({
       base_url = "https://play.dhis2.org/2.33/"
     )
 
-    expect_equal(NROW(data), 1)
-    expect_named(data, c(
+    testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c(
       "name", "id",
       "numerator", "denominator"
     ))

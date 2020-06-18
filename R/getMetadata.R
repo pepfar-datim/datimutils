@@ -9,10 +9,12 @@ duplicateResponse <- function(resp, expand) {
 
   # every column of resp in expand, whcih one has a true make choose
 
-  fill <- as.data.frame(apply(resp, 2, function(y) y %in% expand$x))
+  fill <- try(as.data.frame(apply(resp, 2, function(y) y %in% expand$x)), silent = T)
 
+  if(class(fill) != "try-error")
+  {
 
-  if (nrow(fill) > 1) {
+    if (nrow(fill) > 1) {
     fill <- fill[1, ]
   }
 
@@ -37,6 +39,7 @@ duplicateResponse <- function(resp, expand) {
 
         # add in the duplicates to the final response
         resp <- resp[c(do.call("rbind", bindlist)), ]
+        }
       }
     }
   }
@@ -232,6 +235,9 @@ getMetadata <- function(end_point,
                         expand = NULL,
                         as_vector = TRUE) {
 
+  #non-standard evaluation for end_point
+  end_point <- rlang::ensym(end_point)
+
   # if no filters or fields are specified, just use endpoint as path
   if (!(missing(...)) | !(is.null(fields))) {
     end_point <- gsub("/", "", end_point)
@@ -310,6 +316,11 @@ getMetadata <- function(end_point,
   if (!(is.null(expand))) {
     resp <- duplicateResponse(resp, expand)
   }
+  
+# do we have single value to return?
+  if (is.atomic(resp) && length(resp) == 1){
+    return(resp)
+    }
 
   # If we only request one singular field and that is what we got back
   # return atomic vector unless as_vector = FALSE

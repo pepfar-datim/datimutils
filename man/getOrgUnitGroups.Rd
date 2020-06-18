@@ -2,18 +2,17 @@
 % Please edit documentation in R/getOrgUnitGroups.R
 \name{getOrgUnitGroups}
 \alias{getOrgUnitGroups}
-\title{getOrgUnitGroups(filters = NULL, fields = NULL,
-base_url = NULL, by = NULL)}
+\title{getOrgUnitGroups}
 \usage{
 getOrgUnitGroups(
-  x = NULL,
+  values = NULL,
   by = NULL,
   fields = NULL,
   base_url = getOption("baseurl")
 )
 }
 \arguments{
-\item{x}{- string vector of identifiers that will be used in the filter
+\item{values}{- string vector of identifiers that will be used in the filter
 e.g. vector of uids, names, or codes.}
 
 \item{by}{- what to filter by, i.e. id or name, default is id}
