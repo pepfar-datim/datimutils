@@ -12,7 +12,8 @@ getMetadata(
   pluck = F,
   retry = 1,
   expand = NULL,
-  as_vector = TRUE
+  as_vector = T,
+  name_reduce = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ developer guide}
 
 \item{as_vector}{attempt to return an atomic vector when only a single field
 is requested and returned. Defaults to TRUE.}
+
+\item{name_reduce}{whether to reduce the fields to just name}
 }
 \value{
 the metadata response in json format and flattened

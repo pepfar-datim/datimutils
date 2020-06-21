@@ -12,43 +12,33 @@
 #'
 getOrgUnitGroups <- function(values = NULL, by = NULL, fields = NULL,
                              base_url = getOption("baseurl")) {
+  
+  name_reduce <- NULL
+  default_fields <- c("name", "id")
+  
+  by_ns <- try(rlang::ensym(by), silent = TRUE)
+  
+  if (is.null(fields) && class(by_ns) == "try-error") {
+    name_reduce <- "name"
+  } else if (by_ns == "name" & is.null(fields)) {
+    name_reduce <- "id"
+  }
 
-  
-  by_ns <- try(rlang::ensym(by), silent=TRUE)
-  
   # process first filter item (id, name, etc.)
   default_filter_item <- ifelse(class(by_ns) == "try-error", "id", by_ns)
-  
-  
-  # process field options
-  default_fields <- if (default_filter_item == "name" & is.null(fields)) {
-    "id"
-  } else if (is.null(fields)) {
-    "name"
-  } else {fields}
-  
 
   # process first filter option (in, eq, like, etc.)
   default_filter_option <- "in"
 
   # make filters
-  uniquex <- unique(values)
-
-  # this option is more robust but would need to change mocks
-  # filters = paste0(default_filter_item, default_filter_option, uniquex)
-
-  filters <- paste0(default_filter_item, default_filter_option, paste0(uniquex, collapse = ","))
-
-  # make dataframe to know how to expand result in case of duplicate filters
-  n_occur <- data.frame(table(values), stringsAsFactors = F)
-  n_occur <- n_occur[match(uniquex, n_occur$values), ]
+  filters <- paste0(default_filter_item, ":", default_filter_option, ":", paste0(unique(values), collapse = ","))
 
   # call getMetadata with info above
   getMetadata(
     end_point = "organisationUnitGroups", base_url = base_url,
     filters,
     fields = default_fields, pluck = F, retry = 1,
-    expand = n_occur
+    expand = values, name_reduce = name_reduce
   )
 }
 

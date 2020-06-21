@@ -6,43 +6,11 @@
 #'
 
 duplicateResponse <- function(resp, expand) {
-
-  # every column of resp in expand, whcih one has a true make choose
-
-  fill <- try(as.data.frame(apply(resp, 2, function(y) y %in% expand$x)), silent = T)
-
-  if(class(fill) != "try-error")
-  {
-
-    if (nrow(fill) > 1) {
-    fill <- fill[1, ]
-  }
-
-  choose <- resp[, as.logical(fill), drop = T]
-
-  # match rows of resp to rows of expand
-
-  if (!(anyNA(choose))) {
-    temp <- match(expand$x, choose)
-    if (!(all(is.na(temp)))) {
-      resp <- resp[temp, , drop = F]
-
-      bindlist <- list()
-      # create the duplicates and store in a list
-      if (all(expand$Freq != 1)) {
-        expand <- expand[expand$x %in% choose[temp], ]
-
-        for (i in 1:nrow(expand))
-        {
-          bindlist[[i]] <- rep(i, times = expand$Freq[i])
-        }
-
-        # add in the duplicates to the final response
-        resp <- resp[c(do.call("rbind", bindlist)), ]
-        }
-      }
-    }
-  }
+  if(class(resp) != "character"){
+  subs <- apply(resp, 2, function(x){expand[1] %in% x})
+  resp <- resp[match(expand, resp[,subs]),]
+  }else {resp <- resp[match(expand, resp)]}
+  
   return(resp)
 }
 
@@ -82,6 +50,8 @@ simplifyStructure <- function(resp) {
           if ("try-error" %in% class(resp)) {
             resp <- possible_resp
           }
+        } else {
+          resp <- possible_resp
         }
       }
     } else if (class(possible_resp) == "character") {
@@ -225,6 +195,7 @@ processFilters <- function(end_point, filters) {
 #' @param expand dataframe to know how to expand result in case of duplicate filters
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
+#' @param name_reduce whether to reduce the fields to just name
 #' @return the metadata response in json format and flattened
 #'
 
@@ -233,7 +204,8 @@ getMetadata <- function(end_point,
                         base_url = getOption("baseurl"),
                         pluck = F, retry = 1,
                         expand = NULL,
-                        as_vector = TRUE) {
+                        as_vector = T,
+                        name_reduce = NULL) {
 
   #non-standard evaluation for end_point
   end_point <- rlang::ensym(end_point)
@@ -311,21 +283,25 @@ getMetadata <- function(end_point,
 
   # simplify data structure
   resp <- simplifyStructure(resp)
-
-  # #add in duplicates if needed
-  if (!(is.null(expand))) {
-    resp <- duplicateResponse(resp, expand)
-  }
   
-# do we have single value to return?
+ # # # add in duplicates if needed
+ if (!(is.null(expand))) {
+   resp <- duplicateResponse(resp, expand)
+ }
+
+  if(!(is.null(name_reduce)) && class(resp) %in% "data.frame"){
+    resp <- resp[,name_reduce]
+  }
+ # # # 
+ # # # # # do we have single value to return?
   if (is.atomic(resp) && length(resp) == 1){
     return(resp)
     }
-
-  # If we only request one singular field and that is what we got back
-  # return atomic vector unless as_vector = FALSE
-  # when reaching in to collection handle the fact that the returned name
-  # is in []
+ # # # 
+ # # # #   # If we only request one singular field and that is what we got back
+ # # # #   # return atomic vector unless as_vector = FALSE
+ # # # #   # when reaching in to collection handle the fact that the returned name
+ # # # #   # is in []
   if (as_vector == TRUE &&
     NCOL(resp) == 1 &&
     length(fields) == 1 &&

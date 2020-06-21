@@ -1,17 +1,17 @@
 structure(list(url = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.json?paging=false&filter=name:in:[CHP,Rural]&fields=id,code", 
     status_code = 200L, headers = structure(list(server = "nginx/1.17.9", 
-        date = "Sun, 21 Jun 2020 04:34:28 GMT", `content-type` = "application/json;charset=UTF-8", 
+        date = "Sun, 21 Jun 2020 04:34:12 GMT", `content-type` = "application/json;charset=UTF-8", 
         `cache-control` = "no-cache, private", `x-xss-protection` = "1; mode=block", 
         `x-frame-options` = "SAMEORIGIN", `x-content-type-options` = "nosniff", 
         etag = "W/\"0677758b252ee5d23494cd16083e51bdf\"", `strict-transport-security` = "max-age=15768000", 
         `content-encoding` = "gzip"), class = c("insensitive", 
     "list")), all_headers = list(list(status = 302L, version = "HTTP/2", 
-        headers = structure(list(server = "nginx/1.17.9", date = "Sun, 21 Jun 2020 04:34:27 GMT", 
+        headers = structure(list(server = "nginx/1.17.9", date = "Sun, 21 Jun 2020 04:34:11 GMT", 
             `content-type` = "text/html", `content-length` = "145", 
             location = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.json?paging=false&filter=name:in:[CHP,Rural]&fields=id,code", 
             `strict-transport-security` = "max-age=15768000"), class = c("insensitive", 
         "list"))), list(status = 200L, version = "HTTP/2", headers = structure(list(
-        server = "nginx/1.17.9", date = "Sun, 21 Jun 2020 04:34:28 GMT", 
+        server = "nginx/1.17.9", date = "Sun, 21 Jun 2020 04:34:12 GMT", 
         `content-type` = "application/json;charset=UTF-8", `cache-control` = "no-cache, private", 
         `x-xss-protection` = "1; mode=block", `x-frame-options` = "SAMEORIGIN", 
         `x-content-type-options` = "nosniff", etag = "W/\"0677758b252ee5d23494cd16083e51bdf\"", 
@@ -20,7 +20,7 @@ structure(list(url = "https://play.dhis2.org/2.33.4/api/organisationUnitGroups.j
         flag = FALSE, path = "/2.33.4", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
         "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
     -1L), class = "data.frame"), content = charToRaw("{\"organisationUnitGroups\":[{\"code\":\"CHP\",\"id\":\"uYxK4wmcPqA\"},{\"id\":\"GGghZsfu7qV\"}]}"), 
-    date = structure(1592714068, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0.172597, namelookup = 5.9e-05, 
-    connect = 6.2e-05, pretransfer = 0.000203, starttransfer = 0.335858, 
-    total = 0.335987)), class = "response")
+    date = structure(1592714052, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0.16992, namelookup = 7.9e-05, 
+    connect = 8.2e-05, pretransfer = 0.000218, starttransfer = 0.333137, 
+    total = 0.333313)), class = "response")
