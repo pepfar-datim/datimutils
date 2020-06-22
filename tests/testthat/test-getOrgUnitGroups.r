@@ -3,33 +3,33 @@ context("make arbitrary api call with getorgunitgroups")
 # code to create/update mocks
 library(httptest)
 
-httptest::start_capturing(simplify = FALSE)
-httr::content(
-  httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-                 "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id"),
-          httr::authenticate("admin", "district"))
-)
-
-httr::content(
-  httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-                 "paging=false&filter=name:in:[CHP,Rural]",
-                 "&fields=id,code"),
-          httr::authenticate("admin", "district"))
-)
-
-httr::content(
-  httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-                   "paging=false&filter=name:in:[CHP,Rural]",
-                   "&fields=name,id,organisationUnits[name,id],groupSets[name,id]"),
-            httr::authenticate("admin", "district"))
-)
-
-httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-       "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
-       "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
-       "&fields=code,name,id"))
-
-httptest::stop_capturing()
+# httptest::start_capturing(simplify = FALSE)
+# httr::content(
+#   httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#                  "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id"),
+#           httr::authenticate("admin", "district"))
+# )
+# 
+# httr::content(
+#   httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#                  "paging=false&filter=name:in:[CHP,Rural]",
+#                  "&fields=id,code"),
+#           httr::authenticate("admin", "district"))
+# )
+# 
+# httr::content(
+#   httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#                    "paging=false&filter=name:in:[CHP,Rural]",
+#                    "&fields=name,id,organisationUnits[name,id],groupSets[name,id]"),
+#             httr::authenticate("admin", "district"))
+# )
+# 
+# httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#        "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
+#        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
+#        "&fields=code,name,id"))
+# 
+# httptest::stop_capturing()
 
 httptest::with_mock_api({
   test_that(paste0("Default behavior, given id return name"), {
