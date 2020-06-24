@@ -48,6 +48,7 @@ getOrgUnitGroups <- function(values,
  
 # check if fields contains by as a distinct element
 # \\b represents a non word character so by must be a distinct element
+# TODO fix logic here which would say id is in fields if fields was name,organisationUnits[name,id]
   by_in_fields <- any(grepl(paste0("\\b", by, "\\b"), 
                             default_fields))
 
