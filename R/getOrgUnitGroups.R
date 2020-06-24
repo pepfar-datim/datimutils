@@ -14,7 +14,8 @@ getOrgUnitGroups <- function(values = NULL, by = NULL, fields = NULL,
                              base_url = getOption("baseurl")) {
   
   name_reduce <- NULL
-  default_fields <- c("name", "id")
+  default_fields <- if(is.null(fields)){
+    c("name", "id")} else {fields}
   
   by_ns <- try(rlang::ensym(by), silent = TRUE)
   
