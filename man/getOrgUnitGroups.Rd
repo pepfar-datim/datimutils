@@ -5,8 +5,8 @@
 \title{getOrgUnitGroups}
 \usage{
 getOrgUnitGroups(
-  values = NULL,
-  by = NULL,
+  values,
+  by = "id",
   fields = NULL,
   base_url = getOption("baseurl")
 )
