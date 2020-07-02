@@ -1,36 +1,3 @@
-# removes any nested fields (and spaces) from a character vector of field names
-# e.g. "indicators[name]" becomes "indicators", "id,indicators[name,id]"
-# becomes "id,indicators" and c("indicators[id]","organisationUnits[name]")
-# becomes c("indicators", "organisationUnits")
-.topLevelFields <- function(strings) {
-  if (!is.character(strings)) {
-    stop(paste(
-      "The internal function .removeBracketedText expected",
-      "a character vector but recieved an oject of type:",
-      typeof(strings)
-    ))
-  }
-
-  # fields can only contain letters, square brackets and commas
-  # we remove white space here as well
-  strings <- stringr::str_remove_all(strings, " ")
-  if (any(stringr::str_detect(strings, "[^a-zA-Z,\\[\\]]"))) {
-    stop(paste(
-      "The internal function .removeBracketedText received a string",
-      "with a character other than a-zA-Z, [] or a literal comma(,)"
-    ))
-  }
-
-  while (any(stringr::str_detect(strings, "\\[") &
-    stringr::str_detect(strings, "]"))) {
-    strings <- stringr::str_remove_all(
-      strings,
-      "\\[[a-zA-Z,]*\\]"
-    )
-  }
-  return(strings)
-}
-
 #' @export
 #' @title getOrgUnitGroups
 #'
@@ -71,20 +38,6 @@ getOrgUnitGroups <- function(values,
     name_reduce <- "name"
   } else if (by == "name" & is.null(fields)) {
     name_reduce <- "id"
-  }
-
-  # check if fields contains by as a distinct element
-  # \\b represents a non word character so by must be a distinct element
-  # TODO fix logic here which would say id is in fields if fields was name,organisationUnits[name,id]
-  by_in_fields <- any(grepl(
-    paste0("\\b", by, "\\b"),
-    .topLevelFields(default_fields)
-  ))
-
-  # in order to ensure matching with input vector we must have the by
-  # column in our results, so add to fields if not requested
-  if (!by_in_fields) {
-    default_fields <- c(by, default_fields)
   }
 
   filters <- datimutils::metadataFilter(
