@@ -10,80 +10,48 @@
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @return the metadata response in json format and flattened
 #'
-getOrgUnitGroups <- function(values = NULL, by = NULL, fields = NULL,
+getOrgUnitGroups <- function(values,
+                             by = "id",
+                             fields = NULL,
                              base_url = getOption("baseurl")) {
-  
   name_reduce <- NULL
-  default_fields <- if(is.null(fields)){
-    c("name", "id")} else {fields}
-  
-  by_ns <- try(rlang::ensym(by), silent = TRUE)
-  
-  if (is.null(fields) && class(by_ns) == "try-error") {
+  default_fields <- if (is.null(fields)) {
+    c("name", "id")
+  } else {
+    stringr::str_remove_all(fields, " ")
+  }
+
+  # by can come in as string or NSE, convert to string
+  by <- try(as.character(rlang::ensym(by)), silent = TRUE)
+
+  # by parameter restricted to being an identifiable property
+  # as defined in DHIS2 docs
+  if (!(by %in% c("name", "id", "code", "shortName"))) {
+    stop(
+      "getOrgUnits expects a by parameter of id (the default), name, code, or ",
+      "shortName. Use the ",
+      "more general getMetadata function for other scenarios."
+    )
+  }
+
+  if (by == "id" & is.null(fields)) {
     name_reduce <- "name"
-  } else if (by_ns == "name" & is.null(fields)) {
+  } else if (by == "name" & is.null(fields)) {
     name_reduce <- "id"
   }
 
-  # process first filter item (id, name, etc.)
-  default_filter_item <- ifelse(class(by_ns) == "try-error", "id", by_ns)
-
-  # process first filter option (in, eq, like, etc.)
-  default_filter_option <- "in"
-
-  # make filters
-  filters <- paste0(default_filter_item, ":", default_filter_option, ":", paste0(unique(values), collapse = ","))
+  filters <- datimutils::metadataFilter(
+    values = unique(values),
+    property = by,
+    operator = "in"
+  )
 
   # call getMetadata with info above
-  getMetadata(
-    end_point = "organisationUnitGroups", base_url = base_url,
+  data <- getMetadata(
+    end_point = "organisationUnitGroups",
+    base_url = base_url,
     filters,
     fields = default_fields, pluck = F, retry = 1,
     expand = values, name_reduce = name_reduce
   )
 }
-
-#' #' @export
-#' #' @title getOrgUnitGroups2(filters1 = NULL, filters2 = NULL, fields = NULL,
-#' #' base_url = NULL, by1 = NULL, by2 = NULL)
-#' #' @description wrapper to getMetadata that retrieves org units
-#' #' @param base_url string - base address of instance (text before api/ in URL)
-#' #' @param filters1 - the filters, which can come in any format as long as all
-#' #' components are present
-#' #' @param filters2 - the filters, which can come in any format as long as all
-#' #' components are present
-#' #' @param fields - the fields, which can come in any formt as long as all
-#' #' components are present
-#' #' @param by1 - what to filter by, i.e. id or name, default is id,
-#' #' applies to filter1
-#' #' @param by2 - what to filter by, i.e. id or name, default is id,
-#' #' applies to filter2
-#' #' @return the metadata response in json format and flattened
-#'
-#' getOrgUnitGroups2 <- function(filters1 = NULL, filters2 = NULL,
-#'                               by1 = NULL, by2 = NULL,
-#'                               fields = NULL, base_url = getOption("baseurl")) {
-#'   # process field options
-#'   default_fields <- if (is.null(fields)) {
-#'     c("name", "id")
-#'   } else {
-#'     fields
-#'   }
-#'   # process first filter item (id, name, etc.)
-#'   default_filter_item1 <- ifelse(is.null(by1), "id", by1)
-#'   # process first filter option (in, eq, like, etc.)
-#'   default_filter_option1 <- "in"
-#'   # process second filter item (id, name, etc.)
-#'   default_filter_item2 <- ifelse(is.null(by2), "id", by2)
-#'   # process second filter option (in, eq, like, etc.)
-#'   default_filter_option2 <- "in"
-#'   # call getMetadata with info above
-#'   getMetadata(
-#'     base_url = base_url, end_point = "organisationUnitGroups",
-#'     filters = list(
-#'       paste0(default_filter_item1, default_filter_option1, paste0(filters1, collapse = ",")),
-#'       paste0(default_filter_item2, default_filter_option2, paste0(filters2, collapse = ","))
-#'     ),
-#'     fields = default_fields, pluck = F, retry = 1, expand = NULL
-#'   )
-#' }

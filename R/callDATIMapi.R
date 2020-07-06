@@ -70,6 +70,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   # retry api get block, only retries if reponse code not in 400s
   i <- 1
   response_code <- 5
+
   while (i <= retry & (response_code < 400 | response_code >= 500)) {
     resp <- httr::GET(url, httr::timeout(timeout))
     response_code <- httr::status_code(resp)
