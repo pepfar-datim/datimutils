@@ -89,15 +89,11 @@ httptest::with_mock_api({
   test_that(
     paste0("Default behavior, if provide filter property other than name or ", 
            "id then name returned by default: "), {
-  
+
 # httr::content(httr::GET(
 #   paste0(
 #          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#          "paging=false&filter=code:in:[CHC]&fields=name,id")))
-# httr::content(httr::GET(
-#   paste0(
-#          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#          "paging=false&filter=code:in:[CHC]&fields=code,name,id")))
+#          "paging=false&filter=code:in:[CHC]&fields=code,name")))
              
              data <- getOrgUnitGroups(
                "CHC", by = code,
