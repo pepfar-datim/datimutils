@@ -110,12 +110,12 @@ httptest::with_mock_api({
     paste0("If provide filter property other than name or ", 
            "id then can get back other fields: "), {
              
-# httr::content(httr::GET(
-#   paste0(
-#          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#          "paging=false&filter=code:in:[Country,CHC]&fields=code,id")))
+ #httr::content(httr::GET(
+ #  paste0(
+ #         "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+ #         "paging=false&filter=code:in:[Country,CHC]&fields=code,id,name")))
              
-             data <- getOrgUnitGroups(c("Country", "CHC"), 
+             data <- getOrgUnitGroups(c("Country", "CHC"),
                                       by = code, 
                                       fields = "id",
                                       base_url = "https://play.dhis2.org/2.33/"
@@ -124,12 +124,12 @@ httptest::with_mock_api({
                                             "CXw2yu5fodb"))
              rm(data)
 
-# httr::content(httr::GET(
-#   paste0(
-#     "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#     "paging=false&filter=shortName:in:[Country,CHC,Country]",
-#     "&fields=code,id,name,shortName")))
-# 
+ #httr::content(httr::GET(
+ #  paste0(
+ #    "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+ #    "paging=false&filter=shortName:in:[Country,CHC]",
+ #    "&fields=code,id,name,shortName")))
+
              data <- getOrgUnitGroups(
                c("Country", "CHC", "Country"), 
                by = shortName, 
@@ -138,8 +138,8 @@ httptest::with_mock_api({
              )
              testthat::expect_equal(NROW(data), 3)
              testthat::expect_named(data, c("code",
-                                            "name",
                                             "id",
+                                            "name",
                                             "shortName"))
              testthat::expect_identical(data$id,
                                         c("RpbiCJpIYEj",
@@ -147,11 +147,11 @@ httptest::with_mock_api({
                                           "RpbiCJpIYEj"))
              rm(data)
              
-# httr::content(httr::GET(
-#  paste0(
-#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
-#    "paging=false&filter=shortName:in:[CHC,Country]&fields=code,id,",
-#     "shortName")))             
+ #httr::content(httr::GET(
+ # paste0(
+ #  "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+ #   "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,id,code,name")))
+
              data <- getOrgUnitGroups(
                c("CHC", "Country"), 
                by = shortName, 
@@ -159,8 +159,8 @@ httptest::with_mock_api({
                base_url = "https://play.dhis2.org/2.33/"
              )             
              testthat::expect_equal(NROW(data), 2)
-             testthat::expect_named(data, c("code",
-                                            "id"))
+             testthat::expect_named(data, c("id",
+                                            "code"))
              testthat::expect_identical(data$id,
                                         c("CXw2yu5fodb",
                                           "RpbiCJpIYEj"))
@@ -255,8 +255,8 @@ httptest::with_mock_api({
           base_url = "https://play.dhis2.org/2.33/"
         )
       testthat::expect_equal(NROW(data), 2)
-      testthat::expect_named(data, c("code", "id"))
-      testthat::expect_true(is.na(data[[2, 1]]))
+      testthat::expect_named(data, c("id", "code"))
+      testthat::expect_true(is.na(data[[2, 2]]))
       rm(data)
     }
   )
@@ -282,8 +282,8 @@ httptest::with_mock_api({
       testthat::expect_s3_class(data, "data.frame")
       testthat::expect_equal(NROW(data), 2)
       testthat::expect_named(data, c(
-        "name", "id", "groupSets",
-        "organisationUnits"
+        "name", "id",
+        "organisationUnits", "groupSets"
       ))
       testthat::expect_equal(
         NROW(tidyr::unnest(data,
