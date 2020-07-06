@@ -105,6 +105,69 @@ httptest::with_mock_api({
              )
              
              testthat::expect_equal(NROW(data), 1)
+             testthat::expect_equal(data, "CHC")
+             rm(data)
+           }
+  )
+  
+  test_that(
+    paste0("If provide filter property other than name or ", 
+           "id then can get back other fields: "), {
+             
+# httr::content(httr::GET(
+#   paste0(
+#          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#          "paging=false&filter=code:in:[Country,CHC]&fields=code,id")))
+             
+             data <- getOrgUnitGroups(c("Country", "CHC"), 
+                                      by = code, 
+                                      fields = "id",
+                                      base_url = "https://play.dhis2.org/2.33/"
+             )
+             testthat::expect_equal(data, c("RpbiCJpIYEj",
+                                            "CXw2yu5fodb"))
+             rm(data)
+
+# httr::content(httr::GET(
+#   paste0(
+#     "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#     "paging=false&filter=shortName:in:[Country,CHC,Country]",
+#     "&fields=code,id,name,shortName")))
+# 
+             data <- getOrgUnitGroups(
+               c("Country", "CHC", "Country"), 
+               by = shortName, 
+               fields = "code, id, name, shortName",
+               base_url = "https://play.dhis2.org/2.33/"
+             )
+             testthat::expect_equal(NROW(data), 3)
+             testthat::expect_named(data, c("code",
+                                            "name",
+                                            "id",
+                                            "shortName"))
+             testthat::expect_identical(data$id,
+                                        c("RpbiCJpIYEj",
+                                          "CXw2yu5fodb",
+                                          "RpbiCJpIYEj"))
+             rm(data)
+             
+# httr::content(httr::GET(
+#  paste0(
+#   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+#    "paging=false&filter=shortName:in:[CHC,Country]&fields=code,id,",
+#     "shortName")))             
+             data <- getOrgUnitGroups(
+               c("CHC", "Country"), 
+               by = shortName, 
+               fields = "id, code",
+               base_url = "https://play.dhis2.org/2.33/"
+             )             
+             testthat::expect_equal(NROW(data), 2)
+             testthat::expect_named(data, c("code",
+                                            "id"))
+             testthat::expect_identical(data$id,
+                                        c("CXw2yu5fodb",
+                                          "RpbiCJpIYEj"))
              rm(data)
            }
   )
