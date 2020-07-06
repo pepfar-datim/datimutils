@@ -308,7 +308,7 @@ getMetadata <- function(end_point,
     !grepl(",", fields) && (
     names(resp) == fields ||
       grepl(
-        paste0("[", names(resp), "]"),
+        paste0("\\[", names(resp), "\\]"),
         fields
       )
   )) {
