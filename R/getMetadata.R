@@ -257,6 +257,13 @@ getMetadata <- function(end_point,
     filter_storage <- unlist(filter_storage)
     filter_storage <- stringr::str_flatten(filter_storage)
   }
+  
+  # if filter_storage is empty create placeholder for path string creation
+  if (length(filter_storage) != 0) {
+    ex <- filter_storage
+  } else {
+    ex <- ""
+  }
 
   # if the if loop doesnt get activated this will still create a variable for path
   ef <- ""
@@ -266,13 +273,6 @@ getMetadata <- function(end_point,
     # flattens fields and adds ?fields= if needed
     ef <- stringr::str_flatten(fields, ",")
     ef <- paste0("&fields=", ef)
-  }
-
-  # if filter_storage is empty create placeholder for path string creation
-  if (length(filter_storage) != 0) {
-    ex <- filter_storage
-  } else {
-    ex <- ""
   }
 
   # end point manipulation
