@@ -268,11 +268,6 @@ getMetadata <- function(end_point,
     ef <- paste0("&fields=", ef)
   }
 
-  # end point manipulation
-  if (grepl(end_point, substr(ex, 1, nchar(end_point)))) {
-    end_point <- ""
-  }
-
   # create final path
   path <- paste0(
     end_point, ifelse(length(ex) != 0, ex, ""), ef)
