@@ -270,7 +270,7 @@ getMetadata <- function(end_point,
 
   # if filter_storage is empty create placeholder for path string creation
   if (length(filter_storage) != 0) {
-    ex <- filter_storage[[1]]
+    ex <- filter_storage
   } else {
     ex <- ""
   }
