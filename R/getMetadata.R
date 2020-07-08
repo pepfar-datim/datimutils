@@ -195,7 +195,7 @@ processFilters <- function(end_point, filters) {
 #' "name:!eq:ANC", "indicators.name:like:ANC"}
 #' or
 #' \preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),  
-#' "id:!in:[a11111111111, b22222222222]"
+#' "id:!in:[a11111111111,b22222222222]"
 #' }
 #' see datimutils::metadataFilter and related helpers
 #' @param fields - the metadata fields requested as a comma 
@@ -236,7 +236,7 @@ getMetadata <- function(end_point,
   if (!(missing(...))) {
 
 # turn filters recieved as ... to a character vector of individual filters
-    filters2 <- Reduce(c, list(...))
+    filters2 <- unlist(list(...))
     
     for (i in 1:length(filters2))
     {
