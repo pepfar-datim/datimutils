@@ -226,13 +226,8 @@ getMetadata <- function(end_point,
                         base_url = getOption("baseurl"), 
                         retry = 1) {
 
-  #non-standard evaluation for end_point
-  end_point <- rlang::ensym(end_point)
-
-  # if no filters or fields are specified, just use endpoint as path
-  if (!(missing(...)) | !(is.null(fields))) {
-    end_point <- gsub("/", "", end_point)
-  }
+  #non-standard evaluation for end_point convert to string
+  end_point <- as.character(rlang::ensym(end_point))
 
   # set up storage for multiple filter arguments
   filter_storage <- list()
