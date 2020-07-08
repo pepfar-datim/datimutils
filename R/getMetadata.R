@@ -238,13 +238,14 @@ getMetadata <- function(end_point,
   filter_storage <- list()
 
   # process filter arguments
-  if (!(missing(...))) {
-
+  
+  if (missing(...)) {
+    ex = ""
+  } else {
 # turn filters recieved as ... to a character vector of individual filters
     filters_list <- unlist(list(...))
     
-    for (i in 1:length(filters_list))
-    {
+    for (i in 1:length(filters_list)) {
       if (i == 1) {
         ex2 <- processFilters(end_point = end_point, filters = filters_list[[i]])
       } else {
@@ -255,16 +256,9 @@ getMetadata <- function(end_point,
       filter_storage[[i]] <- ex2
     }
     filter_storage <- unlist(filter_storage)
-    filter_storage <- stringr::str_flatten(filter_storage)
+    ex <- stringr::str_flatten(filter_storage)
   }
   
-  # if filter_storage is empty create placeholder for path string creation
-  if (length(filter_storage) != 0) {
-    ex <- filter_storage
-  } else {
-    ex <- ""
-  }
-
   # if the if loop doesnt get activated this will still create a variable for path
   ef <- ""
 
@@ -282,7 +276,7 @@ getMetadata <- function(end_point,
 
   # create final path
   path <- paste0(
-    end_point, ifelse(length(filter_storage) != 0, filter_storage, ""), ef)
+    end_point, ifelse(length(ex) != 0, ex, ""), ef)
   if (is.null(fields) & missing(...)) {
     path <- end_point
   }
