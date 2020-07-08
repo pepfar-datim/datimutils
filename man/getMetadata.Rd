@@ -2,41 +2,58 @@
 % Please edit documentation in R/getMetadata.R
 \name{getMetadata}
 \alias{getMetadata}
-\title{getMetadata(base_url, end_point, filters, fields, filters2 = NULL, pluck)}
+\title{getMetadata}
 \usage{
 getMetadata(
   end_point,
   ...,
   fields = "name,id",
-  base_url = getOption("baseurl"),
-  pluck = F,
-  retry = 1,
-  expand = NULL,
   as_vector = T,
-  name_reduce = NULL
+  pluck = F,
+  expand = NULL,
+  name_reduce = NULL,
+  base_url = getOption("baseurl"),
+  retry = 1
 )
 }
 \arguments{
 \item{end_point}{string - api endpoint for the metadata of interest
-e.g. dataElements, organisationUnits}
+e.g. dataElements, organisationUnits. Non-standard evaluation supported.}
 
-\item{...}{- the filters}
+\item{...}{- one or more metadata filters specified as a combination of 
+strings and/or character vectors, eg:
+\preformatted{
+"name:!eq:ANC", "indicators.name:like:ANC"}
+or
+\preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),  
+"id:!in:[a11111111111, b22222222222]"
+}
+see datimutils::metadataFilter and related helpers}
 
-\item{fields}{- the fields}
-
-\item{base_url}{string - base address of instance (text before api/ in URL)}
-
-\item{pluck}{- whether to add pluck option as documented by dhis2 api
-developer guide}
-
-\item{retry}{number of times to retry}
-
-\item{expand}{dataframe to know how to expand result in case of duplicate filters}
+\item{fields}{- the metadata fields requested as a comma 
+seperated string or character vector, eg:
+\preformatted{
+"name, id"}
+or
+\preformatted{
+c("name", "id")} 
+#' or
+\preformatted{
+c("name,id", "code")}}
 
 \item{as_vector}{attempt to return an atomic vector when only a single field
 is requested and returned. Defaults to TRUE.}
 
+\item{pluck}{- whether to add pluck option as documented by dhis2 api
+developer guide}
+
+\item{expand}{dataframe to know how to expand result in case of duplicate filters}
+
 \item{name_reduce}{whether to reduce the fields to just name}
+
+\item{base_url}{string - base address of instance (text before api/ in URL)}
+
+\item{retry}{number of times to retry}
 }
 \value{
 the metadata response in json format and flattened
