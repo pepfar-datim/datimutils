@@ -226,6 +226,10 @@ getMetadata <- function(end_point,
                         base_url = getOption("baseurl"), 
                         retry = 1,
                         timeout = 180) {
+  
+  if (!is.character(fields)){
+    stop("The fields argument of getMetadata should be of type character")
+  }
 
   #non-standard evaluation for end_point convert to string
   end_point <- as.character(rlang::ensym(end_point))
@@ -260,10 +264,8 @@ getMetadata <- function(end_point,
   # fields block
   if (!(is.null(fields))) {
     # flattens fields and adds ?fields= if needed
-    ef <- stringr::str_flatten(unlist(sapply(fields, as.character)), ",")
-    if (!(grepl("fields", ef))) {
-      ef <- paste0("&fields=", ef)
-    }
+    ef <- stringr::str_flatten(fields, ",")
+    ef <- paste0("&fields=", ef)
   }
 
   # if filter_storage is empty create placeholder for path string creation
