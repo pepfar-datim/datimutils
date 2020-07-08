@@ -234,7 +234,11 @@ getMetadata <- function(end_point,
 
   #non-standard evaluation for end_point convert to string
   end_point <- as.character(rlang::ensym(end_point))
-
+  if (end_point == ""){
+    stop("end_point must be specified for getMetadata to run.")
+  }
+  
+  
   # set up storage for multiple filter arguments
   filter_storage <- list()
 
@@ -252,7 +256,7 @@ getMetadata <- function(end_point,
       } else {
         ex2 <- processFilters(end_point = NULL, filters = filters_chr[[i]])
       }
-
+# TODO why do we add endpoint above and then pull it back out
       ex2 <- sub(end_point, "", ex2)
       filter_storage[[i]] <- ex2
     }
