@@ -65,4 +65,6 @@ getOrgUnitGroups <- function(values,
     fields = default_fields, pluck = F, retry = 1,
     expand = values, name_reduce = name_reduce
   )
+  
+  return(data)
 }
