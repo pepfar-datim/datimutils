@@ -9,7 +9,6 @@ getMetadata(
   ...,
   fields = "name,id",
   as_vector = T,
-  pluck = F,
   expand = NULL,
   name_reduce = NULL,
   base_url = getOption("baseurl"),
@@ -44,9 +43,6 @@ c("name,id", "code")}}
 \item{as_vector}{attempt to return an atomic vector when only a single field
 is requested and returned. Defaults to TRUE.}
 
-\item{pluck}{- whether to add pluck option as documented by dhis2 api
-developer guide}
-
 \item{expand}{dataframe to know how to expand result in case of duplicate filters}
 
 \item{name_reduce}{whether to reduce the fields to just name}
@@ -54,6 +50,9 @@ developer guide}
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{retry}{number of times to retry}
+
+\item{pluck}{- whether to add pluck option as documented by dhis2 api
+developer guide}
 }
 \value{
 the metadata response in json format and flattened

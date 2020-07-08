@@ -62,7 +62,7 @@ getOrgUnitGroups <- function(values,
     end_point = "organisationUnitGroups",
     base_url = base_url,
     filters,
-    fields = default_fields, pluck = F, retry = 1,
+    fields = default_fields, retry = 1,
     expand = values, name_reduce = name_reduce
   )
   

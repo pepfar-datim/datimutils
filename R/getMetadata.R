@@ -223,7 +223,6 @@ getMetadata <- function(end_point,
                         ..., 
                         fields = "name,id",
                         as_vector = T,
-                        pluck = F,
                         expand = NULL,
                         name_reduce = NULL,
                         base_url = getOption("baseurl"), 
@@ -290,9 +289,7 @@ getMetadata <- function(end_point,
 
   # create final path
   path <- paste0(
-    end_point, ifelse(length(filter_storage) != 0, filter_storage, ""), ef,
-    ifelse(pluck, "~pluck", "")
-  )
+    end_point, ifelse(length(filter_storage) != 0, filter_storage, ""), ef)
   if (is.null(fields) & missing(...)) {
     path <- end_point
   }
