@@ -8,6 +8,9 @@
 duplicateResponse <- function(resp, expand) {
   if(class(resp) != "character"){
   subs <- apply(resp, 2, function(x){expand[1] %in% x})
+    if(sum(subs) > 1){
+      subs[setdiff(names(subs),"name")] <- F
+    }
   resp <- resp[match(expand, resp[,subs]),]
   }else {resp <- resp[match(expand, resp)]}
   
@@ -284,7 +287,7 @@ getMetadata <- function(end_point,
   # simplify data structure
   resp <- simplifyStructure(resp)
   
- # # # add in duplicates if needed
+ # add in duplicates if needed
  if (!(is.null(expand))) {
    resp <- duplicateResponse(resp, expand)
  }
@@ -292,24 +295,24 @@ getMetadata <- function(end_point,
   if(!(is.null(name_reduce)) && class(resp) %in% "data.frame"){
     resp <- resp[,name_reduce]
   }
- # # # 
- # # # # # do we have single value to return?
+
+ # do we have single value to return?
   if (is.atomic(resp) && length(resp) == 1){
     return(resp)
     }
- # # # 
- # # # #   # If we only request one singular field and that is what we got back
- # # # #   # return atomic vector unless as_vector = FALSE
- # # # #   # when reaching in to collection handle the fact that the returned name
- # # # #   # is in []
+
+ # If we only request one singular field and that is what we got back
+ # return atomic vector unless as_vector = FALSE
+ # when reaching in to collection handle the fact that the returned name
+ # is in []
   if (as_vector == TRUE &&
     NCOL(resp) == 1 &&
     length(fields) == 1 &&
     !grepl(",", fields) && (
     names(resp) == fields ||
-      grepl(
-        paste0("[", names(resp), "]"),
-        fields
+      grepl(paste0("[", names(resp), "]"),
+            fields,
+            fixed = TRUE
       )
   )) {
     return(resp[[1]])

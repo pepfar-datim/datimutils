@@ -14,16 +14,21 @@ getOrgUnitGroups <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl")) {
+
   name_reduce <- NULL
-  default_fields <- if (is.null(fields)) {
-    c("name", "id")
-  } else {
-    stringr::str_remove_all(fields, " ")
-  }
 
   # by can come in as string or NSE, convert to string
   by <- try(as.character(rlang::ensym(by)), silent = TRUE)
 
+  default_fields <- if (is.null(fields)) {
+    c(by, "name", "id")
+  } else if (!("name" %in% fields) && !(any(grepl("name", fields)))) {
+    c(by, fields, "name")
+  } else{
+    fields
+  }
+  default_fields <- stringr::str_remove_all(default_fields, " ")
+  default_fields <- unique(default_fields)
   # by parameter restricted to being an identifiable property
   # as defined in DHIS2 docs
   if (!(by %in% c("name", "id", "code", "shortName"))) {
@@ -34,11 +39,17 @@ getOrgUnitGroups <- function(values,
     )
   }
 
-  if (by == "id" & is.null(fields)) {
-    name_reduce <- "name"
-  } else if (by == "name" & is.null(fields)) {
+  if ((by == "name" & is.null(fields))) {
     name_reduce <- "id"
+  } else if (is.null(fields)) {
+    name_reduce <- "name"
+  } else if (!(is.null(fields))){
+    name_reduce <-  gsub("\\[[^()]*\\]", "",fields)
+    if(length(name_reduce == 1)){
+      name_reduce <- gsub(" ", "", unlist(strsplit(name_reduce, ",")))
+    }
   }
+
 
   filters <- datimutils::metadataFilter(
     values = unique(values),
@@ -54,4 +65,6 @@ getOrgUnitGroups <- function(values,
     fields = default_fields, pluck = F, retry = 1,
     expand = values, name_reduce = name_reduce
   )
+  
+  return(data)
 }
