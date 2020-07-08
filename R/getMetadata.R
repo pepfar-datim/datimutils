@@ -311,14 +311,14 @@ getMetadata <- function(end_point,
    resp <- duplicateResponse(resp, expand)
  }
 
+  # do we have single value to return?
+  if (is.atomic(resp) && length(resp) == 1){
+    return(resp)
+  }
+  
   if(!(is.null(name_reduce)) && class(resp) %in% "data.frame"){
     resp <- resp[,name_reduce]
   }
-
- # do we have single value to return?
-  if (is.atomic(resp) && length(resp) == 1){
-    return(resp)
-    }
 
  # If we only request one singular field and that is what we got back
  # return atomic vector unless as_vector = FALSE
