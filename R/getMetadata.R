@@ -234,13 +234,10 @@ getMetadata <- function(end_point,
 
   # process filter arguments
   if (!(missing(...))) {
-    filter_check <- list(...)
-    filters2 <- as.list(...)
 
-    if (length(filter_check) > length(filters2)) {
-      filters2 <- filter_check
-    }
-
+# turn filters recieved as ... to a character vector of individual filters
+    filters2 <- Reduce(c, list(...))
+    
     for (i in 1:length(filters2))
     {
       if (i == 1) {
