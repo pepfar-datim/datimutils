@@ -240,7 +240,7 @@ getMetadata <- function(end_point,
   # process filter arguments
   
   if (missing(...)) {
-    ex = ""
+    ex = NULL
   } else {
 # turn filters recieved as ... to a character vector of individual filters
     filters_list <- unlist(list(...))
@@ -261,7 +261,7 @@ getMetadata <- function(end_point,
   
   # fields block
   if (is.null(fields)) {
-    ef <- ""
+    ef <- NULL
   } else {
     # flattens fields and adds ?fields= if needed
     ef <- stringr::str_flatten(fields, ",")
@@ -269,11 +269,7 @@ getMetadata <- function(end_point,
   }
 
   # create final path
-  path <- paste0(
-    end_point, ifelse(length(ex) != 0, ex, ""), ef)
-  if (is.null(fields) & missing(...)) {
-    path <- end_point
-  }
+  path <- paste0(end_point, ex, ef)
 
   # pass path in api_get
   resp <- api_get(
