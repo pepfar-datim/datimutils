@@ -328,3 +328,12 @@ httptest::with_mock_api({
     }
   )
 })
+
+test_that(
+  paste0("getOrgUnitGroups returns error for unsupported",
+         "by field"), {
+           expect_error(
+             getOrgUnitGroups("foo", by = bar)
+           )
+         })
+           
