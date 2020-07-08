@@ -259,11 +259,10 @@ getMetadata <- function(end_point,
     ex <- stringr::str_flatten(filter_storage)
   }
   
-  # if the if loop doesnt get activated this will still create a variable for path
-  ef <- ""
-
   # fields block
-  if (!(is.null(fields))) {
+  if (is.null(fields)) {
+    ef <- ""
+  } else {
     # flattens fields and adds ?fields= if needed
     ef <- stringr::str_flatten(fields, ",")
     ef <- paste0("&fields=", ef)
