@@ -224,7 +224,8 @@ getMetadata <- function(end_point,
                         expand = NULL,
                         name_reduce = NULL,
                         base_url = getOption("baseurl"), 
-                        retry = 1) {
+                        retry = 1,
+                        timeout = 180) {
 
   #non-standard evaluation for end_point convert to string
   end_point <- as.character(rlang::ensym(end_point))
@@ -286,7 +287,8 @@ getMetadata <- function(end_point,
 
   # pass path in api_get
   resp <- api_get(
-    path = path, base_url = base_url, retry = retry, timeout = 60,
+    path = path, base_url = base_url, retry = retry,
+    timeout = timeout,
     api_version = NULL
   )
 
