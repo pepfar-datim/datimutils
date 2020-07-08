@@ -50,9 +50,6 @@ is requested and returned. Defaults to TRUE.}
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{retry}{number of times to retry}
-
-\item{pluck}{- whether to add pluck option as documented by dhis2 api
-developer guide}
 }
 \value{
 the metadata response in json format and flattened

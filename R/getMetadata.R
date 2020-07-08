@@ -210,8 +210,6 @@ processFilters <- function(end_point, filters) {
 #' c("name,id", "code")} 
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
-#' @param pluck - whether to add pluck option as documented by dhis2 api
-#' developer guide
 #' @param expand dataframe to know how to expand result in case of duplicate filters
 #' @param name_reduce whether to reduce the fields to just name
 #' @param base_url string - base address of instance (text before api/ in URL)
