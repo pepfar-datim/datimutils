@@ -214,6 +214,7 @@ processFilters <- function(end_point, filters) {
 #' @param name_reduce whether to reduce the fields to just name
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param retry number of times to retry
+#' @param timeout integer - seconds to wait for a response, default = 180
 #' @return the metadata response in json format and flattened
 #'
 

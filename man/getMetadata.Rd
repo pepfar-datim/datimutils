@@ -12,7 +12,8 @@ getMetadata(
   expand = NULL,
   name_reduce = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  timeout = 180
 )
 }
 \arguments{
@@ -25,7 +26,7 @@ strings and/or character vectors, eg:
 "name:!eq:ANC", "indicators.name:like:ANC"}
 or
 \preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),  
-"id:!in:[a11111111111, b22222222222]"
+"id:!in:[a11111111111,b22222222222]"
 }
 see datimutils::metadataFilter and related helpers}
 
@@ -50,6 +51,8 @@ is requested and returned. Defaults to TRUE.}
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{retry}{number of times to retry}
+
+\item{timeout}{integer - seconds to wait for a response, default = 180}
 }
 \value{
 the metadata response in json format and flattened
