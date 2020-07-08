@@ -150,7 +150,7 @@ httptest::with_mock_api({
  #httr::content(httr::GET(
  # paste0(
  #  "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
- #   "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,id,code,name")))
+ #   "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,id,code")))
 
              data <- getOrgUnitGroups(
                c("CHC", "Country"), 
