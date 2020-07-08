@@ -243,13 +243,13 @@ getMetadata <- function(end_point,
     ex = NULL
   } else {
 # turn filters recieved as ... to a character vector of individual filters
-    filters_list <- unlist(list(...))
+    filters_chr <- unlist(list(...))
     
-    for (i in 1:length(filters_list)) {
+    for (i in 1:length(filters_chr)) {
       if (i == 1) {
-        ex2 <- processFilters(end_point = end_point, filters = filters_list[[i]])
+        ex2 <- processFilters(end_point = end_point, filters = filters_chr[[i]])
       } else {
-        ex2 <- processFilters(end_point = NULL, filters = filters_list[[i]])
+        ex2 <- processFilters(end_point = NULL, filters = filters_chr[[i]])
       }
 
       ex2 <- sub(end_point, "", ex2)
