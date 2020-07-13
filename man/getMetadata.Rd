@@ -9,8 +9,6 @@ getMetadata(
   ...,
   fields = "name,id",
   as_vector = T,
-  expand = NULL,
-  name_reduce = NULL,
   base_url = getOption("baseurl"),
   retry = 1,
   timeout = 180
@@ -20,33 +18,29 @@ getMetadata(
 \item{end_point}{string - api endpoint for the metadata of interest
 e.g. dataElements, organisationUnits. Non-standard evaluation supported.}
 
-\item{...}{- one or more metadata filters specified as a combination of 
+\item{...}{- one or more metadata filters specified as a combination of
 strings and/or character vectors, eg:
 \preformatted{
 "name:!eq:ANC", "indicators.name:like:ANC"}
 or
-\preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),  
+\preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),
 "id:!in:[a11111111111,b22222222222]"
 }
 see datimutils::metadataFilter and related helpers}
 
-\item{fields}{- the metadata fields requested as a comma 
+\item{fields}{- the metadata fields requested as a comma
 seperated string or character vector, eg:
 \preformatted{
 "name, id"}
 or
 \preformatted{
-c("name", "id")} 
+c("name", "id")}
 #' or
 \preformatted{
 c("name,id", "code")}}
 
 \item{as_vector}{attempt to return an atomic vector when only a single field
 is requested and returned. Defaults to TRUE.}
-
-\item{expand}{dataframe to know how to expand result in case of duplicate filters}
-
-\item{name_reduce}{whether to reduce the fields to just name}
 
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 

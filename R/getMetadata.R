@@ -3,7 +3,6 @@
 #' @param resp raw text response recieved from datim api
 #' @return api response reduced to most simple data structure
 #'
-# make a unit tests for this without api calls
 
 simplifyStructure <- function(resp) {
 
@@ -55,25 +54,25 @@ simplifyStructure <- function(resp) {
 #' @description General utility to get metadata details from DATIM
 #' @param end_point string - api endpoint for the metadata of interest
 #' e.g. dataElements, organisationUnits. Non-standard evaluation supported.
-#' @param ... - one or more metadata filters specified as a combination of 
+#' @param ... - one or more metadata filters specified as a combination of
 #' strings and/or character vectors, eg:
 #' \preformatted{
 #' "name:!eq:ANC", "indicators.name:like:ANC"}
 #' or
-#' \preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),  
+#' \preformatted{c("name:!eq:ANC", "indicators.name:like:ANC"),
 #' "id:!in:[a11111111111,b22222222222]"
 #' }
 #' see datimutils::metadataFilter and related helpers
-#' @param fields - the metadata fields requested as a comma 
+#' @param fields - the metadata fields requested as a comma
 #' seperated string or character vector, eg:
 #' \preformatted{
 #' "name, id"}
 #' or
 #' \preformatted{
-#' c("name", "id")} 
+#' c("name", "id")}
 #' #' or
 #' \preformatted{
-#' c("name,id", "code")} 
+#' c("name,id", "code")}
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
 #' @param base_url string - base address of instance (text before api/ in URL)
@@ -89,12 +88,11 @@ getMetadata <- function(end_point,
                         base_url = getOption("baseurl"),
                         retry = 1,
                         timeout = 180) {
-
   if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
 
-  #non-standard evaluation for end_point convert to string
+  # non-standard evaluation for end_point convert to string
   end_point <- as.character(rlang::ensym(end_point))
   if (end_point == "") {
     stop("end_point must be specified for getMetadata to run.")
@@ -141,7 +139,7 @@ getMetadata <- function(end_point,
     return(resp)
   }
 
-  #If we only request one singular field and that is what we got back
+  # If we only request one singular field and that is what we got back
   # return atomic vector unless as_vector = FALSE
   # when reaching in to collection handle the fact that the returned name
   # is in []
@@ -152,8 +150,8 @@ getMetadata <- function(end_point,
     (
       names(resp) == fields ||
         grepl(paste0("[", names(resp), "]"),
-              fields,
-              fixed = TRUE
+          fields,
+          fixed = TRUE
         )
     )) {
     return(resp[[1]])

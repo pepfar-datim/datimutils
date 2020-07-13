@@ -2,19 +2,16 @@
 #' @description adds in duplicates to the response if they were in the filter
 #' @param resp api response after simplification of data structure
 #' @param expand a vector of something
+#' @param by which column to use as a reference during duplication
 #' @return the same api reponse that entered but with added records
 #'
 #'
 duplicateResponse <- function(resp, expand, by) {
-  if(!(is.array(resp))){
-
-  subs <- apply(resp, 2, function(x){expand[1] %in% x})
-    #
-    if(sum(subs) > 1){
-      subs[setdiff(names(subs), by)] <- F
-    }
-  resp <- resp[match(expand, resp[,subs]),]
-  }else {resp <- resp[match(expand, resp)]}
+  if (!(is.array(resp))) {
+    resp <- resp[match(expand, resp[, by]), ]
+  } else {
+    resp <- resp[match(expand, resp)]
+  }
 
   return(resp)
 }
@@ -35,7 +32,6 @@ getOrgUnitGroups <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl")) {
-
   name_reduce <- NULL
 
   # by can come in as string or NSE, convert to string
@@ -45,7 +41,7 @@ getOrgUnitGroups <- function(values,
     c(by, "name", "id")
   } else if (!("name" %in% fields) && !(any(grepl("name", fields)))) {
     c(by, fields, "name")
-  } else{
+  } else {
     fields
   }
   default_fields <- stringr::str_remove_all(default_fields, " ")
@@ -64,9 +60,9 @@ getOrgUnitGroups <- function(values,
     name_reduce <- "id"
   } else if (is.null(fields)) {
     name_reduce <- "name"
-  } else if (!(is.null(fields))){
-    name_reduce <-  gsub("\\[[^()]*\\]", "",fields)
-    if(length(name_reduce == 1)){
+  } else if (!(is.null(fields))) {
+    name_reduce <- gsub("\\[[^()]*\\]", "", fields)
+    if (length(name_reduce == 1)) {
       name_reduce <- gsub(" ", "", unlist(strsplit(name_reduce, ",")))
     }
   }
@@ -86,10 +82,10 @@ getOrgUnitGroups <- function(values,
     fields = default_fields, retry = 1
   )
 
-   data <- duplicateResponse(resp = data, expand = values, by= by )
+  data <- duplicateResponse(resp = data, expand = values, by = by)
 
-  if(!(is.null(name_reduce)) && class(data) %in% "data.frame"){
-    data <- data[,name_reduce]
+  if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
+    data <- data[, name_reduce]
   }
   return(data)
 }
