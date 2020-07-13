@@ -1,27 +1,9 @@
-#' @title duplicateResponse(resp)
-#' @description adds in duplicates to the response if they were in the filter
-#' @param resp api response after simplification of data structure
-#' @param expand a table with the number of times to duplicate each specific row
-#' @return the same api reponse that entered but with added records
-#'
-
-duplicateResponse <- function(resp, expand) {
-  if(class(resp) != "character"){
-  subs <- apply(resp, 2, function(x){expand[1] %in% x})
-    if(sum(subs) > 1){
-      subs[setdiff(names(subs),"name")] <- F
-    }
-  resp <- resp[match(expand, resp[,subs]),]
-  }else {resp <- resp[match(expand, resp)]}
-  
-  return(resp)
-}
-
 #' @title simplifyStructure(resp)
 #' @description takes a api response and simplifies it down to the most basic data structure
 #' @param resp raw text response recieved from datim api
 #' @return api response reduced to most simple data structure
 #'
+# make a unit tests for this without api calls
 
 simplifyStructure <- function(resp) {
 
@@ -48,6 +30,7 @@ simplifyStructure <- function(resp) {
       if (!(("list" %in% apply(possible_resp, 2, typeof)))) {
         resp <- possible_resp
       } else {
+        # unnest dataframe if has list type in columns
         if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)) {
           resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = T)
           if ("try-error" %in% class(resp)) {
@@ -71,6 +54,7 @@ simplifyStructure <- function(resp) {
 #' @return the processed metadata filter string compatible with DATIM api
 #'
 
+#look if e
 processFilters <- function(end_point, filters) {
 
   # takes filter argument and turns it into a single character string
@@ -210,8 +194,6 @@ processFilters <- function(end_point, filters) {
 #' c("name,id", "code")} 
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
-#' @param expand dataframe to know how to expand result in case of duplicate filters
-#' @param name_reduce whether to reduce the fields to just name
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
@@ -222,8 +204,6 @@ getMetadata <- function(end_point,
                         ..., 
                         fields = "name,id",
                         as_vector = T,
-                        expand = NULL,
-                        name_reduce = NULL,
                         base_url = getOption("baseurl"), 
                         retry = 1,
                         timeout = 180) {
@@ -245,19 +225,13 @@ getMetadata <- function(end_point,
   # process filter arguments
   
   if (missing(...)) {
-    ex = NULL
+    ex <- NULL
   } else {
 # turn filters recieved as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
     
-    for (i in 1:length(filters_chr)) {
-      if (i == 1) {
-        ex2 <- processFilters(end_point = end_point, filters = filters_chr[[i]])
-      } else {
-        ex2 <- processFilters(end_point = NULL, filters = filters_chr[[i]])
-      }
-# TODO why do we add endpoint above and then pull it back out
-      ex2 <- sub(end_point, "", ex2)
+    for (i in seq_along(filters_chr)) {
+      ex2 <- processFilters(end_point = NULL, filters = filters_chr[[i]])
       filter_storage[[i]] <- ex2
     }
     filter_storage <- unlist(filter_storage)
@@ -275,7 +249,6 @@ getMetadata <- function(end_point,
 
   # create final path
   path <- paste0(end_point, ex, ef)
-
   # pass path in api_get
   resp <- api_get(
     path = path, base_url = base_url, retry = retry,
@@ -285,22 +258,13 @@ getMetadata <- function(end_point,
 
   # simplify data structure
   resp <- simplifyStructure(resp)
-  
- # add in duplicates if needed
- if (!(is.null(expand))) {
-   resp <- duplicateResponse(resp, expand)
- }
 
   # do we have single value to return?
   if (is.atomic(resp) && length(resp) == 1){
     return(resp)
   }
-  
-  if(!(is.null(name_reduce)) && class(resp) %in% "data.frame"){
-    resp <- resp[,name_reduce]
-  }
 
- # If we only request one singular field and that is what we got back
+  #If we only request one singular field and that is what we got back
  # return atomic vector unless as_vector = FALSE
  # when reaching in to collection handle the fact that the returned name
  # is in []

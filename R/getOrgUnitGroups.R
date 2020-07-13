@@ -1,3 +1,24 @@
+#' @title duplicateResponse(resp)
+#' @description adds in duplicates to the response if they were in the filter
+#' @param resp api response after simplification of data structure
+#' @param expand a vector of something
+#' @return the same api reponse that entered but with added records
+#'
+#'
+duplicateResponse <- function(resp, expand, by) {
+  if(!(is.array(resp))){
+
+  subs <- apply(resp, 2, function(x){expand[1] %in% x})
+    #
+    if(sum(subs) > 1){
+      subs[setdiff(names(subs), by)] <- F
+    }
+  resp <- resp[match(expand, resp[,subs]),]
+  }else {resp <- resp[match(expand, resp)]}
+
+  return(resp)
+}
+
 #' @export
 #' @title getOrgUnitGroups
 #'
@@ -62,9 +83,13 @@ getOrgUnitGroups <- function(values,
     end_point = "organisationUnitGroups",
     base_url = base_url,
     filters,
-    fields = default_fields, retry = 1,
-    expand = values, name_reduce = name_reduce
+    fields = default_fields, retry = 1
   )
-  
+
+   data <- duplicateResponse(resp = data, expand = values, by= by )
+
+  if(!(is.null(name_reduce)) && class(data) %in% "data.frame"){
+    data <- data[,name_reduce]
+  }
   return(data)
 }

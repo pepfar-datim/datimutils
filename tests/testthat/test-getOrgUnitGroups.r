@@ -50,6 +50,9 @@ httptest::with_mock_api({
       testthat::expect_equal(data, "CHC")
       rm(data)
       })
+
+
+
   
   test_that(
     paste0("Default behavior, given name return id (using standard",
@@ -131,8 +134,8 @@ httptest::with_mock_api({
  #    "&fields=code,id,name,shortName")))
 
              data <- getOrgUnitGroups(
-               c("Country", "CHC", "Country"), 
-               by = shortName, 
+               c("Country", "CHC", "Country"),
+               by = shortName,
                fields = "code, id, name, shortName",
                base_url = "https://play.dhis2.org/2.33/"
              )
@@ -336,4 +339,31 @@ test_that(
              getOrgUnitGroups("foo", by = bar)
            )
          })
-           
+
+#test for duplicateResponse function
+test_that(
+  paste0("duplicateResponse works on dataframes"), {
+      resp <- data.frame("a" = c(1,2,3), "b" = c("a","b","c"),
+                         stringsAsFactors = F)
+      expand <- c("a", "a", "a", "b", "c", "c")
+      resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
+      testthat::expect_equal(NROW(resp), 6)
+      testthat::expect_identical(expand, resp$b)
+      rm(resp)
+         })
+
+#test for simplify structure function
+test_that(
+  paste0("simplifySttructure works on nested dataframes contained in lists"), {
+      resp <- data.frame("a" = c(1,2,3), "b" = c("a","b","c"),
+                         stringsAsFactors = F)
+      resp <- data.frame("a" = data.frame("a" = "b"), "b" = list(resp))
+      resp <- list(resp)
+      resp <- simplifyStructure(resp)
+      testthat::expect_s3_class(resp, "data.frame")
+      rm(resp)
+         })
+
+
+
+
