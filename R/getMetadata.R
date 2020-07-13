@@ -8,7 +8,9 @@
 simplifyStructure <- function(resp) {
 
   # only enter if class is list and length one, other wise it is already simplified
-  if (class(resp) == "list" & length(resp) == 1 & length(resp[[1]]) != 0) {
+  if (class(resp) == "list" &
+    length(resp) == 1 &
+    length(resp[[1]]) != 0) {
     possible_resp <- resp
     continue <- T
 
@@ -47,126 +49,6 @@ simplifyStructure <- function(resp) {
   return(resp)
 }
 
-#' @title processFilters(end_point, filters)
-#' @description takes a filter argument and turns it into an api compatible string
-#' @param filters wildcard argument that can come in as any format or datatype
-#' @param end_point end point
-#' @return the processed metadata filter string compatible with DATIM api
-#'
-
-#look if e
-processFilters <- function(end_point, filters) {
-
-  # takes filter argument and turns it into a single character string
-  ex <- stringr::str_flatten(unlist(sapply(filters, as.character)))
-
-  # removes extraneous info (will be added later anyway for consistency)
-  look <- sub("\\?filter=|\\?filter", "", ex)
-  look <- sub("\\&filter=|\\&filter", "", look)
-
-  # if the format comes in correct
-  if (stringr::str_count(look, pattern = ":") >= 1) {
-    filter_option <- stringr::str_extract(look, "(?<=:).*(?=:)")
-    filter_item <- stringr::str_extract(look, "^[^:]*")
-    rest <- stringr::str_extract(look, "[^:]+$")
-    end_point <- ifelse(is.na(end_point), "", end_point)
-    end_point_tentative <- ""
-
-    # creates a basic filter path
-    ex <- paste0(
-      filter_item,
-      ifelse(is.na(filter_option), "", filter_option),
-      rest
-    )
-  } else {
-
-    # extracts end_point and what is not end_point
-    end_point_tentative <- stringr::str_extract(look, ".+?(?=id|name)")
-    end_point <- ifelse(is.na(end_point_tentative),
-      ifelse(is.na(end_point), "", end_point), end_point_tentative
-    )
-    end_point <- gsub("/", "", end_point)
-    look <- sub("(.*)(id|name)", "\\2", look)
-
-    # extracts the original filter
-    filter_option <-
-      stringr::str_extract(
-        substr(sub("name", "", look), 1, 8),
-        "!ilike|!like|ilike|like|!in|!eq|in|eq"
-      )
-
-    # extracts either id or name from filter
-    filter_item <- stringr::str_extract(
-      substr(look, 1, 4),
-      "name|id"
-    )
-
-    ex <- look
-  }
-
-  # removes :
-  ex <- gsub(":", "", ex)
-
-  # takes first part of filter, i.e. idin
-  one <- sub(
-    paste0("(", filter_item, filter_option, ")", "(.*)"),
-    "\\1", ex
-  )
-  one.one <- sub(
-    paste0("(", filter_item, filter_option, ")", "(.*)"),
-    "\\2", ex
-  )
-
-  # takes second part of filter, i.e. ["abc"] and adds commas if filter = in
-  if (grepl("name", one)) {
-    filters <- gsub("\\?", "\\\\?", filters)
-    filters <- gsub("\\[", "\\\\[", filters)
-    filters <- gsub("\\]", "\\\\]", filters)
-    try <- unlist(stringi::stri_extract_all_regex(str = one.one, pattern = filters))
-    if (is.na(try)) {
-      try <- one.one
-    }
-    two <- paste0(try[!is.na(try)], collapse = ",")
-  } else {
-    two <- ifelse(grepl(",", one.one), one.one,
-      gsub("(.{11})", "\\1,",
-        gsub("\\[|\\]", "", one.one),
-        perl = TRUE
-      )
-    )
-  }
-  if (one == one.one) {
-    ex <- paste0(ifelse(is.na(end_point), "", end_point), one)
-    middle <- one
-  } else {
-    ex <- paste0(ifelse(is.na(end_point), "", end_point), one, two)
-    middle <- ifelse(is.na(end_point_tentative), filter_item, paste0(end_point, filter_item))
-  }
-  if (substr(ex, nchar(ex), nchar(ex)) == ",") {
-    ex <- substr(ex, 1, nchar(ex) - 1)
-  }
-
-  # adds &filter= where needed, and : where needed
-  ex <- sub(
-    paste0("(.*?)(\\&filter=|", middle, "|?filter=", ")"),
-    paste0("\\1&filter=", middle), ex
-  )
-  ex <- sub(
-    paste0("(.*?)", "(", filter_item, ")"),
-    paste0("\\1", filter_item, ":"), ex
-  )
-  ex <- sub(
-    paste0("(", filter_item, ".*?)", "(", filter_option, ")"),
-    paste0("\\1", filter_option, ":"), ex
-  )
-
-  # special processing for "in" filter
-  if (grepl("in", filter_option) & !(grepl("\\[", ex))) {
-    ex <- paste0(sub("(.*?)(in:)", "\\1in:[", ex), "]")
-  }
-
-  return(ex)
-}
 
 #' @export
 #' @title getMetadata
@@ -201,43 +83,38 @@ processFilters <- function(end_point, filters) {
 #'
 
 getMetadata <- function(end_point,
-                        ..., 
+                        ...,
                         fields = "name,id",
                         as_vector = T,
-                        base_url = getOption("baseurl"), 
+                        base_url = getOption("baseurl"),
                         retry = 1,
                         timeout = 180) {
-  
-  if (!is.character(fields)){
+
+  if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
 
   #non-standard evaluation for end_point convert to string
   end_point <- as.character(rlang::ensym(end_point))
-  if (end_point == ""){
+  if (end_point == "") {
     stop("end_point must be specified for getMetadata to run.")
   }
-  
-  
+
+
   # set up storage for multiple filter arguments
   filter_storage <- list()
 
   # process filter arguments
-  
+
   if (missing(...)) {
     ex <- NULL
   } else {
-# turn filters recieved as ... to a character vector of individual filters
+    # turn filters recieved as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
-    
-    for (i in seq_along(filters_chr)) {
-      ex2 <- processFilters(end_point = NULL, filters = filters_chr[[i]])
-      filter_storage[[i]] <- ex2
-    }
-    filter_storage <- unlist(filter_storage)
-    ex <- stringr::str_flatten(filter_storage)
+    ex <- stringr::str_flatten(filters_chr, "&filter=")
+    ex <- paste0("&filter=", ex)
   }
-  
+
   # fields block
   if (is.null(fields)) {
     ef <- NULL
@@ -260,24 +137,25 @@ getMetadata <- function(end_point,
   resp <- simplifyStructure(resp)
 
   # do we have single value to return?
-  if (is.atomic(resp) && length(resp) == 1){
+  if (is.atomic(resp) && length(resp) == 1) {
     return(resp)
   }
 
   #If we only request one singular field and that is what we got back
- # return atomic vector unless as_vector = FALSE
- # when reaching in to collection handle the fact that the returned name
- # is in []
+  # return atomic vector unless as_vector = FALSE
+  # when reaching in to collection handle the fact that the returned name
+  # is in []
   if (as_vector == TRUE &&
     NCOL(resp) == 1 &&
     length(fields) == 1 &&
-    !grepl(",", fields) && (
-    names(resp) == fields ||
-      grepl(paste0("[", names(resp), "]"),
-            fields,
-            fixed = TRUE
-      )
-  )) {
+    !grepl(",", fields) &&
+    (
+      names(resp) == fields ||
+        grepl(paste0("[", names(resp), "]"),
+              fields,
+              fixed = TRUE
+        )
+    )) {
     return(resp[[1]])
   }
 
