@@ -168,9 +168,24 @@ httptest::with_mock_api({
                                         c("CXw2yu5fodb",
                                           "RpbiCJpIYEj"))
              rm(data)
-           }
-  )
+
+  # httr::content(httr::GET(
+  # paste0(
+  #  "https://play.dhis2.org/2.34/api/organisationUnitGroups.json?",
+  #   "paging=false&filter=shortName:in:[CHC,Country]&fields=:all")))
   
+  data <- getOrgUnitGroups(
+    c("CHC", "Country"), 
+    by = shortName, 
+    fields = ":all",
+    base_url = "https://play.dhis2.org/2.34/"
+  )             
+
+    testthat::expect_equal(NROW(data), 2)
+    testthat::expect_equal(NCOL(data), 30)
+    rm(data)
+    })
+
   test_that(
     paste0("Provide vector of unique IDs and get back ordered",
            "character vector of names based on input order"), {
