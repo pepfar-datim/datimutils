@@ -2,12 +2,28 @@
 % Please edit documentation in R/getMetadata.R
 \name{metadataFilter}
 \alias{metadataFilter}
-\alias{\%din\%}
-\alias{\%d!in\%}
-\alias{\%dlike\%}
-\alias{\%d!like\%}
-\alias{\%deq\%}
-\alias{\%d!eq\%}
+\alias{\%.in\%}
+\alias{\%.~in\%}
+\alias{\%.token\%}
+\alias{\%.~token\%}
+\alias{\%.le\%}
+\alias{\%.It\%}
+\alias{\%.ge\%}
+\alias{\%.gt\%}
+\alias{\%.Like\%}
+\alias{\%.~Like\%}
+\alias{\%.^Like\%}
+\alias{\%.~^Like\%}
+\alias{\%.Like$\%}
+\alias{\%.~Like$\%}
+\alias{\%.like\%}
+\alias{\%.^like\%}
+\alias{\%.~^like\%}
+\alias{\%.~like\%}
+\alias{\%.like$\%}
+\alias{\%.~like$\%}
+\alias{\%.eq\%}
+\alias{\%.~eq\%}
 \title{metadataFilter(values, property, operator)}
 \usage{
 metadataFilter(values, property, operator)
@@ -24,17 +40,49 @@ property %din% values
 
 property %d!in% values
 
-property \%din\% values
+property \%.in\% values
 
-property \%d!in\% values
+property \%.~in\% values
 
-property \%dlike\% values
+property \%.token\% values
 
-property \%d!like\% values
+property \%.~token\% values
 
-property \%deq\% values
+property \%.le\% values
 
-property \%d!eq\% values
+property \%.It\% values
+
+property \%.ge\% values
+
+property \%.gt\% values
+
+property \%.Like\% values
+
+property \%.~Like\% values
+
+property \%.^Like\% values
+
+property \%.~^Like\% values
+
+property \%.Like$\% values
+
+property \%.~Like$\% values
+
+property \%.like\% values
+
+property \%.^like\% values
+
+property \%.~^like\% values
+
+property \%.~like\% values
+
+property \%.like$\% values
+
+property \%.~like$\% values
+
+property \%.eq\% values
+
+property \%.~eq\% values
 }
 \arguments{
 \item{values}{the values in property:operator:value}

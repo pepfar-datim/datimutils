@@ -13,8 +13,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
                     api_version = NULL) {
 
   # error if unsported file format desired
-  if (grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", path)
-  | grepl(".jsonp|.html|.xml|.pdf|.xls|.csv|.html+css|.adx", base_url)) {
+  if (grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx",path) || grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", base_url)) {
     stop("invalid file extension, either pass in a link with json or a link without a file format")
   }
 
@@ -70,6 +69,7 @@ api_get <- function(path, base_url = getOption("baseurl"),
   # retry api get block, only retries if reponse code not in 400s
   i <- 1
   response_code <- 5
+  print(url)
   while (i <= retry & (response_code < 400 | response_code >= 500)) {
     resp <- httr::GET(url, httr::timeout(timeout))
     response_code <- httr::status_code(resp)

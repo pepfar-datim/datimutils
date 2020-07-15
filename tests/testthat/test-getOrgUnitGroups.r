@@ -169,17 +169,17 @@ httptest::with_mock_api({
                                           "RpbiCJpIYEj"))
              rm(data)
 
-  # httr::content(httr::GET(
-  # paste0(
-  #  "https://play.dhis2.org/2.34/api/organisationUnitGroups.json?",
-  #   "paging=false&filter=shortName:in:[CHC,Country]&fields=:all")))
+   #httr::content(httr::GET(
+   #paste0(
+   # "https://play.dhis2.org/2.34/api/organisationUnitGroups.json?",
+   #  "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,:all,name")))
   
   data <- getOrgUnitGroups(
-    c("CHC", "Country"), 
-    by = shortName, 
+    c("CHC", "Country"),
+    by = shortName,
     fields = ":all",
     base_url = "https://play.dhis2.org/2.34/"
-  )             
+  )
 
     testthat::expect_equal(NROW(data), 2)
     testthat::expect_equal(NCOL(data), 30)

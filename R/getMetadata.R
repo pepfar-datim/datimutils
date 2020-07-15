@@ -214,42 +214,155 @@ metadataFilter <- function(values, property, operator) {
 
 #' @export
 #' @rdname metadataFilter
-"%din%" <- function(property, values) {
+"%.in%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "in")
 }
 
 #' @export
 #' @rdname metadataFilter
-"%d!in%" <- function(property, values) {
+"%.~in%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "!in")
 }
 
 #' @export
 #' @rdname metadataFilter
-"%dlike%" <- function(property, values) {
+"%.token%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "token")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.~token%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!token")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.le%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "le")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.It%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "It")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.ge%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "ge")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.gt%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "gt")
+}
+
+
+#' @export
+#' @rdname metadataFilter
+"%.Like%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "like")
 }
 
 #' @export
 #' @rdname metadataFilter
-"%d!like%" <- function(property, values) {
+"%.~Like%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "!like")
 }
 
 #' @export
 #' @rdname metadataFilter
-"%deq%" <- function(property, values) {
+"%.^Like%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "\\$like")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.~^Like%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!\\$like")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.Like$%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "like\\$")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.~Like$%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!like\\$")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.like%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "ilike")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.^like%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!ilike")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.~^like%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "\\$ilike")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.~like%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!\\$ilike")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.like$%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "ilike\\$")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.~like$%" <- function(property, values) {
+  property <- rlang::ensym(property)
+  metadataFilter(values, property, "!ilike\\$")
+}
+
+#' @export
+#' @rdname metadataFilter
+"%.eq%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "eq")
 }
 
 #' @export
 #' @rdname metadataFilter
-"%d!eq%" <- function(property, values) {
+"%.~eq%" <- function(property, values) {
   property <- rlang::ensym(property)
   metadataFilter(values, property, "!eq")
 }

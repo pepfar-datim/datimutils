@@ -33,17 +33,13 @@ getOrgUnitGroups <- function(values,
                              fields = NULL,
                              base_url = getOption("baseurl")) {
   name_reduce <- NULL
-  name_reduce_skip <- F
 
   # by can come in as string or NSE, convert to string
   by <- try(as.character(rlang::ensym(by)), silent = TRUE)
 
   default_fields <- if (is.null(fields)) {
     c(by, "name", "id")
-  } else if(any(grepl("all|//*|identifiable|nameable|persisted|owner", fields))){
-    name_reduce_skip <- T
-    fields
-  }else if (!(any(grepl("name", fields)))) {
+  } else if (!("name" %in% fields) && !(any(grepl("name", fields)))) {
     c(by, fields, "name")
   } else {
     fields
@@ -59,7 +55,7 @@ getOrgUnitGroups <- function(values,
       "more general getMetadata function for other scenarios."
     )
   }
-  if(!(name_reduce_skip)){
+
   if ((by == "name" & is.null(fields))) {
     name_reduce <- "id"
   } else if (is.null(fields)) {
@@ -70,7 +66,7 @@ getOrgUnitGroups <- function(values,
       name_reduce <- gsub(" ", "", unlist(strsplit(name_reduce, ",")))
     }
   }
-  }
+
 
   filters <- datimutils::metadataFilter(
     values = unique(values),
@@ -89,7 +85,11 @@ getOrgUnitGroups <- function(values,
   data <- duplicateResponse(resp = data, expand = values, by = by)
 
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
-    data <- data[, name_reduce]
+    potential_data <- try(data[, name_reduce], silent = T)
+    if(!(class(potential_data) == "try-error"))
+      {
+      data <- potential_data
+    }
   }
 
 

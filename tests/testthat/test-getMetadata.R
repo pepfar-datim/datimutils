@@ -136,7 +136,7 @@ with_mock_api({
   
     data <- getMetadata(
       end_point = "dataElements",
-      id %deq% "FTRrcoaog83",
+      id %.eq% "FTRrcoaog83",
       base_url = "https://play.dhis2.org/2.33/"
     )
     # data <- data[["dataElements"]]
@@ -147,7 +147,7 @@ with_mock_api({
     expect_identical(data,
                      getMetadata(
                        end_point = "dataElements",
-                       id %din% "FTRrcoaog83",
+                       id %.in% "FTRrcoaog83",
                        base_url = "https://play.dhis2.org/2.33/"
                      ))
     rm(data)
@@ -288,7 +288,7 @@ with_mock_api({
   ), {
     data <- getMetadata(
       end_point = "dimensions",
-      id %din% c("yY2bQYqNt0o", "gtuVl6NbXQV"),
+      id %.in% c("yY2bQYqNt0o", "gtuVl6NbXQV"),
       base_url = "https://play.dhis2.org/2.33/",
       fields = "name,id,code"
     )
@@ -360,7 +360,7 @@ with_mock_api({
   ), {
     data <- getMetadata(
       end_point = "organisationUnits",
-      organisationUnitGroups.id %deq% "RpbiCJpIYEj",
+      organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
       fields = "id,name,level,ancestors[id,name]",
       base_url = "https://play.dhis2.org/2.33/"
     )
@@ -380,12 +380,9 @@ with_mock_api({
     "&fields=id,name,level,ancestors[id,name]"
   ), {
     # filters sent as list
-    data <- getMetadata(
-      end_point = "organisationUnits",
-      c(
+    data <- getMetadata(end_point="organisationUnits",c(
         "organisationUnitGroups.name:eq:District",
-        "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"
-      ),
+        "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"),
       fields = "id,name,level,ancestors[id,name]",
       base_url = "https://play.dhis2.org/2.33/"
     )
@@ -415,7 +412,7 @@ with_mock_api({
 
     data <- getMetadata(
       end_point = organisationUnits,
-      name %dlike% "Baoma",
+      name %.Like% "Baoma",
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 10)
@@ -430,7 +427,7 @@ with_mock_api({
 
     data <- getMetadata(
       end_point = "organisationUnits",
-      name %dlike% "Sierra Leone",
+      name %.Like% "Sierra Leone",
       base_url = "https://play.dhis2.org/2.33/"
     )
     testthat::expect_equal(NROW(data), 1)
@@ -511,27 +508,57 @@ with_mock_api({
     expect_error(metadataFilter(c("1", "2"), "P", "O"))
 
 # standard and non standard eval
-    expect_identical(id %deq% "V",
-                     "id" %deq% "V")
-    expect_identical(id %din% c("V1", "V2"),
-                     "id" %din% c("V1", "V2"))
+    expect_identical(id %.eq% "V",
+                     "id" %.eq% "V")
+    expect_identical(id %.in% c("V1", "V2"),
+                     "id" %.in% c("V1", "V2"))
 
-# %din% and %!din%
-    expect_identical(P %din% "V",
+# %.in% and %.~in%
+    expect_identical(P %.in% "V",
                      "P:in:[V]")
-    expect_identical(P %d!in% "V",
+    expect_identical(P %.~in% "V",
                      "P:!in:[V]")
-    expect_identical(P %din% c("V_1", "V_2"),
+    expect_identical(P %.in% c("V_1", "V_2"),
                      "P:in:[V_1,V_2]")
-    expect_identical(P %d!in% c("V_1", "V_2"),
+    expect_identical(P %.~in% c("V_1", "V_2"),
                      "P:!in:[V_1,V_2]")
 
-# %deq% and %d!eq%
-    expect_identical(P %deq% "V", "P:eq:V")
-    expect_identical(P %d!eq% "V", "P:!eq:V")
+# %.eq% and %.~eq%
+    expect_identical(P %.eq% "V", "P:eq:V")
+    expect_identical(P %.~eq% "V", "P:!eq:V")
 
-# %dlike% and %d!like%
-    expect_identical(P %dlike% "V", "P:like:V")
-    expect_identical(P %d!like% "V", "P:!like:V")
+    # %.like% and %.~like%
+    expect_identical(P %.like% "V", "P:ilike:V")
+    expect_identical(P %.~like% "V", "P:!\\$ilike:V")
+
+    # %.like$% and %.~like$%
+    expect_identical(P %.like$% "V", "P:ilike\\$:V")
+    expect_identical(P %.~like$% "V", "P:!ilike\\$:V")
+
+    # %.^like% and %.~^like%
+    expect_identical(P %.^like% "V", "P:!ilike:V")
+    expect_identical(P %.~^like% "V", "P:\\$ilike:V")
+
+    # %.Like$% and %.~Like$%
+    expect_identical(P %.Like$% "V", "P:like\\$:V")
+    expect_identical(P %.~Like$% "V", "P:!like\\$:V")
+
+    # %.^Like% and %.~^Like%
+    expect_identical(P %.^Like% "V", "P:\\$like:V")
+    expect_identical(P %.~^Like% "V", "P:!\\$like:V")
+
+    # %.token% and %.~token%
+    expect_identical(P %.token% "V", "P:token:V")
+    expect_identical(P %.~token% "V", "P:!token:V")
+
+    # %.le%, %.It% %.ge% %.gt% and %.~.Like%
+    expect_identical(P %.le% "V", "P:le:V")
+    expect_identical(P %.It% "V", "P:It:V")
+    expect_identical(P %.ge% "V", "P:ge:V")
+    expect_identical(P %.gt% "V", "P:gt:V")
+    expect_identical(P %.~Like$% "V", "P:!like\\$:V")
+
+
+
     })
   })
