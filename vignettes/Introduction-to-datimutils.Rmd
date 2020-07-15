@@ -1,0 +1,58 @@
+---
+title: "Introduction-to-datimutils"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction-to-datimutils}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+library(httptest)
+start_vignette("Introduction-to-datimutils")
+```
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(datimutils)
+```
+Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to datim. If the password field does not exist or is empty, it looks in the default os keyring for the password. If it doesnt find it there either, it will prompt to make one.  
+```{r}
+#logging in generates a cookie so the other funcitons can be used freely without credentials
+loginToDATIM(ring = "filepath")
+```
+
+Any genric api call can use the `api_get` function. Note you can specify retry attempts directly as an argument and the api version to use. The default is the latest version. For example, to return info about the current logged in user, the following can be used.
+
+```c
+api_get(path = "api/me",  base_url = "https://www.datim.org", retry =2, api_version = 29)
+```
+
+One of the wrappers for the api_get function is `getMetadata`. This function takes an `end_point` an optional `filter`, an optional `fields` argument. The filters argument can take a vector of multiple filters if desired.
+
+```c
+baseurl = "www.datim.org/", end_point = "dataElements" 
+filters <- c("id:ilike:B","id:ilike:C") fields <- "name,id,numerator,denominator,categoryOptions"
+getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
+```
+
+
+The getOrgUnitGroups functions can be used as wrappers to the getMetadata function, for example:
+```c
+getOrgUnitGroups(c("cNzfcPWEGSH", "nwQbMeALRjL"))
+getOrgUnitGroups(c("Country", "Military"), by = "name", fields = "name,id,organisationUnits[name,id,path]" )
+getOrgUnitGroups(c("cNzfcPWEGSH", "nwQbMeALRjL"), fields = "name,id,organisationUnits[name,id,path]" )
+```
+
+
+```{r, include=FALSE}
+end_vignette()
+```
