@@ -1,3 +1,4 @@
+#' @export
 #' @title simplifyStructure(resp)
 #' @description takes a api response and simplifies it down to the most basic data structure
 #' @param resp raw text response recieved from datim api
