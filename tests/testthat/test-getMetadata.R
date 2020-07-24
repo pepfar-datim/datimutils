@@ -529,23 +529,23 @@ with_mock_api({
 
     # %.like% and %.~like%
     expect_identical(P %.like% "V", "P:ilike:V")
-    expect_identical(P %.~like% "V", "P:!\\$ilike:V")
+    expect_identical(P %.~like% "V", "P:!$ilike:V")
 
     # %.like$% and %.~like$%
-    expect_identical(P %.like$% "V", "P:ilike\\$:V")
-    expect_identical(P %.~like$% "V", "P:!ilike\\$:V")
+    expect_identical(P %.like$% "V", "P:ilike$:V")
+    expect_identical(P %.~like$% "V", "P:!ilike$:V")
 
     # %.^like% and %.~^like%
     expect_identical(P %.^like% "V", "P:!ilike:V")
-    expect_identical(P %.~^like% "V", "P:\\$ilike:V")
+    expect_identical(P %.~^like% "V", "P:$ilike:V")
 
     # %.Like$% and %.~Like$%
-    expect_identical(P %.Like$% "V", "P:like\\$:V")
-    expect_identical(P %.~Like$% "V", "P:!like\\$:V")
+    expect_identical(P %.Like$% "V", "P:like$:V")
+    expect_identical(P %.~Like$% "V", "P:!like$:V")
 
     # %.^Like% and %.~^Like%
-    expect_identical(P %.^Like% "V", "P:\\$like:V")
-    expect_identical(P %.~^Like% "V", "P:!\\$like:V")
+    expect_identical(P %.^Like% "V", "P:$like:V")
+    expect_identical(P %.~^Like% "V", "P:!$like:V")
 
     # %.token% and %.~token%
     expect_identical(P %.token% "V", "P:token:V")
@@ -556,7 +556,7 @@ with_mock_api({
     expect_identical(P %.It% "V", "P:It:V")
     expect_identical(P %.ge% "V", "P:ge:V")
     expect_identical(P %.gt% "V", "P:gt:V")
-    expect_identical(P %.~Like$% "V", "P:!like\\$:V")
+    expect_identical(P %.~Like$% "V", "P:!like$:V")
 
 
 
