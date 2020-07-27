@@ -127,8 +127,10 @@ duplicateResponse <- function(resp, expand, by) {
     fields = default_fields, retry = 1
   )
 
+  length_response <- try(length(data[[1]]), silent = T)
+  if(length_response == 0)
+    {stop("no data returned by api call")}
   data <- duplicateResponse(resp = data, expand = values, by = by)
-
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
     potential_data <- try(data[, name_reduce], silent = T)
     if(!(class(potential_data) == "try-error"))
