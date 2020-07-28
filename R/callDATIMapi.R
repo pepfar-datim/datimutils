@@ -12,6 +12,10 @@ api_get <- function(path, base_url = getOption("baseurl"),
                     retry = 1, timeout = 60,
                     api_version = NULL) {
 
+  if(is.null(base_url))
+    {
+    stop("You are not logged into DATIM")
+  }
   # error if unsported file format desired
   if (grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx",path) || grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", base_url)) {
     stop("invalid file extension, either pass in a link with json or a link without a file format")
