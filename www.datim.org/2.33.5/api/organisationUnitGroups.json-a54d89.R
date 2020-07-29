@@ -1,0 +1,22 @@
+structure(list(url = "https://www.datim.org/2.33.5/api/organisationUnitGroups.json?paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,:all,name", 
+    status_code = 401L, headers = structure(list(date = "Wed, 29 Jul 2020 18:01:41 GMT", 
+        `content-type` = "application/json;charset=UTF-8", server = "Apache-Coyote/1.1", 
+        `strict-transport-security` = "max-age=31536000 ; includeSubDomains", 
+        `x-xss-protection` = "1; mode=block", `x-frame-options` = "SAMEORIGIN", 
+        `x-content-type-options` = "nosniff", `content-encoding` = "gzip", 
+        vary = "Accept-Encoding"), class = c("insensitive", "list"
+    )), all_headers = list(list(status = 401L, version = "HTTP/2", 
+        headers = structure(list(date = "Wed, 29 Jul 2020 18:01:41 GMT", 
+            `content-type` = "application/json;charset=UTF-8", 
+            server = "Apache-Coyote/1.1", `strict-transport-security` = "max-age=31536000 ; includeSubDomains", 
+            `x-xss-protection` = "1; mode=block", `x-frame-options` = "SAMEORIGIN", 
+            `x-content-type-options` = "nosniff", `content-encoding` = "gzip", 
+            vary = "Accept-Encoding"), class = c("insensitive", 
+        "list")))), cookies = structure(list(domain = "#HttpOnly_www.datim.org", 
+        flag = FALSE, path = "/", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
+        "POSIXt")), name = "SESSION", value = "REDACTED"), row.names = c(NA, 
+    -1L), class = "data.frame"), content = charToRaw("{\"httpStatus\":\"Unauthorized\",\"httpStatusCode\":401,\"status\":\"ERROR\",\"message\":\"Unauthorized\"}"), 
+    date = structure(1596045701, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 5.8e-05, 
+    connect = 6.1e-05, pretransfer = 0.000167, starttransfer = 0.081419, 
+    total = 0.081542)), class = "response")

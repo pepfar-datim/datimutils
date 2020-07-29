@@ -529,7 +529,7 @@ with_mock_api({
 
     # %.like% and %.~like%
     expect_identical(P %.like% "V", "P:ilike:V")
-    expect_identical(P %.~like% "V", "P:$ilike:V")
+    expect_identical(P %.~like% "V", "P:!ilike:V")
 
     # %.like$% and %.~like$%
     expect_identical(P %.like$% "V", "P:ilike$:V")
@@ -553,7 +553,7 @@ with_mock_api({
 
     # %.le%, %.It% %.ge% %.gt% and %.~.Like%
     expect_identical(P %.le% "V", "P:le:V")
-    expect_identical(P %.It% "V", "P:It:V")
+    expect_identical(P %.lt% "V", "P:lt:V")
     expect_identical(P %.ge% "V", "P:ge:V")
     expect_identical(P %.gt% "V", "P:gt:V")
     expect_identical(P %.~Like$% "V", "P:!like$:V")

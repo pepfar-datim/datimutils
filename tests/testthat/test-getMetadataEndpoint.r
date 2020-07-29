@@ -405,6 +405,12 @@ httptest::with_mock_api({
 #        httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33.5/api/organisationUnits.json?paging=false&filter=id:in:[Rp268JB6Ne4]&fields=id,name")))
 
+  #httr::content(httr::GET(paste0(
+  #  "https://play.dhis2.org/2.33.5/api/optionGroupSets.json?paging=false&filter=id:in:[Wonln7Yg5Am]&fields=id,name")))
+  #
+  #    httr::content(httr::GET(paste0(
+  #  "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
+
       data <- getCategories(
         "KfdsGBcoiCa",
         base_url = "https://play.dhis2.org/2.33.5/")
@@ -483,17 +489,17 @@ httptest::with_mock_api({
       testthat::expect_identical(data,"ANC 1-3 Dropout Rate")
       rm(data)
 
-      #data <- getOptionGroupSets(
-      #  "KfdsGBcoiCa",
-      #  base_url = "https://play.dhis2.org/2.33.5/")
-      #testthat::expect_equal(NROW(data), 0)
-      #rm(data)
-      #
-      #data <- getOptionGroups(
-      #  "KfdsGBcoiCa",
-      #  base_url = "https://play.dhis2.org/2.33.5/")
-      #testthat::expect_equal(NROW(data), 0)
-      #rm(data)
+      data <- getOptionGroupSets(
+        "Wonln7Yg5Am",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"test")
+      rm(data)
+
+      data <- getOptionGroups(
+        "hTDovVfKAuN",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Test")
+      rm(data)
 
       data <- getOptionSets(
         "VQ2lai3OfVG",
@@ -520,9 +526,6 @@ httptest::with_mock_api({
       rm(data)
 
       })
-
-
-
 
 })
 
