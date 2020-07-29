@@ -72,12 +72,10 @@ duplicateResponse <- function(resp, expand, by) {
 #'
 #' getOrgUnits(values, by, fields, base_url)
 #'
-.getMetadataEndpoint <- function(..., values,
+.getMetadataEndpoint <- function(end_point, values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1) {
-
-  values <- values; by<- by; fields <- fields; base_url <- base_url
 
   name_reduce <- NULL
 
@@ -120,7 +118,7 @@ duplicateResponse <- function(resp, expand, by) {
 
   # call getMetadata with info above
   data <- getMetadata(
-    end_point = ...,
+    end_point = !!end_point,
     base_url = base_url,
     filters,
     fields = default_fields, retry = retry
@@ -148,7 +146,7 @@ getCategories  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(categories, values = values,
+  .getMetadataEndpoint('categories', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -160,7 +158,7 @@ getCatCombos  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(categoryCombos, values = values,
+  .getMetadataEndpoint('categoryCombos', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -172,7 +170,7 @@ getCatOptionCombos  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(categoryOptionCombos, values = values,
+  .getMetadataEndpoint('categoryOptionCombos', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -184,7 +182,7 @@ getCatOptionGroupSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(categoryOptionGroupSets, values = values,
+  .getMetadataEndpoint('categoryOptionGroupSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -196,7 +194,7 @@ getCatOptionGroups  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(categoryOptionGroups, values = values,
+  .getMetadataEndpoint('categoryOptionGroups', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -208,7 +206,7 @@ getCatOptions  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(categoryOptions, values = values,
+  .getMetadataEndpoint('categoryOptions', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -220,7 +218,7 @@ getDataElementGroupSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(dataElementGroupSets, values = values,
+  .getMetadataEndpoint('dataElementGroupSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -232,7 +230,7 @@ getDataElementGroups  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(dataElementGroups, values = values,
+  .getMetadataEndpoint('dataElementGroups', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -244,7 +242,7 @@ getDataElements  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(dataElements, values = values,
+  .getMetadataEndpoint('dataElements', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -256,7 +254,7 @@ getDataSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(dataSets, values = values,
+  .getMetadataEndpoint('dataSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -268,7 +266,7 @@ getIndicatorGroupSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(indicatorGroupSets, values = values,
+  .getMetadataEndpoint('indicatorGroupSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -280,7 +278,7 @@ getIndicatorGroups  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(indicatorGroups, values = values,
+  .getMetadataEndpoint('indicatorGroups', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -292,7 +290,7 @@ getIndicators  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(indicators, values = values,
+  .getMetadataEndpoint('indicators', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -304,7 +302,7 @@ getOptionGroupSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(optionGroupSets, values = values,
+  .getMetadataEndpoint('optionGroupSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -316,7 +314,7 @@ getOptionGroups  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(optionGroups, values = values,
+  .getMetadataEndpoint('optionGroups', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -328,7 +326,7 @@ getOptionSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(optionSets, values = values,
+  .getMetadataEndpoint('optionSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -340,7 +338,7 @@ getOptions  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(options, values = values,
+  .getMetadataEndpoint('options', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -352,7 +350,7 @@ getOrgUnitGroupSets  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(organisationUnitGroupSets, values = values,
+  .getMetadataEndpoint('organisationUnitGroupSets', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -364,7 +362,7 @@ getOrgUnitGroups  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(organisationUnitGroups, values = values,
+  .getMetadataEndpoint('organisationUnitGroups', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
@@ -376,7 +374,7 @@ getOrgUnits  <- function(values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1){
-  .getMetadataEndpoint(organisationUnits, values = values,
+  .getMetadataEndpoint('organisationUnits', values = values,
                              by = as.character(rlang::ensym(by)),
                              fields = fields,
                              base_url = base_url, retry = retry)
