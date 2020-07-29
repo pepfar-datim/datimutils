@@ -17,60 +17,60 @@ duplicateResponse <- function(resp, expand, by) {
 }
 
 
-#' @title .getMetadataEndpoint
-#' @name dot-getMetadataEndpoint
+#' @title getMetadataEndpoint
 #' @description wrapper to getMetadata that retrieves a metadata endpoint
-#' @param ... the endpoint to use
+#' @param end_point the endpoint to use
 #' @param values - string vector of identifiers that will be used in the filter
 #' e.g. vector of uids, names, or codes.
 #' @param by - what to filter by, i.e. id or name, default is id
 #' @param fields - the fields, which can come in any formt as long as all
 #' components are present
 #' @param base_url string - base address of instance (text before api/ in URL)
+#' @param retry the number of times to try the call
 #' @return the metadata response in json format and flattened
 #' @usage
 #'
-#' .getMetadataEndpoint(..., values, by, fields, base_url)
+#' .getMetadataEndpoint(end_point, values, by, fields, base_url, retry)
 #'
-#' getCategories(values, by, fields, base_url)
+#' getCategories(values, by, fields, base_url, retry)
 #'
-#' getCatCombos(values, by, fields, base_url)
+#' getCatCombos(values, by, fields, base_url, retry)
 #'
-#' getCatOptionCombos(values, by, fields, base_url)
+#' getCatOptionCombos(values, by, fields, base_url, retry)
 #'
-#' getCatOptionGroupSets(values, by, fields, base_url)
+#' getCatOptionGroupSets(values, by, fields, base_url, retry)
 #'
-#' getCatOptionGroups(values, by, fields, base_url)
+#' getCatOptionGroups(values, by, fields, base_url, retry)
 #'
-#' getCatOptions(values, by, fields, base_url)
+#' getCatOptions(values, by, fields, base_url, retry)
 #'
-#' getDataElementGroupSets(values, by, fields, base_url)
+#' getDataElementGroupSets(values, by, fields, base_url, retry)
 #'
-#' getDataElementGroups(values, by, fields, base_url)
+#' getDataElementGroups(values, by, fields, base_url, retry)
 #'
-#' getDataElements(values, by, fields, base_url)
+#' getDataElements(values, by, fields, base_url, retry)
 #'
-#' getDataSets(values, by, fields, base_url)
+#' getDataSets(values, by, fields, base_url, retry)
 #'
-#' getIndicatorGroupSets(values, by, fields, base_url)
+#' getIndicatorGroupSets(values, by, fields, base_url, retry)
 #'
-#' getIndicatorGroups(values, by, fields, base_url)
+#' getIndicatorGroups(values, by, fields, base_url, retry)
 #'
-#' getIndicators(values, by, fields, base_url)
+#' getIndicators(values, by, fields, base_url, retry)
 #'
-#' getOptionGroupSets(values, by, fields, base_url)
+#' getOptionGroupSets(values, by, fields, base_url, retry)
 #'
-#' getOptionGroups(values, by, fields, base_url)
+#' getOptionGroups(values, by, fields, base_url, retry)
 #'
-#' getOptionSets(values, by, fields, base_url)
+#' getOptionSets(values, by, fields, base_url, retry)
 #'
-#' getOptions(values, by, fields, base_url)
+#' getOptions(values, by, fields, base_url, retry)
 #'
-#' getOrgUnitGroupSets(values, by, fields, base_url)
+#' getOrgUnitGroupSets(values, by, fields, base_url, retry)
 #'
-#' getOrgUnitGroups(values, by, fields, base_url)
+#' getOrgUnitGroups(values, by, fields, base_url, retry)
 #'
-#' getOrgUnits(values, by, fields, base_url)
+#' getOrgUnits(values, by, fields, base_url, retry)
 #'
 .getMetadataEndpoint <- function(end_point, values,
                              by = "id",
