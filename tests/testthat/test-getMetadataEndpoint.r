@@ -530,11 +530,11 @@ httptest::with_mock_api({
   test_that("check getorgunitgroups on datim api", {
     data <- getOrgUnitGroups("Country", by = name,
       fields = "organisationUnits[id,name,level,ancestors[id,name]]",
-                             base_url = "https://www.datim.org/")
-  testthat::expect_equal(NROW(data), 70)
+                             base_url = "https://play.dhis2.org/2.33.5/")
+  testthat::expect_equal(NROW(data), 1)
   rm(data)
-  #httr::content(httr::GET(paste0(
-  #"https://www.datim.org/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
+ #httr::content(httr::GET(paste0(
+  #"https://play.dhis2.org/2.33.5/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
   })
 })
 
