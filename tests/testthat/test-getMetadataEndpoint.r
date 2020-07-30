@@ -408,8 +408,8 @@ httptest::with_mock_api({
   #httr::content(httr::GET(paste0(
   #  "https://play.dhis2.org/2.33.5/api/optionGroupSets.json?paging=false&filter=id:in:[Wonln7Yg5Am]&fields=id,name")))
   #
-  #    httr::content(httr::GET(paste0(
-  #  "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
+   #  httr::content(httr::GET(paste0(
+   # "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
 
       data <- getCategories(
         "KfdsGBcoiCa",
@@ -498,7 +498,7 @@ httptest::with_mock_api({
       data <- getOptionGroups(
         "hTDovVfKAuN",
         base_url = "https://play.dhis2.org/2.33.5/")
-      testthat::expect_identical(data,"Test")
+      testthat::expect_identical(data,NULL)
       rm(data)
 
       data <- getOptionSets(

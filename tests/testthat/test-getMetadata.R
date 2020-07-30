@@ -477,6 +477,19 @@ with_mock_api({
     ))
   })
 
+ #httr::content(httr::GET(paste0(
+  #"https://play.dhis2.org/2.33/api/organisationUnits.json?paging=false&filter=organisationUnitGroups.id:eq:RpbiCJpIYEj&fields=id")))
+  test_that("Return atomic response", {
+ data <- getMetadata(
+      end_point = "organisationUnits",
+      organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
+      fields = "id",
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+    testthat::expect_identical(data, "ImspTQPwCqd")
+    rm(data)
+  })
+
   test_that("Metadata filter format helpers", {
 
 # standard call
@@ -557,7 +570,7 @@ with_mock_api({
     expect_identical(P %.ge% "V", "P:ge:V")
     expect_identical(P %.gt% "V", "P:gt:V")
     expect_identical(P %.~Like$% "V", "P:!like$:V")
-
+    expect_identical(P %.~Like% "V", "P:!like:V")
 
 
     })
