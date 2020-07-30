@@ -345,6 +345,197 @@ httptest::with_mock_api({
       rm(data)
     }
   )
+
+    test_that("Test other metadata helpers", {
+
+#httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/categories.json?paging=false&filter=id:in:[KfdsGBcoiCa]&fields=id,name")))
+#
+#httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/categoryCombos.json?paging=false&filter=id:in:[m2jTvAj5kkm]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/categoryOptionCombos.json?paging=false&filter=id:in:[sqGRzCziswD]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/categoryOptionGroupSets.json?paging=false&filter=id:in:[C31vHZqu0qU]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/categoryOptionGroups.json?paging=false&filter=id:in:[OK2Nr4wdfrZ]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/categoryOptions.json?paging=false&filter=id:in:[FbLZS3ueWbQ]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/dataElementGroupSets.json?paging=false&filter=id:in:[jp826jAJHUc]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/dataElementGroups.json?paging=false&filter=id:in:[oDkJh5Ddh7d]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/dataElements.json?paging=false&filter=id:in:[FTRrcoaog83]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/dataSets.json?paging=false&filter=id:in:[lyLU2wR22tC]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/indicatorGroupSets.json?paging=false&filter=id:in:[tOwnTs7TL3Y]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/indicatorGroups.json?paging=false&filter=id:in:[oehv9EO3vP7]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/indicators.json?paging=false&filter=id:in:[ReUHfIn0pTQ]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/optionGroupSets.json?paging=false")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/optionSets.json?paging=false&filter=id:in:[VQ2lai3OfVG]&fields=id,name")))
+#
+#      httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/options.json?paging=false&filter=id:in:[Y1ILwhy5VDY]&fields=id,name")))
+#
+#        httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/organisationUnitGroupSets.json?paging=false&filter=id:in:[uIuxlbV1vRT]&fields=id,name")))
+#
+#        httr::content(httr::GET(paste0(
+#"https://play.dhis2.org/2.33.5/api/organisationUnits.json?paging=false&filter=id:in:[Rp268JB6Ne4]&fields=id,name")))
+
+  #httr::content(httr::GET(paste0(
+  #  "https://play.dhis2.org/2.33.5/api/optionGroupSets.json?paging=false&filter=id:in:[Wonln7Yg5Am]&fields=id,name")))
+  #
+  #    httr::content(httr::GET(paste0(
+  #  "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
+
+      data <- getCategories(
+        "KfdsGBcoiCa",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Births attended by")
+      rm(data)
+
+      data <- getCatCombos(
+        "m2jTvAj5kkm",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Births")
+      rm(data)
+
+      data <- getCatOptionCombos(
+        "sqGRzCziswD",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"0-11m")
+      rm(data)
+
+      data <- getCatOptionGroupSets(
+        "C31vHZqu0qU",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Donor")
+      rm(data)
+
+      data <- getCatOptionGroups(
+        "OK2Nr4wdfrZ",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"CDC")
+      rm(data)
+
+      data <- getCatOptions(
+        "FbLZS3ueWbQ",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"0-11m")
+      rm(data)
+
+      data <- getDataElementGroupSets(
+        "jp826jAJHUc",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Diagnosis")
+      rm(data)
+
+      data <- getDataElementGroups(
+        "oDkJh5Ddh7d",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Acute Flaccid Paralysis (AFP) ")
+      rm(data)
+
+      data <- getDataElements(
+        "FTRrcoaog83",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Accute Flaccid Paralysis (Deaths < 5 yrs)")
+      rm(data)
+
+      data <- getDataSets(
+        "lyLU2wR22tC",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"ART monthly summary")
+      rm(data)
+
+      data <- getIndicatorGroupSets(
+        "tOwnTs7TL3Y",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Child health")
+      rm(data)
+
+      data <- getIndicatorGroups(
+        "oehv9EO3vP7",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"ANC")
+      rm(data)
+
+      data <- getIndicators(
+        "ReUHfIn0pTQ",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"ANC 1-3 Dropout Rate")
+      rm(data)
+
+      data <- getOptionGroupSets(
+        "Wonln7Yg5Am",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"test")
+      rm(data)
+
+      data <- getOptionGroups(
+        "hTDovVfKAuN",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Test")
+      rm(data)
+
+      data <- getOptionSets(
+        "VQ2lai3OfVG",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Age category")
+      rm(data)
+
+      data <- getOptions(
+        "Y1ILwhy5VDY",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"0-14 years")
+      rm(data)
+
+      data <- getOrgUnitGroupSets(
+        "uIuxlbV1vRT",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Area")
+      rm(data)
+
+      data <- getOrgUnits(
+        "Rp268JB6Ne4",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Adonkia CHP")
+      rm(data)
+
+      })
+
+  test_that("check getorgunitgroups on datim api", {
+    data <- getOrgUnitGroups("Country", by = name,
+      fields = "organisationUnits[id,name,level,ancestors[id,name]]",
+                             base_url = "https://play.dhis2.org/2.33.5/")
+  testthat::expect_equal(NROW(data), 1)
+  rm(data)
+ #httr::content(httr::GET(paste0(
+  #"https://play.dhis2.org/2.33.5/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
+  })
 })
 
 test_that(

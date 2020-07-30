@@ -249,9 +249,9 @@ metadataFilter <- function(values, property, operator) {
 
 #' @export
 #' @rdname metadataFilter
-"%.It%" <- function(property, values) {
+"%.lt%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "It")
+  metadataFilter(values, property, "lt")
 }
 
 #' @export
@@ -287,28 +287,28 @@ metadataFilter <- function(values, property, operator) {
 #' @rdname metadataFilter
 "%.^Like%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "\\$like")
+  metadataFilter(values, property, "$like")
 }
 
 #' @export
 #' @rdname metadataFilter
 "%.~^Like%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "!\\$like")
+  metadataFilter(values, property, "!$like")
 }
 
 #' @export
 #' @rdname metadataFilter
 "%.Like$%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "like\\$")
+  metadataFilter(values, property, "like$")
 }
 
 #' @export
 #' @rdname metadataFilter
 "%.~Like$%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "!like\\$")
+  metadataFilter(values, property, "!like$")
 }
 
 #' @export
@@ -329,28 +329,28 @@ metadataFilter <- function(values, property, operator) {
 #' @rdname metadataFilter
 "%.~^like%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "\\$ilike")
+  metadataFilter(values, property, "!$ilike")
 }
 
 #' @export
 #' @rdname metadataFilter
 "%.~like%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "!\\$ilike")
+  metadataFilter(values, property, "!ilike")
 }
 
 #' @export
 #' @rdname metadataFilter
 "%.like$%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "ilike\\$")
+  metadataFilter(values, property, "ilike$")
 }
 
 #' @export
 #' @rdname metadataFilter
 "%.~like$%" <- function(property, values) {
   property <- rlang::ensym(property)
-  metadataFilter(values, property, "!ilike\\$")
+  metadataFilter(values, property, "!ilike$")
 }
 
 #' @export

@@ -7,7 +7,7 @@
 \alias{\%.token\%}
 \alias{\%.~token\%}
 \alias{\%.le\%}
-\alias{\%.It\%}
+\alias{\%.lt\%}
 \alias{\%.ge\%}
 \alias{\%.gt\%}
 \alias{\%.Like\%}
@@ -50,7 +50,7 @@ property \%.~token\% values
 
 property \%.le\% values
 
-property \%.It\% values
+property \%.lt\% values
 
 property \%.ge\% values
 
