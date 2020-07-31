@@ -26,7 +26,8 @@ Imports:
     stringi (>= 1.7.6),
     httr (>= 1.4.0),
     keyring,
-    rlang
+    rlang,
+    sodium
 Suggests:
     devtools (>= 2.0.1),
     dplyr (>= 0.8.3),

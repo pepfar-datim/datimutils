@@ -707,3 +707,8 @@ test_that(
       testthat::expect_s3_class(resp, "data.frame")
       rm(resp)
          })
+
+#mask for datim uids
+
+#httr::content(httr::GET(paste0(
+ # "https://datim.org/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
