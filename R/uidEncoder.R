@@ -27,7 +27,7 @@ encryptUIDS <- function(url, first_time = F){
     httptest::start_capturing(simplify = FALSE)
     httr::content(httr::GET(url))
     httptest::stop_capturing()
-  } else {repsonse <- dget(paste0(httptest::build_mock_url(url), ".R"))}
+  }
   response <- dget(paste0(httptest::build_mock_url(url), ".R"))
   x <- rawToChar(response$content)
   replacements <- as.character(sample(10000000000:99999999999, stringr::str_count(x,'"[a-zA-Z0-9]{11}\\"')))
@@ -55,4 +55,37 @@ decryptUIDS <- function(url){
   dput(response, paste0(httptest::build_mock_url(url), ".R"))
 }
 
+#' @title anonimize
+#' @description anonimizes a vector
+#' @param x the vector to anonimize
+#' @param salt_back the salt to add on the end
+#' @param salt_front the salt to add on front
+#' @param algo the algorithm to use to anonimize
+#' @return anonimized vector
+anonymize <- function(x, salt_front, salt_back, algo="sha512"){
+  hashes <- vapply(paste0(salt_front,x,salt_back), function(object) digest::digest(object, algo=algo), FUN.VALUE="", USE.NAMES=TRUE)
+  hashes <- substring(hashes,1,11)
+  hashes <- ifelse(grepl("^[0-9]",hashes), paste0(sample(LETTERS, sum(stringr::str_count(hashes,"^[0-9]")), replace = T), substr(hashes,2,11)),  hashes)
+  return(hashes)
+}
 
+#' @title anonimizeUIDS
+#' @description Decrypts uids in mocks.
+#' @param url the url to create the mock from or alternatively encrypt an already made one
+#' @param salt_back the salt to add on the end
+#' @param salt_front the salt to add on front
+#' @param first_time if first time is true mock will be created
+#'
+anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
+  if(first_time){
+    httptest::start_capturing(simplify = FALSE)
+    httr::content(httr::GET(url))
+    httptest::stop_capturing()
+  }
+  response <- dget(paste0(httptest::build_mock_url(url), ".R"))
+  x <- rawToChar(response$content)
+  extracts <- stringr::str_extract_all(x, '"[a-zA-Z0-9]{11}\\"')[[1]]
+  replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
+  response$content <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
+  dput(response, paste0(httptest::build_mock_url(url), ".R"))
+}
