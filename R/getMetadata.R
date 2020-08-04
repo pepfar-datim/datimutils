@@ -6,25 +6,27 @@
 
 simplifyStructure <- function(resp) {
 
-  # only enter if class is list and length one, other wise it is already simplified
+  # only enter if class is list and length one, otherwise it is already simplified
   if (class(resp) == "list" &
     length(resp) == 1 &
     length(resp[[1]]) != 0) {
     possible_resp <- resp
     continue <- T
 
-    # the while bloack reduces the structure till it cant
+    # the while block reduces the structure till it can't
     while (continue) {
-      if (class(possible_resp) == "character") {
-        continue <- F
-      } else if (class(possible_resp) == "list") {
+      if (class(possible_resp) == "list") {
         possible_resp <- possible_resp[[1]]
-      } else if (dim(possible_resp)[1] == 1 & dim(possible_resp)[2] == 1) {
+        dim1 <- dim(possible_resp)[1]
+        dim2 <- dim(possible_resp)[2]
+        if(!(is.null(dim1)) && !(is.null(dim2))){
+       if (dim1 == 1 & dim2 == 1) {
         possible_resp <- possible_resp[[1]]
-      } else {
-        continue <- F
       }
-    }
+      }}else {
+        continue <- F
+      }}
+
 
     # if it is a data frame check if it is nested or standard
     if (class(possible_resp) == "data.frame") {
@@ -41,7 +43,8 @@ simplifyStructure <- function(resp) {
           resp <- possible_resp
         }
       }
-    } else if (class(possible_resp) == "character") {
+    } else if(is.atomic(possible_resp))
+      {
       resp <- possible_resp
     }
   }
@@ -113,14 +116,9 @@ getMetadata <- function(end_point,
     ex <- paste0("&filter=", ex)
   }
 
-  # fields block
-  if (is.null(fields)) {
-    ef <- NULL
-  } else {
-    # flattens fields and adds ?fields= if needed
-    ef <- stringr::str_flatten(fields, ",")
-    ef <- paste0("&fields=", ef)
-  }
+  # flattens fields and adds ?fields= if needed
+  ef <- stringr::str_flatten(fields, ",")
+  ef <- paste0("&fields=", ef)
 
   # create final path
   path <- paste0(end_point, ex, ef)
@@ -131,7 +129,7 @@ getMetadata <- function(end_point,
     api_version = NULL
   )
 
-  # simplify data structure
+   # simplify data structure
   resp <- simplifyStructure(resp)
 
   # do we have single value to return?
