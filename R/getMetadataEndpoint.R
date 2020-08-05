@@ -81,13 +81,18 @@ duplicateResponse <- function(resp, expand, by) {
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1) {
 
+  see <- try(stringr::str_extract_all(fields, "\\[[^()]+\\]")[[1]], silent = T)
+
   name_reduce <- NULL
 
   default_fields <- if (is.null(fields)) {
     c(by, "name", "id")
-  } else if (!("name" %in% fields) && !(any(grepl("name", fields)))) {
+  } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
-  } else {
+  } else if (length(see)!=0 & class(see) != "try-error") {
+  if (grepl("name",see) & !(grepl("name",gsub( gsub("\\]","\\\\]",gsub("\\[","\\\\[",see)), "", fields)))){
+    c(by, fields, "name")
+  } }else{
     fields
   }
   default_fields <- stringr::str_remove_all(default_fields, " ")
