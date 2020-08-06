@@ -34,7 +34,7 @@ simplifyStructure <- function(resp) {
         resp <- possible_resp
       } else {
         # unnest dataframe if has list type in columns
-        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)) {
+        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)  & ncol(possible_resp) == 1) {
           resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = T)
           if ("try-error" %in% class(resp)) {
             resp <- possible_resp
