@@ -347,6 +347,27 @@ httptest::with_mock_api({
                     fields = "organisationUnitGroups[name,id]",
                     base_url = "https://play.dhis2.org/2.34/")
       )
+      
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
+#          "&fields=organisationUnitGroups[name,id],ancestors[name,id]")))
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
+#          "&fields=name,organisationUnitGroups[name,id],ancestors[name,id]")))
+      
+      testthat::expect_identical(
+        getMetadata(organisationUnits,
+                    name %.in% org_units,
+                    fields = 
+                      "organisationUnitGroups[name,id],ancestors[name,id]",
+                    base_url = "https://play.dhis2.org/2.34/"),
+        getOrgUnits(org_units, 
+                    by = name,
+                    fields = "organisationUnitGroups[name,id],ancestors[name,id]",
+                    base_url = "https://play.dhis2.org/2.34/")
+      )
     }
   )
 
