@@ -112,7 +112,7 @@ duplicateResponse <- function(resp, expand, by) {
   } else if (is.null(fields)) {
     name_reduce <- "name"
   } else if (!(is.null(fields))) {
-    name_reduce <- gsub("\\[[^()]*\\]", "", fields)
+    name_reduce <- gsub("\\[.*?\\]", "", fields)
     if (length(name_reduce == 1)) {
       name_reduce <- gsub(" ", "", unlist(strsplit(name_reduce, ",")))
     }
