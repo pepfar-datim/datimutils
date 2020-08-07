@@ -142,8 +142,14 @@ duplicateResponse <- function(resp, expand, by) {
     }
   }
 
-
-  return(data)
+# when the input value is a singleton unnest the top layer if data is a list
+if(length(values) == 1 
+   && length(data) == 1
+   && is.list(data)){
+  return(data[[1]])
+  } else {
+    return(data)
+  }
 }
 
 #' @export
