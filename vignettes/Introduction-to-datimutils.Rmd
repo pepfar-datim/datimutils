@@ -9,7 +9,7 @@ vignette: >
 
 ```{r, include=FALSE}
 library(httptest)
-start_vignette("Introduction-to-datimutils")
+start_vignette("play.dhis2.org")
 ```
 
 
@@ -17,40 +17,140 @@ start_vignette("Introduction-to-datimutils")
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = FALSE
+  eval = T
 )
 ```
 
 ```{r setup}
 library(datimutils)
 ```
-Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to datim. If the password field does not exist or is empty, it looks in the default os keyring for the password. If it doesnt find it there either, it will prompt to make one.  
+Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to datim.
+This file should be json in the form of
+```{r eval = F}
+{
+"dhis": {
+  "baseurl": "datiminstance",
+  "username": "username",
+  "password": "password"
+}
+}
+```
+Alternatively if the the entry for password is blank such that the file looks like this
+```{r eval = F}
+{
+"dhis": {
+  "baseurl": "datiminstance",
+  "username": "username",
+  "password": ""
+}
+}
+```
+Then the function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
+
+Call the function as so:
+```{r eval = F}
+# logging in generates a cookie so the other funcitons can be used freely without credentials
+loginToDATIM(config_path = "filepath")
+# If successful you should see a a "name is loged in" message
+```
+
+The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint, a number of filters, and fields as its basic arguments. For example, to call the organisationUnits endpoint with two filters the following call can be used:
+
 ```{r}
-#logging in generates a cookie so the other funcitons can be used freely without credentials
-loginToDATIM(ring = "filepath")
+loginToDATIM(config_path = "~/secrets/play.json")
+data <- getMetadata(
+  end_point = "organisationUnits",
+  "organisationUnitGroups.name:eq:District",
+  "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
+  fields = "id,name,level",
+  base_url = "https://play.dhis2.org/2.33/"
+)
+
+head(data)
 ```
 
-Any genric api call can use the `api_get` function. Note you can specify retry attempts directly as an argument and the api version to use. The default is the latest version. For example, to return info about the current logged in user, the following can be used.
+This is equivalent to:
 
-```c
-api_get(path = "api/me",  base_url = "https://www.datim.org", retry =2, api_version = 29)
+```{r}
+# notice the use of non-standard evaluation
+data <- getMetadata(
+  end_point = organisationUnits,
+  organisationUnitGroups.name %.eq% "District",
+  children.id %.in% c("YuQRtpLP10I","fwH9ipvXde9"),
+  fields = "id,name,level",
+  base_url = "https://play.dhis2.org/2.33/"
+)
+
+head(data)
 ```
 
-One of the wrappers for the api_get function is `getMetadata`. This function takes an `end_point` an optional `filter`, an optional `fields` argument. The filters argument can take a vector of multiple filters if desired.
+Data is usually returned in its most base class:
+```{r}
+# returns a vector
+data <- getMetadata(
+  end_point = "organisationUnitGroups",
+  fields = "name",
+  base_url = "https://play.dhis2.org/2.33/"
+)
+print(data)
+```
 
-```c
-baseurl = "www.datim.org/", end_point = "dataElements" 
-filters <- c("id:ilike:B","id:ilike:C") fields <- "name,id,numerator,denominator,categoryOptions"
-getMetadata(base_url = base_url, end_point = end_point, filters = filters, fields = fields)
+many different types of calls call be made, here we have two filters passed in as a vector. This call returns a nested data frame
+```{r}
+data <- getMetadata(
+  end_point = "organisationUnits",
+  c(
+    "name:like:Baoma",
+    "level:eq:3"
+  ),
+  fields = ":all",
+  base_url = "https://play.dhis2.org/2.33/"
+)
+str(data$translations)
+```
+
+There is a filter format helper for every comparision operator in datim, here like is used.
+```{r}
+data <- getMetadata(
+  end_point = "organisationUnits",
+  name %.Like% "Sierra Leone",
+  base_url = "https://play.dhis2.org/2.33/"
+)
+```
+
+There is a wrapper for every metadata endpoint to make things easier.
+```{r}
+getDataElements(
+    "FTRrcoaog83",
+    base_url = "https://play.dhis2.org/2.33.5/")
+getCatOptionGroups(
+    "OK2Nr4wdfrZ",
+    base_url = "https://play.dhis2.org/2.33.5/")
+```
+
+These helpers will create repeated values and sorting based on input
+```{r}
+# make a random order and duplicated uid group
+ groups <- rep(c(
+    "gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG"), 20)
+ rows <- sample(length(groups))
+ groups <- c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
+              groups[rows])
+
+  data <-
+    getOrgUnitGroups(
+      groups,
+      fields = "code,name,id",
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+
+# even though the actual api call only returns the 3 unique uids in a random
+# order, the wrapper returns it in the order called.
+str(data)
 ```
 
 
-The getOrgUnitGroups functions can be used as wrappers to the getMetadata function, for example:
-```c
-getOrgUnitGroups(c("cNzfcPWEGSH", "nwQbMeALRjL"))
-getOrgUnitGroups(c("Country", "Military"), by = "name", fields = "name,id,organisationUnits[name,id,path]" )
-getOrgUnitGroups(c("cNzfcPWEGSH", "nwQbMeALRjL"), fields = "name,id,organisationUnits[name,id,path]" )
-```
+
 
 
 ```{r, include=FALSE}
