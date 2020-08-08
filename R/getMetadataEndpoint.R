@@ -133,6 +133,7 @@ duplicateResponse <- function(resp, expand, by) {
   if(length_response == 0)
     {return(NULL)}
   data <- duplicateResponse(resp = data, expand = values, by = by)
+
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
     potential_data <- try(data[, name_reduce], silent = T)
     if(!(class(potential_data) == "try-error"))
