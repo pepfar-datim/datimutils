@@ -368,12 +368,12 @@ httptest::with_mock_api({
                     fields = "organisationUnitGroups[name,id],ancestors[name,id]",
                     base_url = "https://play.dhis2.org/2.34/")
       )
-    }
+    
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Afro%20Arab%20Clinic]",
 #          "&fields=name,organisationUnitGroups[name,id]")))
-      data <- getOrgUnits("Afro Arab Clinic",
+data <- getOrgUnits("Afro Arab Clinic",
                           by = name,
                           fields = "organisationUnitGroups[name,id]",
                           base_url = "https://play.dhis2.org/2.34/")
