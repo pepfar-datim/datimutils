@@ -603,7 +603,7 @@ test_that(
            )
          })
 
-#test for duplicateResponse function
+#test for duplicateResponse function on dataframes
 test_that(
   paste0("duplicateResponse works on dataframes"), {
       resp <- data.frame("a" = c(1,2,3), "b" = c("a","b","c"),
@@ -612,6 +612,16 @@ test_that(
       resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
       testthat::expect_equal(NROW(resp), 6)
       testthat::expect_identical(expand, resp$b)
+      rm(resp)
+         })
+#test for duplicateResponse function on vectors
+test_that(
+  paste0("duplicateResponse works on dataframes"), {
+      resp <- c("a","a","b","c")
+      expand <- c("a", "a", "a", "b", "c", "c")
+      resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
+      testthat::expect_equal(length(resp), 6)
+      testthat::expect_identical(expand, resp)
       rm(resp)
          })
 

@@ -1,7 +1,7 @@
 context("getMetadata")
 
 # code to create/update mocks
-library(httptest)
+#library(httptest)
 
 # httptest::start_capturing(simplify = FALSE)
 # httr::content(
@@ -123,6 +123,15 @@ library(httptest)
 #   )
 # )
 # httptest::stop_capturing()
+
+test_that("Error handling ", {
+  testthat::expect_error(
+    getMetadata(indicators,
+                fields = list(a = c("a", "a")),
+                base_url = "https://play.dhis2.org/2.33/"))
+  testthat::expect_error(
+    getMetadata(base_url = "https://play.dhis2.org/2.33/"))
+})
 
 with_mock_api({
   test_that("Basic eq and sinlge element in call: ", {
