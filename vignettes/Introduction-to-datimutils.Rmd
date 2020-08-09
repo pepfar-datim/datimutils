@@ -57,7 +57,6 @@ loginToDATIM(config_path = "filepath")
 The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint, a number of filters, and fields as its basic arguments. For example, to call the organisationUnits endpoint with two filters the following call can be used:
 
 ```{r}
-loginToDATIM(config_path = "~/secrets/play.json")
 data <- getMetadata(
   end_point = "organisationUnits",
   "organisationUnitGroups.name:eq:District",
