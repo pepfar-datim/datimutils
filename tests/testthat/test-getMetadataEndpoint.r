@@ -311,6 +311,63 @@ httptest::with_mock_api({
         655
       )
       rm(data)
+  
+
+      org_units = c("Adonkia CHP", "Afro Arab Clinic")
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
+#          "&fields=name,organisationUnitGroups[name]")))
+      testthat::expect_identical(
+        getMetadata(
+          organisationUnits,
+          name %.in% org_units,
+          fields = "name,organisationUnitGroups[name]",
+          base_url = 
+            "https://play.dhis2.org/2.34/")[["organisationUnitGroups"]],
+        getOrgUnits(org_units, 
+                    by = name,
+                    fields = "organisationUnitGroups[name]",
+                    base_url = "https://play.dhis2.org/2.34/")
+      )
+
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
+#          "&fields=name,organisationUnitGroups[name,id]")))
+      testthat::expect_identical(
+        getMetadata(
+          organisationUnits,
+          name %.in% org_units,
+          fields = "name,organisationUnitGroups[name,id]",
+          base_url = 
+            "https://play.dhis2.org/2.34/")[["organisationUnitGroups"]],
+        getOrgUnits(org_units, 
+                    by = name,
+                    fields = "organisationUnitGroups[name,id]",
+                    base_url = "https://play.dhis2.org/2.34/")
+      )
+      
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
+#          "&fields=organisationUnitGroups[name,id],ancestors[name,id]")))
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
+#          "&fields=name,organisationUnitGroups[name,id],ancestors[name,id]")))
+      
+      testthat::expect_identical(
+        getMetadata(organisationUnits,
+                    name %.in% org_units,
+                    fields = 
+                      "organisationUnitGroups[name,id],ancestors[name,id]",
+                    base_url = "https://play.dhis2.org/2.34/"),
+        getOrgUnits(org_units, 
+                    by = name,
+                    fields = "organisationUnitGroups[name,id],ancestors[name,id]",
+                    base_url = "https://play.dhis2.org/2.34/")
+      )
     }
   )
 
@@ -408,8 +465,8 @@ httptest::with_mock_api({
   #httr::content(httr::GET(paste0(
   #  "https://play.dhis2.org/2.33.5/api/optionGroupSets.json?paging=false&filter=id:in:[Wonln7Yg5Am]&fields=id,name")))
   #
-  #    httr::content(httr::GET(paste0(
-  #  "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
+   #  httr::content(httr::GET(paste0(
+   # "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
 
       data <- getCategories(
         "KfdsGBcoiCa",
@@ -498,7 +555,7 @@ httptest::with_mock_api({
       data <- getOptionGroups(
         "hTDovVfKAuN",
         base_url = "https://play.dhis2.org/2.33.5/")
-      testthat::expect_identical(data,"Test")
+      testthat::expect_identical(data,NULL)
       rm(data)
 
       data <- getOptionSets(
@@ -546,7 +603,7 @@ test_that(
            )
          })
 
-#test for duplicateResponse function
+#test for duplicateResponse function on dataframes
 test_that(
   paste0("duplicateResponse works on dataframes"), {
       resp <- data.frame("a" = c(1,2,3), "b" = c("a","b","c"),
@@ -555,6 +612,16 @@ test_that(
       resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
       testthat::expect_equal(NROW(resp), 6)
       testthat::expect_identical(expand, resp$b)
+      rm(resp)
+         })
+#test for duplicateResponse function on vectors
+test_that(
+  paste0("duplicateResponse works on dataframes"), {
+      resp <- c("a","a","b","c")
+      expand <- c("a", "a", "a", "b", "c", "c")
+      resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
+      testthat::expect_equal(length(resp), 6)
+      testthat::expect_identical(expand, resp)
       rm(resp)
          })
 

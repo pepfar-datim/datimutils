@@ -1,6 +1,6 @@
 context("make arbitrary api call DATIM")
 
-library(httptest)
+# library(httptest)
 
 # code to create/update mocks
 # httptest::start_capturing(simplify = FALSE)
@@ -73,24 +73,29 @@ httptest::with_mock_api({
     # mock built when not logged in resulting in content type of
     # html from the login page
     testthat::expect_error(
-      # https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin
+      # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
       api_get(
         path = "api/me?fields=notloggedin",
         base_url = "https://play.dhis2.org/2.33/",
         retry = 1, timeout = 60, api_version = NULL
       )
     )
-
+    # no base_url
+    testthat::expect_error(
+      api_get(path = "api/me"))
     # response status !=200
     testthat::expect_error(
-      # https://play.dhis2.org/2.33/apii/me.json?paging=false
+      # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
       api_get(
         path = "apii/me",
         base_url = "https://play.dhis2.org/2.33/",
         retry = 1, timeout = 60,
         api_version = NULL
-      )
-    )
+      ))
+      testthat::expect_error(
+        # httr::GET("http://httpstat.us/504")
+        api_get(path = "504",
+                base_url = "http://httpstat.us/"))
   })
 
   test_that(

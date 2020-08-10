@@ -1,7 +1,7 @@
 context("getMetadata")
 
 # code to create/update mocks
-library(httptest)
+#library(httptest)
 
 # httptest::start_capturing(simplify = FALSE)
 # httr::content(
@@ -124,6 +124,15 @@ library(httptest)
 # )
 # httptest::stop_capturing()
 
+test_that("Error handling ", {
+  testthat::expect_error(
+    getMetadata(indicators,
+                fields = list(a = c("a", "a")),
+                base_url = "https://play.dhis2.org/2.33/"))
+  testthat::expect_error(
+    getMetadata(base_url = "https://play.dhis2.org/2.33/"))
+})
+
 with_mock_api({
   test_that("Basic eq and sinlge element in call: ", {
 
@@ -234,6 +243,25 @@ with_mock_api({
     testthat::expect_equal(NROW(data), 3)
     rm(data)
 
+# httr::content(httr::GET(paste0("https://play.dhis2.org/2.33/api/dimensions.json?",
+#        "paging=false&filter=id:eq:gtuVl6NbXQV",
+#        "&fields=id,items[name]"
+# )))
+    
+    data <- getMetadata(
+      end_point = "dimensions",
+      "id:eq:gtuVl6NbXQV",
+      base_url = "https://play.dhis2.org/2.33/",
+      fields = "id,items[name]"
+    )
+    testthat::expect_s3_class(data, "data.frame")
+    testthat::expect_equal(NROW(data), 1)
+    testthat::expect_named(data, c("id", "items"))
+    data <- tidyr::unnest(data, cols = items, names_sep = ".")
+    testthat::expect_named(data, c("id", "items.name"))
+    testthat::expect_equal(NROW(data), 3)
+    rm(data)    
+    
     # paste0("List Columns: ",
     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
     #        "paging=false&filter=id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
@@ -477,6 +505,19 @@ with_mock_api({
     ))
   })
 
+ #httr::content(httr::GET(paste0(
+  #"https://play.dhis2.org/2.33/api/organisationUnits.json?paging=false&filter=organisationUnitGroups.id:eq:RpbiCJpIYEj&fields=id")))
+  test_that("Return atomic response", {
+ data <- getMetadata(
+      end_point = "organisationUnits",
+      organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
+      fields = "id",
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+    testthat::expect_identical(data, "ImspTQPwCqd")
+    rm(data)
+  })
+
   test_that("Metadata filter format helpers", {
 
 # standard call
@@ -557,7 +598,7 @@ with_mock_api({
     expect_identical(P %.ge% "V", "P:ge:V")
     expect_identical(P %.gt% "V", "P:gt:V")
     expect_identical(P %.~Like$% "V", "P:!like$:V")
-
+    expect_identical(P %.~Like% "V", "P:!like:V")
 
 
     })
