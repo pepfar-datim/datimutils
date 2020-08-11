@@ -458,9 +458,21 @@ with_mock_api({
       name %.Like% "Sierra Leone",
       base_url = "https://play.dhis2.org/2.33/"
     )
+
+    end_point <- "organisationUnits"
+
+     data2 <- getMetadata(
+      end_point = end_point,
+      name %.Like% "Sierra Leone",
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c("name", "id"))
+    testthat::expect_identical(data, data2)
     rm(data)
+    rm(data2)
+    rm(end_point)
   })
 
   test_that(paste0(
