@@ -480,6 +480,9 @@ data <- getOrgUnits("Afro Arab Clinic",
    #  httr::content(httr::GET(paste0(
    # "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
 
+     # httr::content(httr::GET(paste0(
+   #"https://play.dhis2.org/2.33.5/api/dimensions.json?paging=false&filter=id:in:[yY2bQYqNt0o]&fields=id,name")))
+
       data <- getCategories(
         "KfdsGBcoiCa",
         base_url = "https://play.dhis2.org/2.33.5/")
@@ -592,6 +595,12 @@ data <- getOrgUnits("Afro Arab Clinic",
         "Rp268JB6Ne4",
         base_url = "https://play.dhis2.org/2.33.5/")
       testthat::expect_identical(data,"Adonkia CHP")
+      rm(data)
+
+       data <- getDimensions(
+        "yY2bQYqNt0o",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Project")
       rm(data)
 
       })
