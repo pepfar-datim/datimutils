@@ -55,6 +55,17 @@ getAnalytics <-  function(..., dimensions = NULL, filters = NULL, start_date = N
     path = path, base_url = base_url, retry = retry
   )
 
+  replacements <- resp$metaData$items
+  col_names <- resp$headers$name
+  resp <- as.data.frame(resp$rows)
+  colnames(resp) <- col_names
+
+  resp <- apply(resp,2, function(x) {ifelse(x %in% names(replacements),
+         unlist(replacements[names(replacements) %in% x]),
+         x)})
+
+  resp <- as.data.frame(resp)
+
   return(resp)
 }
 
