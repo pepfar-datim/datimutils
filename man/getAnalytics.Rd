@@ -13,7 +13,6 @@ getAnalytics(
   order = NULL,
   columns = NULL,
   rows = NULL,
-  sort_order = NULL,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -35,8 +34,6 @@ getAnalytics(
 
 \item{rows}{rows}
 
-\item{sort_order}{sort_order}
-
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{retry}{retry}
@@ -45,5 +42,5 @@ getAnalytics(
 data frame with the rows of the response
 }
 \description{
-calls the analytics endpoint u
+calls the analytics endpoint
 }
