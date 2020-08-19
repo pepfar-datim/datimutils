@@ -22,6 +22,7 @@
 \alias{getOrgUnitGroupSets}
 \alias{getOrgUnitGroups}
 \alias{getOrgUnits}
+\alias{getDimensions}
 \title{getMetadataEndpoint}
 \usage{
 .getMetadataEndpoint(end_point, values, by, fields, base_url, retry)
@@ -65,6 +66,8 @@ getOrgUnitGroupSets(values, by, fields, base_url, retry)
 getOrgUnitGroups(values, by, fields, base_url, retry)
 
 getOrgUnits(values, by, fields, base_url, retry)
+
+getDimensions(values, by, fields, base_url, retry)
 
 getCategories(
   values,
@@ -219,6 +222,14 @@ getOrgUnitGroups(
 )
 
 getOrgUnits(
+  values,
+  by = "id",
+  fields = NULL,
+  base_url = getOption("baseurl"),
+  retry = 1
+)
+
+getDimensions(
   values,
   by = "id",
   fields = NULL,

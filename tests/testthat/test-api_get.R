@@ -82,7 +82,7 @@ httptest::with_mock_api({
     )
     # no base_url
     testthat::expect_error(
-      api_get(path = "api/me"))
+      api_get(path = "api/me2"))
     # response status !=200
     testthat::expect_error(
       # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")

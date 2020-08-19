@@ -72,6 +72,8 @@ duplicateResponse <- function(resp, expand, by) {
 #'
 #' getOrgUnits(values, by, fields, base_url, retry)
 #'
+#' getDimensions(values, by, fields, base_url, retry)
+#'
 .getMetadataEndpoint <- function(end_point, values,
                              by = "id",
                              fields = NULL,
@@ -142,8 +144,14 @@ duplicateResponse <- function(resp, expand, by) {
     }
   }
 
-
-  return(data)
+# when the input value is a singleton unnest the top layer if data is a list
+if(length(values) == 1 
+   && length(data) == 1
+   && is.list(data)){
+  return(data[[1]])
+  } else {
+    return(data)
+  }
 }
 
 #' @export
@@ -385,3 +393,16 @@ getOrgUnits  <- function(values,
                              fields = fields,
                              base_url = base_url, retry = retry)
 }
+
+#' @export
+#' @rdname dot-getMetadataEndpoint
+getDimensions  <- function(values,
+                             by = "id",
+                             fields = NULL,
+                             base_url = getOption("baseurl"), retry = 1){
+  .getMetadataEndpoint('dimensions', values = values,
+                             by = as.character(rlang::ensym(by)),
+                             fields = fields,
+                             base_url = base_url, retry = retry)
+}
+
