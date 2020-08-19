@@ -458,6 +458,7 @@ with_mock_api({
       name %.Like% "Sierra Leone",
       base_url = "https://play.dhis2.org/2.33/"
     )
+
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c("name", "id"))
     rm(data)
