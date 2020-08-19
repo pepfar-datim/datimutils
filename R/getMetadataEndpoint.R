@@ -7,11 +7,7 @@
 #'
 #'
 duplicateResponse <- function(resp, expand, by) {
-  if (!(is.array(resp))) {
-    if(all(is.na(match(expand, resp[, by]))))
-      {
-      return(resp)
-    }
+  if (!(is.vector(resp))) {
     resp <- resp[match(expand, resp[, by]), ]
   } else {
     resp <- resp[match(expand, resp)]
@@ -76,18 +72,25 @@ duplicateResponse <- function(resp, expand, by) {
 #'
 #' getOrgUnits(values, by, fields, base_url, retry)
 #'
+#' getDimensions(values, by, fields, base_url, retry)
+#'
 .getMetadataEndpoint <- function(end_point, values,
                              by = "id",
                              fields = NULL,
                              base_url = getOption("baseurl"), retry = 1) {
 
+  see <- try(stringr::str_extract_all(fields, "\\[[^()]+\\]")[[1]], silent = T)
+
   name_reduce <- NULL
 
   default_fields <- if (is.null(fields)) {
     c(by, "name", "id")
-  } else if (!("name" %in% fields) && !(any(grepl("name", fields)))) {
+  } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
-  } else {
+  } else if (length(see)!=0 & class(see) != "try-error") {
+  if (grepl("name",see) & !(grepl("name",gsub( gsub("\\]","\\\\]",gsub("\\[","\\\\[",see)), "", fields)))){
+    c(by, fields, "name")
+  } }else{
     fields
   }
   default_fields <- stringr::str_remove_all(default_fields, " ")
@@ -107,7 +110,7 @@ duplicateResponse <- function(resp, expand, by) {
   } else if (is.null(fields)) {
     name_reduce <- "name"
   } else if (!(is.null(fields))) {
-    name_reduce <- gsub("\\[[^()]*\\]", "", fields)
+    name_reduce <- gsub("\\[.*?\\]", "", fields)
     if (length(name_reduce == 1)) {
       name_reduce <- gsub(" ", "", unlist(strsplit(name_reduce, ",")))
     }
@@ -132,6 +135,7 @@ duplicateResponse <- function(resp, expand, by) {
   if(length_response == 0)
     {return(NULL)}
   data <- duplicateResponse(resp = data, expand = values, by = by)
+
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
     potential_data <- try(data[, name_reduce], silent = T)
     if(!(class(potential_data) == "try-error"))
@@ -140,8 +144,14 @@ duplicateResponse <- function(resp, expand, by) {
     }
   }
 
-
-  return(data)
+# when the input value is a singleton unnest the top layer if data is a list
+if(length(values) == 1 
+   && length(data) == 1
+   && is.list(data)){
+  return(data[[1]])
+  } else {
+    return(data)
+  }
 }
 
 #' @export
@@ -383,3 +393,16 @@ getOrgUnits  <- function(values,
                              fields = fields,
                              base_url = base_url, retry = retry)
 }
+
+#' @export
+#' @rdname dot-getMetadataEndpoint
+getDimensions  <- function(values,
+                             by = "id",
+                             fields = NULL,
+                             base_url = getOption("baseurl"), retry = 1){
+  .getMetadataEndpoint('dimensions', values = values,
+                             by = as.character(rlang::ensym(by)),
+                             fields = fields,
+                             base_url = base_url, retry = retry)
+}
+
