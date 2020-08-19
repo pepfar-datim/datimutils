@@ -91,16 +91,9 @@ getMetadata <- function(end_point,
   if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
-  
-  class_end_point <- try(class(end_point), silent = T)
+
   # non-standard evaluation for end_point convert to string
-  if(class(class_end_point) == "try_error")
-  {
-  end_point <- as.character(rlang::ensym(!!end_point))
-  } else
-  {
-    end_point <- as.character(rlang::ensym(end_point))
-  }
+  end_point <- as.character(rlang::ensym(end_point))
   if (end_point == "") {
     stop("end_point must be specified for getMetadata to run.")
   }

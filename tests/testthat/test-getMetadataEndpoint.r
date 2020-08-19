@@ -53,73 +53,73 @@ httptest::with_mock_api({
 
 
 
-  
+
   test_that(
     paste0("Default behavior, given name return id (using standard",
            "evaluation of by): "), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHC]&fields=id,name")))
-             
+
       data <- getOrgUnitGroups(
         "CHC", by = "name",
         base_url = "https://play.dhis2.org/2.33/")
-      
+
       testthat::expect_equal(data, "CXw2yu5fodb")
       rm(data)
     }
   )
-  
+
   test_that(
-    paste0("Default behavior, provide name get back id ", 
+    paste0("Default behavior, provide name get back id ",
            "(non standard evaluation of by):"
            ), {
-             
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=name:in:[CHC]&fields=name,id")))
-      
+
              data <- getOrgUnitGroups(
                "CHC", by = name,
                base_url = "https://play.dhis2.org/2.33/")
-             
+
              testthat::expect_equal(data, "CXw2yu5fodb")
              rm(data)
     }
   )
 
   test_that(
-    paste0("Default behavior, if provide filter property other than name or ", 
+    paste0("Default behavior, if provide filter property other than name or ",
            "id then name returned by default: "), {
 
 # httr::content(httr::GET(
 #   paste0(
 #          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=code:in:[CHC]&fields=code,name")))
-             
+
              data <- getOrgUnitGroups(
                "CHC", by = code,
                base_url = "https://play.dhis2.org/2.33/"
              )
-             
+
              testthat::expect_equal(NROW(data), 1)
              testthat::expect_equal(data, "CHC")
              rm(data)
            }
   )
-  
+
   test_that(
-    paste0("If provide filter property other than name or ", 
+    paste0("If provide filter property other than name or ",
            "id then can get back other fields: "), {
-             
+
  #httr::content(httr::GET(
  #  paste0(
  #         "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
  #         "paging=false&filter=code:in:[Country,CHC]&fields=code,id,name")))
-             
+
              data <- getOrgUnitGroups(c("Country", "CHC"),
-                                      by = code, 
+                                      by = code,
                                       fields = "id",
                                       base_url = "https://play.dhis2.org/2.33/"
              )
@@ -149,18 +149,18 @@ httptest::with_mock_api({
                                           "CXw2yu5fodb",
                                           "RpbiCJpIYEj"))
              rm(data)
-             
+
  #httr::content(httr::GET(
  # paste0(
  #  "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
  #   "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,id,code")))
 
              data <- getOrgUnitGroups(
-               c("CHC", "Country"), 
-               by = shortName, 
+               c("CHC", "Country"),
+               by = shortName,
                fields = "id, code",
                base_url = "https://play.dhis2.org/2.33/"
-             )             
+             )
              testthat::expect_equal(NROW(data), 2)
              testthat::expect_named(data, c("id",
                                             "code"))
@@ -173,7 +173,7 @@ httptest::with_mock_api({
    #paste0(
    # "https://play.dhis2.org/2.34/api/organisationUnitGroups.json?",
    #  "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,:all,name")))
-  
+
   data <- getOrgUnitGroups(
     c("CHC", "Country"),
     by = shortName,
@@ -189,7 +189,7 @@ httptest::with_mock_api({
   test_that(
     paste0("Provide vector of unique IDs and get back ordered",
            "character vector of names based on input order"), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
@@ -198,7 +198,7 @@ httptest::with_mock_api({
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
 #   "&fields=id,name")))
-             
+
              data <- getOrgUnitGroups(
                c("w1Atoz18PCL","CXw2yu5fodb"),
                base_url = "https://play.dhis2.org/2.33/"
@@ -206,18 +206,18 @@ httptest::with_mock_api({
              testthat::expect_identical(data, c("District","CHC"))
              rm(data)
            })
-  
+
   test_that(
     paste0("Provide vector of non-unique IDs and get back ordered",
            "character vector of names based on input order"), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
 #   "&fields=name,id")))
-             
+
       data <- getOrgUnitGroups(
-        c("w1Atoz18PCL","CXw2yu5fodb", 
+        c("w1Atoz18PCL","CXw2yu5fodb",
           "w1Atoz18PCL","w1Atoz18PCL",
           "CXw2yu5fodb","CXw2yu5fodb"),
         base_url = "https://play.dhis2.org/2.33/"
@@ -228,7 +228,7 @@ httptest::with_mock_api({
       rm(data)
     }
   )
-  
+
   test_that(
     paste0("Provide vector of non-repeating names and get back ordered",
            "character vector of ids: "),{
@@ -239,7 +239,7 @@ httptest::with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[District,CHC]&fields=id")))
-             
+
       data <- getOrgUnitGroups(
         c("District","CHC"), by = name,
         base_url = "https://play.dhis2.org/2.33/"
@@ -259,7 +259,7 @@ httptest::with_mock_api({
   })
 
   test_that("Can specify non-default fields", {
-        
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHP,Rural]",
@@ -280,12 +280,12 @@ httptest::with_mock_api({
   )
 
   test_that("Get collections as lists", {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHP,Rural]",
 #   "&fields=name,id,organisationUnits[name,id],groupSets[name,id]")))
-    
+
       data <-
         getOrgUnitGroups(
           c("CHP", "Rural"),
@@ -311,7 +311,7 @@ httptest::with_mock_api({
         655
       )
       rm(data)
-  
+
 
       org_units = c("Adonkia CHP", "Afro Arab Clinic")
 # httr::content(httr::GET(
@@ -323,9 +323,9 @@ httptest::with_mock_api({
           organisationUnits,
           name %.in% org_units,
           fields = "name,organisationUnitGroups[name]",
-          base_url = 
+          base_url =
             "https://play.dhis2.org/2.34/")[["organisationUnitGroups"]],
-        getOrgUnits(org_units, 
+        getOrgUnits(org_units,
                     by = name,
                     fields = "organisationUnitGroups[name]",
                     base_url = "https://play.dhis2.org/2.34/")
@@ -340,14 +340,14 @@ httptest::with_mock_api({
           organisationUnits,
           name %.in% org_units,
           fields = "name,organisationUnitGroups[name,id]",
-          base_url = 
+          base_url =
             "https://play.dhis2.org/2.34/")[["organisationUnitGroups"]],
-        getOrgUnits(org_units, 
+        getOrgUnits(org_units,
                     by = name,
                     fields = "organisationUnitGroups[name,id]",
                     base_url = "https://play.dhis2.org/2.34/")
       )
-      
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
@@ -356,19 +356,31 @@ httptest::with_mock_api({
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
 #          "&fields=name,organisationUnitGroups[name,id],ancestors[name,id]")))
-      
+
       testthat::expect_identical(
         getMetadata(organisationUnits,
                     name %.in% org_units,
-                    fields = 
+                    fields =
                       "organisationUnitGroups[name,id],ancestors[name,id]",
                     base_url = "https://play.dhis2.org/2.34/"),
-        getOrgUnits(org_units, 
+        getOrgUnits(org_units,
                     by = name,
                     fields = "organisationUnitGroups[name,id],ancestors[name,id]",
                     base_url = "https://play.dhis2.org/2.34/")
       )
-    }
+    
+# httr::content(httr::GET(
+#   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
+#          "paging=false&filter=name:in:[Afro%20Arab%20Clinic]",
+#          "&fields=name,organisationUnitGroups[name,id]")))
+data <- getOrgUnits("Afro Arab Clinic",
+                          by = name,
+                          fields = "organisationUnitGroups[name,id]",
+                          base_url = "https://play.dhis2.org/2.34/")
+      testthat::expect_s3_class(data, "data.frame")
+      testthat::expect_equal(NROW(data), 2)
+      testthat::expect_named(data, c("name", "id"))
+  }
   )
 
   test_that(
@@ -467,6 +479,9 @@ httptest::with_mock_api({
   #
    #  httr::content(httr::GET(paste0(
    # "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
+
+     # httr::content(httr::GET(paste0(
+   #"https://play.dhis2.org/2.33.5/api/dimensions.json?paging=false&filter=id:in:[yY2bQYqNt0o]&fields=id,name")))
 
       data <- getCategories(
         "KfdsGBcoiCa",
@@ -582,6 +597,12 @@ httptest::with_mock_api({
       testthat::expect_identical(data,"Adonkia CHP")
       rm(data)
 
+       data <- getDimensions(
+        "yY2bQYqNt0o",
+        base_url = "https://play.dhis2.org/2.33.5/")
+      testthat::expect_identical(data,"Project")
+      rm(data)
+
       })
 
   test_that("check getorgunitgroups on datim api", {
@@ -636,7 +657,3 @@ test_that(
       testthat::expect_s3_class(resp, "data.frame")
       rm(resp)
          })
-
-
-
-
