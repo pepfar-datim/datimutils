@@ -54,10 +54,7 @@ getAnalytics <-  function(..., dimensions = NULL, filters = NULL, start_date = N
 
   #collapse everything and form path
   path <- paste0(end_point, stringr::str_c(dimensions, filters, table, order, start_date, end_date, ends, sep = "&"))
-  if(substr(path,nchar(path),nchar(path)) == "&")
-    {
-    path <- substr(path,1,nchar(path)-1)
-  }
+
   resp <- api_get(
     path = path, base_url = base_url, retry = retry
   )

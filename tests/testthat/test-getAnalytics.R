@@ -74,6 +74,11 @@ testthat::expect_equal(NROW(data), 42)
 testthat::expect_named(data, c("Data","Organisation unit","Value"))
 rm(data)
 })
+  test_that("errors in helpers: ", {
+     testthat::expect_error(dForm(c("USER_ORGUNIT","USER_ORGUNIT_CHILDREN") ))
+      testthat::expect_error(fForm(c("USER_ORGUNIT","USER_ORGUNIT_CHILDREN") ))
+  })
+
 })
 
 
