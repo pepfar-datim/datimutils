@@ -155,7 +155,7 @@ duplicateResponse <- function(resp, expand, by) {
       property = by,
       operator = "in"
     )
-    
+
     # call getMetadata with info above
     data <- getMetadata(
       end_point = !!end_point,
