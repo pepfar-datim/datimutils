@@ -624,7 +624,7 @@ data <- getOrgUnits("Afro Arab Clinic",
                                                base_url = "https://play.dhis2.org/2.33/"
           )
 
-          data <- datimutils::getOrgUnits(long_list)
+          data <- datimutils::getOrgUnits(long_list, base_url = "https://play.dhis2.org/2.33/")
       testthat::expect_equal(length(data), 1332)
     rm(data)
          })

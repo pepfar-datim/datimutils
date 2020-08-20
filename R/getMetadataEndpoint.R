@@ -116,7 +116,7 @@ duplicateResponse <- function(resp, expand, by) {
     }
   }
 
-
+  #break up url to multiple calls if needed
   if (sum(nchar(values)) > 2000) {
     values_list <- list()
     times_to_split <- ceiling((length(values) * 11) / 2000)
@@ -155,7 +155,7 @@ duplicateResponse <- function(resp, expand, by) {
       property = by,
       operator = "in"
     )
-
+    
     # call getMetadata with info above
     data <- getMetadata(
       end_point = !!end_point,
