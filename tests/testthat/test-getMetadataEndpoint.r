@@ -614,6 +614,22 @@ data <- getOrgUnits("Afro Arab Clinic",
  #httr::content(httr::GET(paste0(
   #"https://play.dhis2.org/2.33.5/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
   })
+  #httr::content(httr::GET(paste0(
+  #"play.dhis2.org/2.33/api/organisationUnits.json?paging=false&fields=id")))
+  #
+  test_that(
+  paste0("Urls that are over 3000 characters"), {
+          long_list <- datimutils::getMetadata(organisationUnits,
+                                    fields = "id",
+                                               base_url = "https://play.dhis2.org/2.33/"
+          )
+
+          data <- datimutils::getOrgUnits(long_list)
+      testthat::expect_equal(length(data), 1332)
+    rm(data)
+         })
+
+
 })
 
 test_that(
