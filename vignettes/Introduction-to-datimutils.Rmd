@@ -25,13 +25,13 @@ knitr::opts_chunk$set(
 library(datimutils)
 ```
 Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to datim.
-This file should be json in the form of
+For example here is a play server file called `play.json`
 ```{r eval = F}
 {
 "dhis": {
-  "baseurl": "datiminstance",
-  "username": "username",
-  "password": "password"
+  "baseurl": "play.dhis2.org/2.33/",
+  "username": "admin",
+  "password": "district"
 }
 }
 ```
@@ -39,8 +39,8 @@ Alternatively if the the entry for password is blank such that the file looks li
 ```{r eval = F}
 {
 "dhis": {
-  "baseurl": "datiminstance",
-  "username": "username",
+  "baseurl": "play.dhis2.org/2.33/",
+  "username": "admin",
   "password": ""
 }
 }
@@ -48,13 +48,51 @@ Alternatively if the the entry for password is blank such that the file looks li
 Then the function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
 
 Call the function as so:
-```{r eval = F}
+```{r}
 # logging in generates a cookie so the other funcitons can be used freely without credentials
-loginToDATIM(config_path = "filepath")
-# If successful you should see a a "name is loged in" message
+loginToDATIM(config_path = "~/secrets/play.json")
 ```
 
-The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint, a number of filters, and fields as its basic arguments. For example, to call the organisationUnits endpoint with two filters the following call can be used:
+There is a wrapper for every metadata endpoint within datimutils.
+Here are calls to  dataElements and categoryOptionGroups for example:
+```{r}
+getDataElements(
+    "FTRrcoaog83",
+    base_url = "https://play.dhis2.org/2.33.5/")
+getCatOptionGroups(
+    "OK2Nr4wdfrZ",
+    base_url = "https://play.dhis2.org/2.33.5/")
+```
+
+Here is one to the Indicators endpoint:
+```{r}
+  getIndicators(
+        "ReUHfIn0pTQ",
+        base_url = "https://play.dhis2.org/2.33.5/")
+```
+
+These helpers will create repeated values and sorting based on input
+```{r}
+# make a random order and duplicated uid group
+ groups <- rep(c(
+    "gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG"), 20)
+ rows <- sample(length(groups))
+ groups <- c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
+              groups[rows])
+
+  data <-
+    getOrgUnitGroups(
+      groups,
+      fields = "code,name,id",
+      base_url = "https://play.dhis2.org/2.33/"
+    )
+
+# even though the actual api call only returns the 3 unique uids in a random
+# order, the wrapper returns it in the order called.
+str(data)
+```
+
+The `getMetadata` function can be used to call metadata returning endpoints. It should be used for more complicated metadata calls with more than one filter. It takes an endpoint, any number of filters, and fields as its basic arguments. For example, to call the organisationUnits endpoint with two filters the following call can be used:
 
 ```{r}
 data <- getMetadata(
@@ -108,7 +146,7 @@ data <- getMetadata(
 str(data$translations)
 ```
 
-There is a filter format helper for every comparision operator in datim, here like is used.
+There is a filter format helper for every comparision operator in Datim, here like is used.
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
@@ -117,40 +155,37 @@ data <- getMetadata(
 )
 ```
 
-There is a wrapper for every metadata endpoint to make things easier.
-```{r}
-getDataElements(
-    "FTRrcoaog83",
-    base_url = "https://play.dhis2.org/2.33.5/")
-getCatOptionGroups(
-    "OK2Nr4wdfrZ",
-    base_url = "https://play.dhis2.org/2.33.5/")
+Here is a list of the api comparison operators and their datimutils equivalents:
+
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl <- "
+| DHIS2 Operator| infix operator  | Description                                     |
+|---------------|:---------------:|------------------------------------------------:|
+| eq            | %.eq%           | Equality                                        |
+| !eq           | %.~eq%          | Inequality                                      |
+| like          | %.Like%         | Case sensitive string, match anywhere           |
+| !like         | %.~Like%        | Case sensitive string, not match anywhere       |
+| \\$like       | %.^Like%       | Case sensitive string, match start             |
+| !\\$like      | %.~^Like%      | Case sensitive string, not match start         |
+| like\\$       | %.Like$%       | Case sensitive string, match end               |
+| !like\\$      | %.~Like$%      | Case sensitive string, not match end           |
+| ilike         | %.like%         | Case insensitive string, match anywhere         |
+| !ilike        | %.~like%        | Case insensitive string, not match anywhere     |
+| \\$ilike      | %.^like%       | Case insensitive string, match start           |
+| !\\$ilike     | %.~^like%      | Case insensitive string, not match start       |
+| ilike\\$      | %.like$%       | Case insensitive string, match end             |
+| !ilike\\$     | %.~like$%      | Case insensitive string, not match end         |
+| gt            | %.gt%           | Greater than                                    |
+| ge            | %.ge%           | Greater than or equal                           |
+| lt            | %.lt%           | Less than                                       |
+| le            | %.le%           | Less than or equal                              |
+| token         | %.token%        | Match on multiple tokens in search property     |
+| !token        | %.~token%       | Not match on multiple tokens in search property |
+| in            | %.in%           | Find objects matching 1 or more values          |
+| !in           | %.~in%          | Find objects not matching 1 or more values      |
+"
+cat(tabl)
 ```
-
-These helpers will create repeated values and sorting based on input
-```{r}
-# make a random order and duplicated uid group
- groups <- rep(c(
-    "gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG"), 20)
- rows <- sample(length(groups))
- groups <- c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
-              groups[rows])
-
-  data <-
-    getOrgUnitGroups(
-      groups,
-      fields = "code,name,id",
-      base_url = "https://play.dhis2.org/2.33/"
-    )
-
-# even though the actual api call only returns the 3 unique uids in a random
-# order, the wrapper returns it in the order called.
-str(data)
-```
-
-
-
-
 
 ```{r, include=FALSE}
 end_vignette()
