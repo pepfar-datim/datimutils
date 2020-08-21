@@ -84,8 +84,11 @@ anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
   }
   response <- dget(paste0(httptest::build_mock_url(url), ".R"))
   x <- rawToChar(response$content)
-  extracts <- stringr::str_extract_all(x, '"[a-zA-Z0-9]{11}\\"')[[1]]
+  extracts <- stringr::str_extract_all(x, '(id.{2})("[a-zA-Z0-9]{11}\\")')[[1]]
+  extracts <- gsub('id.{3}', "", extracts)
   replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
-  response$content <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
+  put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
+  response$content <- substitute(charToRaw(put_in))
   dput(response, paste0(httptest::build_mock_url(url), ".R"))
 }
+
