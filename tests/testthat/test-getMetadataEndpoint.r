@@ -368,7 +368,7 @@ httptest::with_mock_api({
                     fields = "organisationUnitGroups[name,id],ancestors[name,id]",
                     base_url = "https://play.dhis2.org/2.34/")
       )
-    
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Afro%20Arab%20Clinic]",
@@ -657,3 +657,10 @@ test_that(
       testthat::expect_s3_class(resp, "data.frame")
       rm(resp)
          })
+
+
+
+#mask for datim uids
+
+#httr::content(httr::GET(paste0(
+ # "https://datim.org/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))

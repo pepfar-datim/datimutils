@@ -34,7 +34,9 @@ Imports:
     lubridate,
     data.table,
     getPass,
-    rlang
+    rlang,
+    sodium,
+    digest
 Suggests: 
     devtools (>= 2.0.1),
     httptest,
