@@ -619,15 +619,16 @@ data <- getOrgUnits("Afro Arab Clinic",
   #
   test_that(
   paste0("Urls that are over 3000 characters"), {
-          long_list <- datimutils::getMetadata(organisationUnits,
-                                    fields = "id",
-                                               base_url = "https://play.dhis2.org/2.33/"
-          )
-
-          data <- datimutils::getOrgUnits(long_list, base_url = "https://play.dhis2.org/2.33/")
-      testthat::expect_equal(length(data), 1332)
+    long_list <- datimutils::getMetadata(organisationUnits,
+                                         fields = "id",
+                                         base_url = "https://play.dhis2.org/2.33/"
+    )
+    
+    data <- datimutils::getOrgUnits(c(long_list, sort(long_list)), 
+                                    base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(length(data), 2664)
     rm(data)
-         })
+  })
 
 
 })
