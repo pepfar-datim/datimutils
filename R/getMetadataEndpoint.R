@@ -119,7 +119,7 @@ duplicateResponse <- function(resp, expand, by) {
   #break up url to multiple calls if needed
   if (sum(nchar(unique_values)) > 2000) {
     values_list <- list()
-    times_to_split <- ceiling((length(unique_values) * 11) / 2000)
+    times_to_split <- ceiling(sum(nchar(unique_values)) / 2000)
     seq_to_use <- ceiling(seq(1, length(unique_values), length = times_to_split))
     for (i in seq_along(seq_to_use))
     {
