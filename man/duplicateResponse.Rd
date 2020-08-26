@@ -2,7 +2,7 @@
 % Please edit documentation in R/getMetadataEndpoint.R
 \name{duplicateResponse}
 \alias{duplicateResponse}
-\title{duplicateResponse(resp)}
+\title{duplicateResponse}
 \usage{
 duplicateResponse(resp, expand, by)
 }

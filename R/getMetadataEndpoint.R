@@ -1,4 +1,4 @@
-#' @title duplicateResponse(resp)
+#' @title duplicateResponse
 #' @description adds in duplicates to the response if they were in the filter
 #' @param resp api response after simplification of data structure
 #' @param expand a vector of something
@@ -16,6 +16,28 @@ duplicateResponse <- function(resp, expand, by) {
   return(resp)
 }
 
+#' @title splitUrlComponent
+#' @description splits components of a long url into multiple urls
+#' @param values a vector of values to split
+#' @param limit the limit of length of each split
+#' @return a list with the splits
+#'
+
+splitUrlComponent <- function(values, limit){
+    values_list <- list()
+    times_to_split <- ceiling(sum(nchar(values)) / limit) + 1
+    seq_to_use <- ceiling(seq(1, length(values), length = times_to_split))
+    for (i in seq_along(seq_to_use))
+    {
+      if (i == 1) {
+        values_list[[i]] <- values[seq_to_use[i]:seq_to_use[i + 1]]
+      } else if (i != length(seq_to_use)) {
+        values_list[[i]] <- values[(seq_to_use[i] + 1):seq_to_use[i + 1]]
+      }
+    }
+
+  return(values_list)
+}
 
 #' @title getMetadataEndpoint
 #' @description wrapper to getMetadata that retrieves a metadata endpoint
@@ -116,19 +138,11 @@ duplicateResponse <- function(resp, expand, by) {
     }
   }
   unique_values <- unique(values)
+
   #break up url to multiple calls if needed
   if (sum(nchar(unique_values)) > 2000) {
-    values_list <- list()
-    times_to_split <- ceiling(sum(nchar(unique_values)) / 2000)
-    seq_to_use <- ceiling(seq(1, length(unique_values), length = times_to_split))
-    for (i in seq_along(seq_to_use))
-    {
-      if (i == 1) {
-        values_list[[i]] <- unique_values[seq_to_use[i]:seq_to_use[i + 1]]
-      } else if (i != length(seq_to_use)) {
-        values_list[[i]] <- unique_values[(seq_to_use[i] + 1):seq_to_use[i + 1]]
-      }
-    }
+
+    values_list <- splitUrlComponent(unique_values, 2000)
 
     filters <- lapply(values_list, function(x) {
       metadataFilter(
@@ -138,25 +152,26 @@ duplicateResponse <- function(resp, expand, by) {
       )
     })
 
-    # call getMetadata with info above
-    data_list <- list()
-    for (i in 1:length(filters)) {
-      data_list[[i]] <- getMetadata(
+    # call getMetadata multiple times
+   data_list <-  lapply(filters, function(x) {getMetadata(
         end_point = !!end_point,
         base_url = base_url,
-        filters[[i]],
+        x,
         fields = default_fields, retry = retry
-      )
-    }
+      ) } )
+
+    # bind the responses
     data <- do.call("rbind",data_list)
-  } else {
+  } else
+  #normal route
+  {
     filters <- metadataFilter(
       values = unique_values,
       property = by,
       operator = "in"
     )
 
-    # call getMetadata with info above
+    # call getMetadataa single time
     data <- getMetadata(
       end_point = !!end_point,
       base_url = base_url,
@@ -165,13 +180,16 @@ duplicateResponse <- function(resp, expand, by) {
     )
   }
 
-
+  #return NULL if there is nothing to return
   length_response <- try(length(data[[1]]), silent = T)
   if (length_response == 0) {
     return(NULL)
   }
+
+  #add in duplicates
   data <- duplicateResponse(resp = data, expand = values, by = by)
 
+  #reduce fields returned
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
     potential_data <- try(data[, name_reduce], silent = T)
     if (!(class(potential_data) == "try-error")) {
