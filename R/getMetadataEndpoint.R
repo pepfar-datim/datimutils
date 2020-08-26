@@ -115,24 +115,24 @@ duplicateResponse <- function(resp, expand, by) {
       name_reduce <- gsub(" ", "", unlist(strsplit(name_reduce, ",")))
     }
   }
-
+  unique_values <- unique(values)
   #break up url to multiple calls if needed
-  if (sum(nchar(values)) > 2000) {
+  if (sum(nchar(unique_values)) > 2000) {
     values_list <- list()
-    times_to_split <- ceiling((length(values) * 11) / 2000)
-    seq_to_use <- ceiling(seq(1, length(values), length = times_to_split))
+    times_to_split <- ceiling((length(unique_values) * 11) / 2000)
+    seq_to_use <- ceiling(seq(1, length(unique_values), length = times_to_split))
     for (i in seq_along(seq_to_use))
     {
       if (i == 1) {
-        values_list[[i]] <- values[seq_to_use[i]:seq_to_use[i + 1]]
+        values_list[[i]] <- unique_values[seq_to_use[i]:seq_to_use[i + 1]]
       } else if (i != length(seq_to_use)) {
-        values_list[[i]] <- values[(seq_to_use[i] + 1):seq_to_use[i + 1]]
+        values_list[[i]] <- unique_values[(seq_to_use[i] + 1):seq_to_use[i + 1]]
       }
     }
 
     filters <- lapply(values_list, function(x) {
       metadataFilter(
-        values = unique(x),
+        values = x,
         property = by,
         operator = "in"
       )
@@ -151,7 +151,7 @@ duplicateResponse <- function(resp, expand, by) {
     data <- do.call("rbind",data_list)
   } else {
     filters <- metadataFilter(
-      values = unique(values),
+      values = unique_values,
       property = by,
       operator = "in"
     )
