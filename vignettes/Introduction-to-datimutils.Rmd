@@ -50,7 +50,7 @@ Then the function will look in your keyring for the password, and if not found, 
 Call the function as so:
 ```{r}
 # logging in generates a cookie so the other funcitons can be used freely without credentials
-loginToDATIM(config_path = "~/secrets/play.json")
+loginToDATIM(config_path = "play.json")
 ```
 
 There is a wrapper for every metadata endpoint within datimutils.
