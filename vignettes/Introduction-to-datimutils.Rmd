@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(datimutils)
 ```
-Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to datim.
+Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim.
 For example here is a play server file called `play.json`
 ```{r eval = F}
 {
