@@ -16,14 +16,14 @@ duplicateResponse <- function(resp, expand, by) {
   return(resp)
 }
 
-#' @title splitUrlComponent
+#' @title .splitUrlComponent
 #' @description splits components of a long url into multiple urls
 #' @param values a vector of values to split
 #' @param limit the limit of length of each split
 #' @return a list with the splits
 #'
 
-splitUrlComponent <- function(values, limit){
+.splitUrlComponent <- function(values, limit){
     values_list <- list()
     times_to_split <- ceiling(sum(nchar(values)) / limit) + 1
     seq_to_use <- ceiling(seq(1, length(values), length = times_to_split))
@@ -142,7 +142,7 @@ splitUrlComponent <- function(values, limit){
   #break up url to multiple calls if needed
   if (sum(nchar(unique_values)) > 2000) {
 
-    values_list <- splitUrlComponent(unique_values, 2000)
+    values_list <- .splitUrlComponent(unique_values, 2000)
 
     filters <- lapply(values_list, function(x) {
       metadataFilter(

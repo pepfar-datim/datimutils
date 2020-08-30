@@ -637,7 +637,7 @@ test_that(
                                          base_url = "https://play.dhis2.org/2.33/"
     )
   values <- long_list
-  resp <- splitUrlComponent(long_list, 2000)
+  resp <- .splitUrlComponent(long_list, 2000)
       testthat::expect_type(resp, "list")
       testthat::expect_lt(sum(nchar(resp[[1]])),2000)
       testthat::expect_lt(sum(nchar(resp[[2]])),2000)
