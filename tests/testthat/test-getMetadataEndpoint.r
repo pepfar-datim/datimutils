@@ -619,12 +619,12 @@ data <- getOrgUnits("Afro Arab Clinic",
   #
   test_that(
   paste0("Urls that are over 3000 characters"), {
-    long_list <- datimutils::getMetadata(organisationUnits,
+    long_list <- getMetadata(organisationUnits,
                                          fields = "id",
                                          base_url = "https://play.dhis2.org/2.33/"
     )
     
-    data <- datimutils::getOrgUnits(c(long_list, sort(long_list)), 
+    data <- getOrgUnits(c(long_list, sort(long_list)), 
                                     base_url = "https://play.dhis2.org/2.33/")
     testthat::expect_equal(length(data), 2664)
     rm(data)
@@ -632,7 +632,7 @@ data <- getOrgUnits("Afro Arab Clinic",
 #test for split url component function
 test_that(
   paste0("splitUrlComponent splits up a large vector into smaller vectors"), {
-  long_list <- datimutils::getMetadata(organisationUnits,
+  long_list <- getMetadata(organisationUnits,
                                          fields = "id",
                                          base_url = "https://play.dhis2.org/2.33/"
     )
