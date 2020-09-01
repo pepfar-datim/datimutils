@@ -7,7 +7,7 @@
 #' @param to_list make a list for every uid provided, will drop name from the uids provided
 #' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
-#' @return nested data frame with PSNUs for provided ancestor_uids
+#' @return nested data frame with PSNUs for provided uids
 
 getPSNUs <- function(uids = NULL,
          fields = "id",
@@ -59,7 +59,7 @@ return(psnus)
 #' @param to_list make a list for every uid provided, will drop name from the uids provided
 #' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
-#' @return nested data frame with PSNUs for provided ancestor_uids
+#' @return nested data frame with Communities for provided uids
 
 getCommunities <- function(uids = NULL,
          fields = "id",
@@ -68,7 +68,7 @@ getCommunities <- function(uids = NULL,
 
   fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]")
 
-  communities <- getOrgUnitGroups("AVy8gJXym2D",
+  communities <- getOrgUnitGroups("PvuaP6YALSA",
                           fields = fields, retry = retry)
 
   if(!(is.null(uids))){
@@ -111,7 +111,7 @@ return(communities)
 #' @param to_list make a list for every uid provided, will drop name from the uids provided
 #' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
-#' @return nested data frame with PSNUs for provided ancestor_uids
+#' @return nested data frame with Facilities for provided uids
 
 getFacilities <- function(uids = NULL,
          fields = "id",
@@ -120,7 +120,7 @@ getFacilities <- function(uids = NULL,
 
   fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]")
 
-  facilities <- getOrgUnitGroups("AVy8gJXym2D",
+  facilities <- getOrgUnitGroups("POHZmzofoVx",
                           fields = fields, retry = retry)
 
   if(!(is.null(uids))){
@@ -163,7 +163,7 @@ return(facilities)
 #' @param to_list make a list for every uid provided, will drop name from the uids provided
 #' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
-#' @return nested data frame with PSNUs for provided ancestor_uids
+#' @return nested data frame with MilitaryOrgUnits for provided uids
 
 getMilitaryOrgUnits <- function(uids = NULL,
          fields = "id",
@@ -172,7 +172,7 @@ getMilitaryOrgUnits <- function(uids = NULL,
 
   fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]")
 
-  miltary_units <- getOrgUnitGroups("AVy8gJXym2D",
+  miltary_units <- getOrgUnitGroups("nwQbMeALRjL",
                           fields = fields, retry = retry)
 
   if(!(is.null(uids))){
@@ -215,7 +215,7 @@ return(miltary_units)
 #' @param to_list make a list for every uid provided, will drop name from the uids provided
 #' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
-#' @return nested data frame with PSNUs for provided ancestor_uids
+#' @return nested data frame with Countries for provided uids
 
 getCountries <- function(uids = NULL,
          fields = "id",
@@ -224,7 +224,7 @@ getCountries <- function(uids = NULL,
 
   fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]")
 
-  countries <- getOrgUnitGroups("AVy8gJXym2D",
+  countries <- getOrgUnitGroups("cNzfcPWEGSH",
                           fields = fields, retry = retry)
 
   if(!(is.null(uids))){
