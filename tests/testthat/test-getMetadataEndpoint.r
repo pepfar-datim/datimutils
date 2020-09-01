@@ -313,7 +313,7 @@ httptest::with_mock_api({
       rm(data)
 
 
-      org_units = c("Adonkia CHP", "Afro Arab Clinic")
+      org_units <- c("Adonkia CHP", "Afro Arab Clinic")
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
@@ -613,7 +613,47 @@ data <- getOrgUnits("Afro Arab Clinic",
   rm(data)
  #httr::content(httr::GET(paste0(
   #"https://play.dhis2.org/2.33.5/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
+   })
+  # httr::content(httr::GET(paste0(
+  # "https://play.dhis2.org/2.33/api/organisationUnits.json?paging=false&fields=name,id")))
+  test_that(
+  paste0("Urls that are over 3000 characters"), {
+    long_list <- getMetadata(organisationUnits,
+                             base_url = "https://play.dhis2.org/2.33/")
+    long_list_ordered <- long_list[order(long_list$id), ]
+    
+    data <- getOrgUnits(c(long_list$id, 
+                          long_list_ordered$id), 
+                        base_url = "https://play.dhis2.org/2.33/")
+    testthat::expect_equal(length(data), 2664)
+    testthat::expect_identical(data, c(long_list$name, 
+                                       long_list_ordered$name))
+    rm(data)
   })
+  
+#test for split url component function
+test_that(
+  paste0("splitUrlComponent splits up a large vector into smaller vectors"), {
+  long_list <- getMetadata(organisationUnits,
+                                         fields = "id",
+                                         base_url = "https://play.dhis2.org/2.33/"
+    )
+  values <- long_list
+  resp <- .splitUrlComponent(long_list, 2000)
+      testthat::expect_type(resp, "list")
+      testthat::expect_lt(sum(nchar(resp[[1]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[2]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[3]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[4]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[5]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[6]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[7]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[8]])),2000)
+
+      rm(resp)
+      rm(long_list)
+         })
+
 })
 
 test_that(
