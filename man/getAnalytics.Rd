@@ -6,13 +6,17 @@
 \usage{
 getAnalytics(
   ...,
-  dimensions = NULL,
-  filters = NULL,
-  start_date = NULL,
-  end_date = NULL,
-  order = NULL,
-  columns = NULL,
-  rows = NULL,
+  dx = NULL,
+  dx_f = NULL,
+  pe = NULL,
+  pe_f = NULL,
+  ou = NULL,
+  ou_f = NULL,
+  co = NULL,
+  co_f = NULL,
+  ao = NULL,
+  ao_f = NULL,
+  outputIdScheme = "UID",
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -20,19 +24,27 @@ getAnalytics(
 \arguments{
 \item{...}{any options here to tag on the end of the url}
 
-\item{dimensions}{dimensions}
+\item{dx}{dimensions dx}
 
-\item{filters}{filters}
+\item{dx_f}{filters dx}
 
-\item{start_date}{start_date}
+\item{pe}{dimensions pe}
 
-\item{end_date}{end_date}
+\item{pe_f}{filters pe}
 
-\item{order}{order}
+\item{ou}{dimensions ou}
 
-\item{columns}{columns}
+\item{ou_f}{filters f}
 
-\item{rows}{rows}
+\item{co}{dimensions co}
+
+\item{co_f}{filters co}
+
+\item{ao}{dimensions ao}
+
+\item{ao_f}{filters ao}
+
+\item{outputIdScheme}{UID for uids, NAME for names}
 
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
