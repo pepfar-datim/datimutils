@@ -128,7 +128,7 @@ base_url = getOption("baseurl"), retry = 1){
 #' @rdname dot-analyticsFilter
 "%.d%" <- function(operator, values) {
   operator <- rlang::ensym(operator)
-  .analyticsFilter("dimension", operator, values)
+  .analyticsFilter(property = "dimension", operator = operator, values = values)
 }
 
 
@@ -136,5 +136,5 @@ base_url = getOption("baseurl"), retry = 1){
 #' @rdname dot-analyticsFilter
 "%.f%" <- function(operator, values) {
   operator <- rlang::ensym(operator)
-  .analyticsFilter("filter", operator, values)
+  .analyticsFilter(property = "filter", operator = operator, values = values)
 }
