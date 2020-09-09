@@ -84,6 +84,13 @@ testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 42)
 testthat::expect_named(data, c("Data","Organisation unit","Value"))
 rm(data)
+
+  #httr::content(httr::GET("https://play.dhis2.org/2.34.1/api/analytics.json?paging=false&dimension=dx:fbfJHSPpUQD&startDate=2019-01-01&endDate=2019-01-01&outputIdScheme=UID"))
+      data <- getAnalytics("startDate=2019-01-01&endDate=2019-01-01",
+                     dx = "fbfJHSPpUQD",
+                     base_url = "https://play.dhis2.org/2.34.1/")
+  testthat::expect_identical(data, NULL)
+  rm(data)
 })
 
 
