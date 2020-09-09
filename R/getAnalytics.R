@@ -43,7 +43,7 @@ base_url = getOption("baseurl"), retry = 1){
     path = path, base_url = base_url, retry = retry
   )
 
-  if(nrow(resp$rows) == 0){
+  if(NROW(resp$rows) == 0){
     return(NULL)
   }
   #collect data types
