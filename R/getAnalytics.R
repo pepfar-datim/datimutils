@@ -43,6 +43,9 @@ base_url = getOption("baseurl"), retry = 1){
     path = path, base_url = base_url, retry = retry
   )
 
+  if(nrow(resp$rows) == 0){
+    return(NULL)
+  }
   #collect data types
   coercions <- resp$headers$valueType
   #collect replacements for uids
@@ -119,7 +122,7 @@ base_url = getOption("baseurl"), retry = 1){
 #' .analyticsFilter(values, property, operator)
 .analyticsFilter <- function(values, property, operator) {
 
-    values <- paste0(values, collapse = ",")
+    values <- paste0(values, collapse = ";")
 
     return(paste0(property, "=", operator, ":", values))
 }
