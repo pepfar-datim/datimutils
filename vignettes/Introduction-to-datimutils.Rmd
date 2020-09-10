@@ -146,7 +146,7 @@ data <- getMetadata(
 str(data$translations)
 ```
 
-There is a filter format helper for every comparision operator in Datim, here like is used.
+There is a filter format helper for every comparison operator in Datim, here like is used.
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
@@ -186,6 +186,35 @@ tabl <- "
 "
 cat(tabl)
 ```
+
+There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters, and can also take any number of additional specifications as the first argument, which will get pasted on the end of the api call made. Here are some examples:
+
+```{r}
+loginToDATIM(config_path = "play34.1.json")
+#Get ANC: Key Coverages
+#this call uses only dimension arguments, dx, ou, and pe
+data <- getAnalytics("displayProperty=NAME",
+dx = c("Uvn6LCg7dVU","OdiHJayrsKo","sB79w2hiLp8"), pe = c("THIS_YEAR"),
+ou = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
+
+head(data)
+
+#Get Infrastructure: Public facilities 2014 and 2013
+#this call uses a filter ou argument, which are prefixed by f
+data <- getAnalytics("displayProperty=NAME",
+dx = c("v27b2y9kKh7","vEBapQFZ1AA","DwEVHQvMnDZ"), pe = c("THIS_YEAR"),
+f_ou = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
+
+head(data)
+```
+
+To use `getAnalytics` you can pass in the uids into their respective arguments and will be formatted correctly, but there are also two operators which can format strings for use in analytics api calls.
+
+```{r}
+a %.d% c("123","456")
+a %.f% c("123","456")
+```
+
 
 ```{r, include=FALSE}
 end_vignette()
