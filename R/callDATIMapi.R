@@ -78,6 +78,10 @@ api_get <- function(path, base_url = getOption("baseurl"),
     resp <- httr::GET(url, httr::timeout(timeout))
     response_code <- httr::status_code(resp)
     i <- i + 1
+    if(response_code == 200)
+    {
+      break
+    }
   }
 
   # unknown error catching which returns message and response code
