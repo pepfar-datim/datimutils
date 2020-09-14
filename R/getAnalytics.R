@@ -43,7 +43,7 @@ getAnalytics <-  function(...,
                  stringr::str_c(dx,pe,ou,co,ao,
                                 dx_f,pe_f,ou_f,co_f,ao_f, 
                                 ends, 
-                                paste0("outputIdScheme="
+                                paste0("outputIdScheme=",
                                        outputIdScheme), 
                                 sep = "&"))
 
