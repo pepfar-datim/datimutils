@@ -91,14 +91,43 @@ rm(data)
                      base_url = "https://play.dhis2.org/2.34.1/")
   testthat::expect_identical(data, NULL)
   rm(data)
-})
+
+
 
 
 })
+
+test_that("use of 'all' argument: ", {
+ #httr::content(httr::GET("https://play.dhis2.org/2.34.1/api/analytics.json?paging=false&dimension=dx:fbfJHSPpUQD&dimension=pe:LAST_12_MONTHS&dimension=co&filter=ou:g8upMTyEZGZ;DiszpKrYNg8;egv5Es0QlQP&displayProperty=NAME&outputIdScheme=UID"))
+  data <- getAnalytics("displayProperty=NAME",
+                     dx = "fbfJHSPpUQD",
+                       co = "all",
+                       pe = "LAST_12_MONTHS",
+                       ou_f = c("g8upMTyEZGZ","DiszpKrYNg8","egv5Es0QlQP"),
+                     base_url = "https://play.dhis2.org/2.34.1/")
+  testthat::expect_equal(NROW(data), 28)
+
+  #httr::content(httr::GET("https://play.dhis2.org/2.34.1/api/analytics.json?paging=false&dimension=dx:fbfJHSPpUQD;cYeuwXTCPkU&dimension=pe:201601&dimension=ou:O6uvpzGd5pu;lc3eMKXaEfw&dimension=co&filter=co&outputIdScheme=UID"))
+
+  data <- getAnalytics(
+                     dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
+                       co = "all",
+                       pe = "201601",
+                       ou = c("O6uvpzGd5pu","lc3eMKXaEfw"),
+                     base_url = "https://play.dhis2.org/2.34.1/")
+
+  testthat::expect_identical(data, NULL)
+})
+
+})
+
+
 
 test_that("%.d% and %.f%: ", {
   testthat::expect_equal(a %.d% c("123","456"), "dimension=a:123;456")
   testthat::expect_equal(a %.f% c("123","456"), "filter=a:123;456")
+  testthat::expect_equal(a %.d% "all", "dimension=a")
+  testthat::expect_equal(a %.f% "all", "filter=a")
 })
 
 

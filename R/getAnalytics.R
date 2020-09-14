@@ -37,7 +37,7 @@ base_url = getOption("baseurl"), retry = 1){
 
   #collapse everything and form path
   path <- paste0(end_point, stringr::str_c(dx,pe,ou,co,ao,dx_f,pe_f,ou_f,co_f,ao_f, ends, paste0("outputIdScheme=",outputIdScheme), sep = "&"))
-
+  path <- gsub("&&","&", path)
   #call api
   resp <- api_get(
     path = path, base_url = base_url, retry = retry
@@ -82,6 +82,10 @@ base_url = getOption("baseurl"), retry = 1){
     return(NULL)
   }
   values <- list(...)
+  if(values[[1]][1] == "all")
+  {
+    return(paste0("dimension=", id))
+  }
   values <- lapply(values, function(x) paste0(x, collapse = ";"))
   values <- mapply(function(x,y) paste0("dimension=", y, ":", x), values, id)
   return(paste0(unlist(values), collapse = "&"))
@@ -123,6 +127,10 @@ base_url = getOption("baseurl"), retry = 1){
 .analyticsFilter <- function(values, property, operator) {
 
     values <- paste0(values, collapse = ";")
+
+  if(values == "all") {
+    return(paste0(property, "=", operator))
+  }
 
     return(paste0(property, "=", operator, ":", values))
 }
