@@ -99,6 +99,8 @@ rm(data)
 test_that("%.d% and %.f%: ", {
   testthat::expect_equal(a %.d% c("123","456"), "dimension=a:123;456")
   testthat::expect_equal(a %.f% c("123","456"), "filter=a:123;456")
+  testthat::expect_equal("a" %.d% c("123","456"), "dimension=a:123;456")
+  testthat::expect_equal("a" %.f% c("123","456"), "filter=a:123;456")
 })
 
 
