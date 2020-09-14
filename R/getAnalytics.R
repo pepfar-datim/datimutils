@@ -17,12 +17,15 @@
 #' @param retry retry
 #' @return data frame with the rows of the response
 
-getAnalytics <-  function(..., dx = NULL, dx_f = NULL, pe = NULL, pe_f = NULL,
-ou = NULL, ou_f = NULL, co = NULL, co_f = NULL,
-ao = NULL, ao_f = NULL,
-outputIdScheme = "UID",
-base_url = getOption("baseurl"), retry = 1){
-
+getAnalytics <-  function(...,
+                          dx = NULL, dx_f = NULL,
+                          pe = NULL, pe_f = NULL,
+                          ou = NULL, ou_f = NULL,
+                          co = NULL, co_f = NULL,
+                          ao = NULL, ao_f = NULL,
+                          outputIdScheme = "UID",
+                          base_url = getOption("baseurl"),
+                          retry = 1){
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
   pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
@@ -33,15 +36,23 @@ base_url = getOption("baseurl"), retry = 1){
   #process ...
   end_point <- "analytics?"
   ends <- unlist(list(...))
-  ends <- paste0(ends,collapse = "&")
+  ends <- paste0(ends, collapse = "&")
 
   #collapse everything and form path
+  path <- paste0(end_point,
+                 stringr::str_c(dx,pe,ou,co,ao,
+                                dx_f,pe_f,ou_f,co_f,ao_f,
+                                ends,
+                                paste0("outputIdScheme=",
+                                       outputIdScheme),
+                                sep = "&"))
+
   path <- paste0(end_point, stringr::str_c(dx,pe,ou,co,ao,dx_f,pe_f,ou_f,co_f,ao_f, ends, paste0("outputIdScheme=",outputIdScheme), sep = "&"))
   path <- gsub("&&","&", path)
   #call api
-  resp <- api_get(
-    path = path, base_url = base_url, retry = retry
-  )
+  resp <- api_get(path = path,
+                  base_url = base_url,
+                  retry = retry)
 
   if(NROW(resp$rows) == 0){
     return(NULL)

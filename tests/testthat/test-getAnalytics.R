@@ -91,10 +91,6 @@ rm(data)
                      base_url = "https://play.dhis2.org/2.34.1/")
   testthat::expect_identical(data, NULL)
   rm(data)
-
-
-
-
 })
 
 test_that("use of 'all' argument: ", {
@@ -128,6 +124,8 @@ test_that("%.d% and %.f%: ", {
   testthat::expect_equal(a %.f% c("123","456"), "filter=a:123;456")
   testthat::expect_equal(a %.d% "all", "dimension=a")
   testthat::expect_equal(a %.f% "all", "filter=a")
+  testthat::expect_equal("a" %.d% c("123","456"), "dimension=a:123;456")
+  testthat::expect_equal("a" %.f% c("123","456"), "filter=a:123;456")
 })
 
 
