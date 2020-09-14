@@ -17,12 +17,15 @@
 #' @param retry retry
 #' @return data frame with the rows of the response
 
-getAnalytics <-  function(..., dx = NULL, dx_f = NULL, pe = NULL, pe_f = NULL,
-ou = NULL, ou_f = NULL, co = NULL, co_f = NULL,
-ao = NULL, ao_f = NULL,
-outputIdScheme = "UID",
-base_url = getOption("baseurl"), retry = 1){
-
+getAnalytics <-  function(..., 
+                          dx = NULL, dx_f = NULL, 
+                          pe = NULL, pe_f = NULL,
+                          ou = NULL, ou_f = NULL, 
+                          co = NULL, co_f = NULL,
+                          ao = NULL, ao_f = NULL,
+                          outputIdScheme = "UID",
+                          base_url = getOption("baseurl"), 
+                          retry = 1){
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
   pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
