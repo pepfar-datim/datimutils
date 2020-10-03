@@ -16,7 +16,8 @@ getAnalytics(
   co_f = NULL,
   ao = NULL,
   ao_f = NULL,
-  outputIdScheme = "UID",
+  other_args = NULL,
+  return_names = F,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -44,7 +45,9 @@ getAnalytics(
 
 \item{ao_f}{filters ao}
 
-\item{outputIdScheme}{UID for uids, NAME for names}
+\item{other_args}{functions the same as ..., but must be passed in as list}
+
+\item{return_names}{FALSE for uids, TRUE for names}
 
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 

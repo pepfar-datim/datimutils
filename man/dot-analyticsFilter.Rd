@@ -4,6 +4,8 @@
 \alias{.analyticsFilter}
 \alias{\%.d\%}
 \alias{\%.f\%}
+\alias{make_dim}
+\alias{make_fil}
 \title{.analyticsFilter(values, property, operator)}
 \usage{
 operator %.d% values
@@ -15,6 +17,10 @@ operator %.f% values
 operator \%.d\% values
 
 operator \%.f\% values
+
+make_dim(operator, values)
+
+make_fil(operator, values)
 }
 \arguments{
 \item{values}{the values in property=operator:values}

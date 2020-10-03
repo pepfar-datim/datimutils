@@ -15,14 +15,14 @@ testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 4394)
 testthat::expect_named(data, c("Data","Period","Organisation unit","Value"))
 rm(data) })
-test_that("Basic eq and sinlge element in call: ", {
+test_that("other arguments: ", {
 #httr::content(httr::GET(
 #"https://play.dhis2.org/2.33.5/api/analytics.json?paging=false&dimension=Data:fbfJHSPpUQD.pq2XI5kz2BY;fbfJHSPpUQD.PT59n8BQbqM;cYeuwXTCPkU.pq2XI5kz2BY;cYeuwXTCPkU.PT59n8BQbqM;o15CyZiTvxa;f27B1G7B3m3;hJNC4Bu2Mkv&dimension=pe:201908;201909;201910;201911;201912;202001;202002;202003;202004;202005;202006;202007&filter=ou:ImspTQPwCqd&displayProperty=NAME&outputIdScheme=NAME"))
 
   data <- getAnalytics("displayProperty=NAME",
                      dx = c("fbfJHSPpUQD.pq2XI5kz2BY","fbfJHSPpUQD.PT59n8BQbqM","cYeuwXTCPkU.pq2XI5kz2BY","cYeuwXTCPkU.PT59n8BQbqM","o15CyZiTvxa","f27B1G7B3m3","hJNC4Bu2Mkv"),
                      pe = c("201908","201909","201910","201911","201912","202001","202002","202003","202004","202005","202006","202007"),
-                     ou_f = "ImspTQPwCqd", outputIdScheme="NAME", base_url = "https://play.dhis2.org/2.33.5/")
+                     ou_f = "ImspTQPwCqd", return_names=T, base_url = "https://play.dhis2.org/2.33.5/")
 
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
@@ -33,7 +33,7 @@ rm(data)
 data <- getAnalytics("startDate=2017-01-01","displayProperty=NAME",
                      dx = c("fbfJHSPpUQD.pq2XI5kz2BY","fbfJHSPpUQD.PT59n8BQbqM","cYeuwXTCPkU.pq2XI5kz2BY","cYeuwXTCPkU.PT59n8BQbqM","o15CyZiTvxa","f27B1G7B3m3","hJNC4Bu2Mkv"),
                      pe = c("201908","201909","201910","201911","201912","202001","202002","202003","202004","202005","202006","202007"),
-                     ou_f = "ImspTQPwCqd", outputIdScheme="NAME", base_url = "https://play.dhis2.org/2.33.5/")
+                     ou_f = "ImspTQPwCqd", return_names=T, base_url = "https://play.dhis2.org/2.33.5/")
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
 testthat::expect_named(data, c("Data","Period","Value"))
@@ -43,7 +43,7 @@ rm(data)
   data <- getAnalytics("endDate=2019-01-01","displayProperty=NAME",
                      dx = c("fbfJHSPpUQD.pq2XI5kz2BY","fbfJHSPpUQD.PT59n8BQbqM","cYeuwXTCPkU.pq2XI5kz2BY","cYeuwXTCPkU.PT59n8BQbqM","o15CyZiTvxa","f27B1G7B3m3","hJNC4Bu2Mkv"),
                      pe = c("201908","201909","201910","201911","201912","202001","202002","202003","202004","202005","202006","202007"),
-                     ou_f = "ImspTQPwCqd", outputIdScheme="NAME", base_url = "https://play.dhis2.org/2.33.5/")
+                     ou_f = "ImspTQPwCqd", return_names=T, base_url = "https://play.dhis2.org/2.33.5/")
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
 testthat::expect_named(data, c("Data","Period","Value"))
@@ -54,7 +54,7 @@ rm(data)
     data <- getAnalytics("order=DESC","endDate=2019-01-01","displayProperty=NAME",
                      dx = c("fbfJHSPpUQD.pq2XI5kz2BY","fbfJHSPpUQD.PT59n8BQbqM","cYeuwXTCPkU.pq2XI5kz2BY","cYeuwXTCPkU.PT59n8BQbqM","o15CyZiTvxa","f27B1G7B3m3","hJNC4Bu2Mkv"),
                      pe = c("201908","201909","201910","201911","201912","202001","202002","202003","202004","202005","202006","202007"),
-                     ou_f = "ImspTQPwCqd", outputIdScheme="NAME", base_url = "https://play.dhis2.org/2.33.5/")
+                     ou_f = "ImspTQPwCqd", return_names=T, base_url = "https://play.dhis2.org/2.33.5/")
 
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
@@ -65,7 +65,7 @@ testthat::expect_identical(data$Value[1], 362454.0)
   data <- getAnalytics("tableLayout=true&columns=pe&rows=dx","endDate=2019-01-01","displayProperty=NAME",
                      dx = c("fbfJHSPpUQD.pq2XI5kz2BY","fbfJHSPpUQD.PT59n8BQbqM","cYeuwXTCPkU.pq2XI5kz2BY","cYeuwXTCPkU.PT59n8BQbqM","o15CyZiTvxa","f27B1G7B3m3","hJNC4Bu2Mkv"),
                      pe = c("201908","201909","201910","201911","201912","202001","202002","202003","202004","202005","202006","202007"),
-                     ou_f = "ImspTQPwCqd", outputIdScheme="NAME", base_url = "https://play.dhis2.org/2.33.5/")
+                     ou_f = "ImspTQPwCqd", return_names=T, base_url = "https://play.dhis2.org/2.33.5/")
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 7)
   testthat::expect_equal(NCOL(data), 16)
@@ -84,6 +84,20 @@ testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 42)
 testthat::expect_named(data, c("Data","Organisation unit","Value"))
 rm(data)
+
+      data <- getAnalytics(
+                     dx = c("BfMAe6Itzgt.REPORTING_RATE","QX4ZTUbOt3a.REPORTING_RATE","eZDhcZi6FLP.REPORTING_RATE"),
+                     ou = c("USER_ORGUNIT","USER_ORGUNIT_CHILDREN"),
+                     pe_f = c("LAST_52_WEEKS","LAST_12_MONTHS"),
+                     other_args = list(displayProperty="NAME",user="xE7jOejl9FI"),
+                     base_url = "https://play.dhis2.org/2.33.5/")
+
+testthat::expect_s3_class(data, "data.frame")
+testthat::expect_equal(NROW(data), 42)
+testthat::expect_named(data, c("Data","Organisation unit","Value"))
+rm(data)
+
+
 
   #httr::content(httr::GET("https://play.dhis2.org/2.34.1/api/analytics.json?paging=false&dimension=dx:fbfJHSPpUQD&startDate=2019-01-01&endDate=2019-01-01&outputIdScheme=UID"))
       data <- getAnalytics("startDate=2019-01-01&endDate=2019-01-01",
@@ -119,13 +133,20 @@ test_that("use of 'all' argument: ", {
 
 
 
-test_that("%.d% and %.f%: ", {
+test_that("%.d% and %.f%, make_dim and make_fil: ", {
   testthat::expect_equal(a %.d% c("123","456"), "dimension=a:123;456")
   testthat::expect_equal(a %.f% c("123","456"), "filter=a:123;456")
   testthat::expect_equal(a %.d% "all", "dimension=a")
   testthat::expect_equal(a %.f% "all", "filter=a")
   testthat::expect_equal("a" %.d% c("123","456"), "dimension=a:123;456")
   testthat::expect_equal("a" %.f% c("123","456"), "filter=a:123;456")
+
+  testthat::expect_equal(make_dim(a , c("123","456")), "dimension=a:123;456")
+  testthat::expect_equal(make_fil(a , c("123","456")), "filter=a:123;456")
+  testthat::expect_equal(make_dim(a , "all"), "dimension=a")
+  testthat::expect_equal(make_fil(a , "all"), "filter=a")
+  testthat::expect_equal(make_dim("a" , c("123","456")), "dimension=a:123;456")
+  testthat::expect_equal(make_fil("a" , c("123","456")), "filter=a:123;456")
 })
 
 

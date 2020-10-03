@@ -12,7 +12,8 @@
 #' @param co_f filters co
 #' @param ao dimensions ao
 #' @param ao_f filters ao
-#' @param outputIdScheme UID for uids, NAME for names
+#' @param other_args functions the same as ..., but must be passed in as list
+#' @param return_names FALSE for uids, TRUE for names
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param retry retry
 #' @return data frame with the rows of the response
@@ -23,7 +24,8 @@ getAnalytics <-  function(...,
                           ou = NULL, ou_f = NULL,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
-                          outputIdScheme = "UID",
+                          other_args = NULL,
+                          return_names = F,
                           base_url = getOption("baseurl"),
                           retry = 1){
   #variable set up
@@ -38,16 +40,26 @@ getAnalytics <-  function(...,
   ends <- unlist(list(...))
   ends <- paste0(ends, collapse = "&")
 
+  #process other_args
+  other_args <- unlist(other_args)
+  other_args <- unname(mapply(function(x,y) paste0(x, "=", y), names(other_args), other_args))
+  other_args <- paste0(other_args, collapse = "&")
+
+  #decide return type
+  return_type <- if(return_names){"NAME"} else{"UID"}
+
   #collapse everything and form path
   path <- paste0(end_point,
                  stringr::str_c(dx,pe,ou,co,ao,
                                 dx_f,pe_f,ou_f,co_f,ao_f,
-                                ends,
+                                ends, other_args,
                                 paste0("outputIdScheme=",
-                                       outputIdScheme),
+                                       return_type),
                                 sep = "&"))
 
-  path <- gsub("&&","&", path)
+  #make 2 or more consecutive & into single &
+  path <- gsub("[&]{2,}","&", path)
+
   #call api
   resp <- api_get(path = path,
                   base_url = base_url,
@@ -156,6 +168,21 @@ getAnalytics <-  function(...,
 #' @export
 #' @rdname dot-analyticsFilter
 "%.f%" <- function(operator, values) {
+  operator <- rlang::ensym(operator)
+  .analyticsFilter(property = "filter", operator = operator, values = values)
+}
+
+#' @export
+#' @rdname dot-analyticsFilter
+make_dim <- function(operator, values) {
+  operator <- rlang::ensym(operator)
+  .analyticsFilter(property = "dimension", operator = operator, values = values)
+}
+
+
+#' @export
+#' @rdname dot-analyticsFilter
+make_fil <- function(operator, values) {
   operator <- rlang::ensym(operator)
   .analyticsFilter(property = "filter", operator = operator, values = values)
 }
