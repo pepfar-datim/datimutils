@@ -25,54 +25,55 @@
 \alias{getDimensions}
 \title{getMetadataEndpoint}
 \usage{
-.getMetadataEndpoint(end_point, values, by, fields, base_url, retry)
+.getMetadataEndpoint(end_point, values, by, fields, modify_fields, base_url, retry)
 
-getCategories(values, by, fields, base_url, retry)
+getCategories(values, by, fields, modify_fields, base_url, retry)
 
-getCatCombos(values, by, fields, base_url, retry)
+getCatCombos(values, by, fields, modify_fields, base_url, retry)
 
-getCatOptionCombos(values, by, fields, base_url, retry)
+getCatOptionCombos(values, by, fields, modify_fields, base_url, retry)
 
-getCatOptionGroupSets(values, by, fields, base_url, retry)
+getCatOptionGroupSets(values, by, fields, modify_fields, base_url, retry)
 
-getCatOptionGroups(values, by, fields, base_url, retry)
+getCatOptionGroups(values, by, fields, modify_fields, base_url, retry)
 
-getCatOptions(values, by, fields, base_url, retry)
+getCatOptions(values, by, fields, modify_fields, base_url, retry)
 
-getDataElementGroupSets(values, by, fields, base_url, retry)
+getDataElementGroupSets(values, by, fields, modify_fields, base_url, retry)
 
-getDataElementGroups(values, by, fields, base_url, retry)
+getDataElementGroups(values, by, fields, modify_fields, base_url, retry)
 
-getDataElements(values, by, fields, base_url, retry)
+getDataElements(values, by, fields, modify_fields, base_url, retry)
 
-getDataSets(values, by, fields, base_url, retry)
+getDataSets(values, by, fields, modify_fields, base_url, retry)
 
-getIndicatorGroupSets(values, by, fields, base_url, retry)
+getIndicatorGroupSets(values, by, fields, modify_fields, base_url, retry)
 
-getIndicatorGroups(values, by, fields, base_url, retry)
+getIndicatorGroups(values, by, fields, modify_fields,  base_url, retry)
 
-getIndicators(values, by, fields, base_url, retry)
+getIndicators(values, by, fields, modify_fields, base_url, retry)
 
-getOptionGroupSets(values, by, fields, base_url, retry)
+getOptionGroupSets(values, by, fields, modify_fields, base_url, retry)
 
-getOptionGroups(values, by, fields, base_url, retry)
+getOptionGroups(values, by, fields, modify_fields, base_url, retry)
 
-getOptionSets(values, by, fields, base_url, retry)
+getOptionSets(values, by, fields, modify_fields, base_url, retry)
 
-getOptions(values, by, fields, base_url, retry)
+getOptions(values, by, fields, modify_fields, base_url, retry)
 
-getOrgUnitGroupSets(values, by, fields, base_url, retry)
+getOrgUnitGroupSets(values, by, fields, modify_fields, base_url, retry)
 
-getOrgUnitGroups(values, by, fields, base_url, retry)
+getOrgUnitGroups(values, by, fields, modify_fields, base_url, retry)
 
-getOrgUnits(values, by, fields, base_url, retry)
+getOrgUnits(values, by, fields, modify_fields, base_url, retry)
 
-getDimensions(values, by, fields, base_url, retry)
+getDimensions(values, by, fields, modify_fields, base_url, retry)
 
 getCategories(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -81,6 +82,7 @@ getCatCombos(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -89,6 +91,7 @@ getCatOptionCombos(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -97,6 +100,7 @@ getCatOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -105,6 +109,7 @@ getCatOptionGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -113,6 +118,7 @@ getCatOptions(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -121,6 +127,7 @@ getDataElementGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -129,6 +136,7 @@ getDataElementGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -137,6 +145,7 @@ getDataElements(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -145,6 +154,7 @@ getDataSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -153,6 +163,7 @@ getIndicatorGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -161,6 +172,7 @@ getIndicatorGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -169,6 +181,7 @@ getIndicators(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -177,6 +190,7 @@ getOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -185,6 +199,7 @@ getOptionGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -193,6 +208,7 @@ getOptionSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -201,6 +217,7 @@ getOptions(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -209,6 +226,7 @@ getOrgUnitGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -217,6 +235,7 @@ getOrgUnitGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -225,6 +244,7 @@ getOrgUnits(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -233,6 +253,7 @@ getDimensions(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = T,
   base_url = getOption("baseurl"),
   retry = 1
 )
@@ -247,6 +268,8 @@ e.g. vector of uids, names, or codes.}
 
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}
+
+\item{modify_fields}{whether or not to modify fields or use exactly what is passed in}
 
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
