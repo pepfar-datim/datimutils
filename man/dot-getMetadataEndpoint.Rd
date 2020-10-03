@@ -26,54 +26,55 @@
 \alias{getDimensions}
 \title{getMetadataEndpoint}
 \usage{
-.getMetadataEndpoint(end_point, values, by, fields, d2_session, retry)
+.getMetadataEndpoint(end_point, values, by, fields, modify_fields, d2_session, retry)
 
-getCategories(values, by, fields, d2_session, retry)
+getCategories(values, by, fields, modify_fields, d2_session, retry)
 
-getCatCombos(values, by, fields, d2_session, retry)
+getCatCombos(values, by, fields, modify_fields, d2_session, retry)
 
-getCatOptionCombos(values, by, fields, d2_session, retry)
+getCatOptionCombos(values, by, fields, modify_fields, d2_session, retry)
 
-getCatOptionGroupSets(values, by, fields, d2_session, retry)
+getCatOptionGroupSets(values, by, fields, modify_fields, d2_session, retry)
 
-getCatOptionGroups(values, by, fields, d2_session, retry)
+getCatOptionGroups(values, by, fields, modify_fields, d2_session, retry)
 
-getCatOptions(values, by, fields, d2_session, retry)
+getCatOptions(values, by, fields, modify_fields, d2_session, retry)
 
-getDataElementGroupSets(values, by, fields, d2_session, retry)
+getDataElementGroupSets(values, by, fields, modify_fields, d2_session, retry)
 
-getDataElementGroups(values, by, fields, d2_session, retry)
+getDataElementGroups(values, by, fields, modify_fields, d2_session, retry)
 
-getDataElements(values, by, fields, d2_session, retry)
+getDataElements(values, by, fields, modify_fields, d2_session, retry)
 
-getDataSets(values, by, fields, d2_session, retry)
+getDataSets(values, by, fields, modify_fields, d2_session, retry)
 
-getIndicatorGroupSets(values, by, fields, d2_session, retry)
+getIndicatorGroupSets(values, by, fields, modify_fields, d2_session, retry)
 
-getIndicatorGroups(values, by, fields, d2_session, retry)
+getIndicatorGroups(values, by, fields, modify_fields, d2_session, retry)
 
-getIndicators(values, by, fields, d2_session, retry)
+getIndicators(values, by, fields, modify_fields, d2_session, retry)
 
-getOptionGroupSets(values, by, fields, d2_session, retry)
+getOptionGroupSets(values, by, fields, modify_fields, d2_session, retry)
 
-getOptionGroups(values, by, fields, d2_session, retry)
+getOptionGroups(values, by, fields, modify_fields, d2_session, retry)
 
-getOptionSets(values, by, fields, d2_session, retry)
+getOptionSets(values, by, fields, modify_fields, d2_session, retry)
 
-getOptions(values, by, fields, d2_session, retry)
+getOptions(values, by, fields, modify_fields, d2_session, retry)
 
-getOrgUnitGroupSets(values, by, fields, d2_session, retry)
+getOrgUnitGroupSets(values, by, fields, modify_fields, d2_session, retry)
 
-getOrgUnitGroups(values, by, fields, d2_session, retry)
+getOrgUnitGroups(values, by, fields, modify_fields, d2_session, retry)
 
-getOrgUnits(values, by, fields, d2_session, retry)
+getOrgUnits(values, by, fields, modify_fields, d2_session, retry)
 
-getDimensions(values, by, fields, d2_session, retry)
+getDimensions(values, by, fields, modify_fields, d2_session, retry)
 
 getCategories(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -82,6 +83,7 @@ getCatCombos(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -90,6 +92,7 @@ getCatOptionCombos(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -98,6 +101,7 @@ getCatOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -106,6 +110,7 @@ getCatOptionGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -114,6 +119,7 @@ getCatOptions(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -122,6 +128,7 @@ getDataElementGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -130,6 +137,7 @@ getDataElementGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -138,6 +146,7 @@ getDataElements(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -146,6 +155,7 @@ getDataSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -154,6 +164,7 @@ getUserGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -162,6 +173,7 @@ getIndicatorGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -170,6 +182,7 @@ getIndicatorGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -178,6 +191,7 @@ getIndicators(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -186,6 +200,7 @@ getOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -194,6 +209,7 @@ getOptionGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -202,6 +218,7 @@ getOptionSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -210,6 +227,7 @@ getOptions(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -218,6 +236,7 @@ getOrgUnitGroupSets(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -226,6 +245,7 @@ getOrgUnitGroups(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -234,6 +254,7 @@ getOrgUnits(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -242,6 +263,7 @@ getDimensions(
   values,
   by = "id",
   fields = NULL,
+  modify_fields = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
@@ -256,6 +278,8 @@ e.g. vector of uids, names, or codes.}
 
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}
+
+\item{modify_fields}{whether or not to modify fields or use exactly what is passed in}
 
 \item{d2_session}{the d2Session object, default is "d2_default_session",
 it will be made upon logining in to datim with loginToDATIM}
