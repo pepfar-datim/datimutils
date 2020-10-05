@@ -489,6 +489,8 @@ data <- getOrgUnits("Afro Arab Clinic",
       data <- getOrgUnitGroups(c("Country", "Facility"), by = name, fields = "name,organisationUnits[id]",
                  base_url = "https://play.dhis2.org/2.33/")
       testthat::expect_equal(NROW(data),2)
+      testthat::expect_named(data, c("name",
+                                     "organisationUnits"))
       rm(data)
 
       data <- getCategories(
