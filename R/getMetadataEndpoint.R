@@ -109,7 +109,11 @@ duplicateResponse <- function(resp, expand, by) {
   } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
   } else if (length(see) != 0 & class(see) != "try-error") {
-    if (grepl("name", see) & !(grepl("name", gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)), "", fields)))) {
+    if (grepl("name", see) & 
+        !(grepl("name", 
+                gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)), 
+                     "", 
+                     fields)))) {
       c(by, fields, "name")
     } else {fields}
   } else {
