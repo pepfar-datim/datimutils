@@ -27,11 +27,8 @@ getPSNUs <- function(uids = NULL,
   }
 
   # only return if in fields
-  psnus <- psnus[,to_subset]
+  psnus <- psnus[,to_subset, drop=F]
 
-  if(is.atomic(psnus)){
-    return(psnus)
-  }
 
   # rename id to psnu_id and name to psnu_name
   if(rename){
@@ -116,11 +113,8 @@ getFacilities <- function(uids = NULL,
   }
 
   # only return if in fields
-  facilities <- facilities[,to_subset]
+  facilities <- facilities[,to_subset,drop=F]
 
-  if(is.atomic(facilities)){
-    return(facilities)
-  }
 
   # rename id to facility_id and name to facility_name
   if(rename){
@@ -160,11 +154,7 @@ getMilitaryOrgUnits <- function(uids = NULL,
   }
 
   # only return if in fields
-  military_units <- military_units[,to_subset]
-
-  if(is.atomic( military_units)){
-    return(military_units)
-  }
+  military_units <- military_units[,to_subset, drop=F]
 
   # rename id to militaryOrg_id and name to militaryOrg_name
   if(rename){
@@ -204,11 +194,7 @@ getCountries <- function(uids = NULL,
   }
 
   # only return if in fields
-  countries <- countries[,to_subset]
-
-  if(is.atomic( countries)){
-    return(countries)
-  }
+  countries <- countries[,to_subset, drop=F]
 
   # rename id to country_id and name to country_name
   if(rename){
