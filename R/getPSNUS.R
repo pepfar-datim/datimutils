@@ -4,54 +4,42 @@
 #' @param uids vector of which to retrieve ancestors for
 #' @param fields - the fields of information for those ancestors
 #' @param rename rename id to psnu_id and name to psnu_name
-#' @param to_list make a list for every uid provided, will drop name from the uids provided
-#' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
 #' @importFrom dplyr %>%
 #' @return nested data frame with PSNUs for provided uids
 
 getPSNUs <- function(uids = NULL,
          fields = "id",
-         rename = F, to_list = F, unnest = F, retry = 1) {
+         rename = F, retry = 1) {
 
-
-  fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]]")
+  to_subset <- fields
+  fields <- paste0(fields, collapse = ",")
+  fields <- paste0("organisationUnits[path," ,fields,"]")
 
   psnus <- getOrgUnitGroups("AVy8gJXym2D",
-                          fields = fields, modify_fields = F, retry = retry)
+                          fields = fields, retry = retry)
 
   if(!(is.null(uids))){
-    if(all(!(psnus$id %in% uids))){
-      stop("None of the uids specified are psnus")
+    psnus <- psnus[unlist(sapply(uids, grep, psnus$path, USE.NAMES = F)), ]
+    if(NROW(psnus) == 0){
+      return(NULL)
     }
-psnus <- psnus[psnus$id %in% uids,]
   }
 
+  # only return if in fields
+  psnus <- psnus[,to_subset]
 
-  # rename id to psnu_id and name to psnu_name)
-  if(rename){
-  psnus <- psnus %>% rename("psnu_id" = "id", "psnu_name" = "name" )}
-
-  #turn dataframe to list for each uid provided
-if(to_list){
-psnus <- as.list(psnus$ancestors)
-  if(rename){
-  names(psnus) <- psnus$psnu_id
-  } else{
-    names(psnus) <- psnus$id
-  }
-return(psnus)
-}
-
-
-  if(unnest){
-    psnus <- tidyr::unnest(psnus, cols = "ancestors")
+  if(is.atomic(psnus)){
     return(psnus)
   }
 
+  # rename id to psnu_id and name to psnu_name
+  if(rename){
+    name_key <- c(id = "psnu_id", name = "psnu_name")
+  names(psnus) <- name_key[names(psnus)]}
+
 
   return(psnus)
-
 }
 
 
@@ -61,50 +49,41 @@ return(psnus)
 #' @param uids vector of which to retrieve ancestors for
 #' @param fields - the fields of information for those ancestors
 #' @param rename rename id to psnu_id and name to psnu_name
-#' @param to_list make a list for every uid provided, will drop name from the uids provided
-#' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
 #' @importFrom dplyr %>%
 #' @return nested data frame with Communities for provided uids
 
 getCommunities <- function(uids = NULL,
          fields = "id",
-         rename = F, to_list = F, unnest = F, retry = 1) {
+         rename = F, retry = 1) {
 
-
-  fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]]")
+  to_subset <- fields
+  fields <- paste0(fields, collapse = ",")
+  fields <- paste0("organisationUnits[path," ,fields,"]")
 
   communities <- getOrgUnitGroups("PvuaP6YALSA",
-                          fields = fields, modify_fields = F, retry = retry)
+                          fields = fields, retry = retry)
 
   if(!(is.null(uids))){
-communities <- communities[communities$id %in% uids,]
+    communities <- communities[unlist(sapply(uids, grep, communities$path, USE.NAMES = F)), ]
+    if(NROW(communities) == 0){
+      return(NULL)
+    }
   }
 
-  # rename id to psnu_id and name to psnu_name)
-  if(rename){
-  communities <- communities %>% rename("community_id" = "id", "community_name" = "name" )}
+  # only return if in fields
+  communities <- communities[,to_subset]
 
-  #turn dataframe to list for each uid provided
-if(to_list){
-communities <- as.list(communities$ancestors)
-  if(rename){
-  names(communities) <- communities$community_id
-  } else{
-    names(communities) <- communities$id
-  }
-return(communities)
-}
-
-
-  if(unnest){
-    communities <- tidyr::unnest(communities, cols = "ancestors")
+  if(is.atomic(communities)){
     return(communities)
   }
 
+  # rename id to community_id and name to community_name
+  if(rename){
+    name_key <- c(id = "community_id", name = "community_name")
+  names(communities) <- name_key[names(communities)]}
 
   return(communities)
-
 }
 
 
@@ -114,50 +93,41 @@ return(communities)
 #' @param uids vector of which to retrieve ancestors for
 #' @param fields - the fields of information for those ancestors
 #' @param rename rename id to psnu_id and name to psnu_name
-#' @param to_list make a list for every uid provided, will drop name from the uids provided
-#' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
 #' @importFrom dplyr %>%
 #' @return nested data frame with Facilities for provided uids
 
 getFacilities <- function(uids = NULL,
          fields = "id",
-         rename = F, to_list = F, unnest = F, retry = 1) {
+         rename = F, retry = 1) {
 
-
-  fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]]")
+  to_subset <- fields
+  fields <- paste0(fields, collapse = ",")
+  fields <- paste0("organisationUnits[path," ,fields,"]")
 
   facilities <- getOrgUnitGroups("POHZmzofoVx",
-                          fields = fields, modify_fields = F, retry = retry)
+                          fields = fields, retry = retry)
 
   if(!(is.null(uids))){
-facilities <- facilities[facilities$id %in% uids,]
+    facilities <- facilities[unlist(sapply(uids, grep, facilities$path, USE.NAMES = F)), ]
+    if(NROW(facilities) == 0){
+      return(NULL)
+    }
   }
 
-  # rename id to psnu_id and name to psnu_name)
-  if(rename){
-  facilities <- facilities %>% rename("facility_id" = "id", "facility_name" = "name" )}
+  # only return if in fields
+  facilities <- facilities[,to_subset]
 
-  #turn dataframe to list for each uid provided
-if(to_list){
-facilities <- as.list(facilities$ancestors)
-  if(rename){
-  names(facilities) <- facilities$psnu_id
-  } else{
-    names(facilities) <- facilities$id
-  }
-return(facilities)
-}
-
-
-  if(unnest){
-    facilities <- tidyr::unnest(facilities, cols = "ancestors")
+  if(is.atomic(facilities)){
     return(facilities)
   }
 
+  # rename id to facility_id and name to facility_name
+  if(rename){
+    name_key <- c(id = "facility_id", name = "facility_name")
+  names(facilities) <- name_key[names(facilities)]}
 
   return(facilities)
-
 }
 
 
@@ -167,50 +137,41 @@ return(facilities)
 #' @param uids vector of which to retrieve ancestors for
 #' @param fields - the fields of information for those ancestors
 #' @param rename rename id to psnu_id and name to psnu_name
-#' @param to_list make a list for every uid provided, will drop name from the uids provided
-#' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
 #' @importFrom dplyr %>%
 #' @return nested data frame with MilitaryOrgUnits for provided uids
 
 getMilitaryOrgUnits <- function(uids = NULL,
          fields = "id",
-         rename = F, to_list = F, unnest = F, retry = 1) {
+         rename = F, retry = 1) {
 
+  to_subset <- fields
+  fields <- paste0(fields, collapse = ",")
+  fields <- paste0("organisationUnits[path," ,fields,"]")
 
-  fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]]")
-
-  miltary_units <- getOrgUnitGroups("nwQbMeALRjL",
-                          fields = fields, modify_fields = F, retry = retry)
+  military_units <- getOrgUnitGroups("nwQbMeALRjL",
+                          fields = fields, retry = retry)
 
   if(!(is.null(uids))){
-miltary_units <- miltary_units[miltary_units$id %in% uids,]
+    military_units <- military_units[unlist(sapply(uids, grep, military_units$path, USE.NAMES = F)), ]
+    if(NROW(military_units) == 0){
+      return(NULL)
+    }
   }
 
-  # rename id to psnu_id and name to psnu_name)
+  # only return if in fields
+  military_units <- military_units[,to_subset]
+
+  if(is.atomic( military_units)){
+    return(military_units)
+  }
+
+  # rename id to militaryOrg_id and name to militaryOrg_name
   if(rename){
-  miltary_units <- miltary_units %>% rename("militaryOrg_id" = "id", "militaryOrg_name" = "name" )}
+    name_key <- c(id = "militaryOrg_id", name = "militaryOrg_name")
+  names(military_units) <- name_key[names(military_units)]}
 
-  #turn dataframe to list for each uid provided
-if(to_list){
-miltary_units <- as.list(miltary_units$ancestors)
-  if(rename){
-  names(miltary_units) <- miltary_units$militaryOrg_id
-  } else{
-    names(miltary_units) <- miltary_units$id
-  }
-return(miltary_units)
-}
-
-
-  if(unnest){
-    miltary_units <- tidyr::unnest(miltary_units, cols = "ancestors")
-    return(miltary_units)
-  }
-
-
-  return(miltary_units)
-
+  return(military_units)
 }
 
 
@@ -220,47 +181,39 @@ return(miltary_units)
 #' @param uids vector of which to retrieve ancestors for
 #' @param fields - the fields of information for those ancestors
 #' @param rename rename id to psnu_id and name to psnu_name
-#' @param to_list make a list for every uid provided, will drop name from the uids provided
-#' @param unnest make a long data frame for every uid provided
 #' @param retry the number of times to try the call
 #' @importFrom dplyr %>%
 #' @return nested data frame with Countries for provided uids
 
 getCountries <- function(uids = NULL,
          fields = "id",
-         rename = F, to_list = F, unnest = F, retry = 1) {
+         rename = F, retry = 1) {
 
-
-  fields <- paste0("organisationUnits[name,id,ancestors[",paste0(fields, collapse = ","),"]]")
+  to_subset <- fields
+  fields <- paste0(fields, collapse = ",")
+  fields <- paste0("organisationUnits[path," ,fields,"]")
 
   countries <- getOrgUnitGroups("cNzfcPWEGSH",
-                          fields = fields, modify_fields = F, retry = retry)
+                          fields = fields, retry = retry)
 
-  if(!(is.null(uids))){
-countries <- countries[countries$id %in% uids,]
+ if(!(is.null(uids))){
+    countries <- countries[unlist(sapply(uids, grep, countries$path, USE.NAMES = F)), ]
+    if(NROW(countries) == 0){
+      return(NULL)
+    }
   }
 
-  if(rename){
-  countries <- countries %>% rename("country_id" = "id", "country_name" = "name" )}
+  # only return if in fields
+  countries <- countries[,to_subset]
 
-  #turn dataframe to list for each uid provided
-if(to_list){
-countries <- as.list(countries$ancestors)
-  if(rename){
-  names(countries) <- countries$country_id
-  } else{
-    names(countries) <- countries$id
-  }
-return(countries)
-}
-
-
-  if(unnest){
-    countries <- tidyr::unnest(countries, cols = "ancestors")
+  if(is.atomic( countries)){
     return(countries)
   }
 
+  # rename id to country_id and name to country_name
+  if(rename){
+    name_key <- c(id = "country_id", name = "country_name")
+  names(countries) <- name_key[names(countries)]}
 
   return(countries)
-
 }
