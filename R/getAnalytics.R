@@ -12,7 +12,6 @@
 #' @param co_f filters co
 #' @param ao dimensions ao
 #' @param ao_f filters ao
-#' @param other_args functions the same as ..., but must be passed in as list
 #' @param return_names FALSE for uids, TRUE for names
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param retry retry
@@ -24,7 +23,6 @@ getAnalytics <-  function(...,
                           ou = NULL, ou_f = NULL,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
-                          other_args = NULL,
                           return_names = F,
                           base_url = getOption("baseurl"),
                           retry = 1){
@@ -38,12 +36,10 @@ getAnalytics <-  function(...,
   #process ...
   end_point <- "analytics?"
   ends <- unlist(list(...))
+  z <- names(sapply(ends,names))
+  z <- ifelse(z == ends, "", z)
+  ends <- unname(mapply(function(x,y) if(nchar(x) != 0){ paste0(x, "=", y)} else{y}, z, ends))
   ends <- paste0(ends, collapse = "&")
-
-  #process other_args
-  other_args <- unlist(other_args)
-  other_args <- unname(mapply(function(x,y) paste0(x, "=", y), names(other_args), other_args))
-  other_args <- paste0(other_args, collapse = "&")
 
   #decide return type
   return_type <- if(return_names){"NAME"} else{"UID"}
@@ -52,7 +48,7 @@ getAnalytics <-  function(...,
   path <- paste0(end_point,
                  stringr::str_c(dx,pe,ou,co,ao,
                                 dx_f,pe_f,ou_f,co_f,ao_f,
-                                ends, other_args,
+                                ends,
                                 paste0("outputIdScheme=",
                                        return_type),
                                 sep = "&"))

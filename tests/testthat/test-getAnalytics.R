@@ -89,7 +89,7 @@ rm(data)
                      dx = c("BfMAe6Itzgt.REPORTING_RATE","QX4ZTUbOt3a.REPORTING_RATE","eZDhcZi6FLP.REPORTING_RATE"),
                      ou = c("USER_ORGUNIT","USER_ORGUNIT_CHILDREN"),
                      pe_f = c("LAST_52_WEEKS","LAST_12_MONTHS"),
-                     other_args = list(displayProperty="NAME",user="xE7jOejl9FI"),
+                     displayProperty="NAME",user="xE7jOejl9FI",
                      base_url = "https://play.dhis2.org/2.33.5/")
 
 testthat::expect_s3_class(data, "data.frame")

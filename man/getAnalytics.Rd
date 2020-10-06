@@ -16,7 +16,6 @@ getAnalytics(
   co_f = NULL,
   ao = NULL,
   ao_f = NULL,
-  other_args = NULL,
   return_names = F,
   base_url = getOption("baseurl"),
   retry = 1
@@ -44,8 +43,6 @@ getAnalytics(
 \item{ao}{dimensions ao}
 
 \item{ao_f}{filters ao}
-
-\item{other_args}{functions the same as ..., but must be passed in as list}
 
 \item{return_names}{FALSE for uids, TRUE for names}
 

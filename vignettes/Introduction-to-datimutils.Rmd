@@ -200,10 +200,10 @@ ou = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
 head(data)
 
 #Get Infrastructure: Public facilities 2014 and 2013
-#this call uses a filter ou argument, which are prefixed by f
+#this call uses a filter ou argument, which are followed by _f
 data <- getAnalytics("displayProperty=NAME",
 dx = c("v27b2y9kKh7","vEBapQFZ1AA","DwEVHQvMnDZ"), pe = c("THIS_YEAR"),
-f_ou = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
+ou_f = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
 
 head(data)
 ```
