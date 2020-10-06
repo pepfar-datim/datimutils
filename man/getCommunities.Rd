@@ -4,14 +4,7 @@
 \alias{getCommunities}
 \title{getCommunities}
 \usage{
-getCommunities(
-  uids = NULL,
-  fields = "id",
-  rename = F,
-  to_list = F,
-  unnest = F,
-  retry = 1
-)
+getCommunities(uids = NULL, fields = "id", rename = F, retry = 1)
 }
 \arguments{
 \item{uids}{vector of which to retrieve ancestors for}
@@ -19,10 +12,6 @@ getCommunities(
 \item{fields}{- the fields of information for those ancestors}
 
 \item{rename}{rename id to psnu_id and name to psnu_name}
-
-\item{to_list}{make a list for every uid provided, will drop name from the uids provided}
-
-\item{unnest}{make a long data frame for every uid provided}
 
 \item{retry}{the number of times to try the call}
 }
