@@ -1,7 +1,11 @@
 #' @export
 #' @title getAnalytics
 #' @description calls the analytics endpoint
-#' @param ... any options here to tag on the end of the url
+#' @param ... any options here to tag on the end of the url to support all DHIS2 query parameters.
+#' may be specified as one or more strings (e.g. "startDate=2018-01-01&endDate=2018-06-01" or
+#' "startDate=2018-01-01", "endDate=2018-06-01") or as named variables, vectors, or lists [e.g.
+#' startDate = "2018-01-01", endDate = "2018-06-01" or c(startDate = "2018-01-01", endDate = "2018-06-01") or
+#' list(startDate = "2018-01-01", endDate = "2018-06-01")]
 #' @param dx dimensions dx
 #' @param dx_f filters dx
 #' @param pe dimensions pe
