@@ -77,7 +77,15 @@ api_get <- function(path, base_url = getOption("baseurl"),
   while (i <= retry & (response_code < 400 | response_code >= 500)) {
     resp <- httr::GET(url, httr::timeout(timeout))
     response_code <- httr::status_code(resp)
+    Sys.sleep(i-1)
     i <- i + 1
+    if(response_code == 200 && 
+       resp$url == url &&
+       httr::http_type(resp) == "application/json")
+    {
+      break
+    }
+    
   }
 
   # unknown error catching which returns message and response code
