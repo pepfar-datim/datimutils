@@ -1,205 +1,123 @@
-#' @export
-#' @title getPSNUs
-#' @description wrapper to getOrgUnitGroups that retrieves PSNUs
+#' @title .getOrgUnitsByOrgUnitGroup
+#' @description wrapper to getOrgUnitGroups that retrieves org unit groups
+#' @param org_unit_group orgunitgroup to use
 #' @param uids vector of which to retrieve ancestors for
 #' @param fields - the fields of information for those ancestors
 #' @param rename rename id to psnu_id and name to psnu_name
 #' @param retry the number of times to try the call
 #' @importFrom dplyr %>%
-#' @return nested data frame with PSNUs for provided uids
+#' @return nested data frame with org unit group for provided uids
 
-getPSNUs <- function(uids = NULL,
+.getOrgUnitsByOrgUnitGroup <- function(
+  org_unit_group,
+  uids = NULL,
          fields = "id",
          rename = F, retry = 1) {
+
+  if(org_unit_group == "AVy8gJXym2D"){
+   name_key <- c(id = "psnu_id", name = "psnu_name", path = "path")
+    column_name <- "psnus"
+  } else if(org_unit_group == "PvuaP6YALSA"){
+   name_key <- c(id = "community_id", name = "community_name", path = "path")
+    column_name <- "communities"
+  } else if(org_unit_group == "POHZmzofoVx"){
+   name_key <- c(id = "facility_id", name = "facility_name", path = "path")
+    column_name <- "facilities"
+  } else if(org_unit_group == "nwQbMeALRjL"){
+   name_key <- c(id = "military_id", name = "military_name", path = "path")
+    column_name <- "militaries"
+  } else if(org_unit_group == "cNzfcPWEGSH"){
+   name_key <- c(id = "country_id", name = "country_name", path = "path")
+    column_name <- "countries"
+  }
 
   to_subset <- fields
   fields <- paste0(fields, collapse = ",")
   fields <- paste0("organisationUnits[path," ,fields,"]")
 
-  psnus <- getOrgUnitGroups("AVy8gJXym2D",
+  oug_list <- getOrgUnitGroups(org_unit_group,
                           fields = fields, retry = retry)
 
-  if(!(is.null(uids))){
-    psnus <- psnus[unlist(sapply(uids, grep, psnus$path, USE.NAMES = F)), ]
-    if(NROW(psnus) == 0){
-      return(NULL)
-    }
+  oug_df<- purrr::map(uids, ~dplyr::filter(oug_list,
+                               stringr::str_detect(path, .x)) %>%
+                                 dplyr::select(to_subset))
+
+  if(rename){
+  oug_df <- lapply(oug_df, function(x) {names(x) <- name_key[names(x)]; return(x)})
   }
 
-  # only return if in fields
-  psnus <- psnus[,to_subset, drop=F]
+  oug_df <- oug_df %>% dplyr::tibble()
 
+  names(oug_df) <- column_name
 
-  # rename id to psnu_id and name to psnu_name
-  if(rename){
-    name_key <- c(id = "psnu_id", name = "psnu_name")
-  names(psnus) <- name_key[names(psnus)]}
-
-
-  return(psnus)
+  return(oug_df)
 }
 
+#' @export
+#' @rdname dot-getOrgUnitsByOrgUnitGroup
+getPSNUs <- function(uids = NULL,
+         fields = "id",
+         rename = F, retry = 1) {
+
+  .getOrgUnitsByOrgUnitGroup(
+  "AVy8gJXym2D",
+  uids = uids,
+         fields = fields,
+         rename = rename, retry = retry)
+}
 
 #' @export
-#' @title getCommunities
-#' @description wrapper to getOrgUnitGroups that retrieves PSNUs
-#' @param uids vector of which to retrieve ancestors for
-#' @param fields - the fields of information for those ancestors
-#' @param rename rename id to psnu_id and name to psnu_name
-#' @param retry the number of times to try the call
-#' @importFrom dplyr %>%
-#' @return nested data frame with Communities for provided uids
+#' @rdname dot-getOrgUnitsByOrgUnitGroup
 
 getCommunities <- function(uids = NULL,
          fields = "id",
          rename = F, retry = 1) {
 
-  to_subset <- fields
-  fields <- paste0(fields, collapse = ",")
-  fields <- paste0("organisationUnits[path," ,fields,"]")
-
-  communities <- getOrgUnitGroups("PvuaP6YALSA",
-                          fields = fields, retry = retry)
-
-  if(!(is.null(uids))){
-    communities <- communities[unlist(sapply(uids, grep, communities$path, USE.NAMES = F)), ]
-    if(NROW(communities) == 0){
-      return(NULL)
-    }
-  }
-
-  # only return if in fields
-  communities <- communities[,to_subset]
-
-  if(is.atomic(communities)){
-    return(communities)
-  }
-
-  # rename id to community_id and name to community_name
-  if(rename){
-    name_key <- c(id = "community_id", name = "community_name")
-  names(communities) <- name_key[names(communities)]}
-
-  return(communities)
+   .getOrgUnitsByOrgUnitGroup(
+  "PvuaP6YALSA",
+  uids = uids,
+         fields = fields,
+         rename = rename, retry = retry)
 }
 
-
 #' @export
-#' @title getFacilities
-#' @description wrapper to getOrgUnitGroups that retrieves PSNUs
-#' @param uids vector of which to retrieve ancestors for
-#' @param fields - the fields of information for those ancestors
-#' @param rename rename id to psnu_id and name to psnu_name
-#' @param retry the number of times to try the call
-#' @importFrom dplyr %>%
-#' @return nested data frame with Facilities for provided uids
+#' @rdname dot-getOrgUnitsByOrgUnitGroup
 
 getFacilities <- function(uids = NULL,
          fields = "id",
          rename = F, retry = 1) {
 
-  to_subset <- fields
-  fields <- paste0(fields, collapse = ",")
-  fields <- paste0("organisationUnits[path," ,fields,"]")
-
-  facilities <- getOrgUnitGroups("POHZmzofoVx",
-                          fields = fields, retry = retry)
-
-  if(!(is.null(uids))){
-    facilities <- facilities[unlist(sapply(uids, grep, facilities$path, USE.NAMES = F)), ]
-    if(NROW(facilities) == 0){
-      return(NULL)
-    }
-  }
-
-  # only return if in fields
-  facilities <- facilities[,to_subset,drop=F]
-
-
-  # rename id to facility_id and name to facility_name
-  if(rename){
-    name_key <- c(id = "facility_id", name = "facility_name")
-  names(facilities) <- name_key[names(facilities)]}
-
-  return(facilities)
+   .getOrgUnitsByOrgUnitGroup(
+  "POHZmzofoVx",
+    uids = uids,
+         fields = fields,
+         rename = rename, retry = retry)
 }
 
-
 #' @export
-#' @title getMilitaryOrgUnits
-#' @description wrapper to getOrgUnitGroups that retrieves PSNUs
-#' @param uids vector of which to retrieve ancestors for
-#' @param fields - the fields of information for those ancestors
-#' @param rename rename id to psnu_id and name to psnu_name
-#' @param retry the number of times to try the call
-#' @importFrom dplyr %>%
-#' @return nested data frame with MilitaryOrgUnits for provided uids
+#' @rdname dot-getOrgUnitsByOrgUnitGroup
 
 getMilitaryOrgUnits <- function(uids = NULL,
          fields = "id",
          rename = F, retry = 1) {
 
-  to_subset <- fields
-  fields <- paste0(fields, collapse = ",")
-  fields <- paste0("organisationUnits[path," ,fields,"]")
-
-  military_units <- getOrgUnitGroups("nwQbMeALRjL",
-                          fields = fields, retry = retry)
-
-  if(!(is.null(uids))){
-    military_units <- military_units[unlist(sapply(uids, grep, military_units$path, USE.NAMES = F)), ]
-    if(NROW(military_units) == 0){
-      return(NULL)
-    }
-  }
-
-  # only return if in fields
-  military_units <- military_units[,to_subset, drop=F]
-
-  # rename id to militaryOrg_id and name to militaryOrg_name
-  if(rename){
-    name_key <- c(id = "militaryOrg_id", name = "militaryOrg_name")
-  names(military_units) <- name_key[names(military_units)]}
-
-  return(military_units)
+   .getOrgUnitsByOrgUnitGroup(
+  "nwQbMeALRjL",
+    uids = uids,
+         fields = fields,
+         rename = rename, retry = retry)
 }
 
-
 #' @export
-#' @title getCountries
-#' @description wrapper to getOrgUnitGroups that retrieves PSNUs
-#' @param uids vector of which to retrieve ancestors for
-#' @param fields - the fields of information for those ancestors
-#' @param rename rename id to psnu_id and name to psnu_name
-#' @param retry the number of times to try the call
-#' @importFrom dplyr %>%
-#' @return nested data frame with Countries for provided uids
+#' @rdname dot-getOrgUnitsByOrgUnitGroup
 
 getCountries <- function(uids = NULL,
          fields = "id",
          rename = F, retry = 1) {
 
-  to_subset <- fields
-  fields <- paste0(fields, collapse = ",")
-  fields <- paste0("organisationUnits[path," ,fields,"]")
-
-  countries <- getOrgUnitGroups("cNzfcPWEGSH",
-                          fields = fields, retry = retry)
-
- if(!(is.null(uids))){
-    countries <- countries[unlist(sapply(uids, grep, countries$path, USE.NAMES = F)), ]
-    if(NROW(countries) == 0){
-      return(NULL)
-    }
-  }
-
-  # only return if in fields
-  countries <- countries[,to_subset, drop=F]
-
-  # rename id to country_id and name to country_name
-  if(rename){
-    name_key <- c(id = "country_id", name = "country_name")
-  names(countries) <- name_key[names(countries)]}
-
-  return(countries)
+   .getOrgUnitsByOrgUnitGroup(
+     "cNzfcPWEGSH",
+      uids = uids,
+         fields = fields,
+         rename = rename, retry = retry)
 }
