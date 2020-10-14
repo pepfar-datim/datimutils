@@ -11,6 +11,8 @@ Authors@R:
         role = c("aut")),
     person("Sam", "Garman", email = "sgarman@baosystems.com",
         role = c("aut"))
+    person("Maxwell", "Chandler", email = "mchandler@baosystems.com",
+        role = c("aut"))
   )
 Description: General utilities for interacting with the DATIM api from R.
 URL: https://github.com/pepfar-datim/datimutils
