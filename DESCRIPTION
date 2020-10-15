@@ -10,7 +10,7 @@ Authors@R:
     person("Jason", "Pickering", email = "jason.p.pickering@gmail.com",
         role = c("aut")),
     person("Sam", "Garman", email = "sgarman@baosystems.com",
-        role = c("aut"))
+        role = c("aut")),
     person("Maxwell", "Chandler", email = "mchandler@baosystems.com",
         role = c("aut"))
   )
