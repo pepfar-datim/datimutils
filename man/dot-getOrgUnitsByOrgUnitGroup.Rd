@@ -13,19 +13,44 @@
   org_unit_group,
   uids = NULL,
   fields = "id",
-  rename = F,
+  rename = NULL,
   retry = 1
 )
 
-getPSNUs(uids = NULL, fields = "id", rename = F, retry = 1)
+getPSNUs(
+  uids = NULL,
+  fields = "id",
+  rename = c(id = "psnu_id", name = "psnu_name", path = "path"),
+  retry = 1
+)
 
-getCommunities(uids = NULL, fields = "id", rename = F, retry = 1)
+getCommunities(
+  uids = NULL,
+  fields = "id",
+  rename = c(id = "community_id", name = "community_name", path = "path"),
+  retry = 1
+)
 
-getFacilities(uids = NULL, fields = "id", rename = F, retry = 1)
+getFacilities(
+  uids = NULL,
+  fields = "id",
+  rename = c(id = "facility_id", name = "facility_name", path = "path"),
+  retry = 1
+)
 
-getMilitaryOrgUnits(uids = NULL, fields = "id", rename = F, retry = 1)
+getMilitaryOrgUnits(
+  uids = NULL,
+  fields = "id",
+  rename = c(id = "military_id", name = "military_name", path = "path"),
+  retry = 1
+)
 
-getCountries(uids = NULL, fields = "id", rename = F, retry = 1)
+getCountries(
+  uids = NULL,
+  fields = "id",
+  rename = c(id = "country_id", name = "country_name", path = "path"),
+  retry = 1
+)
 }
 \arguments{
 \item{org_unit_group}{orgunitgroup to use}
@@ -34,7 +59,7 @@ getCountries(uids = NULL, fields = "id", rename = F, retry = 1)
 
 \item{fields}{- the fields of information for those ancestors}
 
-\item{rename}{rename id to psnu_id and name to psnu_name}
+\item{rename}{c(current_name1 = "rename1", current_name2 = "rename2")}
 
 \item{retry}{the number of times to try the call}
 }
