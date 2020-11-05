@@ -27,7 +27,6 @@ Imports:
     httr (>= 1.4.0),
     keyring,
     rlang,
-    sodium,
     digest
 Suggests:
     devtools (>= 2.0.1),
