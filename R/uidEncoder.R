@@ -78,7 +78,6 @@ anonymize <- function(x, salt_front, salt_back, algo="sha512"){
 #'
 anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
   if(first_time){
-    library(httptest)
     httptest::start_capturing(simplify = FALSE)
     httr::content(httr::GET(url))
     httptest::stop_capturing()
@@ -87,9 +86,9 @@ anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
   x <- rawToChar(response$content)
   extracts <- stringr::str_extract_all(x, '(id.{2})("[a-zA-Z0-9]{11}\\")')[[1]]
   extracts <- gsub('id.{3}', "", extracts)
+  extracts <- gsub("[^[:alnum:] ]", "", extracts)
   replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
   put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
   response$content <- substitute(charToRaw(put_in))
   dput(response, paste0(httptest::build_mock_url(url), ".R"))
 }
-
