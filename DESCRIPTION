@@ -35,7 +35,6 @@ Imports:
     data.table,
     getPass,
     rlang,
-    sodium,
     digest
 Suggests: 
     devtools (>= 2.0.1),
