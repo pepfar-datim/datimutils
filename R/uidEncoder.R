@@ -78,6 +78,7 @@ anonymize <- function(x, salt_front, salt_back, algo="sha512"){
 #'
 anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
   if(first_time){
+    library(httptest)
     httptest::start_capturing(simplify = FALSE)
     httr::content(httr::GET(url))
     httptest::stop_capturing()
