@@ -76,7 +76,7 @@ anonymize <- function(x, salt_front, salt_back, algo="sha512"){
 #' @param salt_front the salt to add on front
 #' @param first_time if first time is true mock will be created
 #'
-anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
+anonimizeUIDS <- function(url, salt_front, salt_back, exception, first_time = F){
   if(first_time){
     httptest::start_capturing(simplify = FALSE)
     httr::content(httr::GET(url))
@@ -87,8 +87,10 @@ anonimizeUIDS <- function(url, salt_front, salt_back, first_time = F){
   extracts <- stringr::str_extract_all(x, '(id.{2})("[a-zA-Z0-9]{11}\\")')[[1]]
   extracts <- gsub('id.{3}', "", extracts)
   extracts <- gsub("[^[:alnum:] ]", "", extracts)
+  exception_pos <- which(extracts %in% exception)
   replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
+  replacements[exception_pos] <- exception
   put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
   response$content <- substitute(charToRaw(put_in))
-  dput(response, paste0(httptest::build_mock_url(url), ".R"))
+  dput(response, paste0(httptest::build_mock_url(url)))
 }
