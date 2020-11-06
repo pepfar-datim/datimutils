@@ -62,18 +62,20 @@
 #' @param salt_front the salt to add on front
 #' @param algo the algorithm to use to anonimize
 #' @return anonimized vector
-anonymize <- function(x, salt_front, salt_back, algo="sha512"){
+.anonymize <- function(x, salt_front, salt_back, algo="sha512"){
   hashes <- vapply(paste0(salt_front,x,salt_back), function(object) digest::digest(object, algo=algo), FUN.VALUE="", USE.NAMES=TRUE)
   hashes <- substring(hashes,1,11)
   hashes <- ifelse(grepl("^[0-9]",hashes), paste0(sample(LETTERS, sum(stringr::str_count(hashes,"^[0-9]")), replace = T), substr(hashes,2,11)),  hashes)
   return(hashes)
 }
 
+#' @export
 #' @title anonimizeUIDS
 #' @description Decrypts uids in mocks.
 #' @param url the url to create the mock from or alternatively encrypt an already made one
 #' @param salt_back the salt to add on the end
 #' @param salt_front the salt to add on front
+#' @param exception a single uid to NOT anonimize
 #' @param first_time if first time is true mock will be created
 #'
 anonimizeUIDS <- function(url, salt_front, salt_back, exception = NULL, first_time = F){
@@ -89,7 +91,7 @@ anonimizeUIDS <- function(url, salt_front, salt_back, exception = NULL, first_ti
   extracts <- gsub("[^[:alnum:] ]", "", extracts)
   if(!(is.null(exception))){
   exception_pos <- which(extracts %in% exception)}
-  replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
+  replacements <- .anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
   if(!(is.null(exception))){
   replacements[exception_pos] <- exception}
   put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)

@@ -4,7 +4,7 @@
 \alias{anonimizeUIDS}
 \title{anonimizeUIDS}
 \usage{
-anonimizeUIDS(url, salt_front, salt_back, first_time = F)
+anonimizeUIDS(url, salt_front, salt_back, exception = NULL, first_time = F)
 }
 \arguments{
 \item{url}{the url to create the mock from or alternatively encrypt an already made one}
@@ -12,6 +12,8 @@ anonimizeUIDS(url, salt_front, salt_back, first_time = F)
 \item{salt_front}{the salt to add on front}
 
 \item{salt_back}{the salt to add on the end}
+
+\item{exception}{a single uid to NOT anonimize}
 
 \item{first_time}{if first time is true mock will be created}
 }
