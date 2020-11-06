@@ -73,8 +73,16 @@ getCredentialsFromKeyring <- function(ring) {
 #' file, it will default to dhis
 #'
 loginToDATIM <- function(config_path = NULL,
-                         config_path_level = "dhis") {
+                         config_path_level = "dhis",
+                         username = NULL,
+                         password = NULL) {
 
+  ## TODO error if config path and username and/or password are provided
+  ## error if username provided but no password and if password provided with no user
+  ## TODO modify to use username and password instead of config file if username and password are provided
+  
+  
+  
   # loads credentials from secret file
   credentials <- loadConfigFile(config_path = config_path)
   credentials <- credentials[[config_path_level]]
