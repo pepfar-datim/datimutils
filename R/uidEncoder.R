@@ -92,5 +92,5 @@ anonimizeUIDS <- function(url, salt_front, salt_back, exception, first_time = F)
   replacements[exception_pos] <- exception
   put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
   response$content <- substitute(charToRaw(put_in))
-  dput(response, paste0(httptest::build_mock_url(url)))
+  dput(response, paste0(httptest::build_mock_url(url), ".R"))
 }
