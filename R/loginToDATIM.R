@@ -10,10 +10,7 @@ loadConfigFile <- function(config_path = NA) {
     if (file.access(config_path, mode = 4) == -1) {
       stop(paste("Cannot read configuration located at", config_path))
     }
-
     dhis_config <- jsonlite::fromJSON(config_path)
-    options("baseurl" = dhis_config$dhis$baseurl)
-    options("config" = config_path)
     return(dhis_config)
   } else {
     stop("You must specify a credentials file!")
