@@ -17,7 +17,7 @@ getAnalytics(
   ao = NULL,
   ao_f = NULL,
   return_names = F,
-  base_url = getOption("baseurl"),
+  d2_session = d2_default_session,
   retry = 1
 )
 }
@@ -50,9 +50,9 @@ list(startDate = "2018-01-01", endDate = "2018-06-01")]}
 
 \item{return_names}{FALSE for uids, TRUE for names}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
-
 \item{retry}{retry}
+
+\item{base_url}{string - base address of instance (text before api/ in URL)}
 }
 \value{
 data frame with the rows of the response
