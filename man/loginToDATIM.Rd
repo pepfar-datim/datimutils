@@ -5,7 +5,14 @@
 \title{loginToDATIMfunction(config_path=NULL,
 config_path_level = "dhis" )}
 \usage{
-loginToDATIM(config_path = NULL, config_path_level = "dhis")
+loginToDATIM(
+  config_path = NULL,
+  config_path_level = "dhis",
+  username = NULL,
+  password = NULL,
+  d2_session_name = "d2_default_session",
+  max_cache_age = "7 days"
+)
 }
 \arguments{
 \item{config_path}{path to a dhis config file}
