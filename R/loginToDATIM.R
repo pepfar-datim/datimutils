@@ -2,7 +2,7 @@ d2Session <- R6::R6Class("d2Session",
                          public=list(
                            #' @field  config_path Path to a JSON configuration file. 
                            config_path = NULL,
-                           #' @field  baseurl The URL of the server, e.g. https://www.datim.org/. 
+                           #' @field  base_url The URL of the server, e.g. https://www.datim.org/. 
                            base_url = NULL,
                            #' @field  username Your user name. 
                            username = NULL,

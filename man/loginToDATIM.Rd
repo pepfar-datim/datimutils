@@ -15,12 +15,30 @@ loginToDATIM(
 )
 }
 \arguments{
-\item{config_path}{path to a dhis config file}
+\item{config_path}{path to a dhis config file. If provided, username and password should not be provided.}
 
 \item{config_path_level}{if there a multiple json entries in the config
 file, it will default to dhis}
+
+\item{username}{DHIS 2 username. If provided must provide password and config_path must be NULL}
+
+\item{password}{DHIS 2 password for the username. If provided must provide password and config_path must be NULL}
+
+\item{d2_session_name}{the variable name for the d2Session object. The default
+name is d2_default_session and will be used by other datimutils functions by default when 
+connecting to datim. Generally a custom name should only be needed if you need to log into
+two seperate DHIS2 instances at the same time. If you create a d2Session object with a
+custom name then this object must be passed to other datimutils functions explicitly}
+
+\item{max_cache_age}{for compatibility with datimvalidation. Some 
+datimvalidation functions allow for the use of cached metadata to work 
+faster and offline. This o}
 }
 \description{
-logins into a datim or dhis2 api using either default keyring and a
-config file
+logins into a datim or dhis2 api using either default keyring and 
+a config file. This function creates a d2Session login object in the 
+environment calling the login function.
+E.g. global environment or R-shiny session. Thus you do not need to assign
+the output of this function to a variable as it creates the variable/object
+as a side effect.
 }
