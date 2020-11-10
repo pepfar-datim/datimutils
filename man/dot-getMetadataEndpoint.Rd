@@ -25,56 +25,57 @@
 \alias{getDimensions}
 \title{getMetadataEndpoint}
 \usage{
-.getMetadataEndpoint(end_point, values, by, fields, base_url, retry)
+.getMetadataEndpoint(end_point, values, by, fields, base_url, retry, verbose)
 
-getCategories(values, by, fields, base_url, retry)
+getCategories(values, by, fields, base_url, retry, verbose)
 
-getCatCombos(values, by, fields, base_url, retry)
+getCatCombos(values, by, fields, base_url, retry, verbose)
 
-getCatOptionCombos(values, by, fields, base_url, retry)
+getCatOptionCombos(values, by, fields, base_url, retry, verbose)
 
-getCatOptionGroupSets(values, by, fields, base_url, retry)
+getCatOptionGroupSets(values, by, fields, base_url, retry, verbose)
 
-getCatOptionGroups(values, by, fields, base_url, retry)
+getCatOptionGroups(values, by, fields, base_url, retry, verbose)
 
-getCatOptions(values, by, fields, base_url, retry)
+getCatOptions(values, by, fields, base_url, retry, verbose)
 
-getDataElementGroupSets(values, by, fields, base_url, retry)
+getDataElementGroupSets(values, by, fields, base_url, retry, verbose)
 
-getDataElementGroups(values, by, fields, base_url, retry)
+getDataElementGroups(values, by, fields, base_url, retry, verbose)
 
-getDataElements(values, by, fields, base_url, retry)
+getDataElements(values, by, fields, base_url, retry, verbose)
 
-getDataSets(values, by, fields, base_url, retry)
+getDataSets(values, by, fields, base_url, retry, verbose)
 
-getIndicatorGroupSets(values, by, fields, base_url, retry)
+getIndicatorGroupSets(values, by, fields, base_url, retry, verbose)
 
-getIndicatorGroups(values, by, fields, base_url, retry)
+getIndicatorGroups(values, by, fields, base_url, retry, verbose)
 
-getIndicators(values, by, fields, base_url, retry)
+getIndicators(values, by, fields, base_url, retry, verbose)
 
-getOptionGroupSets(values, by, fields, base_url, retry)
+getOptionGroupSets(values, by, fields, base_url, retry, verbose)
 
-getOptionGroups(values, by, fields, base_url, retry)
+getOptionGroups(values, by, fields, base_url, retry, verbose)
 
-getOptionSets(values, by, fields, base_url, retry)
+getOptionSets(values, by, fields, base_url, retry, verbose)
 
-getOptions(values, by, fields, base_url, retry)
+getOptions(values, by, fields, base_url, retry, verbose)
 
-getOrgUnitGroupSets(values, by, fields, base_url, retry)
+getOrgUnitGroupSets(values, by, fields, base_url, retry, verbose)
 
-getOrgUnitGroups(values, by, fields, base_url, retry)
+getOrgUnitGroups(values, by, fields, base_url, retry, verbose)
 
-getOrgUnits(values, by, fields, base_url, retry)
+getOrgUnits(values, by, fields, base_url, retry, verbose)
 
-getDimensions(values, by, fields, base_url, retry)
+getDimensions(values, by, fields, base_url, retry, verbose)
 
 getCategories(
   values,
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getCatCombos(
@@ -82,7 +83,8 @@ getCatCombos(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getCatOptionCombos(
@@ -90,7 +92,8 @@ getCatOptionCombos(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getCatOptionGroupSets(
@@ -98,7 +101,8 @@ getCatOptionGroupSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getCatOptionGroups(
@@ -106,7 +110,8 @@ getCatOptionGroups(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getCatOptions(
@@ -114,7 +119,8 @@ getCatOptions(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getDataElementGroupSets(
@@ -122,7 +128,8 @@ getDataElementGroupSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getDataElementGroups(
@@ -130,7 +137,8 @@ getDataElementGroups(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getDataElements(
@@ -138,7 +146,8 @@ getDataElements(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getDataSets(
@@ -146,7 +155,8 @@ getDataSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getIndicatorGroupSets(
@@ -154,7 +164,8 @@ getIndicatorGroupSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getIndicatorGroups(
@@ -162,7 +173,8 @@ getIndicatorGroups(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getIndicators(
@@ -170,7 +182,8 @@ getIndicators(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOptionGroupSets(
@@ -178,7 +191,8 @@ getOptionGroupSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOptionGroups(
@@ -186,7 +200,8 @@ getOptionGroups(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOptionSets(
@@ -194,7 +209,8 @@ getOptionSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOptions(
@@ -202,7 +218,8 @@ getOptions(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOrgUnitGroupSets(
@@ -210,7 +227,8 @@ getOrgUnitGroupSets(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOrgUnitGroups(
@@ -218,7 +236,8 @@ getOrgUnitGroups(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getOrgUnits(
@@ -226,7 +245,8 @@ getOrgUnits(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 
 getDimensions(
@@ -234,7 +254,8 @@ getDimensions(
   by = "id",
   fields = NULL,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 }
 \arguments{
@@ -251,6 +272,8 @@ components are present}
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{retry}{the number of times to try the call}
+
+\item{verbose}{return raw content with data}
 }
 \value{
 the metadata response in json format and flattened

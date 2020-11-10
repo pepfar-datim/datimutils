@@ -11,7 +11,8 @@ getMetadata(
   as_vector = T,
   base_url = getOption("baseurl"),
   retry = 1,
-  timeout = 180
+  timeout = 180,
+  verbose = F
 )
 }
 \arguments{
@@ -47,6 +48,8 @@ is requested and returned. Defaults to TRUE.}
 \item{retry}{number of times to retry}
 
 \item{timeout}{integer - seconds to wait for a response, default = 180}
+
+\item{verbose}{return raw content with data}
 }
 \value{
 the metadata response in json format and flattened

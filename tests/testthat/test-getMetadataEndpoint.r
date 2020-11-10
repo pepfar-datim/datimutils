@@ -47,8 +47,13 @@ httptest::with_mock_api({
       data <- getOrgUnitGroups(
         "CXw2yu5fodb",
         base_url = "https://play.dhis2.org/2.33/")
+      data2  <- getOrgUnitGroups(
+        "CXw2yu5fodb",
+        base_url = "https://play.dhis2.org/2.33/", verbose = T)
       testthat::expect_equal(data, "CHC")
+      testthat::expect_equal(data2$data, "CHC")
       rm(data)
+    rm(data2)
       })
 
 
@@ -65,8 +70,12 @@ httptest::with_mock_api({
       data <- getOrgUnitGroups(
         "CHC", by = "name",
         base_url = "https://play.dhis2.org/2.33/")
+    data2 <- getOrgUnitGroups(
+        "CHC", by = "name",
+        base_url = "https://play.dhis2.org/2.33/", verbose = T)
 
       testthat::expect_equal(data, "CXw2yu5fodb")
+      testthat::expect_equal(data2$data, "CXw2yu5fodb")
       rm(data)
     }
   )
@@ -102,10 +111,16 @@ httptest::with_mock_api({
                "CHC", by = code,
                base_url = "https://play.dhis2.org/2.33/"
              )
+            data2 <- getOrgUnitGroups(
+               "CHC", by = code,
+               base_url = "https://play.dhis2.org/2.33/", verbose = T
+             )
 
              testthat::expect_equal(NROW(data), 1)
+            testthat::expect_equal(NROW(data2$data), 1)
              testthat::expect_equal(data, "CHC")
              rm(data)
+              rm(data2)
            }
   )
 
@@ -635,10 +650,15 @@ data <- getOrgUnits("Afro Arab Clinic",
     data <- getOrgUnits(c(long_list$id, 
                           long_list_ordered$id), 
                         base_url = "https://play.dhis2.org/2.33/")
+    data2 <- getOrgUnits(c(long_list$id,
+                          long_list_ordered$id),
+                        base_url = "https://play.dhis2.org/2.33/", verbose = T)
     testthat::expect_equal(length(data), 2664)
+    testthat::expect_equal(length(data2$data), 2664)
     testthat::expect_identical(data, c(long_list$name, 
                                        long_list_ordered$name))
     rm(data)
+    rm(data2)
   })
   
 #test for split url component function

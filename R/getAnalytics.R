@@ -19,6 +19,7 @@
 #' @param return_names FALSE for uids, TRUE for names
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param retry retry
+#' @param verbose return raw content with data
 #' @return data frame with the rows of the response
 
 getAnalytics <-  function(...,
@@ -29,7 +30,7 @@ getAnalytics <-  function(...,
                           ao = NULL, ao_f = NULL,
                           return_names = F,
                           base_url = getOption("baseurl"),
-                          retry = 1){
+                          retry = 1, verbose = F){
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
   pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
@@ -63,7 +64,13 @@ getAnalytics <-  function(...,
   #call api
   resp <- api_get(path = path,
                   base_url = base_url,
-                  retry = retry)
+                  retry = retry, verbose = verbose)
+
+    if(verbose)
+  {
+    meta_data <- resp$api_responses
+    resp <- resp$data
+  }
 
   if(NROW(resp$rows) == 0){
     return(NULL)
@@ -88,8 +95,9 @@ getAnalytics <-  function(...,
 
   #change data types to numeric where possible
   resp[,coercions == "NUMBER"] <- sapply(resp[,coercions == "NUMBER"], as.numeric)
-
-  return(resp)
+ if(verbose)
+  {return(list("data" = resp, "api_responses" = meta_data)) } else{
+  return(resp)}
 }
 
 

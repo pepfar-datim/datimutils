@@ -10,8 +10,10 @@ test_that("all arguments in getAnalytics function: ", {
 
 data <- getAnalytics("displayProperty=NAME", "hierarchyMeta=true", dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
                      pe = c("THIS_YEAR","LAST_YEAR"), ou = c("ImspTQPwCqd","LEVEL-4"), base_url = "https://play.dhis2.org/2.33.5/")
-
+data2 <- getAnalytics("displayProperty=NAME", "hierarchyMeta=true", dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
+                     pe = c("THIS_YEAR","LAST_YEAR"), ou = c("ImspTQPwCqd","LEVEL-4"), base_url = "https://play.dhis2.org/2.33.5/", verbose = T)
 testthat::expect_s3_class(data, "data.frame")
+  testthat::expect_type(data2, "list")
 testthat::expect_equal(NROW(data), 4394)
 testthat::expect_named(data, c("Data","Period","Organisation unit","Value"))
 rm(data) })

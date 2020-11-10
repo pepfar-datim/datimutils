@@ -78,6 +78,7 @@ simplifyStructure <- function(resp) {
 #' @param base_url string - base address of instance (text before api/ in URL)
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
+#' @param verbose return raw content with data
 #' @return the metadata response in json format and flattened
 #'
 
@@ -87,7 +88,7 @@ getMetadata <- function(end_point,
                         as_vector = T,
                         base_url = getOption("baseurl"),
                         retry = 1,
-                        timeout = 180) {
+                        timeout = 180, verbose = F) {
   if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
@@ -123,8 +124,15 @@ getMetadata <- function(end_point,
   resp <- api_get(
     path = path, base_url = base_url, retry = retry,
     timeout = timeout,
-    api_version = NULL
+    api_version = NULL,
+    verbose = verbose
   )
+
+    if(verbose)
+  {
+    meta_data <- resp$api_responses
+    resp <- resp$data
+  }
 
    # simplify data structure
   resp <- simplifyStructure(resp)
@@ -149,10 +157,12 @@ getMetadata <- function(end_point,
           fixed = TRUE
         )
     )) {
+    if(verbose){return(list("data" = resp[[1]], "api_responses" = meta_data))} else{
     return(resp[[1]])
-  }
+  }}
 
-  return(resp)
+  if(verbose){return(list("data" = resp, "api_responses" = meta_data))} else{
+  return(resp)}
 }
 
 #' @export
