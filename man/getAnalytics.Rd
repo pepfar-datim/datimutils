@@ -18,7 +18,8 @@ getAnalytics(
   ao_f = NULL,
   return_names = F,
   base_url = getOption("baseurl"),
-  retry = 1
+  retry = 1,
+  verbose = F
 )
 }
 \arguments{
@@ -53,6 +54,8 @@ list(startDate = "2018-01-01", endDate = "2018-06-01")]}
 \item{base_url}{string - base address of instance (text before api/ in URL)}
 
 \item{retry}{retry}
+
+\item{verbose}{return raw content with data}
 }
 \value{
 data frame with the rows of the response
