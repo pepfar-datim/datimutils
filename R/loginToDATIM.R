@@ -113,6 +113,7 @@ getCredentialsFromKeyring <- function(ring) {
 #' file, it will default to dhis
 #' @param username DHIS 2 username. If provided must provide password and config_path must be NULL
 #' @param password DHIS 2 password for the username. If provided must provide password and config_path must be NULL
+#' @param base_url if providing password and username directly this must be non null
 #' @param d2_session_name the variable name for the d2Session object. The default
 #' name is d2_default_session and will be used by other datimutils functions by default when 
 #' connecting to datim. Generally a custom name should only be needed if you need to log into
@@ -125,12 +126,26 @@ loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis",
                          username = NULL,
                          password = NULL,
+                         base_url = NULL,
                          d2_session_name = "d2_default_session") {
 
-  ## TODO error if config path and username and/or password are provided
-  ## error if username provided but no password and if password provided with no user
+  if((!(is.null(username)) && is.null(password)) || (is.null(username) && !(is.null(password)))){
+    stop("If directly providing function credentials you must specify both username and password")
+  }
+  if((!(is.null(config_path)) && !(is.null(password))) && !(is.null(username))){
+    stop("If using config_path then credentials can not be passed in directly")
+  }
+   if(!(is.null(password)) && !(is.null(username)) && is.null(base_url)){
+    stop("If directly passing password and username, base_url can't be null")
+  }
+
   ## TODO modify to use username and password instead of config file if username and password are provided
-  
+  if(!(is.null(username)) && !(is.null(password))){
+    password <- password
+    username <- username
+    base_url <- base_url
+  } else {
+
   # loads credentials from secret file
   credentials <- loadConfigFile(config_path = config_path)
   credentials <- credentials[[config_path_level]]
@@ -153,13 +168,17 @@ loginToDATIM <- function(config_path = NULL,
     }
   }
 
+  username <- credentials[["username"]]
+    base_url <- credentials[["baseurl"]]
+  }
+
   # form url
-  url <- utils::URLencode(URL = paste0(credentials[["baseurl"]], "api", "/me"))
-  handle <- httr::handle(credentials[["baseurl"]])
+  url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
+  handle <- httr::handle(base_url)
   # Logging in here will give us a cookie to reuse
   r <- httr::GET(
     url,
-    httr::authenticate(credentials[["username"]], 
+    httr::authenticate(username,
                        password),
     httr::timeout(60),
     handle = handle
@@ -173,7 +192,7 @@ loginToDATIM <- function(config_path = NULL,
 # create the session object in the calling environment of the login function
     assign(d2_session_name, 
            d2Session$new(config_path = config_path,
-                         base_url = credentials[["baseurl"]],
+                         base_url = base_url,
                          handle = handle,
                          me = me), 
            envir = parent.frame())

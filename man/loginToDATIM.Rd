@@ -10,6 +10,7 @@ loginToDATIM(
   config_path_level = "dhis",
   username = NULL,
   password = NULL,
+  base_url = NULL,
   d2_session_name = "d2_default_session"
 )
 }
@@ -22,6 +23,8 @@ file, it will default to dhis}
 \item{username}{DHIS 2 username. If provided must provide password and config_path must be NULL}
 
 \item{password}{DHIS 2 password for the username. If provided must provide password and config_path must be NULL}
+
+\item{base_url}{if providing password and username directly this must be non null}
 
 \item{d2_session_name}{the variable name for the d2Session object. The default
 name is d2_default_session and will be used by other datimutils functions by default when 
