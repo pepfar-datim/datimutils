@@ -9,14 +9,14 @@ api_get(path, d2_session, retry = 1, timeout = 60, api_version = NULL)
 \arguments{
 \item{path}{Should begin with api/ and contain the query}
 
+\item{d2_session}{the url on which is added the path}
+
 \item{retry}{number of times to try in case of failure,
 default will not try again}
 
 \item{timeout}{how long should a reponse be waited for}
 
 \item{api_version}{defaults to current but can pass in version number}
-
-\item{ds_session}{the url on which is added the path}
 }
 \value{
 Result of DATIM API query returned as named list.
