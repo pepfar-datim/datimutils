@@ -8,7 +8,8 @@
 #' @param api_version defaults to current but can pass in version number
 #' @return Result of DATIM API query returned as named list.
 #'
-api_get <- function(path, d2_session = d2_default_session,
+api_get <- function(path, 
+                    d2_session,
                     retry = 1, timeout = 60,
                     api_version = NULL) {
   

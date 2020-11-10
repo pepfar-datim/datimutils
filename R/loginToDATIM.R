@@ -12,9 +12,6 @@ d2Session <- R6::R6Class("d2Session",
                            handle = NULL,
                            #' @field maxCacheAge By default, set to 7 days. Used to control the valid 
                            #' age of objects which are cached locally. 
-                           #' 
-                           maxCacheAge = "7 days",
-                           #' @field me Users me object from DHIS2
                            me  = NULL,
                            #' @description 
                            #' Create a new DHISLogin object
@@ -128,8 +125,7 @@ loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis",
                          username = NULL,
                          password = NULL,
-                         d2_session_name = "d2_default_session",
-                         max_cache_age = "7 days") {
+                         d2_session_name = "d2_default_session") {
 
   ## TODO error if config path and username and/or password are provided
   ## error if username provided but no password and if password provided with no user

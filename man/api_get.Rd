@@ -6,7 +6,7 @@
 \usage{
 api_get(
   path,
-  d2_session = d2_default_session,
+  d2_session = parent.frame()$d2_default_session,
   retry = 1,
   timeout = 60,
   api_version = NULL
