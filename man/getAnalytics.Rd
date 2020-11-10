@@ -17,7 +17,7 @@ getAnalytics(
   ao = NULL,
   ao_f = NULL,
   return_names = F,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = parent.env()$d2_default_session,
   retry = 1
 )
 }

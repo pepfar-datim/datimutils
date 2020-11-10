@@ -4,13 +4,7 @@
 \alias{api_get}
 \title{Execute and return a DATIM API query.}
 \usage{
-api_get(
-  path,
-  d2_session = parent.frame()$d2_default_session,
-  retry = 1,
-  timeout = 60,
-  api_version = NULL
-)
+api_get(path, d2_session, retry = 1, timeout = 60, api_version = NULL)
 }
 \arguments{
 \item{path}{Should begin with api/ and contain the query}

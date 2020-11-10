@@ -1,7 +1,7 @@
 #' @title Execute and return a DATIM API query.
 #' @description Gets and flattens DATIM API query as dataframe.
 #' @param path Should begin with api/ and contain the query
-#' @param ds_session the url on which is added the path
+#' @param d2_session the url on which is added the path
 #' @param retry number of times to try in case of failure,
 #' default will not try again
 #' @param timeout how long should a reponse be waited for

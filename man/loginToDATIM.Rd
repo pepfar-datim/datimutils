@@ -10,8 +10,7 @@ loginToDATIM(
   config_path_level = "dhis",
   username = NULL,
   password = NULL,
-  d2_session_name = "d2_default_session",
-  max_cache_age = "7 days"
+  d2_session_name = "d2_default_session"
 )
 }
 \arguments{

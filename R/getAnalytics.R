@@ -28,7 +28,7 @@ getAnalytics <-  function(...,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
                           return_names = F,
-                          d2_session = parent.env()$d2_default_session,
+                          d2_session = parent.frame()$d2_default_session,
                           retry = 1){
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
