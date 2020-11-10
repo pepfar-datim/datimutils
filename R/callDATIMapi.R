@@ -1,17 +1,20 @@
 #' @title Execute and return a DATIM API query.
 #' @description Gets and flattens DATIM API query as dataframe.
 #' @param path Should begin with api/ and contain the query
-#' @param base_url the url on which is added the path
+#' @param d2_session the url on which is added the path
 #' @param retry number of times to try in case of failure,
 #' default will not try again
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
 #' @return Result of DATIM API query returned as named list.
 #'
-api_get <- function(path, base_url = getOption("baseurl"),
+api_get <- function(path, 
+                    d2_session,
                     retry = 1, timeout = 60,
                     api_version = NULL) {
-
+  
+  base_url <- d2_session$base_url
+  handle <- d2_session$handle
   if(is.null(base_url))
     {
     stop("You are not logged into DATIM")
@@ -76,7 +79,8 @@ api_get <- function(path, base_url = getOption("baseurl"),
   print(url)
   
   while (i <= retry & (response_code < 400 | response_code >= 500)) {
-    resp <- httr::GET(url, httr::timeout(timeout))
+    resp <- httr::GET(url, httr::timeout(timeout),
+                      handle = handle)
     response_code <- httr::status_code(resp)
     Sys.sleep(i-1)
     i <- i + 1

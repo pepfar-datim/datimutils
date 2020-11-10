@@ -28,7 +28,7 @@ getAnalytics <-  function(...,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
                           return_names = F,
-                          base_url = getOption("baseurl"),
+                          d2_session = parent.frame()$d2_default_session,
                           retry = 1){
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
@@ -62,7 +62,7 @@ getAnalytics <-  function(...,
 
   #call api
   resp <- api_get(path = path,
-                  base_url = base_url,
+                  d2_session = d2_session,
                   retry = retry)
 
   if(NROW(resp$rows) == 0){
