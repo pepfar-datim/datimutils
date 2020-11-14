@@ -46,7 +46,7 @@ httptest::with_mock_api({
 
       data <- getOrgUnitGroups(
         "CXw2yu5fodb",
-        base_url = "https://play.dhis2.org/2.33/")
+        d2_session = play233)
       testthat::expect_equal(data, "CHC")
       rm(data)
       })
@@ -64,7 +64,7 @@ httptest::with_mock_api({
 
       data <- getOrgUnitGroups(
         "CHC", by = "name",
-        base_url = "https://play.dhis2.org/2.33/")
+        d2_session = play233)
 
       testthat::expect_equal(data, "CXw2yu5fodb")
       rm(data)
@@ -82,7 +82,7 @@ httptest::with_mock_api({
 
              data <- getOrgUnitGroups(
                "CHC", by = name,
-               base_url = "https://play.dhis2.org/2.33/")
+               d2_session = play233)
 
              testthat::expect_equal(data, "CXw2yu5fodb")
              rm(data)
@@ -100,7 +100,7 @@ httptest::with_mock_api({
 
              data <- getOrgUnitGroups(
                "CHC", by = code,
-               base_url = "https://play.dhis2.org/2.33/"
+               d2_session = play233
              )
 
              testthat::expect_equal(NROW(data), 1)
@@ -121,7 +121,7 @@ httptest::with_mock_api({
              data <- getOrgUnitGroups(c("Country", "CHC"),
                                       by = code,
                                       fields = "id",
-                                      base_url = "https://play.dhis2.org/2.33/"
+                                      d2_session = play233
              )
              testthat::expect_equal(data, c("RpbiCJpIYEj",
                                             "CXw2yu5fodb"))
@@ -137,7 +137,7 @@ httptest::with_mock_api({
                c("Country", "CHC", "Country"),
                by = shortName,
                fields = "code, id, name, shortName",
-               base_url = "https://play.dhis2.org/2.33/"
+               d2_session = play233
              )
              testthat::expect_equal(NROW(data), 3)
              testthat::expect_named(data, c("code",
@@ -159,7 +159,7 @@ httptest::with_mock_api({
                c("CHC", "Country"),
                by = shortName,
                fields = "id, code",
-               base_url = "https://play.dhis2.org/2.33/"
+               d2_session = play233
              )
              testthat::expect_equal(NROW(data), 2)
              testthat::expect_named(data, c("id",
@@ -178,7 +178,7 @@ httptest::with_mock_api({
     c("CHC", "Country"),
     by = shortName,
     fields = ":all",
-    base_url = "https://play.dhis2.org/2.34/"
+    d2_session = play234
   )
 
     testthat::expect_equal(NROW(data), 2)
@@ -201,7 +201,7 @@ httptest::with_mock_api({
 
              data <- getOrgUnitGroups(
                c("w1Atoz18PCL","CXw2yu5fodb"),
-               base_url = "https://play.dhis2.org/2.33/"
+               d2_session = play233
              )
              testthat::expect_identical(data, c("District","CHC"))
              rm(data)
@@ -220,7 +220,7 @@ httptest::with_mock_api({
         c("w1Atoz18PCL","CXw2yu5fodb",
           "w1Atoz18PCL","w1Atoz18PCL",
           "CXw2yu5fodb","CXw2yu5fodb"),
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(data, c("District","CHC",
                                          "District","District",
@@ -242,21 +242,12 @@ httptest::with_mock_api({
 
       data <- getOrgUnitGroups(
         c("District","CHC"), by = name,
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(data,  c("w1Atoz18PCL","CXw2yu5fodb"))
       rm(data)
     }
   )
-
-  test_that("Uses default base_url: ", {
-    original_baseurl <- getOption("baseurl")
-    options("baseurl" = "https://play.dhis2.org/2.33/")
-    data <- getOrgUnitGroups("CXw2yu5fodb")
-    testthat::expect_equal(data, "CHC")
-    options("baseurl" = original_baseurl)
-    rm(data)
-  })
 
   test_that("Can specify non-default fields", {
 
@@ -270,7 +261,7 @@ httptest::with_mock_api({
           c("CHP", "Rural"),
           by = "name",
           fields = c("id", "code"),
-          base_url = "https://play.dhis2.org/2.33/"
+          d2_session = play233
         )
       testthat::expect_equal(NROW(data), 2)
       testthat::expect_named(data, c("id", "code"))
@@ -294,7 +285,7 @@ httptest::with_mock_api({
             "name", "id", "organisationUnits[name,id]",
             "groupSets[name,id]"
           ),
-          base_url = "https://play.dhis2.org/2.33/"
+          d2_session = play233
         )
 
       testthat::expect_s3_class(data, "data.frame")
@@ -323,12 +314,11 @@ httptest::with_mock_api({
           organisationUnits,
           name %.in% org_units,
           fields = "name,organisationUnitGroups[name]",
-          base_url =
-            "https://play.dhis2.org/2.34/")[["organisationUnitGroups"]],
+          d2_session = play234)[["organisationUnitGroups"]],
         getOrgUnits(org_units,
                     by = name,
                     fields = "organisationUnitGroups[name]",
-                    base_url = "https://play.dhis2.org/2.34/")
+                    d2_session = play234)
       )
 
 # httr::content(httr::GET(
@@ -340,12 +330,11 @@ httptest::with_mock_api({
           organisationUnits,
           name %.in% org_units,
           fields = "name,organisationUnitGroups[name,id]",
-          base_url =
-            "https://play.dhis2.org/2.34/")[["organisationUnitGroups"]],
+          d2_session = play234)[["organisationUnitGroups"]],
         getOrgUnits(org_units,
                     by = name,
                     fields = "organisationUnitGroups[name,id]",
-                    base_url = "https://play.dhis2.org/2.34/")
+                    d2_session = play234)
       )
 
 # httr::content(httr::GET(
@@ -362,11 +351,11 @@ httptest::with_mock_api({
                     name %.in% org_units,
                     fields =
                       "organisationUnitGroups[name,id],ancestors[name,id]",
-                    base_url = "https://play.dhis2.org/2.34/"),
+                    d2_session = play234),
         getOrgUnits(org_units,
                     by = name,
                     fields = "organisationUnitGroups[name,id],ancestors[name,id]",
-                    base_url = "https://play.dhis2.org/2.34/")
+                    d2_session = play234)
       )
     
 # httr::content(httr::GET(
@@ -376,7 +365,7 @@ httptest::with_mock_api({
 data <- getOrgUnits("Afro Arab Clinic",
                           by = name,
                           fields = "organisationUnitGroups[name,id]",
-                          base_url = "https://play.dhis2.org/2.34/")
+                          d2_session = play234)
       testthat::expect_s3_class(data, "data.frame")
       testthat::expect_equal(NROW(data), 2)
       testthat::expect_named(data, c("name", "id"))
@@ -406,7 +395,7 @@ data <- getOrgUnits("Afro Arab Clinic",
         getOrgUnitGroups(
           groups,
           fields = "code,name,id",
-          base_url = "https://play.dhis2.org/2.33/"
+          d2_session = play233
         )
 
       testthat::expect_equal(NROW(data), 120)
@@ -487,7 +476,7 @@ data <- getOrgUnits("Afro Arab Clinic",
       #"https://play.dhis2.org/2.33/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country,Facility]&fields=name,organisationUnits[id]")))
 
       data <- getOrgUnitGroups(c("Country", "Facility"), by = name, fields = "name,organisationUnits[id]",
-                 base_url = "https://play.dhis2.org/2.33/")
+                 d2_session = play233)
       testthat::expect_equal(NROW(data),2)
       testthat::expect_named(data, c("name",
                                      "organisationUnits"))
@@ -495,121 +484,121 @@ data <- getOrgUnits("Afro Arab Clinic",
 
       data <- getCategories(
         "KfdsGBcoiCa",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Births attended by")
       rm(data)
 
       data <- getCatCombos(
         "m2jTvAj5kkm",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Births")
       rm(data)
 
       data <- getCatOptionCombos(
         "sqGRzCziswD",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"0-11m")
       rm(data)
 
       data <- getCatOptionGroupSets(
         "C31vHZqu0qU",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Donor")
       rm(data)
 
       data <- getCatOptionGroups(
         "OK2Nr4wdfrZ",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"CDC")
       rm(data)
 
       data <- getCatOptions(
         "FbLZS3ueWbQ",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"0-11m")
       rm(data)
 
       data <- getDataElementGroupSets(
         "jp826jAJHUc",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Diagnosis")
       rm(data)
 
       data <- getDataElementGroups(
         "oDkJh5Ddh7d",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Acute Flaccid Paralysis (AFP) ")
       rm(data)
 
       data <- getDataElements(
         "FTRrcoaog83",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Accute Flaccid Paralysis (Deaths < 5 yrs)")
       rm(data)
 
       data <- getDataSets(
         "lyLU2wR22tC",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"ART monthly summary")
       rm(data)
 
       data <- getIndicatorGroupSets(
         "tOwnTs7TL3Y",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Child health")
       rm(data)
 
       data <- getIndicatorGroups(
         "oehv9EO3vP7",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"ANC")
       rm(data)
 
       data <- getIndicators(
         "ReUHfIn0pTQ",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"ANC 1-3 Dropout Rate")
       rm(data)
 
       data <- getOptionGroupSets(
         "Wonln7Yg5Am",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"test")
       rm(data)
 
       data <- getOptionGroups(
         "hTDovVfKAuN",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,NULL)
       rm(data)
 
       data <- getOptionSets(
         "VQ2lai3OfVG",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Age category")
       rm(data)
 
       data <- getOptions(
         "Y1ILwhy5VDY",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"0-14 years")
       rm(data)
 
       data <- getOrgUnitGroupSets(
         "uIuxlbV1vRT",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Area")
       rm(data)
 
       data <- getOrgUnits(
         "Rp268JB6Ne4",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Adonkia CHP")
       rm(data)
 
        data <- getDimensions(
         "yY2bQYqNt0o",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play235)
       testthat::expect_identical(data,"Project")
       rm(data)
 
@@ -618,7 +607,7 @@ data <- getOrgUnits("Afro Arab Clinic",
   test_that("check getorgunitgroups on datim api", {
     data <- getOrgUnitGroups("Country", by = name,
       fields = "organisationUnits[id,name,level,ancestors[id,name]]",
-                             base_url = "https://play.dhis2.org/2.33.5/")
+                             d2_session = play235)
   testthat::expect_equal(NROW(data), 1)
   rm(data)
  #httr::content(httr::GET(paste0(
@@ -629,12 +618,12 @@ data <- getOrgUnits("Afro Arab Clinic",
   test_that(
   paste0("Urls that are over 3000 characters"), {
     long_list <- getMetadata(organisationUnits,
-                             base_url = "https://play.dhis2.org/2.33/")
+                             d2_session = play233)
     long_list_ordered <- long_list[order(long_list$id), ]
     
     data <- getOrgUnits(c(long_list$id, 
                           long_list_ordered$id), 
-                        base_url = "https://play.dhis2.org/2.33/")
+                        d2_session = play233)
     testthat::expect_equal(length(data), 2664)
     testthat::expect_identical(data, c(long_list$name, 
                                        long_list_ordered$name))
@@ -646,7 +635,7 @@ test_that(
   paste0("splitUrlComponent splits up a large vector into smaller vectors"), {
   long_list <- getMetadata(organisationUnits,
                                          fields = "id",
-                                         base_url = "https://play.dhis2.org/2.33/"
+                                         d2_session = play233
     )
   values <- long_list
   resp <- .splitUrlComponent(long_list, 2000)

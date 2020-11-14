@@ -23,6 +23,17 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(datimutils)
+play233 <- list(base_url = "https://play.dhis2.org/2.33/",
+                handle = httr::handle("https://play.dhis2.org/2.33/"))
+play235 <- list(base_url = "https://play.dhis2.org/2.33.5/",
+                handle = httr::handle("https://play.dhis2.org/2.33.5/"))
+play234 <- list(base_url = "https://play.dhis2.org/2.34/",
+                handle = httr::handle("https://play.dhis2.org/2.34/"))
+play2335 <- list(base_url = "https://play.dhis2.org/2.33.5/",
+                handle = httr::handle("https://play.dhis2.org/2.33.5/"))
+play2341 <- list(base_url = "https://play.dhis2.org/2.34.1/",
+                handle = httr::handle("https://play.dhis2.org/2.34.1/"))
+
 ```
 Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim.
 For example here is a play server file called `play.json`
@@ -58,17 +69,17 @@ Here are calls to  dataElements and categoryOptionGroups for example:
 ```{r}
 getDataElements(
     "FTRrcoaog83",
-    base_url = "https://play.dhis2.org/2.33.5/")
+    d2_session = play2335)
 getCatOptionGroups(
     "OK2Nr4wdfrZ",
-    base_url = "https://play.dhis2.org/2.33.5/")
+    d2_session = play2335)
 ```
 
 Here is one to the Indicators endpoint:
 ```{r}
   getIndicators(
         "ReUHfIn0pTQ",
-        base_url = "https://play.dhis2.org/2.33.5/")
+        d2_session = play2335)
 ```
 
 These helpers will create repeated values and sorting based on input
@@ -84,7 +95,7 @@ These helpers will create repeated values and sorting based on input
     getOrgUnitGroups(
       groups,
       fields = "code,name,id",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
 
 # even though the actual api call only returns the 3 unique uids in a random
@@ -100,7 +111,7 @@ data <- getMetadata(
   "organisationUnitGroups.name:eq:District",
   "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
   fields = "id,name,level",
-  base_url = "https://play.dhis2.org/2.33/"
+  d2_session = play233
 )
 
 head(data)
@@ -115,7 +126,7 @@ data <- getMetadata(
   organisationUnitGroups.name %.eq% "District",
   children.id %.in% c("YuQRtpLP10I","fwH9ipvXde9"),
   fields = "id,name,level",
-  base_url = "https://play.dhis2.org/2.33/"
+  d2_session = play233
 )
 
 head(data)
@@ -127,7 +138,7 @@ Data is usually returned in its most base class:
 data <- getMetadata(
   end_point = "organisationUnitGroups",
   fields = "name",
-  base_url = "https://play.dhis2.org/2.33/"
+  d2_session = play233
 )
 print(data)
 ```
@@ -141,7 +152,7 @@ data <- getMetadata(
     "level:eq:3"
   ),
   fields = ":all",
-  base_url = "https://play.dhis2.org/2.33/"
+  d2_session = play233
 )
 str(data$translations)
 ```
@@ -151,7 +162,7 @@ There is a filter format helper for every comparison operator in Datim, here lik
 data <- getMetadata(
   end_point = "organisationUnits",
   name %.Like% "Sierra Leone",
-  base_url = "https://play.dhis2.org/2.33/"
+  d2_session = play233
 )
 ```
 
@@ -195,7 +206,7 @@ loginToDATIM(config_path = "play34.1.json")
 #this call uses only dimension arguments, dx, ou, and pe
 data <- getAnalytics("displayProperty=NAME",
 dx = c("Uvn6LCg7dVU","OdiHJayrsKo","sB79w2hiLp8"), pe = c("THIS_YEAR"),
-ou = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
+ou = c("ImspTQPwCqd"), d2_session = play2341)
 
 head(data)
 
@@ -203,7 +214,7 @@ head(data)
 #this call uses a filter ou argument, which are followed by _f
 data <- getAnalytics("displayProperty=NAME",
 dx = c("v27b2y9kKh7","vEBapQFZ1AA","DwEVHQvMnDZ"), pe = c("THIS_YEAR"),
-ou_f = c("ImspTQPwCqd"), base_url = "https://play.dhis2.org/2.34.1/")
+ou_f = c("ImspTQPwCqd"), d2_session = play2341)
 
 head(data)
 ```

@@ -50,9 +50,9 @@ list(startDate = "2018-01-01", endDate = "2018-06-01")]}
 
 \item{return_names}{FALSE for uids, TRUE for names}
 
-\item{retry}{retry}
+\item{d2_session}{the handle}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
+\item{retry}{retry}
 }
 \value{
 data frame with the rows of the response

@@ -17,7 +17,7 @@
 #' @param ao dimensions ao
 #' @param ao_f filters ao
 #' @param return_names FALSE for uids, TRUE for names
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the handle
 #' @param retry retry
 #' @return data frame with the rows of the response
 

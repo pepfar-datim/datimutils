@@ -31,10 +31,6 @@ name is d2_default_session and will be used by other datimutils functions by def
 connecting to datim. Generally a custom name should only be needed if you need to log into
 two seperate DHIS2 instances at the same time. If you create a d2Session object with a
 custom name then this object must be passed to other datimutils functions explicitly}
-
-\item{max_cache_age}{for compatibility with datimvalidation. Some 
-datimvalidation functions allow for the use of cached metadata to work 
-faster and offline. This o}
 }
 \description{
 logins into a datim or dhis2 api using either default keyring and 
