@@ -1,4 +1,5 @@
 d2Session <- R6::R6Class("d2Session",
+                         #' @title d2Session 
                          public=list(
                            #' @field  config_path Path to a JSON configuration file. 
                            config_path = NULL,
@@ -10,8 +11,7 @@ d2Session <- R6::R6Class("d2Session",
                            user_orgunit = NULL,
                            #' @field handle An httr handle used to communicate with the DHIS2 instance. 
                            handle = NULL,
-                           #' @field maxCacheAge By default, set to 7 days. Used to control the valid 
-                           #' age of objects which are cached locally. 
+                           #' @field me dhis2 api/me response 
                            me  = NULL,
                            #' @description 
                            #' Create a new DHISLogin object
