@@ -82,7 +82,8 @@ httptest::with_mock_api({
     )
     # no base_url
     testthat::expect_error(
-      api_get(path = "api/me2"))
+      api_get(path = "api/me2",
+              d2_session = NULL))
     # response status !=200
     testthat::expect_error(
       # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
@@ -95,7 +96,7 @@ httptest::with_mock_api({
       testthat::expect_error(
         # httr::GET("http://httpstat.us/504")
         api_get(path = "504",
-                d2_session = play233))
+                d2_session = list(base_url = "http://httpstat.us/")))
   })
 
   test_that(
