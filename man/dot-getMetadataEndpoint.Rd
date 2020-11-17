@@ -248,7 +248,8 @@ e.g. vector of uids, names, or codes.}
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}
 
-\item{d2_session}{the handle}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{the number of times to try the call}
 }

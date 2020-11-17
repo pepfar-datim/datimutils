@@ -75,7 +75,8 @@ simplifyStructure <- function(resp) {
 #' c("name,id", "code")}
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
-#' @param d2_session the handle
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
 #' @return the metadata response in json format and flattened

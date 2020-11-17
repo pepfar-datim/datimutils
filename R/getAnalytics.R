@@ -17,7 +17,8 @@
 #' @param ao dimensions ao
 #' @param ao_f filters ao
 #' @param return_names FALSE for uids, TRUE for names
-#' @param d2_session the handle
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry retry
 #' @return data frame with the rows of the response
 

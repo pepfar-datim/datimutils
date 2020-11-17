@@ -9,7 +9,8 @@ api_get(path, d2_session, retry = 1, timeout = 60, api_version = NULL)
 \arguments{
 \item{path}{Should begin with api/ and contain the query}
 
-\item{d2_session}{the url on which is added the path}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{number of times to try in case of failure,
 default will not try again}

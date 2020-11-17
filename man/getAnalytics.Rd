@@ -50,7 +50,8 @@ list(startDate = "2018-01-01", endDate = "2018-06-01")]}
 
 \item{return_names}{FALSE for uids, TRUE for names}
 
-\item{d2_session}{the handle}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{retry}
 }

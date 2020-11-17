@@ -47,7 +47,8 @@ duplicateResponse <- function(resp, expand, by) {
 #' @param by - what to filter by, i.e. id or name, default is id
 #' @param fields - the fields, which can come in any formt as long as all
 #' components are present
-#' @param d2_session the handle
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry the number of times to try the call
 #' @return the metadata response in json format and flattened
 #' @usage
