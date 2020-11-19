@@ -73,15 +73,18 @@
 #' @title anonimizeUIDS
 #' @description Decrypts uids in mocks.
 #' @param url the url to create the mock from or alternatively encrypt an already made one
-#' @param salt_back the salt to add on the end
 #' @param salt_front the salt to add on front
-#' @param exception a single uid to NOT anonimize
+#' @param salt_back the salt to add on the end
+#' @param username username to authenticate
+#' @param password password to authenticate
 #' @param first_time if first time is true mock will be created
+#' @param exception a single uid to NOT anonimize
 #'
-anonimizeUIDS <- function(url, salt_front, salt_back, exception = NULL, first_time = F){
+anonimizeUIDS <- function(url = NULL, salt_front = NULL, salt_back = NULL, username = NULL, password = NULL, first_time = NULL, exception = NULL){
   if(first_time){
     httptest::start_capturing(simplify = FALSE)
-    httr::content(httr::GET(url))
+    httr::content(httr::GET(url, httr::authenticate(user = username,
+                      password = password)))
     httptest::stop_capturing()
   }
   response <- dget(paste0(httptest::build_mock_url(url), ".R"))
@@ -91,7 +94,7 @@ anonimizeUIDS <- function(url, salt_front, salt_back, exception = NULL, first_ti
   extracts <- gsub("[^[:alnum:] ]", "", extracts)
   if(!(is.null(exception))){
   exception_pos <- which(extracts %in% exception)}
-  replacements <- .anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
+  replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
   if(!(is.null(exception))){
   replacements[exception_pos] <- exception}
   put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
