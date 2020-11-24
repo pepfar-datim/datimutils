@@ -17,7 +17,8 @@
 #' @param ao dimensions ao
 #' @param ao_f filters ao
 #' @param return_names FALSE for uids, TRUE for names
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry retry
 #' @return data frame with the rows of the response
 
@@ -28,7 +29,7 @@ getAnalytics <-  function(...,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
                           return_names = F,
-                          base_url = getOption("baseurl"),
+                          d2_session = parent.frame()$d2_default_session,
                           retry = 1){
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
@@ -62,7 +63,7 @@ getAnalytics <-  function(...,
 
   #call api
   resp <- api_get(path = path,
-                  base_url = base_url,
+                  d2_session = d2_session,
                   retry = retry)
 
   if(NROW(resp$rows) == 0){

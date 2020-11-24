@@ -9,7 +9,7 @@ getMetadata(
   ...,
   fields = "name,id",
   as_vector = T,
-  base_url = getOption("baseurl"),
+  d2_session = parent.frame()$d2_default_session,
   retry = 1,
   timeout = 180
 )
@@ -42,7 +42,8 @@ c("name,id", "code")}}
 \item{as_vector}{attempt to return an atomic vector when only a single field
 is requested and returned. Defaults to TRUE.}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{number of times to retry}
 

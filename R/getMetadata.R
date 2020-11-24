@@ -75,7 +75,8 @@ simplifyStructure <- function(resp) {
 #' c("name,id", "code")}
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
 #' @return the metadata response in json format and flattened
@@ -85,7 +86,7 @@ getMetadata <- function(end_point,
                         ...,
                         fields = "name,id",
                         as_vector = T,
-                        base_url = getOption("baseurl"),
+                        d2_session = parent.frame()$d2_default_session,
                         retry = 1,
                         timeout = 180) {
   if (!is.character(fields)) {
@@ -121,7 +122,7 @@ getMetadata <- function(end_point,
   path <- paste0(end_point, ex, ef)
   # pass path in api_get
   resp <- api_get(
-    path = path, base_url = base_url, retry = retry,
+    path = path, d2_session = d2_session, retry = retry,
     timeout = timeout,
     api_version = NULL
   )
