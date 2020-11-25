@@ -73,7 +73,7 @@ getCategories(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -81,7 +81,7 @@ getCatCombos(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -89,7 +89,7 @@ getCatOptionCombos(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -97,7 +97,7 @@ getCatOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -105,7 +105,7 @@ getCatOptionGroups(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -113,7 +113,7 @@ getCatOptions(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -121,7 +121,7 @@ getDataElementGroupSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -129,7 +129,7 @@ getDataElementGroups(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -137,7 +137,7 @@ getDataElements(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -145,7 +145,7 @@ getDataSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -153,7 +153,7 @@ getIndicatorGroupSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -161,7 +161,7 @@ getIndicatorGroups(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -169,7 +169,7 @@ getIndicators(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -177,7 +177,7 @@ getOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -185,7 +185,7 @@ getOptionGroups(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -193,7 +193,7 @@ getOptionSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -201,7 +201,7 @@ getOptions(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -209,7 +209,7 @@ getOrgUnitGroupSets(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -217,7 +217,7 @@ getOrgUnitGroups(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -225,7 +225,7 @@ getOrgUnits(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 
@@ -233,7 +233,7 @@ getDimensions(
   values,
   by = "id",
   fields = NULL,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 }
