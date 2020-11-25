@@ -11,7 +11,8 @@ loginToDATIM(
   username = NULL,
   password = NULL,
   base_url = NULL,
-  d2_session_name = "d2_default_session"
+  d2_session_name = "d2_default_session",
+  d2_session_envir = parent.frame()
 )
 }
 \arguments{
@@ -31,6 +32,9 @@ name is d2_default_session and will be used by other datimutils functions by def
 connecting to datim. Generally a custom name should only be needed if you need to log into
 two seperate DHIS2 instances at the same time. If you create a d2Session object with a
 custom name then this object must be passed to other datimutils functions explicitly}
+
+\item{d2_session_envir}{the environment in which to place the R6 login object, default
+is the immediate calling environment}
 }
 \description{
 logins into a datim or dhis2 api using either default keyring and 

@@ -119,12 +119,15 @@ getCredentialsFromKeyring <- function(ring) {
 #' connecting to datim. Generally a custom name should only be needed if you need to log into
 #' two seperate DHIS2 instances at the same time. If you create a d2Session object with a
 #' custom name then this object must be passed to other datimutils functions explicitly
+#' @param d2_session_envir the environment in which to place the R6 login object, default
+#' is the immediate calling environment
 loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis",
                          username = NULL,
                          password = NULL,
                          base_url = NULL,
-                         d2_session_name = "d2_default_session") {
+                         d2_session_name = "d2_default_session",
+                         d2_session_envir = parent.frame()) {
 
   if((!(is.null(username)) && is.null(password)) || (is.null(username) && !(is.null(password)))){
     stop("If directly providing function credentials you must specify both username and password")
@@ -192,6 +195,6 @@ loginToDATIM <- function(config_path = NULL,
                          base_url = base_url,
                          handle = handle,
                          me = me), 
-           envir = parent.frame())
+           envir = d2_session_envir)
   }
 }
