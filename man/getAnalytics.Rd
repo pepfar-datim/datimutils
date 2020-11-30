@@ -17,7 +17,7 @@ getAnalytics(
   ao = NULL,
   ao_f = NULL,
   return_names = F,
-  d2_session = parent.frame()$d2_default_session,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1
 )
 }
