@@ -1,5 +1,6 @@
 d2Session <- R6::R6Class("d2Session",
                          #' @title d2Session 
+                         lock_objects = FALSE,
                          public=list(
                            #' @field  config_path Path to a JSON configuration file. 
                            config_path = NULL,
