@@ -13,13 +13,14 @@ d2Session <- R6::R6Class("d2Session",
                            handle = NULL,
                            #' @field me dhis2 api/me response 
                            me  = NULL,
+                           max_cache_age  = NULL,
                            #' @description 
                            #' Create a new DHISLogin object
                            #' @param config_path Configuration file path
                            #' @param base_url URL to the server. 
                            #' @param handle httr handle to be used for dhis2 connections 
                            #' @param me DHIS2 me response object
-                           
+                           #' @param max_cache_age cache expiry currently used by datim validation
                            initialize = function(config_path = NA_character_,
                                                  base_url,
                                                  handle,
@@ -187,7 +188,6 @@ loginToDATIM <- function(config_path = NULL,
     stop("Could not authenticate you with the server!")
   } else {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
-    print(paste0(me$name, " is logged in"))
 
 # create the session object in the calling environment of the login function
     assign(d2_session_name, 
