@@ -78,25 +78,30 @@
 #' @param username username to authenticate
 #' @param password password to authenticate
 #' @param first_time if first time is true mock will be created
+#' @param format csv for csv style reponse, anything else for json
 #' @param exception a single uid to NOT anonimize
 #'
-anonimizeUIDS <- function(url = NULL, salt_front = NULL, salt_back = NULL, username = NULL, password = NULL, first_time = NULL, exception = NULL){
+anonimizeUIDS <- function(url = NULL, salt_front = NULL, salt_back = NULL, username = NULL, password = NULL, first_time = NULL, format = NULL, exception = NULL){
   if(first_time){
     httptest::start_capturing(simplify = FALSE)
     httr::content(httr::GET(url, httr::authenticate(user = username,
-                      password = password)))
+                                                    password = password)))
     httptest::stop_capturing()
   }
   response <- dget(paste0(httptest::build_mock_url(url), ".R"))
   x <- rawToChar(response$content)
+  if(format == "csv")
+  {
+    extracts <- stringr::str_extract_all(x, '(,[a-zA-Z0-9]{11})')[[1]]
+    extracts <- setdiff(extracts, c(",dataelement", ",categoryopt"))
+  } else{
   extracts <- stringr::str_extract_all(x, '(id.{2})("[a-zA-Z0-9]{11}\\")')[[1]]
-  extracts <- gsub('id.{3}', "", extracts)
+  extracts <- gsub('id.{3}', "", extracts)}
   extracts <- gsub("[^[:alnum:] ]", "", extracts)
+  replacements <- .anonymize(extracts, salt_front=salt_front, salt_back=salt_back)
   if(!(is.null(exception))){
-  exception_pos <- which(extracts %in% exception)}
-  replacements <- anonymize(gsub("[^[:alnum:] ]","",extracts), salt_front=salt_front, salt_back=salt_back)
-  if(!(is.null(exception))){
-  replacements[exception_pos] <- exception}
+    exception_pos <- which(extracts %in% exception)
+    replacements[exception_pos] <- exception}
   put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
   response$content <- substitute(charToRaw(put_in))
   dput(response, paste0(httptest::build_mock_url(url), ".R"))
