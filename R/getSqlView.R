@@ -7,13 +7,15 @@
 #' @param variable_keys character list - list of the variable names for the sql view
 #' @param variable_values character list - list of the variable values ordered to correspond with
 #' the related variable key
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout number of seconds to wait during call
 #' @return dataframe with the results of the sql view
 
 getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values = NULL,
-                       base_url = getOption("baseurl"), retry=1, timeout = 180){
+                       d2_session = dynGet("d2_default_session", inherits = TRUE),
+                       retry=1, timeout = 180){
 
   assertthat::assert_that(length(variable_keys) == length(variable_values))
 
@@ -24,30 +26,32 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
 
      variable_k_v_pairs <- mapply(function(x,y) paste0("var=", x, ":", y),
                                   variable_keys, variable_values)
-    variable_k_v_pairs <- paste0("&", variable_k_v_pairs, collapse = "&")
+    variable_k_v_pairs <- paste0( "&",variable_k_v_pairs, collapse = "&")
 
   }
 
   if (missing(...)) {
     add <- NULL
   } else {
-    # turn filters recieved as ... to a character vector of individual filters
+    # turn filters received as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
-    add <- stringr::str_flatten(filters_chr, "&filter=")
-    add <- paste0("&filter=", add)
+    add <- stringr::str_flatten(filters_chr, "filter=")
+    add <- paste0("filter=", add)
   }
 
-  path <- paste0("sqlViews/", sql_view_uid, "/data.json",
+  path <-paste0("sqlViews/", sql_view_uid, "/data.json?paging=false",
                      variable_k_v_pairs, add)
 
    resp <- api_get(
-    path = path, base_url = base_url, retry = retry,
-    timeout = timeout,
+    path = path, 
+    d2_session = d2_session,
+    retry = retry,
+    timeout = timeout
   )
 
-  headers <- resp[[1]]$headers$column
+  headers <- resp$listGrid$headers$column
 
-  resp <- as.data.frame(do.call("rbind", resp[[1]]$rows), stringsAsFactors = F)
+  resp <- as.data.frame(do.call("rbind",resp$listGrid$rows),stringsAsFactors = FALSE)
 
   colnames(resp) <- headers
 
@@ -60,16 +64,16 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
 
 #' @export
 #' @title listSqlViews
-#' @param base_url base_url
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @return dataframe with the list of sql views
 
-listSqlViews <- function(base_url = getOption("baseurl")){
-
-  resp <- api_get(
-    path = "sqlViews/", base_url = base_url
-  )
-
-  return(resp[[1]])
+listSqlViews <- function(d2_session = dynGet("d2_default_session", inherits = TRUE)){
+  
+   api_get(
+    path = "sqlViews/", 
+    d2_session = d2_session ) %>% 
+    purrr::pluck('sqlViews')
 
 }
 
