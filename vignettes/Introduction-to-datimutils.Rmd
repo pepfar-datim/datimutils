@@ -23,24 +23,13 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(datimutils)
-play233 <- list(base_url = "https://play.dhis2.org/2.33/",
-                handle = httr::handle("https://play.dhis2.org/2.33/"))
-play235 <- list(base_url = "https://play.dhis2.org/2.33.5/",
-                handle = httr::handle("https://play.dhis2.org/2.33.5/"))
-play234 <- list(base_url = "https://play.dhis2.org/2.34/",
-                handle = httr::handle("https://play.dhis2.org/2.34/"))
-play2335 <- list(base_url = "https://play.dhis2.org/2.33.5/",
-                handle = httr::handle("https://play.dhis2.org/2.33.5/"))
-play2341 <- list(base_url = "https://play.dhis2.org/2.34.1/",
-                handle = httr::handle("https://play.dhis2.org/2.34.1/"))
-
 ```
 Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim.
 For example here is a play server file called `play.json`
 ```{r eval = F}
 {
 "dhis": {
-  "baseurl": "play.dhis2.org/2.33/",
+  "baseurl": "play.dhis2.org/2.36/",
   "username": "admin",
   "password": "district"
 }
@@ -50,7 +39,7 @@ Alternatively if the the entry for password is blank such that the file looks li
 ```{r eval = F}
 {
 "dhis": {
-  "baseurl": "play.dhis2.org/2.33/",
+  "baseurl": "play.dhis2.org/2.36/",
   "username": "admin",
   "password": ""
 }
@@ -68,18 +57,15 @@ There is a wrapper for every metadata endpoint within datimutils.
 Here are calls to  dataElements and categoryOptionGroups for example:
 ```{r}
 getDataElements(
-    "FTRrcoaog83",
-    d2_session = play2335)
+    "FTRrcoaog83")
 getCatOptionGroups(
-    "OK2Nr4wdfrZ",
-    d2_session = play2335)
+    "OK2Nr4wdfrZ")
 ```
 
 Here is one to the Indicators endpoint:
 ```{r}
   getIndicators(
-        "ReUHfIn0pTQ",
-        d2_session = play2335)
+        "ReUHfIn0pTQ")
 ```
 
 These helpers will create repeated values and sorting based on input
@@ -94,9 +80,7 @@ These helpers will create repeated values and sorting based on input
   data <-
     getOrgUnitGroups(
       groups,
-      fields = "code,name,id",
-      d2_session = play233
-    )
+      fields = "code,name,id")
 
 # even though the actual api call only returns the 3 unique uids in a random
 # order, the wrapper returns it in the order called.
@@ -110,8 +94,7 @@ data <- getMetadata(
   end_point = "organisationUnits",
   "organisationUnitGroups.name:eq:District",
   "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
-  fields = "id,name,level",
-  d2_session = play233
+  fields = "id,name,level"
 )
 
 head(data)
@@ -125,8 +108,7 @@ data <- getMetadata(
   end_point = organisationUnits,
   organisationUnitGroups.name %.eq% "District",
   children.id %.in% c("YuQRtpLP10I","fwH9ipvXde9"),
-  fields = "id,name,level",
-  d2_session = play233
+  fields = "id,name,level"
 )
 
 head(data)
@@ -137,8 +119,7 @@ Data is usually returned in its most base class:
 # returns a vector
 data <- getMetadata(
   end_point = "organisationUnitGroups",
-  fields = "name",
-  d2_session = play233
+  fields = "name"
 )
 print(data)
 ```
@@ -151,8 +132,7 @@ data <- getMetadata(
     "name:like:Baoma",
     "level:eq:3"
   ),
-  fields = ":all",
-  d2_session = play233
+  fields = ":all"
 )
 str(data$translations)
 ```
@@ -161,8 +141,7 @@ There is a filter format helper for every comparison operator in Datim, here lik
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
-  name %.Like% "Sierra Leone",
-  d2_session = play233
+  name %.Like% "Sierra Leone"
 )
 ```
 
@@ -201,12 +180,11 @@ cat(tabl)
 There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters, and can also take any number of additional specifications as the first argument, which will get pasted on the end of the api call made. Here are some examples:
 
 ```{r}
-loginToDATIM(config_path = "play34.1.json")
 #Get ANC: Key Coverages
 #this call uses only dimension arguments, dx, ou, and pe
 data <- getAnalytics("displayProperty=NAME",
 dx = c("Uvn6LCg7dVU","OdiHJayrsKo","sB79w2hiLp8"), pe = c("THIS_YEAR"),
-ou = c("ImspTQPwCqd"), d2_session = play2341)
+ou = c("ImspTQPwCqd"))
 
 head(data)
 
@@ -214,7 +192,7 @@ head(data)
 #this call uses a filter ou argument, which are followed by _f
 data <- getAnalytics("displayProperty=NAME",
 dx = c("v27b2y9kKh7","vEBapQFZ1AA","DwEVHQvMnDZ"), pe = c("THIS_YEAR"),
-ou_f = c("ImspTQPwCqd"), d2_session = play2341)
+ou_f = c("ImspTQPwCqd"))
 
 head(data)
 ```
