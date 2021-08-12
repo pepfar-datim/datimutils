@@ -7,12 +7,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include=FALSE}
-library(httptest)
-start_vignette("play.dhis2.org")
-```
-
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -202,9 +196,4 @@ To use `getAnalytics` you can pass in the uids into their respective arguments a
 ```{r}
 a %.d% c("123","456")
 a %.f% c("123","456")
-```
-
-
-```{r, include=FALSE}
-end_vignette()
 ```
