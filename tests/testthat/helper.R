@@ -9,3 +9,5 @@ play2335 <- list(base_url = "https://play.dhis2.org/2.33.5/",
                 handle = httr::handle("https://play.dhis2.org/2.33.5/"))
 play2341 <- list(base_url = "https://play.dhis2.org/2.34.1/",
                 handle = httr::handle("https://play.dhis2.org/2.34.1/"))
+play2363 <- list(base_url = "https://play.dhis2.org/2.36.3/",
+                 handle = httr::handle("https://play.dhis2.org/2.36.3/"))
