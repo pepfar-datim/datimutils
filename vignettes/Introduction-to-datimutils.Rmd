@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 library(datimutils)
 ```
 
-Before querying the DATIM api, one must log into a DATIM instance. There are three basic ways to do so within datimutils. All three utilize the `loginToDATIM` function.
+Before querying the DATIM api, you must log into a DATIM instance. There are three basic ways to do so within datimutils. All three utilize the `loginToDATIM` function.
 
 By default the `loginToDATIM` function will create an object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects.
 > Note: this session will expire after __. When it does, you will need to re-authenticate 
