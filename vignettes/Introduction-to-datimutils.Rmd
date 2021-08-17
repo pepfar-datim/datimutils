@@ -64,7 +64,7 @@ Alternatively, if the the entry for password is blank such that the file looks l
 }
 }
 ```
-The function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
+The function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login. A user may prefer storing their passwords in their keyring because it allows them to avoid storing passwords in plain text on their computer, which is a potential security risk.   
 >Note: keyrings operate differently on different operating systems
 
 
