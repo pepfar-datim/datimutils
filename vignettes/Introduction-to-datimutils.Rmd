@@ -31,6 +31,7 @@ The most basic method is to pass your username and password directly into the `l
   
 ```{r eval = F}
 loginToDATIM(
+  base_url = 'play.dhis2.org/2.36/',
   username = 'admin',
   password = 'district'
 )
