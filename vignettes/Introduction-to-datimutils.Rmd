@@ -37,7 +37,7 @@ loginToDATIM(
 )
 ```
 
-The other two methods require the use of a configuration file. Make sure that you remember the location of this config file, as you will need it to pass into the `loginToDATIM` function.
+The other two methods require the use of a configuration file. Make sure that you remember the location of this config file, as you will need it to pass into the `loginToDATIM` function. If a user wants to ablility to quickly log into multiple different servers, they can have a config file for each one.
 
 In this case, our config file is a JSON file called, *play.json*.
 
@@ -69,6 +69,8 @@ The function will look in your keyring for the password, and if not found, will 
 
 
 In both methods, call the `loginToDATIM` function as so:
+> Note: replace `play.json` with the path of your config file
+
 ```{r}
 # logging in generates a cookie so the other funcitons can be used freely without credentials
 loginToDATIM(config_path = "play.json")
