@@ -18,8 +18,30 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(datimutils)
 ```
-Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim.
-For example here is a play server file called `play.json`
+
+Before querying the DATIM api, one must log into a DATIM instance. There are three basic ways to do so within datimutils. All three utilize the `loginToDATIM` function.
+
+By default the `loginToDATIM` function will create an object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects.
+> Note: this session will expire after __. When it does, you will need to re-authenticate 
+
+  
+The most basic method is to pass your username and password directly into the `loginToDATIM` function.
+  
+```{r eval = F}
+loginToDATIM(
+  username = 'admin',
+  password = 'district'
+)
+```
+
+The other two methods require the use of a configuration file. Make sure that you remember the location of this config file, as you will need it to pass into the `loginToDATIM` function.
+
+In this case, our config file is a JSON file called, *play.json*.
+
+There are two ways to login with this config file. 
+
+In the first, you input your baseurl, username, and password.
+
 ```{r eval = F}
 {
 "dhis": {
@@ -29,7 +51,7 @@ For example here is a play server file called `play.json`
 }
 }
 ```
-Alternatively if the the entry for password is blank such that the file looks like this
+Alternatively, if the the entry for password is blank such that the file looks like this
 ```{r eval = F}
 {
 "dhis": {
@@ -39,9 +61,10 @@ Alternatively if the the entry for password is blank such that the file looks li
 }
 }
 ```
-Then the function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
+The function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
+>Note: keyrings operate differently on different operating systems
 
-Call the function as so:
+In both methods, call the `loginToDATIM` function as so:
 ```{r}
 # logging in generates a cookie so the other funcitons can be used freely without credentials
 loginToDATIM(config_path = "play.json")
