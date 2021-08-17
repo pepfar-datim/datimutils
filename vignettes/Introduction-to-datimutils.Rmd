@@ -22,7 +22,10 @@ library(datimutils)
 Before querying the DATIM api, you must log into a DATIM instance. There are three basic ways to do so within datimutils. All three utilize the `loginToDATIM` function.
 
 By default the `loginToDATIM` function will create an object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects.
+<!--
 > Note: this session will expire after __. When it does, you will need to re-authenticate 
+
+-->
 
   
 The most basic method is to pass your username and password directly into the `loginToDATIM` function.
@@ -63,6 +66,7 @@ Alternatively, if the the entry for password is blank such that the file looks l
 ```
 The function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
 >Note: keyrings operate differently on different operating systems
+
 
 In both methods, call the `loginToDATIM` function as so:
 ```{r}
