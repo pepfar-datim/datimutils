@@ -145,7 +145,58 @@ getOrgUnits("Kenema",
 
 Though the return of this command may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
 ```
-{"headers":[],"metaData":{"items":{"FbKK4ofIv5R":{"uid":"FbKK4ofIv5R","code":"IN_52494","name":"Measles Coverage <1y","legendSet":"BtxOoQuLyg1","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"JIVMtpjVZqJ":{"uid":"JIVMtpjVZqJ","code":"IN_394153","name":"Diarrhoea <5 y incidence rate (%)","legendSet":"z9SVZTVo0j4","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"Tt5TAvdfdVK":{"uid":"Tt5TAvdfdVK","code":"IN_52500","name":"ANC LLITN coverage","legendSet":"fqs276KXCXi","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"sB79w2hiLp8":{"uid":"sB79w2hiLp8","name":"ANC 3 Coverage","description":"Total 3rd ANC visits (Fixed and outreach) by expected number of pregnant women.","legendSet":"fqs276KXCXi","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"sMTMkudvLCD":{"uid":"sMTMkudvLCD","name":"HIV: testing and counseling 15-24y","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"SUM"}
+{
+   "headers":[
+      
+   ],
+   "metaData":{
+      "items":{
+         "FbKK4ofIv5R":{
+            "uid":"FbKK4ofIv5R",
+            "code":"IN_52494",
+            "name":"Measles Coverage <1y",
+            "legendSet":"BtxOoQuLyg1",
+            "dimensionItemType":"INDICATOR",
+            "valueType":"NUMBER",
+            "totalAggregationType":"AVERAGE"
+         },
+         "JIVMtpjVZqJ":{
+            "uid":"JIVMtpjVZqJ",
+            "code":"IN_394153",
+            "name":"Diarrhoea <5 y incidence rate (%)",
+            "legendSet":"z9SVZTVo0j4",
+            "dimensionItemType":"INDICATOR",
+            "valueType":"NUMBER",
+            "totalAggregationType":"AVERAGE"
+         },
+         "Tt5TAvdfdVK":{
+            "uid":"Tt5TAvdfdVK",
+            "code":"IN_52500",
+            "name":"ANC LLITN coverage",
+            "legendSet":"fqs276KXCXi",
+            "dimensionItemType":"INDICATOR",
+            "valueType":"NUMBER",
+            "totalAggregationType":"AVERAGE"
+         },
+         "sB79w2hiLp8":{
+            "uid":"sB79w2hiLp8",
+            "name":"ANC 3 Coverage",
+            "description":"Total 3rd ANC visits (Fixed and outreach) by expected number of pregnant women.",
+            "legendSet":"fqs276KXCXi",
+            "dimensionItemType":"INDICATOR",
+            "valueType":"NUMBER",
+            "totalAggregationType":"AVERAGE"
+         },
+         "sMTMkudvLCD":{
+            "uid":"sMTMkudvLCD",
+            "name":"HIV: testing and counseling 15-24y",
+            "dimensionItemType":"INDICATOR",
+            "valueType":"NUMBER",
+            "totalAggregationType":"SUM"
+         }
+      }
+   }
+}
 ```
 > Keep in mind that the above is ~1/20 of the total characters
 
