@@ -153,23 +153,47 @@ Though the return of this command may seem convoluted, as some columns actually 
 Here is a list of all the supported metadata endpoints:
 
 ```
-"lastUpdated"            "id"                     "href"                  
-"level"                  "created"                "name"                  
-"shortName"              "code"                   "leaf"                  
-"path"                   "displayFormName"        "favorite"              
-"dimensionItemType"      "displayName"            "displayShortName"      
-"externalAccess"         "periodOffset"           "openingDate"           
-"dimensionItem"          "children"               "translations"          
-"organisationUnitGroups" "ancestors"              "userGroupAccesses"     
-"attributeValues"        "users"                  "userAccesses"          
-"dataSets"               "legendSets"             "programs"              
-"favorites"              "closedDate"             "sharing.external"      
-"parent.id"              "access.read"            "access.update"         
-"access.externalize"     "access.delete"          "access.write"          
-"access.manage"          "geometry.type"          "geometry.coordinates"  
-"createdBy.displayName"  "createdBy.name"         "createdBy.id"          
-"createdBy.username"     "user.displayName"       "user.name"             
-"user.id"                "user.username"
+getCategories(values, by, fields, d2_session, retry)
+
+getCatCombos(values, by, fields, d2_session, retry)
+
+getCatOptionCombos(values, by, fields, d2_session, retry)
+
+getCatOptionGroupSets(values, by, fields, d2_session, retry)
+
+getCatOptionGroups(values, by, fields, d2_session, retry)
+
+getCatOptions(values, by, fields, d2_session, retry)
+
+getDataElementGroupSets(values, by, fields, d2_session, retry)
+
+getDataElementGroups(values, by, fields, d2_session, retry)
+
+getDataElements(values, by, fields, d2_session, retry)
+
+getDataSets(values, by, fields, d2_session, retry)
+
+getIndicatorGroupSets(values, by, fields, d2_session, retry)
+
+getIndicatorGroups(values, by, fields, d2_session, retry)
+
+getIndicators(values, by, fields, d2_session, retry)
+
+getOptionGroupSets(values, by, fields, d2_session, retry)
+
+getOptionGroups(values, by, fields, d2_session, retry)
+
+getOptionSets(values, by, fields, d2_session, retry)
+
+getOptions(values, by, fields, d2_session, retry)
+
+getOrgUnitGroupSets(values, by, fields, d2_session, retry)
+
+getOrgUnitGroups(values, by, fields, d2_session, retry)
+
+getOrgUnits(values, by, fields, d2_session, retry)
+
+getDimensions(values, by, fields, d2_session, retry)
 ```
 
 <!-- seems like a new section from here on -->
