@@ -83,6 +83,95 @@ loginToDATIM(config_path = "play.json")
 
 ## Features for working with DATIM/DHIS2 metadata
 
+For demonstration purposes, we will use a sample data set:
+
+```{r}
+data <- tibble::tribble(~dataElement, ~orgUnit, ~value,
+                "fbfJHSPpUQD", "kJq2mPyFEHo", 1,
+                "cYeuwXTCPkU", "kJq2mPyFEHo", 2,
+                "fbfJHSPpUQD", "Vth0fbpFcsO", 3
+                )
+```
+
+
+### Getting metadata based on a vector of identifiers (e.g. uid or name)
+
+#### Uuids to names
+
+By default, `getDataElements` (and the other high level metadata helpers) support the conversion of a vector of uids into a vector of names. The command
+
+```{r}
+getOrgUnits(data$orgUnit)
+```
+
+would return `[1] "Kenema" "Kenema" "Kono" `, as the orgUnit uid "kJq2mPyFEHo" corresponds to the name "Kenema."
+
+Note that you get a row for "Kenema" both times it appears. This is an advantage of datimutils. It will return the metadata jhelpers in the same order order of the vector passed in. Because of this, it works well with tidyverse functions like the one below.
+
+```{r}
+dplyr::mutate(data,
+              dataElementName = datimutils::getDataElements(dataElement))
+
+```
+
+#### Names to uuids
+
+It is also possible to look up metadata using a different identifier, but you must specify the field you intend to use.
+
+```{r}
+getOrgUnits('Bo', by = name)
+
+# Return: [1] "O6uvpzGd5pu"
+```
+
+<!--
+> Note: The name passed in the function can be written with single quotes (as seen above), with no quotes at all `getOrgUnits(Bo, by = name)`, but not with double quotes.
+
+It seems that neither double quotes nor no quotes works. Single quotes is the only one I tested that worked.
+-->
+
+Identifiers besides 'name' could be 'shortName' or 'id.'
+
+#### Working with metadata fields
+
+The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint, any number of filters, and any number of fields as its basic arguments. Using `fields = ":all"` all the possible fields for a particular type of metadata (Indicators, OrgUnits, etc...)
+
+```{r}
+getOrgUnits("Kenema", 
+            by = name,
+            fields = ":all")
+
+```
+
+Though the return of this command may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
+
+```
+{"headers":[],"metaData":{"items":{"FbKK4ofIv5R":{"uid":"FbKK4ofIv5R","code":"IN_52494","name":"Measles Coverage <1y","legendSet":"BtxOoQuLyg1","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"JIVMtpjVZqJ":{"uid":"JIVMtpjVZqJ","code":"IN_394153","name":"Diarrhoea <5 y incidence rate (%)","legendSet":"z9SVZTVo0j4","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"Tt5TAvdfdVK":{"uid":"Tt5TAvdfdVK","code":"IN_52500","name":"ANC LLITN coverage","legendSet":"fqs276KXCXi","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"sB79w2hiLp8":{"uid":"sB79w2hiLp8","name":"ANC 3 Coverage","description":"Total 3rd ANC visits (Fixed and outreach) by expected number of pregnant women.","legendSet":"fqs276KXCXi","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"AVERAGE"},"sMTMkudvLCD":{"uid":"sMTMkudvLCD","name":"HIV: testing and counseling 15-24y","dimensionItemType":"INDICATOR","valueType":"NUMBER","totalAggregationType":"SUM"}
+```
+> Keep in mind that the above is ~1/20 of the total 
+
+Here is a list of all the supported metadata endpoints:
+
+```
+"lastUpdated"            "id"                     "href"                  
+"level"                  "created"                "name"                  
+"shortName"              "code"                   "leaf"                  
+"path"                   "displayFormName"        "favorite"              
+"dimensionItemType"      "displayName"            "displayShortName"      
+"externalAccess"         "periodOffset"           "openingDate"           
+"dimensionItem"          "children"               "translations"          
+"organisationUnitGroups" "ancestors"              "userGroupAccesses"     
+"attributeValues"        "users"                  "userAccesses"          
+"dataSets"               "legendSets"             "programs"              
+"favorites"              "closedDate"             "sharing.external"      
+"parent.id"              "access.read"            "access.update"         
+"access.externalize"     "access.delete"          "access.write"          
+"access.manage"          "geometry.type"          "geometry.coordinates"  
+"createdBy.displayName"  "createdBy.name"         "createdBy.id"          
+"createdBy.username"     "user.displayName"       "user.name"             
+"user.id"                "user.username"
+```
+
 There is a wrapper for every metadata endpoint within datimutils.
 Here are calls to  dataElements and categoryOptionGroups for example:
 ```{r}
