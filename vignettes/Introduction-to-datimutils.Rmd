@@ -91,6 +91,7 @@ data <- tibble::tribble(~dataElement, ~orgUnit, ~value,
                 "cYeuwXTCPkU", "kJq2mPyFEHo", 2,
                 "fbfJHSPpUQD", "Vth0fbpFcsO", 3
                 )
+print(data)
 ```
 
 
@@ -137,10 +138,10 @@ Identifiers besides 'name' could be 'shortName' or 'id.'
 The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint, any number of filters, and any number of fields as its basic arguments. Using `fields = ":all"` all the possible fields for a particular type of metadata (Indicators, OrgUnits, etc...)
 
 ```{r}
-getOrgUnits("Kenema", 
+data <- getOrgUnits("Kenema", 
             by = name,
             fields = ":all")
-
+str(data)
 ```
 
 Though the return of this command may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
