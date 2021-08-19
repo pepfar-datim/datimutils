@@ -15,7 +15,7 @@ To make use of `datimutils` package you should already have a basic understandin
 
 * the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements;
 
-* organisation units are structured in a hierarchy and data can be aggregated within that hierarchy; and
+* organisation units are structured in a hierarchy and data can be aggregated within that hierarchy.
 
 Below we will show how datimutils can be used to log into a DHIS2 instance, retrieve metadata, and retireve aggregated data for further analysis in R.
 
