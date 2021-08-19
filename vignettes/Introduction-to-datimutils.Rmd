@@ -7,6 +7,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+The `datimutils` package was developed to simplify interaction with the DATIM/DHIS2 api from R. The package was designed to work well with `tidyverse` package functions and currently supports requesting metadata and metadata properties as well as aggregated data from the analytics resource of the API. This enables one to pull any data that one would be able to get in a DHIS2 pivot table.
+
+To make use of `datimutils` package you should already have a basic understanding of DATIM/DHIS2. For instance you should understand that:
+
+* the data in DHIS2 instances are associated with organisation units, data elements, time periods, and categories and category options such as age and sex;
+
+* the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements; 
+
+* organisation units are structured in a hierarchy and data can be aggregated within that hierarchy; and
+
+Below we will show how datimutils can be used to log into a DHIS2 instance, retrieve metadata, and retireve aggregated data for further analysis in R.
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -17,8 +29,12 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(datimutils)
+library(httptest)
 ```
 
+```{r, include = FALSE}
+httptest::start_vignette("play.dhis2.org")
+```
 ## Logging into DATIM
 
 Before querying the DATIM api, you must log into a DATIM instance. There are three basic ways to do so within datimutils. All three utilize the `loginToDATIM` function.
@@ -384,4 +400,5 @@ To use `getAnalytics` you can pass in the uids into their respective arguments a
 ```{r}
 a %.d% c("123","456")
 a %.f% c("123","456")
+httptest::end_vignette()
 ```
