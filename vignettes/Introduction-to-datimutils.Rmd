@@ -115,48 +115,34 @@ print(data)
 
 A DHIS2 configuration includes many different types of metadata, such as data elements and indicators. The Web api lets you look up these pieces of metadata and obtain their related properties . For instance, a property of an organisation unit is its path. Datimutils provides a number of high level metadata helpers for obtaining details on the different types of metadata. This is the list of high level metadata helpers in datimutils.
 
-```
-getCategories(values, by, fields, d2_session, retry)
 
-getCatCombos(values, by, fields, d2_session, retry)
-
-getCatOptionCombos(values, by, fields, d2_session, retry)
-
-getCatOptionGroupSets(values, by, fields, d2_session, retry)
-
-getCatOptionGroups(values, by, fields, d2_session, retry)
-
-getCatOptions(values, by, fields, d2_session, retry)
-
-getDataElementGroupSets(values, by, fields, d2_session, retry)
-
-getDataElementGroups(values, by, fields, d2_session, retry)
-
-getDataElements(values, by, fields, d2_session, retry)
-
-getDataSets(values, by, fields, d2_session, retry)
-
-getIndicatorGroupSets(values, by, fields, d2_session, retry)
-
-getIndicatorGroups(values, by, fields, d2_session, retry)
-
-getIndicators(values, by, fields, d2_session, retry)
-
-getOptionGroupSets(values, by, fields, d2_session, retry)
-
-getOptionGroups(values, by, fields, d2_session, retry)
-
-getOptionSets(values, by, fields, d2_session, retry)
-
-getOptions(values, by, fields, d2_session, retry)
-
-getOrgUnitGroupSets(values, by, fields, d2_session, retry)
-
-getOrgUnitGroups(values, by, fields, d2_session, retry)
-
-getOrgUnits(values, by, fields, d2_session, retry)
-
-getDimensions(values, by, fields, d2_session, retry)
+```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl <- "
+|                       datimutils function                      | DATIM Source               |
+|----------------------------------------------------------------|:--------------------------:|
+| getCategories(values, by, fields, d2_session, retry)           | categories                 |
+| getCatCombos(values, by, fields, d2_session, retry)            | categoryCombinations       |
+| getCatOptionCombos(values, by, fields, d2_session, retry)      | categoryOptionCombinations |
+| getCatOptionGroupSets(values, by, fields, d2_session, retry)   | categoryOptionGroupSets    |
+| getCatOptionGroups(values, by, fields, d2_session, retry)      | categoryOptionGroups       |
+| getCatOptions(values, by, fields, d2_session, retry)           | categoryOptions            |
+| getDataElementGroupSets(values, by, fields, d2_session, retry) | dataElementGroupSets       |
+| getDataElementGroups(values, by, fields, d2_session, retry)    | dataElementGroups          |
+| getDataElements(values, by, fields, d2_session, retry)         | dataElements               |
+| getDataSets(values, by, fields, d2_session, retry)             | dataSets                   |
+| getIndicatorGroupSets(values, by, fields, d2_session, retry)   | indicatorGroupSets         |
+| getIndicatorGroups(values, by, fields, d2_session, retry)      | indicatorGroups            |
+| getIndicators(values, by, fields, d2_session, retry)           | indicators                 |
+| getOptionGroupSets(values, by, fields, d2_session, retry)      | optionGroupSets            |
+| getOptionGroups(values, by, fields, d2_session, retry)         | optionGroups               |
+| getOptionSets(values, by, fields, d2_session, retry)           | optionSets                 |
+| getOptions(values, by, fields, d2_session, retry)              | options                    |
+| getOrgUnitGroupSets(values, by, fields, d2_session, retry)     | organisationUnitGroupSets  |
+| getOrgUnitGroups(values, by, fields, d2_session, retry)        | organisationUnitGroups     |
+| getOrgUnits(values, by, fields, d2_session, retry)             | organisationUnits          |
+| getDimensions(values, by, fields, d2_session, retry)           | dimensions                 |
+"
+cat(tabl)
 ```
 
 Additionally there is a generic getMetadata function that allows you to create more complex requests for metadata. We provide examples of using these metadata functions below.
