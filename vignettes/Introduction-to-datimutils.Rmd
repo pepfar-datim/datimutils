@@ -13,7 +13,7 @@ To make use of `datimutils` package you should already have a basic understandin
 
 * the data in DHIS2 instances are associated with organisation units, data elements, time periods, and categories and category options such as age and sex;
 
-* the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements; 
+* the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements;
 
 * organisation units are structured in a hierarchy and data can be aggregated within that hierarchy; and
 
@@ -41,12 +41,12 @@ Before querying the DATIM api, you must log into a DATIM instance. There are thr
 
 By default the `loginToDATIM` function will create an object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects.
 
-> Note: By default, this session will expire after 60 minutes. When it does, you will need to re-authenticate 
+> Note: By default, this session will expire after 60 minutes. When it does, you will need to re-authenticate
 
 ### Method 1 - The Most Basic
-  
+
 The most basic method is to pass your username and password directly into the `loginToDATIM` function.
-  
+
 ```{r eval = F}
 loginToDATIM(
   base_url = 'play.dhis2.org/2.36/',
@@ -62,7 +62,7 @@ The other two methods require the use of a configuration file. Make sure that yo
 
 In this case, our config file is a JSON file called, *play.json*.
 
-There are two ways to login with this config file. 
+There are two ways to login with this config file.
 
 In the first, you input your baseurl, username, and password.
 
@@ -113,6 +113,55 @@ print(data)
 
 ### Getting metadata based on a vector of identifiers (e.g. uid or name)
 
+A DHIS2 configuration includes many different types of metadata, such as data elements and indicators. The Web api lets you look up these pieces of metadata and obtain their related properties . For instance, a property of an organisation unit is its path. Datimutils provides a number of high level metadata helpers for obtaining details on the different types of metadata. This is the list of high level metadata helpers in datimutils.
+
+```
+getCategories(values, by, fields, d2_session, retry)
+
+getCatCombos(values, by, fields, d2_session, retry)
+
+getCatOptionCombos(values, by, fields, d2_session, retry)
+
+getCatOptionGroupSets(values, by, fields, d2_session, retry)
+
+getCatOptionGroups(values, by, fields, d2_session, retry)
+
+getCatOptions(values, by, fields, d2_session, retry)
+
+getDataElementGroupSets(values, by, fields, d2_session, retry)
+
+getDataElementGroups(values, by, fields, d2_session, retry)
+
+getDataElements(values, by, fields, d2_session, retry)
+
+getDataSets(values, by, fields, d2_session, retry)
+
+getIndicatorGroupSets(values, by, fields, d2_session, retry)
+
+getIndicatorGroups(values, by, fields, d2_session, retry)
+
+getIndicators(values, by, fields, d2_session, retry)
+
+getOptionGroupSets(values, by, fields, d2_session, retry)
+
+getOptionGroups(values, by, fields, d2_session, retry)
+
+getOptionSets(values, by, fields, d2_session, retry)
+
+getOptions(values, by, fields, d2_session, retry)
+
+getOrgUnitGroupSets(values, by, fields, d2_session, retry)
+
+getOrgUnitGroups(values, by, fields, d2_session, retry)
+
+getOrgUnits(values, by, fields, d2_session, retry)
+
+getDimensions(values, by, fields, d2_session, retry)
+```
+
+Additionally there is a generic getMetadata function that allows you to create more complex requests for metadata. We provide examples of using these metadata functions below.
+
+
 #### Uuids to names
 
 By default, `getDataElements` (and the other high level metadata helpers) support the conversion of a vector of uids into a vector of names. The command
@@ -151,20 +200,50 @@ Identifiers besides 'name' could be 'shortName' or 'id.'
 
 #### Working with metadata fields
 
-The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint, any number of filters, and any number of fields as its basic arguments. Using `fields = ":all"` all the possible fields for a particular type of metadata (Indicators, OrgUnits, etc...)
+The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint and fields as its basic arguments. The main difference between `getMetadata` and other metadata helpers is that `getMetadata` does not require an array of values to query, meaning that you will not know the exact length of your response. This is disadvantageous for implementation in tidyverse functions like dplyer, but very beneficial if you want the full scope of information in a specific query.
 
 ```{r}
-data <- getOrgUnits("Kenema", 
-            by = name,
-            fields = ":all")
-str(data)
+data <- getMetadata(
+  end_point = "organisationUnits",
+  "organisationUnitGroups.name:eq:District",
+  fields = "id,name,level"
+)
+
+head(data)
 ```
 
-Though the return of this command may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
+In the above function, the second argument is called a filter. In this case, it filters the 'organisationUnits' endpoint to only respond with units at the district level.
+
+To improve the syntax of datimutils code, datimutils has included it own api comparison operators. A full list of datimutils' custom api comparison operators can be found at the end of the section. The above and below command are equivalent.
+
+```{r}
+data <- getMetadata(
+  end_point = "organisationUnits",
+  organisationUnitGroups.name %.eq% "District",
+  fields = "id,name,level"
+)
+
+head(data)
+```
+
+If you're familiar with the technology, datimutils also has non-standard evaluation:
+
+```{r}
+data <- getMetadata(
+  end_point = organisationUnits,
+  organisationUnitGroups.name %.eq% "District",
+  fields = "id,name,level"
+)
+
+head(data)
+```
+
+
+Though the return of these commands may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
 ```
 {
    "headers":[
-      
+
    ],
    "metaData":{
       "items":{
@@ -218,53 +297,10 @@ Though the return of this command may seem convoluted, as some columns actually 
 > Keep in mind that the above is ~1/20 of the total characters
 
 
-Here is a list of all the supported metadata endpoints:
 
-```
-getCategories(values, by, fields, d2_session, retry)
 
-getCatCombos(values, by, fields, d2_session, retry)
 
-getCatOptionCombos(values, by, fields, d2_session, retry)
-
-getCatOptionGroupSets(values, by, fields, d2_session, retry)
-
-getCatOptionGroups(values, by, fields, d2_session, retry)
-
-getCatOptions(values, by, fields, d2_session, retry)
-
-getDataElementGroupSets(values, by, fields, d2_session, retry)
-
-getDataElementGroups(values, by, fields, d2_session, retry)
-
-getDataElements(values, by, fields, d2_session, retry)
-
-getDataSets(values, by, fields, d2_session, retry)
-
-getIndicatorGroupSets(values, by, fields, d2_session, retry)
-
-getIndicatorGroups(values, by, fields, d2_session, retry)
-
-getIndicators(values, by, fields, d2_session, retry)
-
-getOptionGroupSets(values, by, fields, d2_session, retry)
-
-getOptionGroups(values, by, fields, d2_session, retry)
-
-getOptionSets(values, by, fields, d2_session, retry)
-
-getOptions(values, by, fields, d2_session, retry)
-
-getOrgUnitGroupSets(values, by, fields, d2_session, retry)
-
-getOrgUnitGroups(values, by, fields, d2_session, retry)
-
-getOrgUnits(values, by, fields, d2_session, retry)
-
-getDimensions(values, by, fields, d2_session, retry)
-```
-
-<!-- seems like a new section from here on -->
+<!-- seems like a new section from here on
 
 These helpers will create repeated values and sorting based on input
 ```{r}
@@ -285,18 +321,7 @@ These helpers will create repeated values and sorting based on input
 str(data)
 ```
 
-The `getMetadata` function can be used to call metadata returning endpoints. It should be used for more complicated metadata calls with more than one filter. It takes an endpoint, any number of filters, and fields as its basic arguments. For example, to call the organisationUnits endpoint with two filters the following call can be used:
 
-```{r}
-data <- getMetadata(
-  end_point = "organisationUnits",
-  "organisationUnitGroups.name:eq:District",
-  "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
-  fields = "id,name,level"
-)
-
-head(data)
-```
 
 This is equivalent to:
 
@@ -343,6 +368,7 @@ data <- getMetadata(
 )
 ```
 
+-->
 Here is a list of the api comparison operators and their datimutils equivalents:
 
 ```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
