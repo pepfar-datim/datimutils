@@ -184,7 +184,7 @@ It seems that neither double quotes nor no quotes works. Single quotes is the on
 
 Identifiers besides 'name' could be 'shortName' or 'id.'
 
-#### Working with metadata fields
+#### Working with `getMetadata`
 
 The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint and fields as its basic arguments. The main difference between `getMetadata` and other metadata helpers is that `getMetadata` does not require an array of values to query, meaning that you will not know the exact length of your response. This is disadvantageous for implementation in tidyverse functions like dplyer, but very beneficial if you want the full scope of information in a specific query.
 
@@ -197,6 +197,9 @@ data <- getMetadata(
 
 head(data)
 ```
+
+
+#### Metadata filters
 
 In the above function, the second argument is called a filter. In this case, it filters the 'organisationUnits' endpoint to only respond with units at the district level.
 
@@ -223,6 +226,8 @@ data <- getMetadata(
 
 head(data)
 ```
+
+
 
 
 Though the return of these commands may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
@@ -387,25 +392,48 @@ tabl <- "
 cat(tabl)
 ```
 
-There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters, and can also take any number of additional specifications as the first argument, which will get pasted on the end of the api call made. Here are some examples:
+
+## Retrieving data using `getAnalytics`
+
+There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters, and returns aggregated data. Here is an example:
 
 ```{r}
 #Get ANC: Key Coverages
 #this call uses only dimension arguments, dx, ou, and pe
-data <- getAnalytics("displayProperty=NAME",
-dx = c("Uvn6LCg7dVU","OdiHJayrsKo","sB79w2hiLp8"), pe = c("THIS_YEAR"),
-ou = c("ImspTQPwCqd"))
-
-head(data)
-
-#Get Infrastructure: Public facilities 2014 and 2013
-#this call uses a filter ou argument, which are followed by _f
-data <- getAnalytics("displayProperty=NAME",
-dx = c("v27b2y9kKh7","vEBapQFZ1AA","DwEVHQvMnDZ"), pe = c("THIS_YEAR"),
-ou_f = c("ImspTQPwCqd"))
+data <- datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
+                         ou = "O6uvpzGd5pu",
+                         pe = "LAST_12_MONTHS",
+                         return_names = TRUE)
 
 head(data)
 ```
+
+### Anatomy of an analytics call
+
+A simple `getAnalytics` call uses three main parameters dx, ou, and pe. The parameter 'dx' is used to specify the data element or indicator, 'ou' is used to specify the organisation units, and 'pe' is used to specify the period. 
+
+In our sample case, the data element passed was the uuid for 'ANC 1 Coverage,' The organisation unit passed was the uuid for 'Bo,' and the period was the last 12 months.
+
+
+### Dimensions vs filters
+
+Adding '_f' to the end of a parameter in `getAnalytics` turns from from a dimension into a filter ('ou' to 'ou_f'). Because of this change, the following commands look similar, but have one key difference:
+
+```{r}
+datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
+                         ou = c("O6uvpzGd5pu", "fdc6uOvgoji"),
+                         pe = "LAST_12_MONTHS",
+                         return_names = TRUE)
+
+datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
+                         ou_f = c("O6uvpzGd5pu", "fdc6uOvgoji"),
+                         pe = "LAST_12_MONTHS",
+                         return_names = TRUE)
+
+```
+
+
+In the first command, because the 'ou' argument is a *dimension*, the `getAnalytics` function queries each of the uuids in the array individually, and meaning that the organisation unit appears as a column in the resulting dataframe. In the second command, because the 'ou_f' argument is a *filter*, the `getAnalytics` aggregates data from the array of uuids as a whole and doe snot include the organisation unit as a column in the resulting dataframe.
 
 To use `getAnalytics` you can pass in the uids into their respective arguments and will be formatted correctly, but there are also two operators which can format strings for use in analytics api calls.
 
