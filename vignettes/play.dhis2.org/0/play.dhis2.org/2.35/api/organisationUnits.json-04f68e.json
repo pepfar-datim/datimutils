@@ -3,7 +3,7 @@
         {
             "lastUpdated": "2014-11-25T09:37:53.212",
             "id": "vWbkYPRmKyS",
-            "href": "https://play.dhis2.org/2.36.3/api/organisationUnits/vWbkYPRmKyS",
+            "href": "https://play.dhis2.org/2.35.6/api/organisationUnits/vWbkYPRmKyS",
             "level": 3,
             "created": "2012-02-17T15:54:39.987",
             "name": "Baoma",
@@ -11,15 +11,6 @@
             "code": "OU_540",
             "leaf": false,
             "path": "/ImspTQPwCqd/O6uvpzGd5pu/vWbkYPRmKyS",
-            "sharing": {
-                "external": false,
-                "users": {
-
-                },
-                "userGroups": {
-
-                }
-            },
             "displayFormName": "Baoma",
             "favorite": false,
             "dimensionItemType": "ORGANISATION_UNIT",
@@ -877,12 +868,12 @@
             ],
             "translations": [
                 {
-                    "property": "SHORT_NAME",
+                    "property": "NAME",
                     "locale": "en_GB",
                     "value": "Baoma"
                 },
                 {
-                    "property": "NAME",
+                    "property": "SHORT_NAME",
                     "locale": "en_GB",
                     "value": "Baoma"
                 }

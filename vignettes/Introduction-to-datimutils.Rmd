@@ -17,7 +17,7 @@ To make use of `datimutils` package you should already have a basic understandin
 
 * organisation units are structured in a hierarchy and data can be aggregated within that hierarchy.
 
-Below we will show how datimutils can be used to log into a DHIS2 instance, retrieve metadata, and retireve aggregated data for further analysis in R.
+Below you will see how datimutils can be used to log into a DHIS2 instance, retrieve metadata, and retrieve aggregated data for further analysis in R.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -37,15 +37,15 @@ httptest::start_vignette("play.dhis2.org")
 ```
 ## Logging into DATIM
 
-Before querying the DATIM api, you must log into a DATIM instance. There are three basic ways to do so within datimutils. All three utilize the `loginToDATIM` function.
+Before querying the DATIM api, you must log into a DATIM instance. There are three basic ways to do so with datimutils. All three utilize the `loginToDATIM` function. NOTE this function can log in to any DHIS2 instance, not just DATIM, base on the provided baseurl.
 
-By default the `loginToDATIM` function will create an object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects.
+By default the `loginToDATIM` function will create an R object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects with each request.
 
-> Note: By default, this session will expire after 60 minutes. When it does, you will need to re-authenticate
+> Note: By default, this DHIS2 session will expire after 60 minutes. When it does, you will need to re-authenticate
 
-### Method 1 - The Most Basic
+### Method 1 - username and password parameters
 
-The most basic method is to pass your username and password directly into the `loginToDATIM` function.
+The most basic method is to pass your username and password directly into the `loginToDATIM` function, along with the web address of the server you wish to log in to.
 
 ```{r eval = F}
 loginToDATIM(
@@ -58,11 +58,11 @@ loginToDATIM(
 
 ### Methods 2 and 3 - Configuration Files
 
-The other two methods require the use of a configuration file. Make sure that you remember the location of this config file, as you will need it to pass into the `loginToDATIM` function. If a user wants to ablility to quickly log into multiple different servers, they can have a config file for each one.
+The other two methods require the use of a configuration file. Make sure that you remember the location of this config file, as you will need it to pass into the `loginToDATIM` function. If a user wants the ablility to quickly log into multiple different servers, they can have a config file for each one.
 
-In this case, our config file is a JSON file called, *play.json*.
+In this vignette, our config file is a JSON file called, *play.json*.
 
-There are two ways to login with this config file.
+There are two ways set up this config file.
 
 In the first, you input your baseurl, username, and password.
 
@@ -85,7 +85,7 @@ Alternatively, if the the entry for password is blank such that the file looks l
 }
 }
 ```
-The function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login. A user may prefer storing their passwords in their keyring because it allows them to avoid storing passwords in plain text on their computer, which is a potential security risk.   
+The function will look in your keyring/credential store for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login. A user may prefer storing their passwords in their operating systems credentiual store because it allows them to avoid storing passwords in plain text on their computer, which is a potential security risk.   
 >Note: keyrings operate differently on different operating systems
 
 
@@ -99,7 +99,9 @@ loginToDATIM(config_path = "play.json")
 
 ## Features for working with DATIM/DHIS2 metadata
 
-For demonstration purposes, we will use a sample data set:
+A DHIS2 configuration includes many different types of metadata, such as data elements, indicators, and organisation units. The Web api lets you look up these pieces of metadata and obtain their related properties . For instance, a property of an organisation unit is its path, or the hierarchy or organization units above the organisation unit.
+
+For demonstration purposes, we will use a small sample data set with columns containing data element uids, organisation unit uids, and a value column:
 
 ```{r}
 data <- tibble::tribble(~dataElement, ~orgUnit, ~value,
@@ -110,55 +112,54 @@ data <- tibble::tribble(~dataElement, ~orgUnit, ~value,
 print(data)
 ```
 
+Datimutils offers a number of different ways to retrieve metadata from DHIS2 including some high level metadata helpers for each type of metadata and a more general criteria based search using metadata filters.
 
-### Getting metadata based on a vector of identifiers (e.g. uid or name)
+### Metadata helpers when you have a vector of identifiers (e.g. uids or names)
 
-A DHIS2 configuration includes many different types of metadata, such as data elements and indicators. The Web api lets you look up these pieces of metadata and obtain their related properties . For instance, a property of an organisation unit is its path. Datimutils provides a number of high level metadata helpers for obtaining details on the different types of metadata. This is the list of high level metadata helpers in datimutils.
+Datimutils provides a number of high level metadata helpers for obtaining details (properties) of the different types of metadata. There is one for each of the main metadata categories in DHIS2 and auto complete in your R IDE will often make typing these very fast. This is the list of the numerous high level metadata helpers in datimutils.
 
 
-```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl <- "
 |                       datimutils function                      | DATIM Source               |
 |----------------------------------------------------------------|:--------------------------:|
-| getCategories(values, by, fields, d2_session, retry)           | categories                 |
-| getCatCombos(values, by, fields, d2_session, retry)            | categoryCombinations       |
-| getCatOptionCombos(values, by, fields, d2_session, retry)      | categoryOptionCombinations |
-| getCatOptionGroupSets(values, by, fields, d2_session, retry)   | categoryOptionGroupSets    |
-| getCatOptionGroups(values, by, fields, d2_session, retry)      | categoryOptionGroups       |
-| getCatOptions(values, by, fields, d2_session, retry)           | categoryOptions            |
-| getDataElementGroupSets(values, by, fields, d2_session, retry) | dataElementGroupSets       |
-| getDataElementGroups(values, by, fields, d2_session, retry)    | dataElementGroups          |
-| getDataElements(values, by, fields, d2_session, retry)         | dataElements               |
-| getDataSets(values, by, fields, d2_session, retry)             | dataSets                   |
-| getIndicatorGroupSets(values, by, fields, d2_session, retry)   | indicatorGroupSets         |
-| getIndicatorGroups(values, by, fields, d2_session, retry)      | indicatorGroups            |
-| getIndicators(values, by, fields, d2_session, retry)           | indicators                 |
-| getOptionGroupSets(values, by, fields, d2_session, retry)      | optionGroupSets            |
-| getOptionGroups(values, by, fields, d2_session, retry)         | optionGroups               |
-| getOptionSets(values, by, fields, d2_session, retry)           | optionSets                 |
-| getOptions(values, by, fields, d2_session, retry)              | options                    |
-| getOrgUnitGroupSets(values, by, fields, d2_session, retry)     | organisationUnitGroupSets  |
-| getOrgUnitGroups(values, by, fields, d2_session, retry)        | organisationUnitGroups     |
-| getOrgUnits(values, by, fields, d2_session, retry)             | organisationUnits          |
-| getDimensions(values, by, fields, d2_session, retry)           | dimensions                 |
+| getCategories           | categories                 |
+| getCatCombos            | categoryCombinations       |
+| getCatOptionCombos      | categoryOptionCombinations |
+| getCatOptionGroupSets   | categoryOptionGroupSets    |
+| getCatOptionGroups      | categoryOptionGroups       |
+| getCatOptions           | categoryOptions            |
+| getDataElementGroupSets | dataElementGroupSets       |
+| getDataElementGroups    | dataElementGroups          |
+| getDataElements         | dataElements               |
+| getDataSets             | dataSets                   |
+| getIndicatorGroupSets   | indicatorGroupSets         |
+| getIndicatorGroups      | indicatorGroups            |
+| getIndicators           | indicators                 |
+| getOptionGroupSets      | optionGroupSets            |
+| getOptionGroups         | optionGroups               |
+| getOptionSets           | optionSets                 |
+| getOptions              | options                    |
+| getOrgUnitGroupSets     | organisationUnitGroupSets  |
+| getOrgUnitGroups        | organisationUnitGroups     |
+| getOrgUnits             | organisationUnits          |
+| getDimensions           | dimensions                 |
 "
 cat(tabl)
 ```
 
-Additionally there is a generic getMetadata function that allows you to create more complex requests for metadata. We provide examples of using these metadata functions below.
 
+#### Easily Convert UIDs to names
 
-#### Uuids to names
-
-By default, `getDataElements` (and the other high level metadata helpers) support the conversion of a vector of uids into a vector of names. The command
+By default high level metadata helpers such as `getDataElements` support the conversion of a vector of uids into a vector of names. The command
 
 ```{r}
 getOrgUnits(data$orgUnit)
 ```
 
-would return `[1] "Kenema" "Kenema" "Kono" `, as the orgUnit uid "kJq2mPyFEHo" corresponds to the name "Kenema."
+returns `[1] "Kenema" "Kenema" "Kono" `, as the orgUnit uid "kJq2mPyFEHo" corresponds to the name "Kenema."
 
-Note that you get a row for "Kenema" both times it appears. This is an advantage of datimutils. It will return the metadata jhelpers in the same order order of the vector passed in. Because of this, it works well with tidyverse functions like the one below.
+Note that you get a result for "Kenema" both times it appears. This is an advantage of datimutils. The metadata helpers will return matched results in the same order as the lookup vector passed to the function. Because of this, it works well with tidyverse functions like `dplyr::mutate`. Here we add a new column with data element names corresponding to the existing data element uid columns. 
 
 ```{r}
 dplyr::mutate(data,
@@ -166,14 +167,19 @@ dplyr::mutate(data,
 
 ```
 
-#### Names to uuids
+#### Convert other identifiers to uids
 
-It is also possible to look up metadata using a different identifier, but you must specify the field you intend to use.
+It is also possible to look up metadata using a different identifier such as name or code, but you must specify the look up identifier for your input vector.
 
 ```{r}
-getOrgUnits('Bo', by = name)
+getOrgUnits("Bo", 
+            by = name)
 
-# Return: [1] "O6uvpzGd5pu"
+```
+```{r}
+getDataElements("DE_359596", 
+                by = code)
+
 ```
 
 <!--
@@ -181,8 +187,6 @@ getOrgUnits('Bo', by = name)
 
 It seems that neither double quotes nor no quotes works. Single quotes is the only one I tested that worked.
 -->
-
-Identifiers besides 'name' could be 'shortName' or 'id.'
 
 #### Working with `getMetadata`
 

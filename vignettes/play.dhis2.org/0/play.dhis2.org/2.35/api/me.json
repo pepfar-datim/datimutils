@@ -1,5 +1,5 @@
 {
-    "lastUpdated": "2021-08-19T11:08:22.403",
+    "lastUpdated": "2018-12-03T13:24:26.356",
     "id": "xE7jOejl9FI",
     "created": "2013-04-18T17:15:08.407",
     "name": "John Traore",
@@ -19,16 +19,7 @@
     "whatsApp": "+123123123123",
     "languages": "English",
     "telegram": "john.traore",
-    "sharing": {
-        "external": false,
-        "users": {
-
-        },
-        "userGroups": {
-
-        }
-    },
-    "lastCheckedInterpretations": "2021-08-19T11:08:22.402",
+    "lastCheckedInterpretations": "2016-10-13T11:51:34.317",
     "firstName": "John",
     "nationality": "Sierra Leone",
     "interests": "Football, swimming, singing, dancing",
@@ -43,11 +34,11 @@
     },
     "userCredentials": {
         "code": "admin",
-        "lastUpdated": "2021-08-19T13:54:53.127",
+        "lastUpdated": "2021-08-20T12:19:47.441",
         "id": "ZyjSDLHGPv4",
         "created": "2013-04-18T17:15:08.401",
         "name": "John Traore",
-        "lastLogin": "2021-08-19T13:54:53.127",
+        "lastLogin": "2021-08-20T12:19:47.441",
         "displayName": "John Traore",
         "externalAuth": false,
         "externalAccess": false,
@@ -55,15 +46,6 @@
         "twoFA": false,
         "passwordLastUpdated": "2014-12-18T20:56:05.264",
         "invitation": false,
-        "sharing": {
-            "external": false,
-            "users": {
-
-            },
-            "userGroups": {
-
-            }
-        },
         "selfRegistered": false,
         "favorite": false,
         "username": "admin",
@@ -78,15 +60,8 @@
             "write": true,
             "manage": true
         },
-        "createdBy": {
-            "displayName": "John Traore",
-            "name": "John Traore",
-            "id": "xE7jOejl9FI",
-            "username": "admin"
-        },
         "user": {
             "displayName": "John Traore",
-            "name": "John Traore",
             "id": "xE7jOejl9FI",
             "username": "admin"
         },
@@ -155,8 +130,7 @@
     },
     "settings": {
         "keyMessageSmsNotification": false,
-        "keyDbLocale": "en",
-        "keyTrackerDashboardLayout": "{\"IpHINAT79UW\":{\"widgets\":[{\"title\":\"enrollment\",\"view\":\"components/enrollment/enrollment.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":0},{\"title\":\"indicators\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":1},{\"title\":\"dataentry\",\"view\":\"components/dataentry/dataentry.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":2},{\"title\":\"report\",\"view\":\"components/report/tei-report.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3},{\"title\":\"current_selections\",\"view\":\"components/selected/selected.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":0},{\"title\":\"feedback\",\"view\":\"components/rulebound/rulebound.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":1},{\"title\":\"profile\",\"view\":\"components/profile/profile.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":2},{\"title\":\"relationships\",\"view\":\"components/relationship/relationship.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":4},{\"title\":\"notes\",\"view\":\"components/notes/notes.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5},{\"title\":\"messaging\",\"view\":\"components/messaging/messaging.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5},{\"title\":\"dataentryTabular\",\"view\":\"components/dataentry/dataentry-tabular-layout.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3}],\"program\":\"IpHINAT79UW\"},\"ur1Edk5Oe2n\":{\"widgets\":[{\"title\":\"enrollment\",\"view\":\"components/enrollment/enrollment.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":0},{\"title\":\"indicators\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":1},{\"title\":\"dataentry\",\"view\":\"components/dataentry/dataentry.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":2},{\"title\":\"report\",\"view\":\"components/report/tei-report.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3},{\"title\":\"current_selections\",\"view\":\"components/selected/selected.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":0},{\"title\":\"feedback\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":1},{\"title\":\"profile\",\"view\":\"components/profile/profile.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":2},{\"title\":\"relationships\",\"view\":\"components/relationship/relationship.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":3},{\"title\":\"notes\",\"view\":\"components/notes/notes.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":4},{\"title\":\"messaging\",\"view\":\"components/messaging/messaging.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5},{\"title\":\"dataentryTabular\",\"view\":\"components/dataentry/dataentry-tabular-layout.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3}],\"program\":\"ur1Edk5Oe2n\"},\"DEFAULT\":{\"widgets\":[{\"title\":\"enrollment\",\"view\":\"components/enrollment/enrollment.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":0},{\"title\":\"indicators\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":1,\"canBeUsedAsTopBar\":true,\"topBarView\":\"components/rulebound/rulebound-topbar.html#indicators\"},{\"title\":\"dataentry\",\"view\":\"components/dataentry/dataentry.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":2},{\"title\":\"dataentryTabular\",\"view\":\"components/dataentry/dataentry-tabular-layout.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3},{\"title\":\"report\",\"view\":\"components/report/tei-report.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":4},{\"title\":\"current_selections\",\"view\":\"components/selected/selected.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":0},{\"title\":\"feedback\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":1,\"canBeUsedAsTopBar\":true,\"topBarView\":\"components/rulebound/rulebound-topbar.html#feedback\"},{\"title\":\"profile\",\"view\":\"components/profile/profile.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":2,\"canBeUsedAsTopBar\":true,\"topBarView\":\"components/profile/profile-topbar.html\"},{\"title\":\"relationships\",\"view\":\"components/relationship/relationship.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":3},{\"title\":\"notes\",\"view\":\"components/notes/notes.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":4},{\"title\":\"messaging\",\"view\":\"components/messaging/messaging.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5}],\"topBarSettings\":{},\"program\":\"DEFAULT\",\"programStageTimeLineLayout\":{}}}",
+        "keyTrackerDashboardLayout": "{\"IpHINAT79UW\":{\"widgets\":[{\"title\":\"enrollment\",\"view\":\"components/enrollment/enrollment.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":0},{\"title\":\"indicators\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":1},{\"title\":\"dataentry\",\"view\":\"components/dataentry/dataentry.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":2},{\"title\":\"report\",\"view\":\"components/report/tei-report.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3},{\"title\":\"current_selections\",\"view\":\"components/selected/selected.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":0},{\"title\":\"feedback\",\"view\":\"components/rulebound/rulebound.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":1},{\"title\":\"profile\",\"view\":\"components/profile/profile.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":2},{\"title\":\"relationships\",\"view\":\"components/relationship/relationship.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":4},{\"title\":\"notes\",\"view\":\"components/notes/notes.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5},{\"title\":\"messaging\",\"view\":\"components/messaging/messaging.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5},{\"title\":\"dataentryTabular\",\"view\":\"components/dataentry/dataentry-tabular-layout.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3}],\"program\":\"IpHINAT79UW\"},\"ur1Edk5Oe2n\":{\"widgets\":[{\"title\":\"enrollment\",\"view\":\"components/enrollment/enrollment.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":0},{\"title\":\"indicators\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":1},{\"title\":\"dataentry\",\"view\":\"components/dataentry/dataentry.html\",\"show\":false,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":2},{\"title\":\"report\",\"view\":\"components/report/tei-report.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3},{\"title\":\"current_selections\",\"view\":\"components/selected/selected.html\",\"show\":false,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":0},{\"title\":\"feedback\",\"view\":\"components/rulebound/rulebound.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":1},{\"title\":\"profile\",\"view\":\"components/profile/profile.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":2},{\"title\":\"relationships\",\"view\":\"components/relationship/relationship.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":3},{\"title\":\"notes\",\"view\":\"components/notes/notes.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":4},{\"title\":\"messaging\",\"view\":\"components/messaging/messaging.html\",\"show\":true,\"expand\":true,\"parent\":\"smallerWidget\",\"order\":5},{\"title\":\"dataentryTabular\",\"view\":\"components/dataentry/dataentry-tabular-layout.html\",\"show\":true,\"expand\":true,\"parent\":\"biggerWidget\",\"order\":3}],\"program\":\"ur1Edk5Oe2n\"}}",
         "keyCurrentStyle": "light_blue/light_blue.css",
         "keyStyle": "light_blue/light_blue.css",
         "keyUiLocale": "en",
@@ -538,22 +512,20 @@
     "programs": [
         "IpHINAT79UW",
         "WSGAb5XwJ3Y",
-        "ur1Edk5Oe2n",
         "lxAQ7Zs9VYR",
         "uy2gU8kT1jF",
         "fDd25txQckK",
+        "ur1Edk5Oe2n",
         "eBAyeGv0exc",
         "kla3mAPgvCH",
         "MoUd5BTQ3lY",
         "q04UBOqq3rp",
         "VBqh0ynB2wv",
-        "M3xtLkYBlKI",
         "qDkgAbB5Jlk",
-        "mAyFmtECflO"
+        "M3xtLkYBlKI",
+        "ROSaojkGieB"
     ],
     "dataSets": [
-        "Nyh6laLdBEJ",
-        "j38YW1Am7he",
         "aLpVgfXiz0f",
         "YFTk3VdO9av",
         "Rl58JxmKJo2",
@@ -564,7 +536,6 @@
         "ce7DSxx5H2I",
         "EKWVBc5C0ms",
         "PLq9sJluXvc",
-        "rsyjyJmYD4J",
         "ULowA8V3ucd",
         "QX4ZTUbOt3a",
         "pBOMPrpg1QX",
@@ -575,8 +546,12 @@
         "Y8gAn9DfAGU",
         "vc6nF5yZsPR",
         "Lpw6GcnTrmS",
+        "Nyh6laLdBEJ",
+        "j38YW1Am7he",
+        "rsyjyJmYD4J",
         "lyLU2wR22tC",
         "VTdjfLXXmoi",
-        "SF8FDSqw30D"
+        "SF8FDSqw30D",
+        "aI1N6nBs2c7"
     ]
 }
