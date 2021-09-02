@@ -7,17 +7,17 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The `datimutils` package was developed to simplify interaction with the DATIM/DHIS2 api from R. The package was designed to work well with `tidyverse` package functions and currently supports requesting metadata and metadata properties as well as aggregated data from the analytics resource of the API. This enables one to pull any data that one would be able to get in a DHIS2 pivot table.
+The `datimutils` package was developed to simplify the interaction between the DATIM/DHIS2 api and R. The package was designed to work well with the `tidyverse` package and its suite of functions. It currently supports requesting metadata and metadata properties as well as aggregated data from the analytics resource of the API. This enables users to pull any data that they would normally be able to get in a DHIS2 pivot table.
 
-To make use of `datimutils` package you should already have a basic understanding of DATIM/DHIS2. For instance you should understand that:
+In order to make use of the `datimutils` package the user should already have a basic understanding of DATIM/DHIS2. For instance the user should understand:
 
-* the data in DHIS2 instances are associated with organisation units, data elements, time periods, and categories and category options such as age and sex;
+-   the data in DHIS2 instances are associated with organisation units, data elements, time periods, and categories and category options such as age and sex;
 
-* the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements;
+-   the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements;
 
-* organisation units are structured in a hierarchy and data can be aggregated within that hierarchy.
+-   organisation units are structured in a hierarchy and data can be aggregated within that hierarchy.
 
-Below you will see how datimutils can be used to log into a DHIS2 instance, retrieve metadata, and retrieve aggregated data for further analysis in R.
+Below the user will see how datimutils can be used to log into a DHIS2 instance, retrieve metadata, and retrieve aggregated data in order to perform further analysis in R.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -35,17 +35,18 @@ library(httptest)
 ```{r, include = FALSE}
 httptest::start_vignette("play.dhis2.org")
 ```
+
 ## Logging into DATIM
 
-Before querying the DATIM api, you must log into a DATIM instance. There are three basic ways to do so with datimutils. All three utilize the `loginToDATIM` function. NOTE this function can log in to any DHIS2 instance, not just DATIM, base on the provided baseurl.
+Before querying the DATIM api, the user must log into a DATIM instance. There are three basic ways to accomplish this with datimutils. All three methods utilize the `loginToDATIM` function. NOTE this function can log into any DHIS2 instance, not just DATIM, based on the provided baseurl.
 
-By default the `loginToDATIM` function will create an R object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming you are logging in from the global environment. All datimutils functions will search for the d2_default_session by default, allowing you to make multiple DATIM api requests through datimutils without individually specifying unique login objects with each request.
+By default the `loginToDATIM` function will create an R object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming the user is logging in from the global environment. All datimutils functions will search for the d2_default_session by default, thus enabling the user to make multiple DATIM api requests through datimutils without individually specifying unique login objects with each request.
 
-> Note: By default, this DHIS2 session will expire after 60 minutes. When it does, you will need to re-authenticate
+> Note: By default, this DHIS2 session will expire after 60 minutes. When it does, the user will need to re-authenticate
 
 ### Method 1 - username and password parameters
 
-The most basic method is to pass your username and password directly into the `loginToDATIM` function, along with the web address of the server you wish to log in to.
+The most basic method is for the user to pass their respective username and password directly into the `loginToDATIM` function, along with the web address of the server the user wishes to log in to.
 
 ```{r eval = F}
 loginToDATIM(
@@ -55,16 +56,15 @@ loginToDATIM(
 )
 ```
 
-
 ### Methods 2 and 3 - Configuration Files
 
-The other two methods require the use of a configuration file. Make sure that you remember the location of this config file, as you will need it to pass into the `loginToDATIM` function. If a user wants the ablility to quickly log into multiple different servers, they can have a config file for each one.
+The other two log in methods require the user to utilize a configuration file. It is imperative that the user remembers the location of this config file, as it is needed to pass into the `loginToDATIM` function. If a user wants the ability to quickly log into multiple different servers, they can have a config file for each server instance.
 
-In this vignette, our config file is a JSON file called, *play.json*.
+In this vignette, the example config file is a JSON file called, *play.json*.
 
-There are two ways set up this config file.
+There are two approved ways set up this configuration file.
 
-In the first, you input your baseurl, username, and password.
+The first option entails the user entering the following: baseurl, username, and password.
 
 ```{r eval = F}
 {
@@ -75,7 +75,9 @@ In the first, you input your baseurl, username, and password.
 }
 }
 ```
-Alternatively, if the the entry for password is blank such that the file looks like this
+
+Alternatively, the the entry for password can be blank such that the file resembles this
+
 ```{r eval = F}
 {
 "dhis": {
@@ -85,21 +87,20 @@ Alternatively, if the the entry for password is blank such that the file looks l
 }
 }
 ```
-The function will look in your keyring/credential store for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login. A user may prefer storing their passwords in their operating systems credentiual store because it allows them to avoid storing passwords in plain text on their computer, which is a potential security risk.   
->Note: keyrings operate differently on different operating systems
 
+The function will look in the users keyring/credential store for the aforementioned password, if not found, the user will be prompted to enter a password that will store automatically under that username and service (baseurl) for the next log in. A user may prefer storing their passwords in their operating systems credential store due to the fact it enables them to avoid storing this data in a plain text fomat on their computer, which is a potential security risk.\
+\>Note: keyrings operate differently on different operating systems
 
-In both methods, call the `loginToDATIM` function as so:
-> Note: replace `play.json` with the path of your config file
+In both methods, call the `loginToDATIM` function as so: \> Note: replace `play.json` with the path of your config file
 
 ```{r}
-# logging in generates a cookie so the other funcitons can be used freely without credentials
+# logging in generates a cookie so the other functions can be used freely without credentials
 loginToDATIM(config_path = "play.json")
 ```
 
 ## Features for working with DATIM/DHIS2 metadata
 
-A DHIS2 configuration includes many different types of metadata, such as data elements, indicators, and organisation units. The Web api lets you look up these pieces of metadata and obtain their related properties . For instance, a property of an organisation unit is its path, or the hierarchy or organization units above the organisation unit.
+A DHIS2 configuration includes many different types of metadata; such as data elements, indicators, and organisation units. The Web api allows the user to look up these pieces of metadata and obtain their related properties . For instance, a property of an organisation unit is its path, or the hierarchy or organization units above the organisation unit.
 
 For demonstration purposes, we will use a small sample data set with columns containing data element uids, organisation unit uids, and a value column:
 
@@ -114,10 +115,9 @@ print(data)
 
 Datimutils offers a number of different ways to retrieve metadata from DHIS2 including some high level metadata helpers for each type of metadata and a more general criteria based search using metadata filters.
 
-### Metadata helpers when you have a vector of identifiers (e.g. uids or names)
+### Metadata helpers when a user has a vector of identifiers (e.g. uids or names)
 
-Datimutils provides a number of high level metadata helpers for obtaining details (properties) of the different types of metadata. There is one for each of the main metadata categories in DHIS2 and auto complete in your R IDE will often make typing these very fast. This is the list of the numerous high level metadata helpers in datimutils.
-
+Datimutils provides a number of high level metadata helpers for obtaining details (properties) of the different types of metadata. There is a helper for each of the main metadata categories in DHIS2, in fact auto complete in the users R IDE will often make typing these very fast. This is the list of the numerous high level metadata helpers in datimutils.
 
 ```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl <- "
@@ -148,7 +148,6 @@ tabl <- "
 cat(tabl)
 ```
 
-
 #### Easily Convert UIDs to names
 
 By default high level metadata helpers such as `getDataElements` support the conversion of a vector of uids into a vector of names. The command
@@ -157,9 +156,9 @@ By default high level metadata helpers such as `getDataElements` support the con
 getOrgUnits(data$orgUnit)
 ```
 
-returns `[1] "Kenema" "Kenema" "Kono" `, as the orgUnit uid "kJq2mPyFEHo" corresponds to the name "Kenema."
+returns `[1] "Kenema" "Kenema" "Kono"`, as the orgUnit uid "kJq2mPyFEHo" corresponds to the name "Kenema."
 
-Note that you get a result for "Kenema" both times it appears. This is an advantage of datimutils. The metadata helpers will return matched results in the same order as the lookup vector passed to the function. Because of this, it works well with tidyverse functions like `dplyr::mutate`. Here we add a new column with data element names corresponding to the existing data element uid columns. 
+Note that the user gets a result for "Kenema" both times it appears. This is an advantage of datimutils. The metadata helpers will return matched results in the same order as the lookup vector passed to the function. This key design element enables it to work well with the tidyverse suite of functions such as `dplyr::mutate`. Here a new column is added with data element names corresponding to the existing data element uid columns.
 
 ```{r}
 dplyr::mutate(data,
@@ -169,25 +168,27 @@ dplyr::mutate(data,
 
 #### Convert other identifiers to uids
 
-It is also possible to look up metadata using a different identifier such as name or code, but you must specify the look up identifier for your input vector.
+It is also possible to look up metadata using a different identifier such as name or code, but the user must specify the look up identifier for their input vector.
 
 ```{r}
 getOrgUnits("Bo", 
             by = name)
 
 ```
+
 ```{r}
 getDataElements("DE_359596", 
                 by = code)
 
 ```
 
+```{=html}
 <!--
 > Note: The name passed in the function can be written with single quotes (as seen above), with no quotes at all `getOrgUnits(Bo, by = name)`, but not with double quotes.
 
 It seems that neither double quotes nor no quotes works. Single quotes is the only one I tested that worked.
 -->
-
+```
 #### Working with `getMetadata`
 
 The `getMetadata` function can be used to call metadata returning endpoints. It takes an endpoint and fields as its basic arguments. The main difference between `getMetadata` and other metadata helpers is that `getMetadata` does not require an array of values to query, meaning that you will not know the exact length of your response. This is disadvantageous for implementation in tidyverse functions like dplyer, but very beneficial if you want the full scope of information in a specific query.
@@ -202,12 +203,11 @@ data <- getMetadata(
 head(data)
 ```
 
-
 #### Metadata filters
 
 In the above function, the second argument is called a filter. In this case, it filters the 'organisationUnits' endpoint to only respond with units at the district level.
 
-To improve the syntax of datimutils code, datimutils has included it own api comparison operators. A full list of datimutils' custom api comparison operators can be found at the end of the section. The above and below command are equivalent.
+To improve the syntax of datimutils code, datimutils has included its own api comparison operators. A full list of datimutils' custom api comparison operators can be found at the end of the section. The above and below commands are equivalent.
 
 ```{r}
 data <- getMetadata(
@@ -219,7 +219,7 @@ data <- getMetadata(
 head(data)
 ```
 
-If you're familiar with the technology, datimutils also has non-standard evaluation:
+If the user is familiar with the technology, datimutils also has non-standard evaluation:
 
 ```{r}
 data <- getMetadata(
@@ -231,70 +231,64 @@ data <- getMetadata(
 head(data)
 ```
 
+Though the return of these commands may seem convoluted, as some columns are actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
 
+    {
+       "headers":[
 
+       ],
+       "metaData":{
+          "items":{
+             "FbKK4ofIv5R":{
+                "uid":"FbKK4ofIv5R",
+                "code":"IN_52494",
+                "name":"Measles Coverage <1y",
+                "legendSet":"BtxOoQuLyg1",
+                "dimensionItemType":"INDICATOR",
+                "valueType":"NUMBER",
+                "totalAggregationType":"AVERAGE"
+             },
+             "JIVMtpjVZqJ":{
+                "uid":"JIVMtpjVZqJ",
+                "code":"IN_394153",
+                "name":"Diarrhoea <5 y incidence rate (%)",
+                "legendSet":"z9SVZTVo0j4",
+                "dimensionItemType":"INDICATOR",
+                "valueType":"NUMBER",
+                "totalAggregationType":"AVERAGE"
+             },
+             "Tt5TAvdfdVK":{
+                "uid":"Tt5TAvdfdVK",
+                "code":"IN_52500",
+                "name":"ANC LLITN coverage",
+                "legendSet":"fqs276KXCXi",
+                "dimensionItemType":"INDICATOR",
+                "valueType":"NUMBER",
+                "totalAggregationType":"AVERAGE"
+             },
+             "sB79w2hiLp8":{
+                "uid":"sB79w2hiLp8",
+                "name":"ANC 3 Coverage",
+                "description":"Total 3rd ANC visits (Fixed and outreach) by expected number of pregnant women.",
+                "legendSet":"fqs276KXCXi",
+                "dimensionItemType":"INDICATOR",
+                "valueType":"NUMBER",
+                "totalAggregationType":"AVERAGE"
+             },
+             "sMTMkudvLCD":{
+                "uid":"sMTMkudvLCD",
+                "name":"HIV: testing and counseling 15-24y",
+                "dimensionItemType":"INDICATOR",
+                "valueType":"NUMBER",
+                "totalAggregationType":"SUM"
+             }
+          }
+       }
+    }
 
-Though the return of these commands may seem convoluted, as some columns actually lists, datimutils does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON <!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
-```
-{
-   "headers":[
+> Keep in mind that the above is \~1/20 of the total characters
 
-   ],
-   "metaData":{
-      "items":{
-         "FbKK4ofIv5R":{
-            "uid":"FbKK4ofIv5R",
-            "code":"IN_52494",
-            "name":"Measles Coverage <1y",
-            "legendSet":"BtxOoQuLyg1",
-            "dimensionItemType":"INDICATOR",
-            "valueType":"NUMBER",
-            "totalAggregationType":"AVERAGE"
-         },
-         "JIVMtpjVZqJ":{
-            "uid":"JIVMtpjVZqJ",
-            "code":"IN_394153",
-            "name":"Diarrhoea <5 y incidence rate (%)",
-            "legendSet":"z9SVZTVo0j4",
-            "dimensionItemType":"INDICATOR",
-            "valueType":"NUMBER",
-            "totalAggregationType":"AVERAGE"
-         },
-         "Tt5TAvdfdVK":{
-            "uid":"Tt5TAvdfdVK",
-            "code":"IN_52500",
-            "name":"ANC LLITN coverage",
-            "legendSet":"fqs276KXCXi",
-            "dimensionItemType":"INDICATOR",
-            "valueType":"NUMBER",
-            "totalAggregationType":"AVERAGE"
-         },
-         "sB79w2hiLp8":{
-            "uid":"sB79w2hiLp8",
-            "name":"ANC 3 Coverage",
-            "description":"Total 3rd ANC visits (Fixed and outreach) by expected number of pregnant women.",
-            "legendSet":"fqs276KXCXi",
-            "dimensionItemType":"INDICATOR",
-            "valueType":"NUMBER",
-            "totalAggregationType":"AVERAGE"
-         },
-         "sMTMkudvLCD":{
-            "uid":"sMTMkudvLCD",
-            "name":"HIV: testing and counseling 15-24y",
-            "dimensionItemType":"INDICATOR",
-            "valueType":"NUMBER",
-            "totalAggregationType":"SUM"
-         }
-      }
-   }
-}
-```
-> Keep in mind that the above is ~1/20 of the total characters
-
-
-
-
-
+```{=html}
 <!-- seems like a new section from here on
 
 These helpers will create repeated values and sorting based on input
@@ -342,7 +336,7 @@ data <- getMetadata(
 print(data)
 ```
 
-many different types of calls call be made, here we have two filters passed in as a vector. This call returns a nested data frame
+many different types of calls can be made, below are two filters passed in as a vector. This call returns a nested data frame
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
@@ -355,7 +349,7 @@ data <- getMetadata(
 str(data$translations)
 ```
 
-There is a filter format helper for every comparison operator in Datim, here like is used.
+There is a filter format helper for every comparison operator in Datim, for example like is used below.
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
@@ -364,6 +358,7 @@ data <- getMetadata(
 ```
 
 -->
+```
 Here is a list of the api comparison operators and their datimutils equivalents:
 
 ```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
@@ -396,10 +391,9 @@ tabl <- "
 cat(tabl)
 ```
 
-
 ## Retrieving data using `getAnalytics`
 
-There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters, and returns aggregated data. Here is an example:
+There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters which then returns aggregated data. Here is an example:
 
 ```{r}
 #Get ANC: Key Coverages
@@ -414,14 +408,13 @@ head(data)
 
 ### Anatomy of an analytics call
 
-A simple `getAnalytics` call uses three main parameters dx, ou, and pe. The parameter 'dx' is used to specify the data element or indicator, 'ou' is used to specify the organisation units, and 'pe' is used to specify the period. 
+A simple `getAnalytics` call uses three main parameters dx, ou, and pe. The parameter 'dx' is used to specify the data element or indicator, 'ou' is used to specify the organisation units, and 'pe' is used to specify the period.
 
-In our sample case, the data element passed was the uuid for 'ANC 1 Coverage,' The organisation unit passed was the uuid for 'Bo,' and the period was the last 12 months.
-
+In this sample case, the data element passed was the uuid for 'ANC 1 Coverage,' The organisation unit passed was the uuid for 'Bo,' and the period was the last 12 months.
 
 ### Dimensions vs filters
 
-Adding '_f' to the end of a parameter in `getAnalytics` turns from from a dimension into a filter ('ou' to 'ou_f'). Because of this change, the following commands look similar, but have one key difference:
+Adding '\_f' to the end of a parameter in `getAnalytics` turns it from a dimension into a filter ('ou' to 'ou_f'). Because of this change, the following commands look similar, but have one key difference:
 
 ```{r}
 datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
@@ -436,10 +429,9 @@ datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
 
 ```
 
+In the first command, because the 'ou' argument is a *dimension*, the `getAnalytics` function queries each of the uuids in the array individually, meaning that the organisation unit appears as a column in the resulting dataframe. In the second command, because the 'ou_f' argument is a *filter*, the `getAnalytics` aggregates data from the array of uuids as a whole and does not include the organisation unit as a column in the resulting dataframe.
 
-In the first command, because the 'ou' argument is a *dimension*, the `getAnalytics` function queries each of the uuids in the array individually, and meaning that the organisation unit appears as a column in the resulting dataframe. In the second command, because the 'ou_f' argument is a *filter*, the `getAnalytics` aggregates data from the array of uuids as a whole and doe snot include the organisation unit as a column in the resulting dataframe.
-
-To use `getAnalytics` you can pass in the uids into their respective arguments and will be formatted correctly, but there are also two operators which can format strings for use in analytics api calls.
+To use `getAnalytics` the user can pass in the uids into their respective arguments and will be formatted correctly, but there are also two operators which can format strings for use in analytics api calls.
 
 ```{r}
 a %.d% c("123","456")
