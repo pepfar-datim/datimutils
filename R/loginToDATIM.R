@@ -100,6 +100,41 @@ getCredentialsFromKeyring <- function(ring) {
   return(credentials)
 }
 
+
+
+
+
+
+
+# Wed Sep  8 16:48:56 2021 ------------------
+#' @title getCredentialsFromOAuth2(ring, service, username)
+#'
+#' @description retrieves username, service, and password from DATIM/DHIS2
+#' @param ring keyring name
+#' @return a list containing entries called password, baseurl, and username
+#'
+getCredentialsFromKeyring <- function(ring) {
+  # returns credentials from a keyring
+  try <- as.list(keyring::key_list(keyring = ring))
+  credentials <- c("password" = keyring::key_get(try[["service"]]), try)
+  names(credentials) <- c("password", "baseurl", "username")
+  keyring::keyring_lock(ring)
+  return(credentials)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+################################################################################
+
 #' @export
 #' @title loginToDATIMfunction(config_path=NULL,
 #' config_path_level = "dhis" )
