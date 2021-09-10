@@ -34,11 +34,11 @@
     },
     "userCredentials": {
         "code": "admin",
-        "lastUpdated": "2021-08-20T12:19:47.441",
+        "lastUpdated": "2021-09-10T08:17:46.791",
         "id": "ZyjSDLHGPv4",
         "created": "2013-04-18T17:15:08.401",
         "name": "John Traore",
-        "lastLogin": "2021-08-20T12:19:47.441",
+        "lastLogin": "2021-09-10T08:17:46.791",
         "displayName": "John Traore",
         "externalAuth": false,
         "externalAccess": false,
@@ -523,7 +523,7 @@
         "VBqh0ynB2wv",
         "qDkgAbB5Jlk",
         "M3xtLkYBlKI",
-        "ROSaojkGieB"
+        "xlE5qTOKJrL"
     ],
     "dataSets": [
         "aLpVgfXiz0f",
@@ -551,7 +551,6 @@
         "rsyjyJmYD4J",
         "lyLU2wR22tC",
         "VTdjfLXXmoi",
-        "SF8FDSqw30D",
-        "aI1N6nBs2c7"
+        "SF8FDSqw30D"
     ]
 }

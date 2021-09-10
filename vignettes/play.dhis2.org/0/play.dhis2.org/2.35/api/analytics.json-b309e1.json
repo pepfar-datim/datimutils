@@ -41,14 +41,14 @@
             "O6uvpzGd5pu": {
                 "name": "Bo"
             },
-            "202008": {
-                "name": "August 2020"
-            },
             "202107": {
                 "name": "July 2021"
             },
             "202009": {
                 "name": "September 2020"
+            },
+            "202108": {
+                "name": "August 2021"
             },
             "202105": {
                 "name": "May 2021"
@@ -98,7 +98,6 @@
                 "Uvn6LCg7dVU"
             ],
             "pe": [
-                "202008",
                 "202009",
                 "202010",
                 "202011",
@@ -109,7 +108,8 @@
                 "202104",
                 "202105",
                 "202106",
-                "202107"
+                "202107",
+                "202108"
             ],
             "ou": [
                 "O6uvpzGd5pu",
@@ -120,20 +120,7 @@
             ]
         }
     },
-    "height": 23,
     "rows": [
-        [
-            "ANC 1 Coverage",
-            "August 2020",
-            "Bo",
-            "146.7"
-        ],
-        [
-            "ANC 1 Coverage",
-            "August 2020",
-            "Bombali",
-            "93.9"
-        ],
         [
             "ANC 1 Coverage",
             "September 2020",
@@ -259,8 +246,21 @@
             "July 2021",
             "Bombali",
             "92.7"
+        ],
+        [
+            "ANC 1 Coverage",
+            "August 2021",
+            "Bo",
+            "147.1"
+        ],
+        [
+            "ANC 1 Coverage",
+            "August 2021",
+            "Bombali",
+            "94.1"
         ]
     ],
-    "headerWidth": 4,
-    "width": 4
+    "height": 23,
+    "width": 4,
+    "headerWidth": 4
 }

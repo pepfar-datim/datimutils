@@ -33,14 +33,14 @@
             "O6uvpzGd5pu": {
                 "name": "Bo"
             },
-            "202008": {
-                "name": "August 2020"
-            },
             "202107": {
                 "name": "July 2021"
             },
             "202009": {
                 "name": "September 2020"
+            },
+            "202108": {
+                "name": "August 2021"
             },
             "202105": {
                 "name": "May 2021"
@@ -90,7 +90,6 @@
                 "Uvn6LCg7dVU"
             ],
             "pe": [
-                "202008",
                 "202009",
                 "202010",
                 "202011",
@@ -101,7 +100,8 @@
                 "202104",
                 "202105",
                 "202106",
-                "202107"
+                "202107",
+                "202108"
             ],
             "ou": [
                 "O6uvpzGd5pu",
@@ -112,13 +112,7 @@
             ]
         }
     },
-    "height": 12,
     "rows": [
-        [
-            "ANC 1 Coverage",
-            "August 2020",
-            "121.9"
-        ],
         [
             "ANC 1 Coverage",
             "September 2020",
@@ -173,8 +167,14 @@
             "ANC 1 Coverage",
             "July 2021",
             "135.9"
+        ],
+        [
+            "ANC 1 Coverage",
+            "August 2021",
+            "122.3"
         ]
     ],
-    "headerWidth": 3,
-    "width": 3
+    "height": 12,
+    "width": 3,
+    "headerWidth": 3
 }
