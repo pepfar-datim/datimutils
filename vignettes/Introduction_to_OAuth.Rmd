@@ -1,0 +1,49 @@
+---
+title: "Introduction to OAuth"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to OAuth"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+The purpose of this documentation is to elaborate upon the OAuth functions created here,  and how it enhances the security of the users Shiny applications.
+
+## Section 1 - Purpose
+The purpose of this package is to create a way for developers to create Shiny apps that use OAuth2 for authentication. Shiny developers have seen an abundance of options rolled out over the years, but these functions will be tailored to DATIM. 
+
+## Section 2 - Basis Script 
+This script was the basis of the OAuth functions that can be found within this package. 
+
+It utilizes the 'httr' and 'shiny' r packages. The 'shiny' package allows the developer to access the url before and after the shiny application is authorized. This is imperative to access the authentication code which tells the server to grant the user a token. The 'httr' package covers the other 90% of the functionality. It contains several OAuth funcitons that are built upon. 
+
+## Section 3 - Functions
+1) getOAuthToken(auth_code, redirect_uri, key, token_url, key_secret_code)  
+    This function handles the fetching of the Authorization Token. 
+    
+    Example: 
+    token_request <- getToken(
+    auth_code = "sdfaf43qgasgadsfadsfadsfadsf",
+    redirect_uri = "http://127.0.0.1:1410/",
+    key = api_keys$key,
+    token_url = api_keys$token_url)
+
+
+
+
+### Shiny Specific Functions
+
+
+
+
+
+
+
