@@ -35,6 +35,15 @@ d2Session <- R6::R6Class("d2Session",
                        )
 )
 
+
+
+
+
+
+
+
+
+
 #' @title LoadConfig(config_path)
 #'
 #' @description Loads a JSON configuration file to access a DHIS2 instance
@@ -53,6 +62,13 @@ loadConfigFile <- function(config_path = NA) {
     stop("You must specify a credentials file!")
   }
 }
+
+
+
+
+
+
+
 
 #' @title makeKeyring(ring ="DatimLogin",
 #' service = getOption("baseurl"), username)
@@ -85,6 +101,15 @@ makeKeyring <- function(username,
   }
 }
 
+
+
+
+
+
+
+
+
+
 #' @title getCredentialsFromKeyring(ring, service, username)
 #'
 #' @description retrieves username, service, and password from keyring
@@ -106,31 +131,71 @@ getCredentialsFromKeyring <- function(ring) {
 
 
 
+
+
+
+
+#TESTING 
+# Note that secret is not really secret, and it's fine to include inline
+# Copy information directly from the dhis2.org web settings
+app <- oauth_app("OAuth2 Demo Client",
+                 key = "demo",
+                 secret = "b18b6560d-0fe3-02ad-6322-25ff2813aae"#,
+                 #redirect_uri = "http://localhost:8100/"
+                 )
+
+api <- oauth_endpoint("requestToken","authorize", "accessToken",
+                      base_url = "https://play.dhis2.org/2.36.3/uaa/oauth")                                         
+
 # Wed Sep  8 16:48:56 2021 ------------------
-#' @title getCredentialsFromOAuth2(ring, service, username)
+#' @title getTokenFromOAuth2(app,api,scope)
 #'
-#' @description retrieves username, service, and password from DATIM/DHIS2
-#' @param ring keyring name
-#' @return a list containing entries called password, baseurl, and username
+#' @description retrieve authorization token from DATIM/DHIS2
+#' @param app Oauthapp details
+#' @return access token to specified application
 #'
-getCredentialsFromKeyring <- function(ring) {
-  # returns credentials from a keyring
-  try <- as.list(keyring::key_list(keyring = ring))
-  credentials <- c("password" = keyring::key_get(try[["service"]]), try)
-  names(credentials) <- c("password", "baseurl", "username")
-  keyring::keyring_lock(ring)
-  return(credentials)
+getTokenFromOAuth2 <- function(app,api,scope = "All") {
+  
+  
+  has_auth_code <- function(params) {
+    # params is a list object containing the parsed URL parameters. Return TRUE if
+    # based on these parameters, it looks like auth codes are present that we can
+    # use to get an access token. If not, it means we need to go through the OAuth
+    # flow.
+    return(!is.null(params$code))
+  }
+
+  
+  token <- oauth2.0_token(
+    endpoint = api,
+    app = app,
+    scope = scope,
+    # credentials = oauth2.0_access_token(api, app, "_pwcBo&state=urXETpcCwl"),
+    cache = FALSE
+  )
+  
+  #params <- parseQueryString(isolate(session$clientData$url_search))
+  url <- oauth2.0_authorize_url(api, app, scope = scope)
+  print(url)
+  redirect <- sprintf("location.replace(\"%s\");", url)
+  print(redirect)
+  print(tags$script(HTML(redirect)))
+  parseQueryString(isolate(session$clientData$url_search))
+  return(token)
 }
 
 
 
+r <- httr::GET(
+  url,
+  # Wed Sep 15 16:22:58 2021 -------------- Needs to be an if else
+  #GET("https://play.dhis2.org/2.36.3/uaa/oauth/token/grant_type=authorization_code/", config(token = token))
+  config(token = token), #Instead of pw
+  httr::timeout(60),
+  handle = handle
+)
 
-
-
-
-
-
-
+me <- jsonlite::fromJSON(httr::content(r, as = "text"))
 
 
 ################################################################################
@@ -208,12 +273,18 @@ loginToDATIM <- function(config_path = NULL,
     base_url <- credentials[["baseurl"]]
   }
 
+  
+  
+  
+  
   # form url
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
   handle <- httr::handle(base_url)
   # Logging in here will give us a cookie to reuse
   r <- httr::GET(
     url,
+    # Wed Sep 15 16:22:58 2021 -------------- Needs to be an if else
+    #GET("https://play.dhis2.org/2.36.3/uaa/oauth/token/grant_type=authorization_code/", config(token = token))
     httr::authenticate(username,
                        password),
     httr::timeout(60),
@@ -232,4 +303,8 @@ loginToDATIM <- function(config_path = NULL,
                          me = me), 
            envir = d2_session_envir)
   }
+  
+  
+  
+  
 }

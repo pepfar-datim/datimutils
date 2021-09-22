@@ -18,7 +18,7 @@ if (interactive()) {
 # Copy information directly from the dhis2.org web settings
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
-                 secret = "a365a5a6f-99ee-db74-6758-1abcfe9b234", #dhis2 = Client Secret
+                 secret = "ce57f2d89-9910-01a7-d0d7-22dfbc5ae8b", #dhis2 = Client Secret
                  redirect_uri = APP_URL  
 )
 

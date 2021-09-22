@@ -12,7 +12,6 @@ library(httptest)
 start_vignette("play.dhis2.org")
 ```
 
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -35,8 +34,9 @@ play2341 <- list(base_url = "https://play.dhis2.org/2.34.1/",
                 handle = httr::handle("https://play.dhis2.org/2.34.1/"))
 
 ```
-Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim.
-For example here is a play server file called `play.json`
+
+Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim. For example here is a play server file called `play.json`
+
 ```{r eval = F}
 {
 "dhis": {
@@ -46,7 +46,9 @@ For example here is a play server file called `play.json`
 }
 }
 ```
+
 Alternatively if the the entry for password is blank such that the file looks like this
+
 ```{r eval = F}
 {
 "dhis": {
@@ -56,16 +58,18 @@ Alternatively if the the entry for password is blank such that the file looks li
 }
 }
 ```
+
 Then the function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
 
 Call the function as so:
+
 ```{r}
 # logging in generates a cookie so the other funcitons can be used freely without credentials
 loginToDATIM(config_path = "play.json")
 ```
 
-There is a wrapper for every metadata endpoint within datimutils.
-Here are calls to  dataElements and categoryOptionGroups for example:
+There is a wrapper for every metadata endpoint within datimutils. Here are calls to dataElements and categoryOptionGroups for example:
+
 ```{r}
 getDataElements(
     "FTRrcoaog83",
@@ -76,6 +80,7 @@ getCatOptionGroups(
 ```
 
 Here is one to the Indicators endpoint:
+
 ```{r}
   getIndicators(
         "ReUHfIn0pTQ",
@@ -83,6 +88,7 @@ Here is one to the Indicators endpoint:
 ```
 
 These helpers will create repeated values and sorting based on input
+
 ```{r}
 # make a random order and duplicated uid group
  groups <- rep(c(
@@ -133,6 +139,7 @@ head(data)
 ```
 
 Data is usually returned in its most base class:
+
 ```{r}
 # returns a vector
 data <- getMetadata(
@@ -144,6 +151,7 @@ print(data)
 ```
 
 many different types of calls call be made, here we have two filters passed in as a vector. This call returns a nested data frame
+
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
@@ -158,6 +166,7 @@ str(data$translations)
 ```
 
 There is a filter format helper for every comparison operator in Datim, here like is used.
+
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
@@ -225,7 +234,6 @@ To use `getAnalytics` you can pass in the uids into their respective arguments a
 a %.d% c("123","456")
 a %.f% c("123","456")
 ```
-
 
 ```{r, include=FALSE}
 end_vignette()

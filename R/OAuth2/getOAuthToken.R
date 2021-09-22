@@ -17,6 +17,7 @@
 
 
 getOAuthToken <- function(auth_code, redirect_uri, key, token_url, key_secret_code){
+  
   queryBody <- createURLString(key, redirect_uri, auth_code)
   
   httr::POST(

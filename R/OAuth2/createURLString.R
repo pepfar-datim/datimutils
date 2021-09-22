@@ -8,6 +8,9 @@
 #' makeBodyString(key= "fhauh108', redirect_uri = "localhost:1410", authcode = "08oiweifoaoihfoijfaodjf")
 
 createURLString <- function(key, redirect_uri, auth_code){
-  sprintf("client_id=%s&grant_type=authorization_code&redirect_uri=%s&code=%s",
-          key, redirect_uri, auth_code)
+  sprintf("client_id=%s&grant_type=authorization_code&redirect_uri=%s&code=%s", key, redirect_uri, auth_code)
+  
+  # url <- oauth2.0_authorize_url(api, app, scope = scope)
+  # redirect <- sprintf("location.replace(\"%s\");", url)
+  # tags$script(HTML(redirect))
 }
