@@ -51,6 +51,8 @@ Create a new DHISLogin object
 \item{\code{handle}}{httr handle to be used for dhis2 connections}
 
 \item{\code{me}}{DHIS2 me response object}
+
+\item{\code{max_cache_age}}{cache expiry currently used by datim validation}
 }
 \if{html}{\out{</div>}}
 }
