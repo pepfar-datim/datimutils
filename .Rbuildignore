@@ -1,3 +1,5 @@
+^renv$
+^renv\.lock$
 ^datimutils\.Rproj$
 ^\.Rproj\.user$
 ^\.travis\.yml$
