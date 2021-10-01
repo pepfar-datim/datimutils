@@ -14,7 +14,6 @@ if (interactive()) {
   # deployed URL
   APP_URL <- "https://servername/path-to-app" #This will be your shiny server path
 }
-#options(shiny.port = 8100)
 
 #Documentation 
 # Note that secret is not really secret, and it's fine to include inline
@@ -23,7 +22,7 @@ if (interactive()) {
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
                  secret = "12a584e18-7ca3-2ca4-34ad-1fa2db4f517", #dhis2 = Client Secret
-                 redirect_uri = "http://127.0.0.1:8100/"#APP_URL#"http://localhost:8100/" #"http://localhost:1410/"#"http://localhost:8100/"
+                 redirect_uri = APP_URL #"http://127.0.0.1:8100/"
 )
 
 # Create endpoints with oauth_endpoint()
@@ -79,15 +78,17 @@ server <- function(input, output, session) {
     return()
   }
   
-
   # Link to Documenation https://httr.r-lib.org/reference/oauth2.0_token.html
+  #options(httr_oob_default=TRUE) This might have to be ran in the users console the first time.
+  
   # Manually create a token
   token <- oauth2.0_token(
     app = app,
     endpoint =api, 
     scope = scope,
     use_basic_auth = TRUE,
-    oob_value="http://127.0.0.1:8100/", #options(httr_oob_default=TRUE) 
+    oob_value=APP_URL, #"http://127.0.0.1:8100/", 
+    cache = FALSE,
     credentials = oauth2.0_access_token(endpoint = api,
                                         app = app,
                                         code = params$code,
@@ -103,10 +104,11 @@ server <- function(input, output, session) {
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
   handle <- httr::handle(base_url)
   
-  
+  #curl command to get the above 
   resp <- GET(url, config(token = token))
   # TODO: check for success/failure here
   
+  #outputs curl command to 
   output$code <- renderText(content(resp, "text"))
   
 }
