@@ -12,7 +12,7 @@ if (interactive()) {
   APP_URL <- "http://127.0.0.1:8100/"
 } else {
   # deployed URL
-  APP_URL <- "https://servername/path-to-app" #This will be your shiny server path
+  APP_URL <- "https://rstudio-connect.testing.ap.datim.org/OAuth2/" #This will be your shiny server path
 }
 
 #Documentation 
@@ -98,7 +98,7 @@ server <- function(input, output, session) {
   ##### Print out variables for tracing purposes ######
   print(params$code)
   print(app$redirect_uri)
-
+  
   # form url
   base_url="play.dhis2.org/2.36.3/"
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
@@ -107,7 +107,7 @@ server <- function(input, output, session) {
   #curl command to get the above 
   resp <- GET(url, config(token = token))
   # TODO: check for success/failure here
-  
+  str(resp)
   #outputs curl command to 
   output$code <- renderText(content(resp, "text"))
   
