@@ -1,6 +1,26 @@
+#Necessary Libraries
 library(httr)
 library(xml2)
 
+### Variables used for testing
+redirect_uri <- "http://127.0.0.1:8100/"
+
+# Copy information directly from the dhis2.org web settings
+app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
+                 key = "demo",         #dhis2 = Client ID
+                 secret = "8031cb4cd-e72f-2e9d-4cba-6ed8eaa2ff4", #dhis2 = Client Secret
+                 redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
+)
+
+api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.3/uaa/oauth",
+                      request=NULL,#Documentation says to leave this NULL for OAuth2 
+                      authorize = "authorize",
+                      access="token"
+) 
+
+scope <- "ALL"   
+
+### Define Functions
 d2Session <- R6::R6Class("d2Session",
                          #' @title d2Session 
                          public=list(
@@ -38,24 +58,6 @@ d2Session <- R6::R6Class("d2Session",
                          )
 )
 
-
-redirect_uri <- "http://127.0.0.1:8100/"
-
-# Copy information directly from the dhis2.org web settings
-app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
-                 key = "demo",         #dhis2 = Client ID
-                 secret = "e48fe92e0-f95e-ebb9-3461-10219010bb0", #dhis2 = Client Secret
-                 redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
-)
-
-api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.3/uaa/oauth",
-                      request=NULL,#Documentation says to leave this NULL for OAuth2 
-                      authorize = "authorize",
-                      access="token"
-) 
-
-scope <- "ALL"    
-
 # Wed Sep  8 16:48:56 2021 ------------------
 #' @title getOAuthToken (app_url,app,api,scope)
 #'
@@ -74,8 +76,7 @@ getOAuthToken <- function(redirect_uri,app,api,scope) {
     cache = FALSE
   )
   
-  #return(token$credentials)
-  #return(token)
+  return(token)
 }
 
 #REALLY NEED a better user input here that pops up on the screen as opposed to terminal or a way to extract that url
@@ -118,7 +119,7 @@ loginToDATIMOAuth <- function(config_path = NULL,
                          d2_session_envir = parent.frame()) {
   
   #get token
-  getOAuthToken(redirect_uri,app,api,scope)
+  token=getOAuthToken(redirect_uri,app,api,scope)
   
   
   
@@ -153,8 +154,5 @@ loginToDATIMOAuth <- function(config_path = NULL,
 
 
 
-loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.3/",app=app, api = api, redirect_uri=redirect_uri,scope = scope)
-
-
-
+#loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.3/",app=app, api = api, redirect_uri=redirect_uri,scope = scope)
 

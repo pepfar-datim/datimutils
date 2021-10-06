@@ -31,18 +31,9 @@ d2Session <- R6::R6Class("d2Session",
                              self$base_url <- base_url
                              self$username <- me$userCredentials$username
                              self$handle <- handle
-                             }
-                       )
+                           }
+                         )
 )
-
-
-
-
-
-
-
-
-
 
 #' @title LoadConfig(config_path)
 #'
@@ -62,13 +53,6 @@ loadConfigFile <- function(config_path = NA) {
     stop("You must specify a credentials file!")
   }
 }
-
-
-
-
-
-
-
 
 #' @title makeKeyring(ring ="DatimLogin",
 #' service = getOption("baseurl"), username)
@@ -101,15 +85,6 @@ makeKeyring <- function(username,
   }
 }
 
-
-
-
-
-
-
-
-
-
 #' @title getCredentialsFromKeyring(ring, service, username)
 #'
 #' @description retrieves username, service, and password from keyring
@@ -124,81 +99,6 @@ getCredentialsFromKeyring <- function(ring) {
   keyring::keyring_lock(ring)
   return(credentials)
 }
-
-
-
-
-
-
-
-
-
-
-
-#TESTING 
-# Note that secret is not really secret, and it's fine to include inline
-# Copy information directly from the dhis2.org web settings
-app <- oauth_app("OAuth2 Demo Client",
-                 key = "demo",
-                 secret = "b18b6560d-0fe3-02ad-6322-25ff2813aae"#,
-                 #redirect_uri = "http://localhost:8100/"
-                 )
-
-api <- oauth_endpoint("requestToken","authorize", "accessToken",
-                      base_url = "https://play.dhis2.org/2.36.3/uaa/oauth")                                         
-
-# Wed Sep  8 16:48:56 2021 ------------------
-#' @title getTokenFromOAuth2(app,api,scope)
-#'
-#' @description retrieve authorization token from DATIM/DHIS2
-#' @param app Oauthapp details
-#' @return access token to specified application
-#'
-getTokenFromOAuth2 <- function(app,api,scope = "All") {
-  
-  
-  has_auth_code <- function(params) {
-    # params is a list object containing the parsed URL parameters. Return TRUE if
-    # based on these parameters, it looks like auth codes are present that we can
-    # use to get an access token. If not, it means we need to go through the OAuth
-    # flow.
-    return(!is.null(params$code))
-  }
-
-  
-  token <- oauth2.0_token(
-    endpoint = api,
-    app = app,
-    scope = scope,
-    # credentials = oauth2.0_access_token(api, app, "_pwcBo&state=urXETpcCwl"),
-    cache = FALSE
-  )
-  
-  #params <- parseQueryString(isolate(session$clientData$url_search))
-  url <- oauth2.0_authorize_url(api, app, scope = scope)
-  print(url)
-  redirect <- sprintf("location.replace(\"%s\");", url)
-  print(redirect)
-  print(tags$script(HTML(redirect)))
-  parseQueryString(isolate(session$clientData$url_search))
-  return(token)
-}
-
-
-
-r <- httr::GET(
-  url,
-  # Wed Sep 15 16:22:58 2021 -------------- Needs to be an if else
-  #GET("https://play.dhis2.org/2.36.3/uaa/oauth/token/grant_type=authorization_code/", config(token = token))
-  config(token = token), #Instead of pw
-  httr::timeout(60),
-  handle = handle
-)
-
-me <- jsonlite::fromJSON(httr::content(r, as = "text"))
-
-
-################################################################################
 
 #' @export
 #' @title loginToDATIMfunction(config_path=NULL,
@@ -229,53 +129,49 @@ loginToDATIM <- function(config_path = NULL,
                          base_url = NULL,
                          d2_session_name = "d2_default_session",
                          d2_session_envir = parent.frame()) {
-
+  
   if((!(is.null(username)) && is.null(password)) || (is.null(username) && !(is.null(password)))){
     stop("If directly providing function credentials you must specify both username and password")
   }
   if((!(is.null(config_path)) && !(is.null(password))) && !(is.null(username))){
     stop("If using config_path then credentials can not be passed in directly")
   }
-   if(!(is.null(password)) && !(is.null(username)) && is.null(base_url)){
+  if(!(is.null(password)) && !(is.null(username)) && is.null(base_url)){
     stop("If directly passing password and username, base_url can't be null")
   }
-
+  
   ## TODO modify to use username and password instead of config file if username and password are provided
   if(!(is.null(username)) && !(is.null(password))){
     password <- password
     username <- username
     base_url <- base_url
   } else {
-
-  # loads credentials from secret file
-  credentials <- loadConfigFile(config_path = config_path)
-  credentials <- credentials[[config_path_level]]
-  password <- credentials[["password"]]
-  if (is.null(password)) {
-    password <- ""
-  }
-  # checks if password in file and if not checks keyring, and if not there prompts to make one
-  if (nchar(password) == 0) {
-    password <- try(keyring::key_get(
-      service = credentials[["baseurl"]],
-      username = credentials[["username"]]
-    ))
-    if ("try-error" %in% class(password)) {
-      keyring::key_set(service = credentials[["baseurl"]], username = credentials[["username"]])
-      password <- keyring::key_get(
+    
+    # loads credentials from secret file
+    credentials <- loadConfigFile(config_path = config_path)
+    credentials <- credentials[[config_path_level]]
+    password <- credentials[["password"]]
+    if (is.null(password)) {
+      password <- ""
+    }
+    # checks if password in file and if not checks keyring, and if not there prompts to make one
+    if (nchar(password) == 0) {
+      password <- try(keyring::key_get(
         service = credentials[["baseurl"]],
         username = credentials[["username"]]
-      )
+      ))
+      if ("try-error" %in% class(password)) {
+        keyring::key_set(service = credentials[["baseurl"]], username = credentials[["username"]])
+        password <- keyring::key_get(
+          service = credentials[["baseurl"]],
+          username = credentials[["username"]]
+        )
+      }
     }
-  }
-
-  username <- credentials[["username"]]
+    
+    username <- credentials[["username"]]
     base_url <- credentials[["baseurl"]]
   }
-
-  
-  
-  
   
   # form url
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
@@ -283,8 +179,6 @@ loginToDATIM <- function(config_path = NULL,
   # Logging in here will give us a cookie to reuse
   r <- httr::GET(
     url,
-    # Wed Sep 15 16:22:58 2021 -------------- Needs to be an if else
-    #GET("https://play.dhis2.org/2.36.3/uaa/oauth/token/grant_type=authorization_code/", config(token = token))
     httr::authenticate(username,
                        password),
     httr::timeout(60),
@@ -294,8 +188,8 @@ loginToDATIM <- function(config_path = NULL,
     stop("Could not authenticate you with the server!")
   } else {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
-
-# create the session object in the calling environment of the login function
+    
+    # create the session object in the calling environment of the login function
     assign(d2_session_name, 
            d2Session$new(config_path = config_path,
                          base_url = base_url,
@@ -303,8 +197,4 @@ loginToDATIM <- function(config_path = NULL,
                          me = me), 
            envir = d2_session_envir)
   }
-  
-  
-  
-  
 }

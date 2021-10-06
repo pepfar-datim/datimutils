@@ -1,3 +1,8 @@
+
+############## LIVE ONE THAT WORKS ################
+
+
+
 library(shiny)
 library(httr)
 library(xml2)
@@ -19,11 +24,7 @@ if (interactive()) {
 # Note that secret is not really secret, and it's fine to include inline
 # Copy information directly from the dhis2.org web settings
 
-app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
-                 key = "demo",         #dhis2 = Client ID
-                 secret = "12a584e18-7ca3-2ca4-34ad-1fa2db4f517", #dhis2 = Client Secret
-                 redirect_uri = APP_URL #"http://127.0.0.1:8100/"
-)
+
 
 # Create endpoints with oauth_endpoint()
 # Fri Sep 24 16:49:46 2021 ------ This is def where the problem arises
@@ -107,7 +108,6 @@ server <- function(input, output, session) {
   #curl command to get the above 
   resp <- GET(url, config(token = token))
   # TODO: check for success/failure here
-  str(resp)
   #outputs curl command to 
   output$code <- renderText(content(resp, "text"))
   
