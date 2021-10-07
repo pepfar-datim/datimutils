@@ -161,7 +161,5 @@ loginToDATIMOAuth <- function(config_path = NULL,
 
 }
 
-
-
 #loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.3/",app=app, api = api, redirect_uri=redirect_uri,scope = scope)
 
