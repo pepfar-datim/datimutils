@@ -8,7 +8,7 @@ redirect_uri <- "http://127.0.0.1:8100/"
 # Copy information directly from the dhis2.org web settings
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
-                 secret = "8031cb4cd-e72f-2e9d-4cba-6ed8eaa2ff4", #dhis2 = Client Secret
+                 secret = "68bd4f81d-9b0d-f256-5d9c-0234393e7ae", #dhis2 = Client Secret
                  redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
 )
 
