@@ -118,10 +118,19 @@ loginToDATIMOAuth <- function(config_path = NULL,
                          d2_session_name = "d2_default_session",
                          d2_session_envir = parent.frame()) {
   
+  # Thu Oct  7 16:53:33 2021 ------------------------------
+  #Replaced 
   #get token
-  token=getOAuthToken(redirect_uri,app,api,scope)
+  #token=getOAuthToken(redirect_uri,app,api,scope)
+  #With the below code block in order to be able to use it with shiny. Essentially
+  # if the token is null it will take you to login at DHIS2 if you already have your token from 
+  #Shiny it will use that. Thoughts?
   
-  
+  if (is.null(token)) {
+    token=getOAuthToken(redirect_uri,app,api,scope)
+  } else {
+    token=token #For Shiny 
+  }
   
   # form url
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))

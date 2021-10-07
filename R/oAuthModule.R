@@ -16,32 +16,13 @@ has_auth_code <- function(params) {
 
 }
 
-if (interactive()) {
-  # testing url
-  options(shiny.port = 8100)
-  APP_URL <- "http://127.0.0.1:8100/"
-} else {
-  # deployed URL
-  APP_URL <- "https://rstudio-connect.testing.ap.datim.org/OAuth2/" #This will be your shiny server path
-}
-
-
-
-
-
-
-
 # ### Server Section
 shinyOAuthServer <- function(id) {
   
   moduleServer(id,function(input, output, session){
       
       ns <- session$ns
-      
-      # uiBase=uiBase()
-      #APP_URL=APP_URL()
-       
-     
+
       params <- parseQueryString(isolate(session$clientData$url_search))
       if (!has_auth_code(params)) {
         return()
@@ -64,11 +45,22 @@ shinyOAuthServer <- function(id) {
                                             use_basic_auth = TRUE)
       )
 
-      return(token)
+      #return(token) Alternate approach if loginToDATIMOAuth isn't useful
+      
+      loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.3/",
+                        token = token,
+                        app=app,
+                        api = api,
+                        redirect_uri="http://127.0.0.1:8100/",
+                        scope = scope)
+      
+      #I am not the biggest fan of using these global assigments, so completely open to suggestions. 
+      d2_default_session<<-d2_default_session
+      return(d2_default_session)
+      
 
     })
   }
-
 
 
 ### UI Section
