@@ -26,7 +26,7 @@ if (interactive()) {
 # Copy information directly from the dhis2.org web settings
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
-                 secret = "68bd4f81d-9b0d-f256-5d9c-0234393e7ae", #dhis2 = Client Secret
+                 secret = "76fd0224e-923c-fc67-151a-7619de5c5f7", #dhis2 = Client Secret
                  redirect_uri = APP_URL#"http://127.0.0.1:8100/"
 )
 
@@ -35,7 +35,7 @@ app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
 # Fri Sep 24 16:49:46 2021 ------ This is def where the problem arises
 #Documentation link https://httr.r-lib.org/reference/oauth_endpoint.html 
 
-api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.3/uaa/oauth",
+api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
                       request=NULL,#Documentation says to leave this NULL for OAuth2 
                       authorize = "authorize",
                       access="token"
@@ -106,7 +106,7 @@ server <- function(input, output, session) {
   print(app$redirect_uri)
   
   # form url
-  base_url="play.dhis2.org/2.36.3/"
+  base_url="play.dhis2.org/2.36.4/"
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
   handle <- httr::handle(base_url)
   

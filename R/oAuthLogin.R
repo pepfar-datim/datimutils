@@ -2,30 +2,10 @@
 library(httr)
 library(xml2)
 
-### Variables used for testing
-redirect_uri <- "http://127.0.0.1:8100/"
-
-# Copy information directly from the dhis2.org web settings
-app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
-                 key = "demo",         #dhis2 = Client ID
-                 secret = "68bd4f81d-9b0d-f256-5d9c-0234393e7ae", #dhis2 = Client Secret
-                 redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
-)
-
-api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.3/uaa/oauth",
-                      request=NULL,#Documentation says to leave this NULL for OAuth2 
-                      authorize = "authorize",
-                      access="token"
-) 
-
-scope <- "ALL"   
-
 ### Define Functions
 d2Session <- R6::R6Class("d2Session",
                          #' @title d2Session 
                          public=list(
-                           #' @field  config_path Path to a JSON configuration file. 
-                           config_path = NULL,
                            #' @field  base_url The URL of the server, e.g. https://www.datim.org/. 
                            base_url = NULL,
                            #' @field  username Your user name. 
@@ -44,11 +24,9 @@ d2Session <- R6::R6Class("d2Session",
                            #' @param handle httr handle to be used for dhis2 connections 
                            #' @param me DHIS2 me response object
                            #' @param max_cache_age cache expiry currently used by datim validation
-                           initialize = function(config_path = NA_character_,
-                                                 base_url,
+                           initialize = function(base_url,
                                                  handle,
                                                  me) {
-                             self$config_path <- config_path
                              self$me <- me
                              self$user_orgunit <- me$organisationUnits$id
                              self$base_url <- base_url
@@ -60,10 +38,12 @@ d2Session <- R6::R6Class("d2Session",
 
 # Wed Sep  8 16:48:56 2021 ------------------
 #' @title getOAuthToken (app_url,app,api,scope)
-#'
 #' @description retrieve authorization token from DATIM/DHIS2
-#' @param app Oauthapp details
-#' @return access token to specified application
+#' @param app OAuth2 client details - Name, Client ID, Client Secret, redirect URIs
+#' @param redirect_uri Redirect_uri listed under client details
+#' @param api Endpoint for authorization - base url, authorize endpoint, access token endpoint
+#' @param scope the scope of what the client will return. "All" is default for DHIS2
+#' @return access token to specified OAuth2 Client
 #'
 getOAuthToken <- function(redirect_uri,app,api,scope) {
   
@@ -82,22 +62,15 @@ getOAuthToken <- function(redirect_uri,app,api,scope) {
 #REALLY NEED a better user input here that pops up on the screen as opposed to terminal or a way to extract that url
 
 ###############################################################################
-
 #' @export
-#' @title loginToDATIMfunction(config_path=NULL,
-#' config_path_level = "dhis" )
-#' @description logins into a datim or dhis2 api using either default keyring and 
-#' a config file. This function creates a d2Session login object in the 
+#' @title loginToDATIMOAuth()
+#' @description login to a datim or dhis2 api using Oauth2.
+#' This function creates a d2Session login object in the 
 #' environment calling the login function.
 #' E.g. global environment or R-shiny session. Thus you do not need to assign
 #' the output of this function to a variable as it creates the variable/object
 #' as a side effect.
-#' @param config_path path to a dhis config file. If provided, username and password should not be provided.
-#' @param config_path_level if there a multiple json entries in the config
-#' file, it will default to dhis
-#' @param username DHIS 2 username. If provided must provide password and config_path must be NULL
-#' @param password DHIS 2 password for the username. If provided must provide password and config_path must be NULL
-#' @param base_url if providing password and username directly this must be non null
+#' @param base_url The base url for the instance you are authenticating against. 
 #' @param d2_session_name the variable name for the d2Session object. The default
 #' name is d2_default_session and will be used by other datimutils functions by default when 
 #' connecting to datim. Generally a custom name should only be needed if you need to log into
@@ -105,12 +78,9 @@ getOAuthToken <- function(redirect_uri,app,api,scope) {
 #' custom name then this object must be passed to other datimutils functions explicitly
 #' @param d2_session_envir the environment in which to place the R6 login object, default
 #' is the immediate calling environment
-loginToDATIMOAuth <- function(config_path = NULL,
-                         config_path_level = "dhis",
-                         #username = NULL,
-                         #password = NULL,
+loginToDATIMOAuth <- function(
                          base_url = NULL,
-                         token = NULL, #Added for testing token integration
+                         token = NULL, 
                          redirect_uri= NULL,
                          app= NULL,
                          api= NULL,
@@ -123,8 +93,8 @@ loginToDATIMOAuth <- function(config_path = NULL,
   #get token
   #token=getOAuthToken(redirect_uri,app,api,scope)
   #With the below code block in order to be able to use it with shiny. Essentially
-  # if the token is null it will take you to login at DHIS2 if you already have your token from 
-  #Shiny it will use that. Thoughts?
+  # if the token is null it will take you to login at DHIS2 if you already have your token(From Shiny)
+  #it will use that. Thoughts @Sam?
   
   if (is.null(token)) {
     token=getOAuthToken(redirect_uri,app,api,scope)
@@ -151,7 +121,7 @@ loginToDATIMOAuth <- function(config_path = NULL,
     
     # create the session object in the calling environment of the login function
     assign(d2_session_name, 
-           d2Session$new(config_path = config_path,
+           d2Session$new(#config_path = config_path,
                          base_url = base_url,
                          handle = handle,
                          me = me), 
@@ -161,5 +131,38 @@ loginToDATIMOAuth <- function(config_path = NULL,
 
 }
 
-#loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.3/",app=app, api = api, redirect_uri=redirect_uri,scope = scope)
-
+### Example of using the above. 
+{
+### Define variables 
+# 
+# redirect_uri <- "http://127.0.0.1:8100/"
+# 
+# # Copy information directly from the dhis2.org web settings
+# app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
+#                  key = "demo",         #dhis2 = Client ID
+#                  secret = "76fd0224e-923c-fc67-151a-7619de5c5f7", #dhis2 = Client Secret
+#                  redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
+# )
+# 
+# ## Endpoint details
+# api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
+#                       request=NULL,#Documentation says to leave this NULL for OAuth2
+#                       authorize = "authorize",
+#                       access="token"
+# )
+# 
+# ## Scope of what is to be returned
+# scope <- "ALL"
+# ## Set options
+# options(httr_oob_default=TRUE)
+# ## Use function created above
+# loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",app=app, api = api, redirect_uri=redirect_uri,scope = scope)
+# 
+# ## Try to query the API using the D2Session created above.
+# data <- getMetadata(
+#   end_point = "organisationUnits",
+#   "organisationUnitGroups.name:eq:District",
+#   fields = "id,name,level"
+# )
+# head(data)
+}

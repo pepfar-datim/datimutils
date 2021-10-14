@@ -47,7 +47,7 @@ shinyOAuthServer <- function(id) {
 
       #return(token) Alternate approach if loginToDATIMOAuth isn't useful
       
-      loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.3/",
+      loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",
                         token = token,
                         app=app,
                         api = api,
