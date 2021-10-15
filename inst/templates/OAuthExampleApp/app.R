@@ -2,7 +2,9 @@ library(shiny)
 library(tidyverse)
 library(httr)
 library(xml2)
+library(datimutils)
 source("~/Documents/Repos/datimutils/R/OAuthModule.R")
+source("~/Documents/Repos/datimutils/R/oAuthLogin.R")
 
 
 
@@ -12,23 +14,22 @@ if (interactive()) {
     APP_URL <<- "http://127.0.0.1:8100/"
 } else {
     # deployed URL
-    APP_URL <<- "https://rstudio-connect.testing.ap.datim.org/OAuth2/" #This will be your shiny server path
+    APP_URL <<- "https://rstudio-connect.testing.ap.datim.org/content/92" #This will be your shiny server path
 }
 
 app <<- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
-                 secret = "68bd4f81d-9b0d-f256-5d9c-0234393e7ae", #dhis2 = Client Secret
+                 secret = "96eb2fc53-a0af-2f0b-509c-15ba027cded", #dhis2 = Client Secret
                  redirect_uri = APP_URL #"http://127.0.0.1:8100/"
 )
 
-api <<- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.3/uaa/oauth",
+api <<- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
                       request=NULL,#Documentation says to leave this NULL for OAuth2 
                       authorize = "authorize",
                       access="token"
                    ) 
 
 scope <<- "ALL"
-
 
 uiBase <- fluidPage(
     titlePanel("Hello Shiny!"),
@@ -53,21 +54,6 @@ server <- function(input, output, session,scope) {
     output$mytable = DT::renderDataTable({
         df
     })
-    
-    #Alternate if the above is deemed unusable
-    # token=shinyOAuthServer("oAuth")
-    # 
-    # # form url
-    # base_url="play.dhis2.org/2.36.3/"
-    # url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
-    # handle <- httr::handle(base_url)
-    # 
-    # 
-    # #curl command to get the above 
-    # resp <- GET(url, config(token = token))
-    # # TODO: check for success/failure here
-    # 
-    # output$code <- renderText(content(resp, "text"))
     
 }
 
