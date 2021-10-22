@@ -71,6 +71,11 @@ getOAuthToken <- function(redirect_uri,app,api,scope) {
 #' the output of this function to a variable as it creates the variable/object
 #' as a side effect.
 #' @param base_url The base url for the instance you are authenticating against. 
+#' @param token The authorization token granted after using getOAuthToken()
+#' @param redirect_uri Redirect_uri listed under client details
+#' @param app OAuth2 client details - Name, Client ID, Client Secret, redirect URIs
+#' @param api Endpoint for authorization - base url, authorize endpoint, access token endpoint
+#' @param scope The scope of what the client will return. "All" is default for DHIS2
 #' @param d2_session_name the variable name for the d2Session object. The default
 #' name is d2_default_session and will be used by other datimutils functions by default when 
 #' connecting to datim. Generally a custom name should only be needed if you need to log into
@@ -121,8 +126,7 @@ loginToDATIMOAuth <- function(
     
     # create the session object in the calling environment of the login function
     assign(d2_session_name, 
-           d2Session$new(#config_path = config_path,
-                         base_url = base_url,
+           d2Session$new(base_url = base_url,
                          handle = handle,
                          me = me), 
            envir = d2_session_envir)
@@ -133,8 +137,8 @@ loginToDATIMOAuth <- function(
 
 ### Example of using the above. 
 {
-### Define variables 
-# 
+# ### Define variables 
+# # 
 # redirect_uri <- "http://127.0.0.1:8100/"
 # 
 # # Copy information directly from the dhis2.org web settings
