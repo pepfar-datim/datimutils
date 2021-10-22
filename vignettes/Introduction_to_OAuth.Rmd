@@ -1,6 +1,5 @@
 ---
-title: "Introduction to OAuth"
-author: "Vignette Author"
+title: "Introduction to OAuthentication in datimutils"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -15,35 +14,86 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-The purpose of this documentation is to elaborate upon the OAuth functions created here,  and how it enhances the security of the users Shiny applications.
+This documentation is intended to explain the OAuthentication functions found in datimutils, primarily focusing on the script oAuthLogin.R and its adjacent shiny modules.
 
 ## Section 1 - Purpose
-The purpose of this package is to create a way for developers to create Shiny apps that use OAuth2 for authentication. Shiny developers have seen an abundance of options rolled out over the years, but these functions will be tailored to DATIM. 
+The purpose of the functions found in oAuthLogin.R is intended to make developers life's easier by giving them a way to seamlessly secure their Shiny apps via OAuth2. By leveraging the security of DHIS2, developers can focus on coding as opposed to worrying about the security of their end product. Shiny developers have seen an abundance of authentication options rolled out over the years, but these functions will be tailored specifically to DATIM. 
 
-## Section 2 - Basis Script 
-This script was the basis of the OAuth functions that can be found within this package. 
-
-It utilizes the 'httr' and 'shiny' r packages. The 'shiny' package allows the developer to access the url before and after the shiny application is authorized. This is imperative to access the authentication code which tells the server to grant the user a token. The 'httr' package covers the other 90% of the functionality. It contains several OAuth funcitons that are built upon. 
+## Section 2 - Base Script 
+The script, oAuthLogin.R, is the basis of the OAuthentication shiny modules in datimutils.It utilizes the 'httr' and 'xml2' r packages. The 'httr' package specifically contains several OAuth/api functions that are built upon here. There are three functions derived from this script that culminate in an R6 session variable that enables the user to access the DATIM api. The functions are d2session, getOAuthToken, and loginToDATIMOAuth which will all be explained in the next session. 
 
 ## Section 3 - Functions
-1) getOAuthToken(auth_code, redirect_uri, key, token_url, key_secret_code)  
-    This function handles the fetching of the Authorization Token. 
-    
-    Example: 
-    token_request <- getToken(
-    auth_code = "sdfaf43qgasgadsfadsfadsfadsf",
-    redirect_uri = "http://127.0.0.1:1410/",
-    key = api_keys$key,
-    token_url = api_keys$token_url)
+1) d2session is an R6 object that is created based upon the users unique credentials and permissions in DATIM. This object is ultimately saved in the users session environment until exiting or time out. 
+
+2) This function retrieves the authentication token from DATIM. 
+      getOAuthToken(redirect_uri,app,api,scope)
+
+3) This function is what brings all three together and allows the user to log in
+      loginToDATIMOAuth (base_url = NULL,
+                         token = NULL, 
+                         redirect_uri= NULL,
+                         app= NULL,
+                         api= NULL,
+                         scope= NULL,
+                         d2_session_name = "d2_default_session",
+                         d2_session_envir = parent.frame())
 
 
 
+### Shiny Specific Information
+By adding the 'shiny' package into the mix it allows the application to access the web url before and after the user is authorized. This is imperative to access the authentication code which tells the server to grant the user an access token. In the templates section of this package you will find two examples of how to harness the OAuth functionality. Both of these shiny modules are similar, but utilize the functionality in different ways. Both are drop in solutions to any shiny application with a few minor tweaks to the code. Both will require the developer to define their specific OAuth Clients details such as redirect uri, endpoints, and application info. 
 
-### Shiny Specific Functions
+* oAuthModule.R 
+This module is the more basic of the two. Whenever the user navigates to your app they will instantly be redirected to DATIM to authenticate. Simply develop your application as you normally would, then drop in the shiny shinyOAuthUI and shinyOAuthServer in their respective sections. The only other modification that will have to be made is renaming your original ui to uiBase and then feeding that uiBase to shinyOAuthUI. An example of this integration can be found in the oAuthDirect folder's app.R file
+
+* loginScreenModule.R
+This module is slightly more advance in that it gives the end user the option of how they log in. Whenever the user navigates to your app they will arrive at a landing page with the option to enter their credentials, or click 'Authenticate with DATIM'. This module will require an additional if else statement to be wrapped around the server section that handles the post authentication activities.
+
+The developer could also wait until the end to integrate either of these modules in order to speed up the process by avoiding authenticating every time the app is launched during development.
+
+### Example
+* Local
+```{r}
+### Setup
+library(datimutils)
+
+#Define OAuth Client Details. These will be specific to your app
+
+#This will be where you have the shiny application hosted. In this case locally
+redirect_uri <- "http://127.0.0.1:8100/"
+
+# Copy information directly from the dhis2.org web settings
+app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
+                 key = "demo",         #dhis2 = Client ID
+                 secret = "76fd0224e-923c-fc67-151a-7619de5c5f7", #dhis2 = Client Secret
+                 redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
+)
+
+## Endpoint details where you go to enter your credentials and to get your token
+api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
+                      request=NULL,#Documentation says to leave this NULL for OAuth2
+                      authorize = "authorize",
+                      access="token"
+)
+
+## Scope of what is to be returned
+scope <- "ALL"
+
+## Set options
+options(httr_oob_default=TRUE)
+
+### Log in via DATIM.
+     #Note This will open an external browser window. After logging in, the user will need to copy the code from the url and paste it into the R console
+loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",app=app, api = api, redirect_uri=redirect_uri,scope = scope)
+
+### Try to query the API using the D2Session created above.
+data <- getMetadata(
+  end_point = "organisationUnits",
+  "organisationUnitGroups.name:eq:District",
+  fields = "id,name,level"
+)
+head(data)
+```
 
 
-
-
-
-
-
+* Shiny Application
