@@ -20,7 +20,7 @@ This documentation is intended to explain the OAuthentication functions found in
 The purpose of the functions found in oAuthLogin.R is intended to make developers life's easier by giving them a way to seamlessly secure their Shiny apps via OAuth2. By leveraging the security of DHIS2, developers can focus on coding as opposed to worrying about the security of their end product. Shiny developers have seen an abundance of authentication options rolled out over the years, but these functions will be tailored specifically to DATIM. 
 
 ## Section 2 - Base Script 
-The script, oAuthLogin.R, is the basis of the OAuthentication shiny modules in datimutils.It utilizes the 'httr' and 'xml2' r packages. The 'httr' package specifically contains several OAuth/api functions that are built upon here. There are three functions derived from this script that culminate in an R6 session variable that enables the user to access the DATIM api. The functions are d2session, getOAuthToken, and loginToDATIMOAuth which will all be explained in the next session. 
+The script, oAuthLogin.R, is the basis of the OAuthentication shiny modules in datimutils.It utilizes the 'httr' and 'xml2' r packages. The 'httr' package specifically contains several OAuth/api functions that are built upon here. There are three functions derived from this script that culminate in an R6 session variable that enables the user to access the DATIM api. The functions are d2session, getOAuthToken, and loginToDATIMOAuth which will all be explained in the next section. 
 
 ## Section 3 - Functions
 1) d2session is an R6 object that is created based upon the users unique credentials and permissions in DATIM. This object is ultimately saved in the users session environment until exiting or time out. 
@@ -41,10 +41,10 @@ The script, oAuthLogin.R, is the basis of the OAuthentication shiny modules in d
 
 
 ### Shiny Specific Information
-By adding the 'shiny' package into the mix it allows the application to access the web url before and after the user is authorized. This is imperative to access the authentication code which tells the server to grant the user an access token. In the templates section of this package you will find two examples of how to harness the OAuth functionality. Both of these shiny modules are similar, but utilize the functionality in different ways. Both are drop in solutions to any shiny application with a few minor tweaks to the code. Both will require the developer to define their specific OAuth Clients details such as redirect uri, endpoints, and application info. 
+By adding the 'shiny' package into the mix it allows the application to access the web url before and after the user is authorized. This is imperative to access the authentication code, which tells the server to grant the user an access token, seamlessly. In the templates section of this package you will find two examples of how to harness the OAuth functionality. Both of these shiny modules are similar, but utilize the functionality in different ways. Both are drop in solutions to any shiny application with a few minor tweaks to the code. Both will require the developer to define their specific OAuth Clients details such as redirect uri, endpoints, and application info. 
 
 * oAuthModule.R 
-This module is the more basic of the two. Whenever the user navigates to your app they will instantly be redirected to DATIM to authenticate. Simply develop your application as you normally would, then drop in the shiny shinyOAuthUI and shinyOAuthServer in their respective sections. The only other modification that will have to be made is renaming your original ui to uiBase and then feeding that uiBase to shinyOAuthUI. An example of this integration can be found in the oAuthDirect folder's app.R file
+This module is the more basic of the two. Whenever the user navigates to your app they will instantly be redirected to DATIM to authenticate. Simply develop your application as you normally would, then drop in the shiny shinyOAuthUI and shinyOAuthServer in their respective sections. The only other modification that will have to be made is renaming your original ui to uiBase and then feeding uiBase to shinyOAuthUI. An example of this integration can be found in the oAuthDirect folder's app.R file
 
 * loginScreenModule.R
 This module is slightly more advance in that it gives the end user the option of how they log in. Whenever the user navigates to your app they will arrive at a landing page with the option to enter their credentials, or click 'Authenticate with DATIM'. This module will require an additional if else statement to be wrapped around the server section that handles the post authentication activities.
@@ -53,7 +53,7 @@ The developer could also wait until the end to integrate either of these modules
 
 ### Example
 * Local
-```{r}
+```{r eval=FALSE, include=FALSE}
 ### Setup
 library(datimutils)
 
@@ -97,3 +97,10 @@ head(data)
 
 
 * Shiny Application
+```{r eval=FALSE, include=FALSE}
+library(shiny)
+shinyAppDir(
+  appDir = "../../datimutils/inst/templates/oAuthDirect/",
+  options = list(width = "100%", height = 700)
+)
+```

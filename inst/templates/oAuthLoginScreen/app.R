@@ -3,7 +3,7 @@ library(tidyverse)
 library(httr)
 library(xml2)
 library(datimutils)
-source("~/Documents/Repos/datimutils/inst/templates/OAuthModule.R")
+source("~/Documents/Repos/datimutils/inst/templates/oAuthLoginScreen/LoginScreenModule.R")
 source("~/Documents/Repos/datimutils/R/oAuthLogin.R")
 
 
@@ -20,7 +20,7 @@ server <- function(input, output, session) {
     
     shinyOAuthServer("oAuth")
     
-    
+    #Users Cod should be nested in this if else statement or could do observer event
     if (authenticated==TRUE){
         
         df=getMetadata(

@@ -13,7 +13,7 @@ if (interactive()) {
 
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                   key = "demo",         #dhis2 = Client ID
-                  secret = "9164cda9d-cb9d-77c6-7ffd-f2a60303807", #dhis2 = Client Secret
+                  secret = "cc0d5b9e4-8450-31fb-e9a6-50d2efb0b2e", #dhis2 = Client Secret
                   redirect_uri = APP_URL #"http://127.0.0.1:8100/"
 )
 
@@ -25,7 +25,9 @@ api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
 
 scope <- "ALL"
 
-authenticated=TRUE
+authenticated=FALSE #SOLELY FOR TESTING
+
+
 # # params is a list object containing the parsed URL parameters. Return TRUE if
 # # based on these parameters, it looks like auth codes are present that we can
 # # use to get an access token. If not, it means we need to go through the OAuth

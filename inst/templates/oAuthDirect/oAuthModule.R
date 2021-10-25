@@ -8,12 +8,12 @@ if (interactive()) {
   APP_URL <- "http://127.0.0.1:8100/"
 } else {
   # deployed URL
-  APP_URL <- "c" #This will be your shiny server path
+  APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/92" #This will be your shiny server path
 }
 
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
-                 secret = "9164cda9d-cb9d-77c6-7ffd-f2a60303807", #dhis2 = Client Secret
+                 secret = "cc0d5b9e4-8450-31fb-e9a6-50d2efb0b2e", #dhis2 = Client Secret
                  redirect_uri = APP_URL #"http://127.0.0.1:8100/"
 )
 
@@ -25,7 +25,6 @@ api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
 
 scope <- "ALL"
 
-authenticated=TRUE
 # # params is a list object containing the parsed URL parameters. Return TRUE if
 # # based on these parameters, it looks like auth codes are present that we can
 # # use to get an access token. If not, it means we need to go through the OAuth
@@ -65,8 +64,6 @@ shinyOAuthServer <- function(id) {
                                           use_basic_auth = TRUE)
     )
     
-    #return(token) Alternate approach if loginToDATIMOAuth isn't useful
-    
     loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",
                       token = token,
                       app=app,
@@ -75,7 +72,11 @@ shinyOAuthServer <- function(id) {
                       scope = scope)
     
 
-    d2_default_session<<-d2_default_session
+    d2_default_session<<-d2_default_session #This probably needs refactored, becasue of the use of <<-. Removing this line does 
+                                              #in fact still put the d2 session obeject in the users environment, but only after
+                                                # closing the app launch. Perhaps add a trigger or if else to the 'after' code
+                                                  #Or in a more shiny approach observeEvent. Sam mentioned a fix via a slack thread 
+                                                    #that deals with the shiny environemnt scoping
     return(d2_default_session)
     
   })
