@@ -136,9 +136,9 @@ loginToDATIMOAuth <- function(
 }
 
 ### Example of using the above. 
-{
-# ### Define variables 
-# # 
+# {
+# ### Define variables
+# #
 # redirect_uri <- "http://127.0.0.1:8100/"
 # 
 # # Copy information directly from the dhis2.org web settings
@@ -169,4 +169,4 @@ loginToDATIMOAuth <- function(
 #   fields = "id,name,level"
 # )
 # head(data)
-}
+# }

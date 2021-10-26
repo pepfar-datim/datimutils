@@ -1,7 +1,7 @@
 ### Shiny Module fo OAuth login
 
 ### Variables based upon the DHIS2 OAuth2 Client being integrated
-
+options(httr_oob_default=TRUE)
 if (interactive()) {
   # testing url
   options(shiny.port = 8100)
@@ -69,15 +69,17 @@ shinyOAuthServer <- function(id) {
                       app=app,
                       api = api,
                       redirect_uri= APP_URL,
-                      scope = scope)
-    
-
-    d2_default_session<<-d2_default_session #This probably needs refactored, becasue of the use of <<-. Removing this line does 
+                      scope = scope,
+                      d2_session_envir = parent.env(environment(2)) 
+                      )
+    #Seems like the answer might be here from Hadly Wickham
+    #‘d2_default_session’ not found thus get metadata won't work in the app
+    #d2_default_session<<-d2_default_session #This probably needs refactored, becasue of the use of <<-. Removing this line does 
                                               #in fact still put the d2 session obeject in the users environment, but only after
                                                 # closing the app launch. Perhaps add a trigger or if else to the 'after' code
                                                   #Or in a more shiny approach observeEvent. Sam mentioned a fix via a slack thread 
                                                     #that deals with the shiny environemnt scoping
-    return(d2_default_session)
+    #return(d2_default_session)
     
   })
 }
