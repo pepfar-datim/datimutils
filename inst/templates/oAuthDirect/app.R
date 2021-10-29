@@ -123,7 +123,7 @@ if (interactive()) {
 
 app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                  key = "demo",         #dhis2 = Client ID
-                 secret = "31712fa82-b9ae-8df6-750b-0ce9ca0f9b1", #dhis2 = Client Secret
+                 secret = "3f6a26d22-6ee0-2886-46d5-90a6c6f4d40", #dhis2 = Client Secret
                  redirect_uri = APP_URL #"http://127.0.0.1:8100/"
 )
 
