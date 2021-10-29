@@ -48,25 +48,91 @@ mykey = paste(sample(LETTERS,20,replace = T),collapse="")#Will remove after dev
 ############### SERVER #########################################################
 server <- function(input, output, session) {
     
-    observeEvent(input$back_to_login,{
-        req(input$back_to_login)
-        updateQueryString("?",mode="replace",session=session)
-        session$reload()
-    })
-    
+    #Username and PW login Option
     output$ui_hasauth = renderUI({
         req(input$login_button)
         print("login_button")
         req(input$user_name)
         req(input$password)
-        if(input$user_name=="admin" & input$password =="jbales"){
-            print("auth OK")
-            hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
-            redirect <- sprintf("location.replace(\"%s\");", paste0(APP_URL,"?code=",hashcode))
-            tags$script(HTML(redirect))
-            
+        
+        tryCatch({
+            datimutils::loginToDATIM(base_url = "https://play.dhis2.org/2.36.4/", #Sys.getenv("BASE_URL"),Modified for testing
+                                     username = input$user_name,
+                                     password = input$password,
+                                     d2_session_envir = parent.env(environment())
+            )
+        },
+        # This function throws an error if the login is not successful
+        error = function(e) {
+            flog.info(paste0("User ", input$user_name, " login failed."), name = "datapack")
         }
+        )
+        
+        
+        if (exists("d2_default_session")) {
+            if (any(class(d2_default_session) == "d2Session")) {
+                user_input$authenticated  <-  TRUE
+                user_input$d2_session  <-  d2_default_session$clone()
+                d2_default_session <- NULL
+                
+                # Need to check the user is a member of the PRIME Data Systems Group, COP Memo group, or a super user
+                user_input$memo_authorized  <-
+                    grepl("VDEqY8YeCEk|ezh8nmc4JbX", user_input$d2_session$me$userGroups) |
+                    grepl(
+                        "jtzbVV4ZmdP",
+                        user_input$d2_session$me$userCredentials$userRoles
+                    )
+                flog.info(
+                    paste0(
+                        "User ",
+                        user_input$d2_session$me$userCredentials$username,
+                        " logged in."
+                    ),
+                    name = "datapack"
+                )
+            }
+        } else {
+            sendSweetAlert(
+                session,
+                title = "Login failed",
+                text = "Please check your username/password!",
+                type = "error"
+            )
+        }
+        
+        # hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
+
+        # if(input$user_name=="admin" & input$password =="jbales"){
+        #     print("auth OK")
+        #     hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
+            
+            # redirect <- sprintf("location.replace(\"%s\");", paste0(APP_URL,"?code=",hashcode))
+            # tags$script(HTML(redirect))
+            
+       #} 
     })
+    
+    
+    
+    ### Logout Button Checks
+    observeEvent(input$logout, {
+        req(input$logout)
+        updateQueryString("?",mode="replace",session=session) #Gets you back to the login without the authorization code at top
+        flog.info(paste0("User ", user_input$d2_session$me$userCredentials$username, " logged out."))
+        #ready$ok  <-  FALSE #Ask Jason what this does
+        user_input$authenticated  <-  FALSE
+        user_input$user_name <- ""
+        user_input$authorized  <-  FALSE
+        user_input$d2_session  <-  NULL
+        d2_default_session <- NULL
+        gc()
+        session$reload()
+        
+    })
+    
+    user_input <- reactiveValues(authenticated = FALSE,
+                                 status = "",
+                                 d2_session = NULL)
     
     output$ui_redirect = renderUI({
         #print(input$login_button_oauth) useful for debugging 
@@ -153,8 +219,6 @@ server <- function(input, output, session) {
         res
     })
 }
-
-
 ############### UI #############################################################
 
 ### Developers will place their AFTER AUTHENTICATED code in this ui block 
@@ -164,7 +228,7 @@ ui <- function(req_txt) {
         verbatimTextOutput("code"),
         DT::dataTableOutput("mytable"),
         #textAreaInput("inreq",NULL,value = req_txt,height = "300px"),
-        actionButton("back_to_login","Return to Login Page",icon=icon("home"))
+        actionButton("logout","Return to Login Page",icon=icon("sign-out"))
     )
 }
 
