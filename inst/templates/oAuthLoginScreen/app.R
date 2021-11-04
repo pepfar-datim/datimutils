@@ -26,7 +26,7 @@ if (interactive()) {
 {
     app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
                      key = "demo",         #dhis2 = Client ID
-                     secret = "3f6a26d22-6ee0-2886-46d5-90a6c6f4d40", #dhis2 = Client Secret
+                     secret = "f036759e2-ab67-d40b-b46f-722a1503c05", #dhis2 = Client Secret
                      redirect_uri = APP_URL #"http://127.0.0.1:8100/"
     )
     
@@ -48,13 +48,27 @@ mykey = paste(sample(LETTERS,20,replace = T),collapse="")#Will remove after dev
 ############### SERVER #########################################################
 server <- function(input, output, session) {
     
+
     #Username and PW login Option
     output$ui_hasauth = renderUI({
         req(input$login_button)
-        print("login_button")
         req(input$user_name)
         req(input$password)
-        
+            
+         hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
+
+         if(user_input$authenticated  ==  TRUE){
+            #print("auth OK")
+            hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
+            
+             redirect <- sprintf("location.replace(\"%s\");", paste0(APP_URL,"?code="))
+             tags$script(HTML(redirect))
+            
+       } 
+    })
+    
+    ##Logic ported Datapackr-app
+    observeEvent(input$login_button, {    
         tryCatch({
             datimutils::loginToDATIM(base_url = "https://play.dhis2.org/2.36.4/", #Sys.getenv("BASE_URL"),Modified for testing
                                      username = input$user_name,
@@ -67,8 +81,6 @@ server <- function(input, output, session) {
             flog.info(paste0("User ", input$user_name, " login failed."), name = "datapack")
         }
         )
-        
-        
         if (exists("d2_default_session")) {
             if (any(class(d2_default_session) == "d2Session")) {
                 user_input$authenticated  <-  TRUE
@@ -99,20 +111,7 @@ server <- function(input, output, session) {
                 type = "error"
             )
         }
-        
-        # hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
-
-        # if(input$user_name=="admin" & input$password =="jbales"){
-        #     print("auth OK")
-        #     hashcode = safer::encrypt_string(paste0(input$user_name,input$password,'@time:',Sys.time()),key = mykey)
-            
-            # redirect <- sprintf("location.replace(\"%s\");", paste0(APP_URL,"?code=",hashcode))
-            # tags$script(HTML(redirect))
-            
-       #} 
-    })
-    
-    
+    })  
     
     ### Logout Button Checks
     observeEvent(input$logout, {
@@ -130,10 +129,6 @@ server <- function(input, output, session) {
         
     })
     
-    user_input <- reactiveValues(authenticated = FALSE,
-                                 status = "",
-                                 d2_session = NULL)
-    
     output$ui_redirect = renderUI({
         #print(input$login_button_oauth) useful for debugging 
         if(!is.null(input$login_button_oauth)){
@@ -144,26 +139,115 @@ server <- function(input, output, session) {
             } else NULL
         } else NULL
     })
+  
+
+
+#     output$code <- renderText({
+# 
+#         # params <- parseQueryString(session$clientData$url_search)
+#         # #print(params)
+#         # req(has_auth_code(params))
+#         # 
+#         # if(has_auth_code(params)){
+#         #     user_input$authenticated  <-  TRUE 
+#         # }
+#         # 
+#         # #Manually create a token
+#         # token <- oauth2.0_token(
+#         #     app = app,
+#         #     endpoint =api,
+#         #     scope = scope,
+#         #     use_basic_auth = TRUE,
+#         #     oob_value=APP_URL, #"http://127.0.0.1:8100/",
+#         #     cache = FALSE,
+#         #     credentials = oauth2.0_access_token(endpoint = api,
+#         #                                         app = app,
+#         #                                         code = params$code,
+#         #                                         use_basic_auth = TRUE)
+#         #     #Just so we know this will also work
+#         #     # user_params = list(grant_type = "password",
+#         #     #                    username="admin",
+#         #     #                    password="district"),
+#         #     # use_oob=T
+#         # 
+#         # )
+#         # 
+#         # 
+#         # loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",
+#         #                   token = token,
+#         #                   app=app,
+#         #                   api = api,
+#         #                   redirect_uri= APP_URL,
+#         #                   scope = scope,
+#         #                   d2_session_envir = parent.env(environment()) #Based on Sam's advice, def want this in there.
+#         # )
+#          
+# 
+#         
+#         base_url="play.dhis2.org/2.36.4/"
+#         url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
+#         handle <- httr::handle(base_url)
+#         
+#         #curl command to get the above 
+#         resp <- GET(url, config(token = token))
+#         
+#         
+# #################### Lets us know about the request ############################
+#         print(paste0("status code : ",resp$status_code))
+#         
+#         if(resp$status_code == 200){
+#             res = content(resp, "text")
+#             
+#         } else {
+#             
+#             #check the token was produced less that 1 minute ago (maybe reduce this time ?)
+#             has_auth_user_pwd = safer::decrypt_string(params$code,key = mykey) %>% 
+#                 strsplit(split = "@time:") %>% 
+#                 .[[1]] %>% 
+#                 .[2] %>%
+#                 as.POSIXct()
+#             
+#             has_auth_user_pwd = difftime(Sys.time(),has_auth_user_pwd,units = "mins")<1
+#             if (has_auth_user_pwd){
+#                 res = "Auth with user & password"
+#             } else { 
+#                 res = "Bad auth"
+#             }
+#         }
+#         res
+#     })
     
-    output$code <- renderText({
+    #Controls table output
+    output$mytable = DT::renderDataTable({
         
         params <- parseQueryString(session$clientData$url_search)
-        print(params)
+        #print(params)
         req(has_auth_code(params))
         
-        # Manually create a token
+        if(has_auth_code(params)){
+            user_input$authenticated  <-  TRUE 
+        }
+        
+        #Manually create a token
         token <- oauth2.0_token(
             app = app,
-            endpoint =api, 
+            endpoint =api,
             scope = scope,
             use_basic_auth = TRUE,
-            oob_value=APP_URL, #"http://127.0.0.1:8100/", 
+            oob_value=APP_URL, #"http://127.0.0.1:8100/",
             cache = FALSE,
             credentials = oauth2.0_access_token(endpoint = api,
                                                 app = app,
                                                 code = params$code,
                                                 use_basic_auth = TRUE)
+            #Just so we know this will also work
+            # user_params = list(grant_type = "password",
+            #                    username="admin",
+            #                    password="district"),
+            # use_oob=T
+            
         )
+        
         
         loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",
                           token = token,
@@ -173,51 +257,20 @@ server <- function(input, output, session) {
                           scope = scope,
                           d2_session_envir = parent.env(environment()) #Based on Sam's advice, def want this in there.
         )
-
+        
 
         df=getMetadata(
             end_point = "organisationUnits",
             "organisationUnitGroups.name:eq:District",
-            fields = "id,name,level"
+            fields = "id,name,level"#,
+            #d2_session = user_input$d2_session
         )
-
-        output$mytable = DT::renderDataTable({
-            df
-        })
         
-        
-        base_url="play.dhis2.org/2.36.4/"
-        url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
-        handle <- httr::handle(base_url)
-        
-        #curl command to get the above 
-        resp <- GET(url, config(token = token))
-        
-        
-#################### Lets us know about the request ############################
-        print(paste0("status code : ",resp$status_code))
-        
-        if(resp$status_code == 200){
-            res = content(resp, "text")
-            
-        } else {
-            
-            #check the token was produced less that 1 minute ago (maybe reduce this time ?)
-            has_auth_user_pwd = safer::decrypt_string(params$code,key = mykey) %>% 
-                strsplit(split = "@time:") %>% 
-                .[[1]] %>% 
-                .[2] %>%
-                as.POSIXct()
-            
-            has_auth_user_pwd = difftime(Sys.time(),has_auth_user_pwd,units = "mins")<1
-            if (has_auth_user_pwd){
-                res = "Auth with user & password"
-            } else {
-                res = "Bad auth"
-            }
-        }
-        res
     })
+    
+
+    #Check if the user is authenticated via console
+    observe(print(isolate(user_input$authenticated)))
 }
 ############### UI #############################################################
 
@@ -225,7 +278,7 @@ server <- function(input, output, session) {
 ui <- function(req_txt) {
     fluidPage(
         titlePanel("Hello Shiny!"),
-        verbatimTextOutput("code"),
+        #verbatimTextOutput("code"),
         DT::dataTableOutput("mytable"),
         #textAreaInput("inreq",NULL,value = req_txt,height = "300px"),
         actionButton("logout","Return to Login Page",icon=icon("sign-out"))
@@ -269,6 +322,13 @@ ui_auth <- function(req_txt){
     )))
 }
 
+user_input <- reactiveValues(authenticated = FALSE,
+                             status = "",
+                             d2_session = NULL)
+
+# test <- reactive( if ( (isolate(user_input$authenticated)  ==  FALSE) || ( has_auth_code(parseQueryString(req$QUERY_STRING)) )    ) T 
+#                   else F )
+
 ### Checks and controls the two ui options
 uiFunc <- function(req) {
     req_txt = paste0("REQUEST_METHOD: ",req$REQUEST_METHOD,"\n",
@@ -287,11 +347,15 @@ uiFunc <- function(req) {
     )
     #print(names(req)) #Useful for debugging, will print above info to console
     
-    if (!has_auth_code(parseQueryString(req$QUERY_STRING))) {
-        ui_auth(req_txt)
+     if ( ( !has_auth_code(parseQueryString(req$QUERY_STRING))) ) { #If the user does NOT have a token OR hasn't logged in with a username and password
+         ui_auth(req_txt)
     } else {
-        ui(req_txt)
-    }
+         ui(req_txt)
+     }
+    
+
+    # ( isolate(user_input$authenticated)  ==  FALSE )
+    
 }
 
 # NOTE: uiFunc, as opposed to ui
