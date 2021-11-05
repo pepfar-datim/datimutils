@@ -26,10 +26,10 @@ The script, oAuthLogin.R, is the basis of the OAuthentication shiny modules in d
 1) The below functions culminate in a d2session, which is an R6 object that is created based upon the users unique credentials and permissions in DATIM. This object is ultimately saved in the users session environment until exiting or time out. 
 
 2) This function retrieves the authentication token from DATIM. 
-      getOAuthToken(redirect_uri,app,api,scope)
+      * getOAuthToken(redirect_uri,app,api,scope)
 
 3) This function is what brings all three together and allows the user to log in
-      loginToDATIMOAuth (base_url = NULL,
+      * loginToDATIMOAuth (base_url = NULL,
                          token = NULL, 
                          redirect_uri= NULL,
                          app= NULL,
