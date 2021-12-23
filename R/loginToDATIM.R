@@ -184,17 +184,30 @@ loginToDATIM <- function(config_path = NULL,
     httr::timeout(60),
     handle = handle
   )
-  if (r$status != 200L) {
-    stop("Could not authenticate you with the server!")
-  } else {
+  print(r$status)
+  if (r$status == 200L) {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
-
-# create the session object in the calling environment of the login function
-    assign(d2_session_name, 
+    
+    # create the session object in the calling environment of the login function
+    assign(d2_session_name,
            d2Session$new(config_path = config_path,
                          base_url = base_url,
                          handle = handle,
-                         me = me), 
+                         me = me),
            envir = d2_session_envir)
+  } else if (r$status == 302L) {
+    stop("Unable to authenticate due to DATIM currently undergoing maintenance.
+         Please try again later!")
+  } else if (r$status == 503L) {
+    stop("Unable to reach DATIM, the server may be experiencing issues.
+         Please try again later!")
+  } else if (r$status == 404L) {
+    stop("Unable to authenticate due to an invalid URL.Please check the
+         'base_url' parameter you provided.")
+  } else if (r$status == 401L) {
+    stop("Unable to authenticate due to an invalid username or password. 
+         Please update your credentials and try again.")
+  } else {
+    stop("An unknowon error has occured during authentication!")
   }
 }
