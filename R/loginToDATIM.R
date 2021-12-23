@@ -184,7 +184,7 @@ loginToDATIM <- function(config_path = NULL,
     httr::timeout(60),
     handle = handle
   )
-  print(r$status)
+
   if (r$status == 200L) {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
     
