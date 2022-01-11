@@ -1,0 +1,58 @@
+---
+title: "Securing-user-mechanism-access"
+output: html_document
+vignette: >
+  %\VignetteIndexEntry{Introduction-to-datimutils}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Who is meant to use this package?
+
+If you are a shiny app developer deploying apps with BAO's PDAP DataLake Team, you can use functions in datimutils to make sure that your users are able to access only the data they are permitted to access. The process is relatively simple and only requires standard usage of the `loginToDATIM` process. In order to understand who your user is, your code will need to check accessible data streams with the objective of classifying a user based on those streams. A developer can then classify their user and limit mechanism access as needed. 
+
+## Getting Data Streams
+
+To access data steams and classify a user a developer can run the following:
+
+```{r get_streams_user_type, eval=T}
+
+# retrieve data steams; data streams are returned as a dataframe with the column stream
+user_streams <- getStreams(username = "smokeGP", password = "ipod-invent-Pots-8", base_url = "https://test.datim.org/")
+print(user_streams)
+
+# pass streams and classify user
+user_type <- getUserType(user_streams$stream)
+
+print(paste("User is",user_type))
+
+```
+
+## Accessing Mechanisms
+
+Once a user type is classified, a developer can start to enforce limitations on the data access. To start, pull all the mechanisms a user can view. Mechanisms can be pulled by three different id columns meant for joining and filtering (e.g. cocuid, mech_id, mech_name):  
+
+```{r get_mechs, eval=T}
+
+# pull all mechanisms
+user_mechs <- getMechs(username = "smokeGP", password = "ipod-invent-Pots-8", base_url = "https://test.datim.org/", by = "cocuid")
+
+# join the 
+```
+
+
+## A Shiny App Example
+
+Usage has been tested in a shiny app example developers can access here. Clone the github repo, make sure you have all the necessary packages and then set up a `config` file for `datimutils` to consume. You can then run the app; upon launching you should see the datim screen. Login with credentials and you should land on the following page:
+
+```{r home_screen}
+
+```
+
+Developers can reference the server code in the github repo to see how the action buttons tie to the functions above and how username and password are passed as inputs.
+
+
