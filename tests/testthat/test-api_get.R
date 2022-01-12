@@ -29,6 +29,7 @@ library(httptest)
 # httptest::stop_capturing()
 }
 
+################################################################################
 # TEST 1 
 ################################################################################
 # no mock for this test
@@ -47,7 +48,7 @@ testthat::test_that("Can use timeout paramater", {
 # TEST 2 
 ################################################################################
 # no mock for this test - no httr requests should actually be issued
-# for these resonse formats
+# for these response formats
 # we expect only json requests
 testthat::test_that("We reject request for non-json response formats", {
   formats <- c(
@@ -77,6 +78,7 @@ testthat::test_that("We reject request for non-json response formats", {
 
 # API Testing begins using httptest package
 httptest::with_mock_api({
+  
   # TEST 3 
   ##############################################################################
   testthat::test_that("We handle anticipated api issues", {
@@ -95,10 +97,6 @@ httptest::with_mock_api({
     testthat::expect_error(
       api_get(path = "api/me2",
               d2_session = NULL))
-    
-    
-    
-    
     # response status !=200
     testthat::expect_error(
       # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
