@@ -8,48 +8,103 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = F)
+source("functions.R")
 ```
 
-## Who is meant to use this package?
 
-If you are a shiny app developer deploying apps with BAO's PDAP DataLake Team, you can use functions in datimutils to make sure that your users are able to access only the data they are permitted to access. The process is relatively simple and only requires standard usage of the `loginToDATIM` process. In order to understand who your user is, your code will need to check accessible data streams with the objective of classifying a user based on those streams. A developer can then classify their user and limit mechanism access as needed. 
+
+## Who is this Vignette for?
+
+If you are a shiny app developer deploying apps with BAO's PDAP DataLake Team, you can use the following process and functions in [datimutils](https://github.com/pepfar-datim/datimutils) to make sure your users have appropriate mechnanism access. This process is relatively simple and requires standard usage of the `loginToDATIM` process. In order to understand who a user is, your code will need to check accessible data streams with the objective of classifying a user based on those streams. A developer can then classify their user and limit mechanism access as needed.
 
 ## Getting Data Streams
 
-To access data steams and classify a user a developer can run the following:
+To access data steams and classify a user, developers can leverage the new `getUserGroups` wrapper to access the `userGroups` DATIM endpoint. In this case we pass a global partner's test credentials to receive the streams they have access to and classify the user (note the code chunk below is an example and developers will have to access the input username and password parameters via their app). Here we pass credentials to classify a user:
 
-```{r get_streams_user_type, eval=T}
+```{r get_streams_user_type, eval=T, echo = F}
+loginToDATIM(
+  config_path = NULL,
+  config_path_level = "dhis",
+  username = "",
+  password = "",
+  base_url = "https://test.datim.org/",
+  d2_session_name = "d2_default_session",
+  d2_session_envir = parent.frame()
+)
 
-# retrieve data steams; data streams are returned as a dataframe with the column stream
-user_streams <- getStreams(username = "smokeGP", password = "ipod-invent-Pots-8", base_url = "https://test.datim.org/")
-print(user_streams)
+# get user groups and 
+user_groups <- d2_default_session$me$userGroups$id %>% 
+  getUserGroups() 
+
+# select from user_groups everything that is a data stream and needed for classification
+user_groups <- user_groups[grepl("Data (.+?) access|^Global|^OU",user_groups)]
+  
+# remove Data Access strings
+user_groups_e <- gsub("Data | access", "", user_groups)
 
 # pass streams and classify user
-user_type <- getUserType(user_streams$stream)
+user_type <- getUserType(user_groups_e)
 
-print(paste("User is",user_type))
-
+print(paste("User type: ",user_type))
 ```
 
 ## Accessing Mechanisms
 
-Once a user type is classified, a developer can start to enforce limitations on the data access. To start, pull all the mechanisms a user can view. Mechanisms can be pulled by three different id columns meant for joining and filtering (e.g. cocuid, mech_id, mech_name):  
+Once a user type is classified, developers can start to enforce limitations on data access. Mechanisms can be pulled by three different id columns meant for potential joining and filtering (e.g. cocuid, mech_id, mech_name):  
 
 ```{r get_mechs, eval=T}
 
 # pull all mechanisms
-user_mechs <- getMechs(username = "smokeGP", password = "ipod-invent-Pots-8", base_url = "https://test.datim.org/", by = "cocuid")
-
-# join the 
+user_mechs <- getMechs(username = "", password = "", base_url = "https://test.datim.org/", by = "cocuid")
+DT::datatable(user_mechs)
 ```
-
 
 ## A Shiny App Example
 
-Usage has been tested in a shiny app example developers can access here. Clone the github repo, make sure you have all the necessary packages and then set up a `config` file for `datimutils` to consume. You can then run the app; upon launching you should see the datim screen. Login with credentials and you should land on the following page:
+The above functions are meant to be used in shiny apps and so developers will not be passing username and passwords hard coded into functions as these are great security risks. Developers can extract the username and password inputs in a manner similar to BAO's `datapacker-app`. Developers can access an example app with a similar structure [here](https://github.com/flopez-bao/shinyapps-datimutils-security-example). Clone the github repo, make sure you have all the necessary packages and then set up a `config` file for `datimutils` to consume. Upon launching the app you should see the DATIM screen. 
 
-```{r home_screen}
+When a user inputs their username and password a developer can capture their inputs and pass them to the necessary functions. In the code chunk below from the example app we can see how a developer captures the input in the same way it is used for login in to DATIM. There are different ways to limit acces but here is a very basic example where we check a system variable for a user type to decide wether access to all mechanisms is granted:
+
+```{r example_code_chunk, echo=t, eval = F}
+
+  ...
+
+  #Login process
+  observeEvent(input$login_button, {
+    tryCatch({
+      datimutils::loginToDATIM(base_url = Sys.getenv("BASE_URL"),
+                               username = input$user_name,
+                               password = input$password,
+                               d2_session_envir = parent.env(environment())
+      )
+    },
+   
+  ...
+
+  #show mechs by cocuid adn check against system variable user
+  observeEvent(input$mech_cocuid_button, {
+    
+    d <- getStreams(username = input$user_name, password = input$password, base_url = Sys.getenv("BASE_URL"))
+    d <- getUserType(d$stream)
+
+    if(d == Sys.getenv("USER_TYPE")) {
+      my_cat_ops <- getMechs(username = input$user_name, password = input$password, base_url = Sys.getenv("BASE_URL"), by= "cocuid")
+      
+      output$table <- renderDataTable(my_cat_ops,
+                                      options = list(
+                                        pageLength = 10,
+                                        initComplete = I("function(settings, json) {alert('Done.');}")
+                                      )
+      )
+    } else {
+      access_denied <- paste("You are not allowed to see this information. Only",Sys.getenv("USER_TYPE"), "user types are allowed to see this information.")
+      output$message <- renderPrint({ access_denied })  
+    }
+    
+  })
+  
+  ...
 
 ```
 

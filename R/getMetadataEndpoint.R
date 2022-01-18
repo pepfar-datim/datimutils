@@ -354,6 +354,20 @@ getDataSets <- function(values,
 
 #' @export
 #' @rdname dot-getMetadataEndpoint
+getUserGroups <- function(values,
+                        by = "id",
+                        fields = NULL,
+                        d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1) {
+  .getMetadataEndpoint("userGroups",
+                       values = values,
+                       by = as.character(rlang::ensym(by)),
+                       fields = fields,
+                       d2_session = d2_session, retry = retry
+  )
+}
+
+#' @export
+#' @rdname dot-getMetadataEndpoint
 getIndicatorGroupSets <- function(values,
                                   by = "id",
                                   fields = NULL,
