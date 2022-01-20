@@ -101,7 +101,7 @@ httptest::with_mock_api({
     testthat::expect_error(
       # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
       api_get(
-        path = "apii/me",#note extra i???????????
+        path = "apii/me",
         d2_session = play233,
         retry = 1,
         timeout = 60,
