@@ -5,7 +5,8 @@
 #' @description Returns a dataframe all mechanisms associated with the user. 
 #' @param option_fields fields passed to the getMetaData endpoint.
 #' @param combo_fields fields passed to getCatOptionCombos call.
-#' @param d2_session the d2Session object, default is "d2_default_session",
+#' @param d2_session the d2Session object, default is "d2_default_session"
+#' @importFrom magrittr "%>%"
 
 listMyMechs <- function(option_fields = c("name", "id", "code"),
                         combo_fields = "id", 

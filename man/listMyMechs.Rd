@@ -17,7 +17,7 @@ listMyMechs(
 
 \item{combo_fields}{fields passed to getCatOptionCombos call.}
 
-\item{d2_session}{the d2Session object, default is "d2_default_session",}
+\item{d2_session}{the d2Session object, default is "d2_default_session"}
 }
 \description{
 Returns a dataframe all mechanisms associated with the user.

@@ -9,7 +9,7 @@ getMyStreams <- function(d2_session = dynGet("d2_default_session", inherits = TR
   # pull all user groups streams
   tryCatch(
     expr = {
-      user_groups <- d2_default_session$me$userGroups$id %>% getUserGroups() 
+      user_groups <- getUserGroups(d2_default_session$me$userGroups$id) 
     },
     error = function(e){ 
       print(e)
