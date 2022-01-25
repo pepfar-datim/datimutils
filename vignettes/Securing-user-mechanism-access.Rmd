@@ -9,7 +9,6 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = F)
-source("functions.R")
 ```
 
 
@@ -20,76 +19,104 @@ If you are a shiny app developer deploying apps with BAO's PDAP DataLake Team, y
 
 ## Getting Data Streams
 
-To access data steams and classify a user, developers can leverage the new `getUserGroups` wrapper to access the `userGroups` DATIM endpoint. In this case we pass a global partner's test credentials to receive the streams they have access to and classify the user (note the code chunk below is an example and developers will have to access the input username and password parameters via their app). Here we pass credentials to classify a user:
+To access data steams and classify a user, developers can leverage the new `getMyStreams` wrapper to access the `getUserGroups` DATIM endpoint. You can pass your credentials to classify a user:
 
 ```{r get_streams_user_type, eval=T, echo = F}
+
+# login 
 loginToDATIM(
-  config_path = NULL,
-  config_path_level = "dhis",
-  username = "",
-  password = "",
+  config_path = "~/secrets/datim.json",
   base_url = "https://test.datim.org/",
   d2_session_name = "d2_default_session",
   d2_session_envir = parent.frame()
 )
 
-# get user groups and 
-user_groups <- d2_default_session$me$userGroups$id %>% 
-  getUserGroups() 
+# get streams
+streams <- getMyStreams()
 
-# select from user_groups everything that is a data stream and needed for classification
-user_groups <- user_groups[grepl("Data (.+?) access|^Global|^OU",user_groups)]
-  
-# remove Data Access strings
-user_groups_e <- gsub("Data | access", "", user_groups)
-
-# pass streams and classify user
-user_type <- getUserType(user_groups_e)
-
-print(paste("User type: ",user_type))
+# pass streams to user type classifier
+print(
+  paste("User type: ", getMyUserType(streams))
+  )
 ```
 
 ## Accessing Mechanisms
 
-Once a user type is classified, developers can start to enforce limitations on data access. Mechanisms can be pulled by three different id columns meant for potential joining and filtering (e.g. cocuid, mech_id, mech_name):  
+Once a user type is classified, developers can start to enforce limitations on data access. Mechanisms can be pulled and filtered on the desired columns; here for example we extract only mech_code and name:  
 
 ```{r get_mechs, eval=T}
 
 # pull all mechanisms
-user_mechs <- getMechs(username = "", password = "", base_url = "https://test.datim.org/", by = "cocuid")
-DT::datatable(user_mechs)
+user_mechs <- listMyMechs()
+DT::datatable(
+  head(user_mechs) %>% 
+    select(mech_code, name)
+  )
 ```
 
 ## A Shiny App Example
 
-The above functions are meant to be used in shiny apps and so developers will not be passing username and passwords hard coded into functions as these are great security risks. Developers can extract the username and password inputs in a manner similar to BAO's `datapacker-app`. Developers can access an example app with a similar structure [here](https://github.com/flopez-bao/shinyapps-datimutils-security-example). Clone the github repo, make sure you have all the necessary packages and then set up a `config` file for `datimutils` to consume. Upon launching the app you should see the DATIM screen. 
+The above functions are meant to be used in shiny apps and so developers will not be passing username and passwords hard coded into functions as these are great security risks. Developers can extract the username and password inputs in a manner similar to BAO's `datapacker-app`. Developers can access an example app with a similar structure based on the data they will be exposing: [usg only](https://github.com/flopez-bao/shinyapps-datimutils-security-example-usgonly) or [partners](https://github.com/flopez-bao/shinyapps-datimutils-security-example-partners). Clone the github repo, make sure you have all the necessary packages and then set up a `config` file for `datimutils` to consume. Upon launching the app you should see the DATIM screen. 
 
-When a user inputs their username and password a developer can capture their inputs and pass them to the necessary functions. In the code chunk below from the example app we can see how a developer captures the input in the same way it is used for login in to DATIM. There are different ways to limit acces but here is a very basic example where we check a system variable for a user type to decide wether access to all mechanisms is granted:
+For folks making apps with data meant for agencies aka USG folks we can outright deny access to the app by providing an immediate signout:
 
-```{r example_code_chunk, echo=t, eval = F}
-
-  ...
-
-  #Login process
-  observeEvent(input$login_button, {
-    tryCatch({
+```{r usg, echo=t, eval = F}
+...
+tryCatch({
       datimutils::loginToDATIM(base_url = Sys.getenv("BASE_URL"),
                                username = input$user_name,
                                password = input$password,
                                d2_session_envir = parent.env(environment())
       )
-    },
-   
-  ...
+      
+      # DISALLOW USER ACCESS TO THE APP-----
+      
+      # access data streams
+      d <- getMyStreams()
+      # classify a user
+      d <- getMyUserType(d)
+      
+      #if a user is not to be allowed deny them entry
+      if (!d %in% USG_USERS) {
+        
+        # alert the user they cannot access the app
+        sendSweetAlert(
+          session,
+          title = "Login failed",
+          text = "You are not authorized to use this application",
+          type = "error"
+        )
+        
+        # log them out
+        Sys.sleep(3)
+        flog.info(paste0("User ", user_input$d2_session$me$userCredentials$username, " logged out."))
+        user_input$authenticated  <-  FALSE
+        user_input$user_name <- ""
+        user_input$authorized  <-  FALSE
+        user_input$d2_session  <-  NULL
+        d2_default_session <- NULL
+        gc()
+        session$reload()
+      
+      }
+...
+```
 
-  #show mechs by cocuid adn check against system variable user
-  observeEvent(input$mech_cocuid_button, {
+For folks targeting data that is accessible to partners they must filter information for partners while still providing a full view of the data that is accessible to agencies. In the repo provided above we see this:
+
+```{r partners, echo=t, eval = F}
+...
+#show mechs by mechs id
+  observeEvent(input$mech_id_button, {
     
-    d <- getStreams(username = input$user_name, password = input$password, base_url = Sys.getenv("BASE_URL"))
-    d <- getUserType(d$stream)
-
-    if(d == Sys.getenv("USER_TYPE")) {
-      my_cat_ops <- getMechs(username = input$user_name, password = input$password, base_url = Sys.getenv("BASE_URL"), by= "cocuid")
+    # get streams and user type information
+    d <- getMyStreams()
+    d <- getMyUserType(d$stream)
+    
+    # test if a user is an agency user
+    if(d %in% USG_USERS) {
+      
+      my_cat_ops <- listMyMechs()
       
       output$table <- renderDataTable(my_cat_ops,
                                       options = list(
@@ -97,17 +124,31 @@ When a user inputs their username and password a developer can capture their inp
                                         initComplete = I("function(settings, json) {alert('Done.');}")
                                       )
       )
+    # test if a user is a partner
+    } else if (d %in% PARTNER_USERS) {
+      
+      my_cat_ops <- listMyMechs()
+      my_cat_ops_f <- merge(my_cat_ops, sample_data, by = "mech_code")
+      
+      output$table <- renderDataTable(my_cat_ops_f,
+                                      options = list(
+                                        pageLength = 10,
+                                        initComplete = I("function(settings, json) {alert('Done.');}")
+                                      )
+      )
+      
+      
     } else {
-      access_denied <- paste("You are not allowed to see this information. Only",Sys.getenv("USER_TYPE"), "user types are allowed to see this information.")
+      access_denied <- paste("You are not allowed to see this information.")
       output$message <- renderPrint({ access_denied })  
+      
     }
     
   })
-  
-  ...
 
+...
 ```
 
-Developers can reference the server code in the github repo to see how the action buttons tie to the functions above and how username and password are passed as inputs.
+Developers can reference the server code in the github repo to see how the action buttons tie to the functions.
 
 

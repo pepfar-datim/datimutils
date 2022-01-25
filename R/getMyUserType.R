@@ -1,12 +1,14 @@
 #' @export
-#' @title getUserType(username=NULL, password = NULL)
-#' @description Allows developer to classify a user based on their data streams. 
-#' @streams data streams as a vector.
+#' @title getMyUserType(streams = NULL)
+#' @description Returns a classified user type based on accessible data streams. 
+#' @streams data streams as a character vector.
 
-getUserType <- function(streams = NULL) {
+getMyUserType <- function(streams = NULL) {
   
   if(is.null(streams)) {
     stop("You must provide a vector of streams to classify users")
+  } else if (!is.character(streams)) {
+    stop("What you provided is not a character vector. Please provide a character vector of streams.")
   } else {
     if( length( regmatches(streams ,regexpr("OU (.+?) MOH users", streams)) )  > 0 ) {
       return("moh user")
@@ -27,3 +29,6 @@ getUserType <- function(streams = NULL) {
     }
   }
 }
+
+
+
