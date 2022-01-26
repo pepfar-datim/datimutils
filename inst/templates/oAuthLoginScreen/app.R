@@ -162,7 +162,7 @@ if (interactive()) {
     # deployed URL
     APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/97"
 }
-
+                                                                                                                                           
 ################ OAuth Client information ##################################### 
 {
     app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
@@ -171,7 +171,7 @@ if (interactive()) {
                      redirect_uri = APP_URL #"http://127.0.0.1:8100/"
     )
     
-    api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
+    api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.7/uaa/oauth",
                           request=NULL,#Documentation says to leave this NULL for OAuth2 
                           authorize = "authorize",
                           access="token"
