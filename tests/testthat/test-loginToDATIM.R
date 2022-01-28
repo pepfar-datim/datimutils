@@ -76,7 +76,6 @@ httptest::with_mock_api({
   test_that("We cannot get logged in successfully due to an invalid base_url", {
     
     testthat::expect_error(loginToDATIM(
-      #Found in folder 2.372/api/
       base_url = 'play.dhis2.org/badBaseUrl/',
       username = 'admin',
       password = 'test'
@@ -86,4 +85,68 @@ httptest::with_mock_api({
     fixed=TRUE #Checks against a regular expression so must be here
     )
   })
+})
+################################################################################
+# TEST 4 
+################################################################################
+context("Get an unsuccessful login based upon DATIM currently undergoing
+        maintenance")
+
+httptest::with_mock_api({
+  
+  test_that("We cannot get logged in successfully due to DATIM currently
+            undergoing maintenance", {
+    
+    testthat::expect_error(loginToDATIM(
+      base_url = 'play.dhis2.org/DatimMaintenance/',
+      username = 'admin',
+      password = 'test'
+    ),
+    "Unable to authenticate due to DATIM currently undergoing maintenance.
+         Please try again later!",
+    fixed=TRUE #Checks against a regular expression so must be here
+    )
+  })
+})
+################################################################################
+# TEST 5 
+################################################################################
+context("Get an unsuccessful login based upon DATIM having server issues")
+
+httptest::with_mock_api({
+  
+  test_that("We cannot get logged in successfully due to DATIM servers being 
+            down", {
+              
+              testthat::expect_error(loginToDATIM(
+                base_url = 'play.dhis2.org/ServerDown/',
+                username = 'admin',
+                password = 'test'
+              ),
+              "Unable to reach DATIM, the server may be experiencing issues.
+         Please try again later!",
+         fixed=TRUE #Checks against a regular expression so must be here
+              )
+            })
+})
+
+
+################################################################################
+# TEST 6 
+################################################################################
+context("Get an unsuccessful login based upon an unaccounted for API response")
+
+httptest::with_mock_api({
+  
+  test_that("We cannot get logged in successfully due to an unknown error", {
+
+              testthat::expect_error(loginToDATIM(
+                base_url = 'play.dhis2.org/Unknown/',
+                username = 'admin',
+                password = 'test'
+              ),
+              "An unknowon error has occured during authentication!",
+         fixed=TRUE #Checks against a regular expression so must be here
+              )
+            })
 })
