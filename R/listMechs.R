@@ -1,14 +1,14 @@
 #' @export
-#' @title listMyMechs(option_fields = c("name", "id", "code"),
+#' @title listMechs(option_fields = c("name", "id", "code"),
 #' combo_fields = "id", 
 #' d2_session = dynGet("d2_default_session",inherits = TRUE)
-#' @description Returns a dataframe all mechanisms associated with the user. 
+#' @description Returns a dataframe with all mechanisms a user has access to. 
 #' @param option_fields fields passed to the getMetaData endpoint.
 #' @param combo_fields fields passed to getCatOptionCombos call.
 #' @param d2_session the d2Session object, default is "d2_default_session"
 #' @importFrom magrittr "%>%"
 
-listMyMechs <- function(option_fields = c("name", "id", "code"),
+listMechs <- function(option_fields = c("name", "id", "code"),
                         combo_fields = "id", 
                         d2_session = dynGet("d2_default_session",
                                             inherits = TRUE)) {
@@ -22,11 +22,15 @@ listMyMechs <- function(option_fields = c("name", "id", "code"),
     
     df <- getMetadata(categoryOptions, 
                       categories.id %.in% "SH885jaRe0o",
-                      fields = option_fields) %>% 
+                      fields = option_fields,
+                      d2_session = d2_session
+                      ) %>% 
       dplyr::mutate(option_id = id,
                     combo_id = datimutils::getCatOptionCombos(code, 
                                                               by = code,
-                                                              fields = combo_fields)) %>% 
+                                                              fields = combo_fields,
+                                                              d2_session = d2_session
+                                                              )) %>% 
       dplyr::select(-id, mech_code = code)
     
     return(df)

@@ -124,7 +124,7 @@ print(data)
 tabl <- "
 |                       datimutils function                      | DATIM Source               |
 |----------------------------------------------------------------|:--------------------------:|
-| getCategories           | categories                 |
+| getCategories           | categories                 | 
 | getCatCombos            | categoryCombinations       |
 | getCatOptionCombos      | categoryOptionCombinations |
 | getCatOptionGroupSets   | categoryOptionGroupSets    |
@@ -145,6 +145,7 @@ tabl <- "
 | getOrgUnitGroups        | organisationUnitGroups     |
 | getOrgUnits             | organisationUnits          |
 | getDimensions           | dimensions                 |
+| getUserGroups           |
 "
 cat(tabl)
 ```
