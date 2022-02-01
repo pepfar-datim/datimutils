@@ -2,12 +2,9 @@
 % Please edit documentation in R/getMyUserType.R
 \name{getMyUserType}
 \alias{getMyUserType}
-\title{getMyUserType(streams = NULL)}
+\title{getMyUserType(d2_session = dynGet("d2_default_session", inherits = TRUE))}
 \usage{
-getMyUserType(
-  streams = NULL,
-  d2_session = dynGet("d2_default_session", inherits = TRUE)
-)
+getMyUserType(d2_session = dynGet("d2_default_session", inherits = TRUE))
 }
 \arguments{
 \item{d2_session}{the d2Session object, default is "d2_default_session"}
