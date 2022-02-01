@@ -145,7 +145,7 @@ tabl <- "
 | getOrgUnitGroups        | organisationUnitGroups     |
 | getOrgUnits             | organisationUnits          |
 | getDimensions           | dimensions                 |
-| getUserGroups           |
+| getUserGroups           | userGroups                 |
 "
 cat(tabl)
 ```
