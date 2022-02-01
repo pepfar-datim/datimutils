@@ -2,7 +2,7 @@
 title: "Securing-user-mechanism-access"
 output: html_document
 vignette: >
-  %\VignetteIndexEntry{Introduction-to-datimutils}
+  %\VignetteIndexEntry{Securing-user-mechanism-access}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
