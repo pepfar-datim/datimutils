@@ -31,7 +31,7 @@ listMechs <- function(option_fields = c("name", "id", "code"),
                                                               fields = combo_fields,
                                                               d2_session = d2_session
                                                               )) %>% 
-      dplyr::select(-id, mech_code = code)
+      dplyr::select(-id)
     
     return(df)
   }
