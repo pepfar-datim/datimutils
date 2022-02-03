@@ -3,34 +3,39 @@ context("make arbitrary api call DATIM")
 library(httptest)
 
 #code to create/update mocks
-{
+
 # httptest::start_capturing(simplify = FALSE)
-# #not logged in for this one, fields there just to give the call a unique httptest ID
-# httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
+# #not logged in for this one, fields there just to give the call a unique
+# httptest ID
+# httr::GET(
+# "https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
 # httptest::stop_capturing()
-# 
+#
 # datapackcommons::DHISLogin_Play("2.33")
-# 
+#
 # httptest::start_capturing(simplify = FALSE)
-# 
+#
 # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
 # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false")
 # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name")
-# httr::GET("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
-# httr::GET("https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false")
+# httr::GET(
+# "https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
+# httr::GET(
+# "https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false")
 # httr::GET(
 #   paste0(
 #     "https://play.dhis2.org/2.33/api/indicators.json?paging=false",
-#     "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc"
+#     "&fields=name,id,translations[locale,value],indicatorGroups[id,name]
+#      &filter=name:ilike:anc"
 #   )
 # )
 # httr::GET("https://play.dhis2.org/2.33/api/30/smsCommands.json?paging=false")
-# 
+#
 # httptest::stop_capturing()
-}
+
 
 ################################################################################
-# TEST 1 
+# TEST 1
 ################################################################################
 # no mock for this test
 testthat::test_that("Can use timeout paramater", {
@@ -45,7 +50,7 @@ testthat::test_that("Can use timeout paramater", {
 })
 
 ################################################################################
-# TEST 2 
+# TEST 2
 ################################################################################
 # no mock for this test - no httr requests should actually be issued
 # for these response formats
@@ -78,15 +83,16 @@ testthat::test_that("We reject request for non-json response formats", {
 
 # API Testing begins using httptest package
 httptest::with_mock_api({
-  
-  # TEST 3 
+
+  # TEST 3
   ##############################################################################
   testthat::test_that("We handle anticipated api issues", {
     # non-json content type
     # mock built when not logged in resulting in content type of
     # html from the login page
     testthat::expect_error(
-      # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
+      # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=
+      # false&fields=notloggedin")
       api_get(
         path = "api/me?fields=notloggedin",
         d2_session = play233,
@@ -112,9 +118,9 @@ httptest::with_mock_api({
         api_get(path = "504",
                 d2_session = list(base_url = "http://httpstat.us/")))
   })
-  
+
   ##############################################################################
-  # TEST 4 
+  # TEST 4
   ##############################################################################
   testthat::test_that(
     "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false",
@@ -149,7 +155,7 @@ httptest::with_mock_api({
       rm(user)
     }
   )
-  
+
   ##############################################################################
   # TEST 5
   ##############################################################################
@@ -167,7 +173,7 @@ httptest::with_mock_api({
       rm(ind)
     }
   )
-  
+
   ##############################################################################
   # TEST 6
   ##############################################################################
@@ -189,7 +195,7 @@ httptest::with_mock_api({
     expect_true(all(grepl("[Aa][Nn][Cc]", ind$indicators$name)))
     rm(ind)
   })
-  
+
   ##############################################################################
   # TEST 7
   ##############################################################################
@@ -205,7 +211,7 @@ httptest::with_mock_api({
     testthat::expect_null(user$id)
     rm(user)
   })
-  
+
   ##############################################################################
   # TEST 8
   ##############################################################################
@@ -222,7 +228,7 @@ httptest::with_mock_api({
     testthat::expect_null(ind$pager)
     rm(ind)
   })
-  
+
   ##############################################################################
   # TEST 9
   ##############################################################################
