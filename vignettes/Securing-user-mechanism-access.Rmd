@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = F)
 
 ## Who is this Vignette for?
 
-If you are a shiny app developer deploying apps with BAO's PDAP DataLake Team, you can use the following process and functions in [datimutils](https://github.com/pepfar-datim/datimutils) to make sure your users have appropriate mechnanism access. This process is relatively simple and requires standard usage of the `loginToDATIM` process. In order to understand who a user is, your code will need to check accessible data streams with the objective of classifying a user based on those streams. A developer can then classify their user and limit mechanism access as needed.
+If you are a shiny app developer deploying apps with PEPFAR's PDAP DataLake Team, you can use the following process and functions in [datimutils](https://github.com/pepfar-datim/datimutils) to make sure your users have appropriate mechnanism access. This process is relatively simple and requires standard usage of the `loginToDATIM` process. In order to understand who a user is, your code will need to check accessible data streams with the objective of classifying a user based on those streams. A developer can then classify their user and limit mechanism access as needed.
 
 ## Getting Data Streams
 
