@@ -42,7 +42,7 @@ print(
 
 ## Accessing Mechanisms
 
-Once a user type is classified, developers can start to enforce limitations on data access. Mechanisms can be pulled and filtered on the desired columns; here for example we extract only mech_code and name:  
+Once a user type is classified, developers can start to enforce limitations on data access. Mechanisms can be pulled and filtered on the desired columns; here for example we extract only code and name:  
 
 ```{r get_mechs, eval=T}
 
@@ -50,7 +50,7 @@ Once a user type is classified, developers can start to enforce limitations on d
 user_mechs <- listMyMechs()
 DT::datatable(
   head(user_mechs) %>% 
-    select(mech_code, name)
+    select(code, name)
   )
 ```
 
@@ -128,7 +128,7 @@ For folks targeting data that is accessible to partners they must filter informa
     } else if (d %in% PARTNER_USERS) {
       
       my_cat_ops <- listMyMechs()
-      my_cat_ops_f <- merge(my_cat_ops, sample_data, by = "mech_code")
+      my_cat_ops_f <- merge(my_cat_ops, sample_data, by = "code")
       
       output$table <- renderDataTable(my_cat_ops_f,
                                       options = list(
