@@ -1,26 +1,32 @@
 d2Session <- R6::R6Class("d2Session",
-                         #' @title d2Session 
-                         public=list(
-                           #' @field  config_path Path to a JSON configuration file. 
+                         #' @title d2Session
+                         public = list(
+                           #' @field  config_path Path to a JSON configuration
+                           #' file.
                            config_path = NULL,
-                           #' @field  base_url The URL of the server, e.g. https://www.datim.org/. 
+                           #' @field  base_url The URL of the server,
+                           #' e.g. https://www.datim.org/.
                            base_url = NULL,
-                           #' @field  username Your user name. 
+                           #' @field  username Your user name.
                            username = NULL,
-                           #' @field user_orgunit UID of the users assigned organisation unit
+                           #' @field user_orgunit UID of the users assigned
+                           #' organisation unit
                            user_orgunit = NULL,
-                           #' @field handle An httr handle used to communicate with the DHIS2 instance. 
+                           #' @field handle An httr handle used to communicate
+                           #' with the DHIS2 instance.
                            handle = NULL,
-                           #' @field me dhis2 api/me response 
+                           #' @field me dhis2 api/me response
                            me  = NULL,
                            max_cache_age  = NULL,
-                           #' @description 
+                           #' @description
                            #' Create a new DHISLogin object
                            #' @param config_path Configuration file path
-                           #' @param base_url URL to the server. 
-                           #' @param handle httr handle to be used for dhis2 connections 
+                           #' @param base_url URL to the server.
+                           #' @param handle httr handle to be used for dhis2
+                           #' connections
                            #' @param me DHIS2 me response object
-                           #' @param max_cache_age cache expiry currently used by datim validation
+                           #' @param max_cache_age cache expiry currently used
+                           #' by datim validation
                            initialize = function(config_path = NA_character_,
                                                  base_url,
                                                  handle,
@@ -103,25 +109,30 @@ getCredentialsFromKeyring <- function(ring) {
 #' @export
 #' @title loginToDATIMfunction(config_path=NULL,
 #' config_path_level = "dhis" )
-#' @description logins into a datim or dhis2 api using either default keyring and 
-#' a config file. This function creates a d2Session login object in the 
+#' @description logins into a datim or dhis2 api using either default keyring
+#' and a config file. This function creates a d2Session login object in the
 #' environment calling the login function.
 #' E.g. global environment or R-shiny session. Thus you do not need to assign
 #' the output of this function to a variable as it creates the variable/object
 #' as a side effect.
-#' @param config_path path to a dhis config file. If provided, username and password should not be provided.
+#' @param config_path path to a dhis config file. If provided, username and
+#'  password should not be provided.
 #' @param config_path_level if there a multiple json entries in the config
 #' file, it will default to dhis
-#' @param username DHIS 2 username. If provided must provide password and config_path must be NULL
-#' @param password DHIS 2 password for the username. If provided must provide password and config_path must be NULL
-#' @param base_url if providing password and username directly this must be non null
-#' @param d2_session_name the variable name for the d2Session object. The default
-#' name is d2_default_session and will be used by other datimutils functions by default when 
-#' connecting to datim. Generally a custom name should only be needed if you need to log into
-#' two seperate DHIS2 instances at the same time. If you create a d2Session object with a
-#' custom name then this object must be passed to other datimutils functions explicitly
-#' @param d2_session_envir the environment in which to place the R6 login object, default
-#' is the immediate calling environment
+#' @param username DHIS 2 username. If provided must provide password and
+#' config_path must be NULL
+#' @param password DHIS 2 password for the username. If provided must provide
+#' password and config_path must be NULL
+#' @param base_url if providing password and username directly this must be
+#' non null
+#' @param d2_session_name the variable name for the d2Session object.
+#' The default name is d2_default_session and will be used by other datimutils
+#' functions by default when connecting to datim. Generally a custom name
+#' should only be needed if you need to log into two seperate DHIS2 instances
+#' at the same time. If you create a d2Session object with a custom name then
+#' this object must be passed to other datimutils functions explicitly
+#' @param d2_session_envir the environment in which to place the R6 login
+#' object, default is the immediate calling environment
 loginToDATIM <- function(config_path = NULL,
                          config_path_level = "dhis",
                          username = NULL,
@@ -154,7 +165,8 @@ loginToDATIM <- function(config_path = NULL,
   if (is.null(password)) {
     password <- ""
   }
-  # checks if password in file and if not checks keyring, and if not there prompts to make one
+  # checks if password in file and if not checks keyring, and if not there
+  # prompts to make one
   if (nchar(password) == 0) {
     password <- try(keyring::key_get(
       service = credentials[["baseurl"]],
@@ -184,17 +196,30 @@ loginToDATIM <- function(config_path = NULL,
     httr::timeout(60),
     handle = handle
   )
-  if (r$status != 200L) {
-    stop("Could not authenticate you with the server!")
-  } else {
+
+  if (r$status == 200L) {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
 
-# create the session object in the calling environment of the login function
-    assign(d2_session_name, 
+    # create the session object in the calling environment of the login function
+    assign(d2_session_name,
            d2Session$new(config_path = config_path,
                          base_url = base_url,
                          handle = handle,
-                         me = me), 
+                         me = me),
            envir = d2_session_envir)
+  } else if (r$status == 302L) {
+    stop("Unable to authenticate due to DATIM currently undergoing maintenance.
+         Please try again later!")
+  } else if (r$status == 503L) {
+    stop("Unable to reach DATIM, the server may be experiencing issues.
+         Please try again later!")
+  } else if (r$status == 404L) {
+    stop("Unable to authenticate due to an invalid URL.Please check the
+         'base_url' parameter you provided.")
+  } else if (r$status == 401L) {
+    stop("Unable to authenticate due to an invalid username or password.
+         Please update your credentials and try again.")
+  } else {
+    stop("An unknowon error has occured during authentication!")
   }
 }
