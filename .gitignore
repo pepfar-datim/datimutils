@@ -157,3 +157,6 @@ fabric.properties
 .idea/rpackages.xml
 .idea/vcs.xml
 R/scratch.R
+
+#Renv local packages
+renv/

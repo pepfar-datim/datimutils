@@ -1,0 +1,19 @@
+{
+    "organisationUnitGroups": [
+        {
+            "code": "Chiefdom",
+            "name": "Chiefdom",
+            "id": "gzcv65VyaGq"
+        },
+        {
+            "code": "CHP",
+            "name": "CHP",
+            "id": "uYxK4wmcPqA"
+        },
+        {
+            "code": "Clinic",
+            "name": "Clinic",
+            "id": "RXL3lPSK8oG"
+        }
+    ]
+}

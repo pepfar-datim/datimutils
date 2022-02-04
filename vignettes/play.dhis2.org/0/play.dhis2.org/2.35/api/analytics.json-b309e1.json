@@ -1,0 +1,266 @@
+{
+    "headers": [
+        {
+            "name": "dx",
+            "column": "Data",
+            "valueType": "TEXT",
+            "type": "java.lang.String",
+            "hidden": false,
+            "meta": true
+        },
+        {
+            "name": "pe",
+            "column": "Period",
+            "valueType": "TEXT",
+            "type": "java.lang.String",
+            "hidden": false,
+            "meta": true
+        },
+        {
+            "name": "ou",
+            "column": "Organisation unit",
+            "valueType": "TEXT",
+            "type": "java.lang.String",
+            "hidden": false,
+            "meta": true
+        },
+        {
+            "name": "value",
+            "column": "Value",
+            "valueType": "NUMBER",
+            "type": "java.lang.Double",
+            "hidden": false,
+            "meta": false
+        }
+    ],
+    "metaData": {
+        "items": {
+            "ou": {
+                "name": "Organisation unit"
+            },
+            "O6uvpzGd5pu": {
+                "name": "Bo"
+            },
+            "202107": {
+                "name": "July 2021"
+            },
+            "202009": {
+                "name": "September 2020"
+            },
+            "202108": {
+                "name": "August 2021"
+            },
+            "202105": {
+                "name": "May 2021"
+            },
+            "202106": {
+                "name": "June 2021"
+            },
+            "202103": {
+                "name": "March 2021"
+            },
+            "202104": {
+                "name": "April 2021"
+            },
+            "LAST_12_MONTHS": {
+                "name": "Last 12 months"
+            },
+            "fdc6uOvgoji": {
+                "name": "Bombali"
+            },
+            "202101": {
+                "name": "January 2021"
+            },
+            "202102": {
+                "name": "February 2021"
+            },
+            "202011": {
+                "name": "November 2020"
+            },
+            "202012": {
+                "name": "December 2020"
+            },
+            "dx": {
+                "name": "Data"
+            },
+            "202010": {
+                "name": "October 2020"
+            },
+            "pe": {
+                "name": "Period"
+            },
+            "Uvn6LCg7dVU": {
+                "name": "ANC 1 Coverage"
+            }
+        },
+        "dimensions": {
+            "dx": [
+                "Uvn6LCg7dVU"
+            ],
+            "pe": [
+                "202009",
+                "202010",
+                "202011",
+                "202012",
+                "202101",
+                "202102",
+                "202103",
+                "202104",
+                "202105",
+                "202106",
+                "202107",
+                "202108"
+            ],
+            "ou": [
+                "O6uvpzGd5pu",
+                "fdc6uOvgoji"
+            ],
+            "co": [
+
+            ]
+        }
+    },
+    "rows": [
+        [
+            "ANC 1 Coverage",
+            "September 2020",
+            "Bo",
+            "169.4"
+        ],
+        [
+            "ANC 1 Coverage",
+            "September 2020",
+            "Bombali",
+            "79.0"
+        ],
+        [
+            "ANC 1 Coverage",
+            "October 2020",
+            "Bo",
+            "144.2"
+        ],
+        [
+            "ANC 1 Coverage",
+            "October 2020",
+            "Bombali",
+            "79.7"
+        ],
+        [
+            "ANC 1 Coverage",
+            "November 2020",
+            "Bo",
+            "192.8"
+        ],
+        [
+            "ANC 1 Coverage",
+            "December 2020",
+            "Bo",
+            "110.6"
+        ],
+        [
+            "ANC 1 Coverage",
+            "December 2020",
+            "Bombali",
+            "81.5"
+        ],
+        [
+            "ANC 1 Coverage",
+            "January 2021",
+            "Bo",
+            "129.6"
+        ],
+        [
+            "ANC 1 Coverage",
+            "January 2021",
+            "Bombali",
+            "88.3"
+        ],
+        [
+            "ANC 1 Coverage",
+            "February 2021",
+            "Bo",
+            "140.5"
+        ],
+        [
+            "ANC 1 Coverage",
+            "February 2021",
+            "Bombali",
+            "89.0"
+        ],
+        [
+            "ANC 1 Coverage",
+            "March 2021",
+            "Bo",
+            "127.0"
+        ],
+        [
+            "ANC 1 Coverage",
+            "March 2021",
+            "Bombali",
+            "80.0"
+        ],
+        [
+            "ANC 1 Coverage",
+            "April 2021",
+            "Bo",
+            "136.1"
+        ],
+        [
+            "ANC 1 Coverage",
+            "April 2021",
+            "Bombali",
+            "93.8"
+        ],
+        [
+            "ANC 1 Coverage",
+            "May 2021",
+            "Bo",
+            "157.4"
+        ],
+        [
+            "ANC 1 Coverage",
+            "May 2021",
+            "Bombali",
+            "123.0"
+        ],
+        [
+            "ANC 1 Coverage",
+            "June 2021",
+            "Bo",
+            "145.3"
+        ],
+        [
+            "ANC 1 Coverage",
+            "June 2021",
+            "Bombali",
+            "102.9"
+        ],
+        [
+            "ANC 1 Coverage",
+            "July 2021",
+            "Bo",
+            "174.1"
+        ],
+        [
+            "ANC 1 Coverage",
+            "July 2021",
+            "Bombali",
+            "92.7"
+        ],
+        [
+            "ANC 1 Coverage",
+            "August 2021",
+            "Bo",
+            "147.1"
+        ],
+        [
+            "ANC 1 Coverage",
+            "August 2021",
+            "Bombali",
+            "94.1"
+        ]
+    ],
+    "height": 23,
+    "width": 4,
+    "headerWidth": 4
+}
