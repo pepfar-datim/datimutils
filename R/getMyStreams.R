@@ -20,10 +20,10 @@ getMyStreams <- function(d2_session = dynGet("d2_default_session", inherits = TR
   )
   
   # select from user_groups everything that is a data stream and needed for classification
-  user_groups <- user_groups[grepl("Data (.+?) access|^Global|^OU",user_groups)]
+  user_groups <- user_groups[grepl("Data (.+?) access",user_groups)]
   
   # remove Data Access strings
-  streams <- gsub("Data | access", "", user_groups)
+  streams <- sort(gsub("Data | access", "", user_groups))
   
   return(streams)
 }
