@@ -1,0 +1,27 @@
+structure(list(url = "https://play.dhis2.org/2.36.6/api/api/me", 
+    status_code = 401L, headers = structure(list(server = "nginx", 
+        date = "Tue, 18 Jan 2022 22:02:55 GMT", `content-type` = "application/xml;charset=UTF-8", 
+        `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
+        `x-frame-options` = "SAMEORIGIN"), class = c("insensitive", 
+    "list")), all_headers = list(list(status = 301L, version = "HTTP/1.1", 
+        headers = structure(list(server = "nginx", date = "Tue, 18 Jan 2022 22:02:55 GMT", 
+            `content-type` = "text/html", `content-length` = "162", 
+            connection = "keep-alive", location = "https://play.dhis2.org/2.36/api/api/me"), class = c("insensitive", 
+        "list"))), list(status = 302L, version = "HTTP/2", headers = structure(list(
+        server = "nginx", date = "Tue, 18 Jan 2022 22:02:55 GMT", 
+        `content-type` = "text/html", `content-length` = "138", 
+        location = "https://play.dhis2.org/2.36.6/api/api/me", 
+        `strict-transport-security` = "max-age=15768000"), class = c("insensitive", 
+    "list"))), list(status = 401L, version = "HTTP/2", headers = structure(list(
+        server = "nginx", date = "Tue, 18 Jan 2022 22:02:55 GMT", 
+        `content-type` = "application/xml;charset=UTF-8", `x-content-type-options` = "nosniff", 
+        `x-xss-protection` = "1; mode=block", `x-frame-options` = "SAMEORIGIN"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = logical(0), 
+        flag = logical(0), path = logical(0), secure = logical(0), 
+        expiration = structure(numeric(0), class = c("POSIXct", 
+        "POSIXt")), name = logical(0), value = logical(0)), row.names = integer(0), class = "data.frame"), 
+    content = charToRaw("<webMessage xmlns=\"http://dhis2.org/schema/dxf/2.0\" httpStatus=\"Unauthorized\" httpStatusCode=\"401\" status=\"ERROR\"><message>Unauthorized</message></webMessage>"), 
+    date = structure(1642543375, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0.26364, namelookup = 9.2e-05, 
+    connect = 9.8e-05, pretransfer = 0.000254, starttransfer = 0.484014, 
+    total = 0.484114)), class = "response")
