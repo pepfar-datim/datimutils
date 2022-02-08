@@ -41,7 +41,6 @@ d2Session <- R6::R6Class("d2Session",
                          )
 )
 
-# Wed Sep  8 16:48:56 2021 ------------------
 #' @title getOAuthToken (app_url,app,api,scope)
 #' @description retrieve authorization token from DATIM/DHIS2
 #' @param app OAuth2 client details - Name, Client ID, Client Secret,
@@ -67,8 +66,8 @@ getOAuthToken <- function(redirect_uri, app, api, scope) {
   return(token)
 }
 
-# REALLY NEED a better user input here that pops up on the screen as opposed
-# to terminal or a way to extract that url
+# TODO Need a better user input here that pops up on the screen as opposed
+# to terminal
 
 ###############################################################################
 #' @export
@@ -112,7 +111,7 @@ loginToDATIMOAuth <- function(
   #token=getOAuthToken(redirect_uri,app,api,scope)
   #With the below code block in order to be able to use it with shiny.
   #Essentially if the token is null it will take you to login at DHIS2 if you
-  #already have your token(From Shiny) it will use that. Thoughts @Sam?
+  #already have your token(From Shiny) it will use that.
 
   if (is.null(token)) {
     token <- getOAuthToken(redirect_uri, app, api, scope)
@@ -136,7 +135,6 @@ loginToDATIMOAuth <- function(
   } else {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
 
-
     # create the session object in the calling environment of the login function
     assign(d2_session_name,
            d2Session$new(base_url = base_url,
@@ -147,8 +145,6 @@ loginToDATIMOAuth <- function(
 
 
 }
-
-
 
 ### Will move to vignette
 ### Example of using the above.

@@ -10,165 +10,25 @@ library(waiter)
 library(futile.logger)
 library(shinyWidgets)
 
-#NOTE this will go away
-#source("~/Documents/Repos/datimutils/R/oAuthLogin.R")
-
-### Define Functions
-d2Session <- R6::R6Class("d2Session",
-                         #' @title d2Session 
-                         public=list(
-                             #' @field  base_url The URL of the server, e.g. https://www.datim.org/. 
-                             base_url = NULL,
-                             #' @field  username Your user name. 
-                             username = NULL,
-                             #' @field user_orgunit UID of the users assigned organisation unit
-                             user_orgunit = NULL,
-                             #' @field handle An httr handle used to communicate with the DHIS2 instance. 
-                             handle = NULL,
-                             #' @field me dhis2 api/me response 
-                             me  = NULL,
-                             max_cache_age  = NULL,
-                             #' @description 
-                             #' Create a new DHISLogin object
-                             #' @param config_path Configuration file path
-                             #' @param base_url URL to the server. 
-                             #' @param handle httr handle to be used for dhis2 connections 
-                             #' @param me DHIS2 me response object
-                             #' @param max_cache_age cache expiry currently used by datim validation
-                             initialize = function(base_url,
-                                                   handle,
-                                                   me) {
-                                 self$me <- me
-                                 self$user_orgunit <- me$organisationUnits$id
-                                 self$base_url <- base_url
-                                 self$username <- me$userCredentials$username
-                                 self$handle <- handle
-                             }
-                         )
-)
-
-# Wed Sep  8 16:48:56 2021 ------------------
-#' @title getOAuthToken (app_url,app,api,scope)
-#' @description retrieve authorization token from DATIM/DHIS2
-#' @param app OAuth2 client details - Name, Client ID, Client Secret, redirect URIs
-#' @param redirect_uri Redirect_uri listed under client details
-#' @param api Endpoint for authorization - base url, authorize endpoint, access token endpoint
-#' @param scope the scope of what the client will return. "All" is default for DHIS2
-#' @return access token to specified OAuth2 Client
-#'
-getOAuthToken <- function(redirect_uri,app,api,scope) {
-    
-    token <- oauth2.0_token(
-        app = app,
-        endpoint =api, 
-        scope = scope,
-        use_basic_auth = TRUE,
-        oob_value=redirect_uri,
-        cache = FALSE
-    )
-    
-    return(token)
-}
-
-#REALLY NEED a better user input here that pops up on the screen as opposed to terminal or a way to extract that url
-
-###############################################################################
-#' @export
-#' @title loginToDATIMOAuth()
-#' @description login to a datim or dhis2 api using Oauth2.
-#' This function creates a d2Session login object in the 
-#' environment calling the login function.
-#' E.g. global environment or R-shiny session. Thus you do not need to assign
-#' the output of this function to a variable as it creates the variable/object
-#' as a side effect.
-#' @param base_url The base url for the instance you are authenticating against. 
-#' @param token The authorization token granted after using getOAuthToken()
-#' @param redirect_uri Redirect_uri listed under client details
-#' @param app OAuth2 client details - Name, Client ID, Client Secret, redirect URIs
-#' @param api Endpoint for authorization - base url, authorize endpoint, access token endpoint
-#' @param scope The scope of what the client will return. "All" is default for DHIS2
-#' @param d2_session_name the variable name for the d2Session object. The default
-#' name is d2_default_session and will be used by other datimutils functions by default when 
-#' connecting to datim. Generally a custom name should only be needed if you need to log into
-#' two seperate DHIS2 instances at the same time. If you create a d2Session object with a
-#' custom name then this object must be passed to other datimutils functions explicitly
-#' @param d2_session_envir the environment in which to place the R6 login object, default
-#' is the immediate calling environment
-loginToDATIMOAuth <- function(
-    base_url = NULL,
-    token = NULL, 
-    redirect_uri= NULL,
-    app= NULL,
-    api= NULL,
-    scope= NULL,
-    d2_session_name = "d2_default_session",
-    d2_session_envir = parent.frame()) {
-    
-    # Thu Oct  7 16:53:33 2021 ------------------------------
-    #Replaced 
-    #get token
-    #token=getOAuthToken(redirect_uri,app,api,scope)
-    #With the below code block in order to be able to use it with shiny. Essentially
-    # if the token is null it will take you to login at DHIS2 if you already have your token(From Shiny)
-    #it will use that. Thoughts @Sam?
-    
-    if (is.null(token)) {
-        token=getOAuthToken(redirect_uri,app,api,scope)
-    } else {
-        token=token #For Shiny 
-    }
-    
-    # form url
-    url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
-    handle <- httr::handle(base_url)
-    
-    #Get Request
-    r <- httr::GET(
-        url,
-        config(token = token),
-        httr::timeout(60),
-        handle = handle
-    )
-    if (r$status != 200L) {
-        stop("Could not authenticate you with the server!")
-    } else {
-        me <- jsonlite::fromJSON(httr::content(r, as = "text")) 
-        
-        
-        # create the session object in the calling environment of the login function
-        assign(d2_session_name, 
-               d2Session$new(base_url = base_url,
-                             handle = handle,
-                             me = me), 
-               envir = d2_session_envir)
-    }
-    
-    
-}
-
-
-
-
-
-
-
+# Note will not be necessary once merged with datimutils
+source("~/Documents/Repos/datimutils/R/oAuthLogin.R")
 
 ######## APP starts
 if (interactive()) {
     # testing url
     options(shiny.port = 8100)
-    APP_URL <- "http://127.0.0.1:8100/" #Investigate this further if time permits
+    APP_URL <- "http://127.0.0.1:8100/"# This will be your local host path
 } else {
     # deployed URL
-    APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/97"
+    APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/97" #This will be your shiny server path
 }
                                                                                                                                            
 ################ OAuth Client information ##################################### 
 {
-    app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
-                     key = "demo",         #dhis2 = Client ID
-                     secret = "f036759e2-ab67-d40b-b46f-722a1503c05", #dhis2 = Client Secret
-                     redirect_uri = APP_URL #"http://127.0.0.1:8100/"
+    app <- oauth_app("OAuth2 Demo Client", # dhis2 = Name
+                     key = "demo",         # dhis2 = Client ID
+                     secret = "852fa0557-1e3e-aec6-6e3d-b8891223c73", #dhis2 = Client Secret
+                     redirect_uri = APP_URL
     )
     
     api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.7/uaa/oauth",
@@ -185,7 +45,7 @@ has_auth_code <- function(params) {
     return(!is.null(params$code))
 }
 
-mykey = paste(sample(LETTERS,20,replace = T),collapse="") #Just an added layer of security, feel free to remove here and the output$ui_hasauth block
+mykey = paste(sample(LETTERS,20,replace = T),collapse="") # Just an added layer of security, feel free to remove here and the output$ui_hasauth block
 ############### SERVER #########################################################
 server <- function(input, output, session) {
     
@@ -210,7 +70,7 @@ server <- function(input, output, session) {
     ### Login Button Checks 
     observeEvent(input$login_button, {    
         tryCatch({
-            datimutils::loginToDATIM(base_url = "https://play.dhis2.org/2.36.4/", #Sys.getenv("BASE_URL"),Modified for testing
+            datimutils::loginToDATIM(base_url = "https://play.dhis2.org/2.36.7/", #Sys.getenv("BASE_URL"),Modified for testing
                                      username = input$user_name,
                                      password = input$password,
                                      d2_session_envir = parent.env(environment())
@@ -227,9 +87,12 @@ server <- function(input, output, session) {
                 user_input$d2_session  <-  d2_default_session$clone()
                 d2_default_session <- NULL
                 
-                # Need to check the user is a member of the PRIME Data Systems Group, COP Memo group, or a super user
+                # Need to check the user is a member of the
+                # PRIME Data Systems Group, COP Memo group,
+                # or a super user
                 user_input$memo_authorized  <-
-                    grepl("VDEqY8YeCEk|ezh8nmc4JbX", user_input$d2_session$me$userGroups) |
+                    grepl("VDEqY8YeCEk|ezh8nmc4JbX",
+                          user_input$d2_session$me$userGroups) |
                     grepl(
                         "jtzbVV4ZmdP",
                         user_input$d2_session$me$userCredentials$userRoles
@@ -256,7 +119,8 @@ server <- function(input, output, session) {
     ### Logout Button Checks
     observeEvent(input$logout, {
         req(input$logout)
-        updateQueryString("?",mode="replace",session=session) #Gets you back to the login without the authorization code at top
+        # Gets you back to the login without the authorization code at top
+        updateQueryString("?",mode="replace",session=session) 
         flog.info(paste0("User ", user_input$d2_session$me$userCredentials$username, " logged out."))
         user_input$authenticated  <-  FALSE
         user_input$user_name <- ""
@@ -293,7 +157,7 @@ server <- function(input, output, session) {
             endpoint =api,
             scope = scope,
             use_basic_auth = TRUE,
-            oob_value=APP_URL, #"http://127.0.0.1:8100/",
+            oob_value=APP_URL,
             cache = FALSE,
             credentials = oauth2.0_access_token(endpoint = api,
                                                 app = app,
@@ -308,13 +172,13 @@ server <- function(input, output, session) {
             
         )
         
-        loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",
+        loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.7/", # Sys.getenv("BASE_URL"), Modified for testing
                           token = token,
                           app=app,
                           api = api,
                           redirect_uri= APP_URL,
                           scope = scope,
-                          d2_session_envir = parent.env(environment()) #Based on Sam's advice, def want this in there.
+                          d2_session_envir = parent.env(environment())
         )
     },
     error = function(e) {
@@ -329,9 +193,11 @@ server <- function(input, output, session) {
                 user_input$d2_session  <-  d2_default_session$clone()
                 d2_default_session <- NULL
                 
-                # Need to check the user is a member of the PRIME Data Systems Group, COP Memo group, or a super user
+                # Need to check the user is a member of the
+                # PRIME Data Systems Group, COP Memo group, or a super user
                 user_input$memo_authorized  <-
-                    grepl("VDEqY8YeCEk|ezh8nmc4JbX", user_input$d2_session$me$userGroups) |
+                    grepl("VDEqY8YeCEk|ezh8nmc4JbX",
+                          user_input$d2_session$me$userGroups) |
                     grepl(
                         "jtzbVV4ZmdP",
                         user_input$d2_session$me$userCredentials$userRoles
@@ -415,7 +281,7 @@ ui_auth <- function(req_txt){
     )))
 }
 
-#Assists with stand UserName and PW method
+#Assists with standard UserName and PW method
 user_input <- reactiveValues(authenticated = FALSE,
                              status = "",
                              d2_session = NULL)
