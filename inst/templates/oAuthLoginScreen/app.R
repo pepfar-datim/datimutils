@@ -20,19 +20,19 @@ if (interactive()) {
     APP_URL <- "http://127.0.0.1:8100/"# This will be your local host path
 } else {
     # deployed URL
-    APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/97" #This will be your shiny server path
+    APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/XX" #This will be your shiny server path
 }
                                                                                                                                            
 ################ OAuth Client information ##################################### 
 {
-    app <- oauth_app("OAuth2 Demo Client", # dhis2 = Name
-                     key = "demo",         # dhis2 = Client ID
-                     secret = "852fa0557-1e3e-aec6-6e3d-b8891223c73", #dhis2 = Client Secret
+    app <- oauth_app("Shiny App Datimutils", # dhis2 = Name
+                     key = "Shiny App Datimutils",         # dhis2 = Client ID
+                     secret = "e74a0ced9-946d-8e9b-2b31-2a6b330f36e", #dhis2 = Client Secret
                      redirect_uri = APP_URL
     )
     
-    api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.7/uaa/oauth",
-                          request=NULL,#Documentation says to leave this NULL for OAuth2 
+    api <- oauth_endpoint(base_url = "https://cop-test.datim.org/uaa/oauth",
+                          request=NULL,# Documentation says to leave this NULL for OAuth2 
                           authorize = "authorize",
                           access="token"
     ) 
@@ -70,7 +70,7 @@ server <- function(input, output, session) {
     ### Login Button Checks 
     observeEvent(input$login_button, {    
         tryCatch({
-            datimutils::loginToDATIM(base_url = "https://play.dhis2.org/2.36.7/", #Sys.getenv("BASE_URL"),Modified for testing
+            datimutils::loginToDATIM(base_url = "https://cop-test.datim.org/", #Sys.getenv("BASE_URL"),Modified for testing
                                      username = input$user_name,
                                      password = input$password,
                                      d2_session_envir = parent.env(environment())
@@ -163,16 +163,9 @@ server <- function(input, output, session) {
                                                 app = app,
                                                 code = params$code,
                                                 use_basic_auth = TRUE)
-            #This could also be developed further in order to get a token with 
-                #username & pw, but defeats the point.
-            # user_params = list(grant_type = "password",
-            #                    username=input$username,
-            #                    password=input$password),
-            # use_oob=T
-            
         )
         
-        loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.7/", # Sys.getenv("BASE_URL"), Modified for testing
+        loginToDATIMOAuth(base_url = "https://cop-test.datim.org/", # Sys.getenv("BASE_URL"), Modified for testing
                           token = token,
                           app=app,
                           api = api,
@@ -181,8 +174,9 @@ server <- function(input, output, session) {
                           d2_session_envir = parent.env(environment())
         )
     },
-    error = function(e) {
-        flog.info(paste0("User ", input$user_name, " login failed."), name = "datapack")
+    error = function(e) { # Not needed for oauth
+        #flog.info(paste0("User ", input$user_name, " login failed."),
+        #name = "datapack")
     }
         )
         
@@ -221,9 +215,8 @@ server <- function(input, output, session) {
     output$mytable = DT::renderDataTable({
         
         df=getMetadata(
-            end_point = "organisationUnits",
-            "organisationUnitGroups.name:eq:District",
-            fields = "id,name,level",
+            end_point = "organisationUnitGroups",
+            fields = "id,name",
             d2_session = user_input$d2_session
         )
         

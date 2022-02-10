@@ -105,14 +105,6 @@ loginToDATIMOAuth <- function(
                          d2_session_name = "d2_default_session",
                          d2_session_envir = parent.frame()) {
 
-  # Thu Oct  7 16:53:33 2021 ------------------------------
-  #Replaced
-  #get token
-  #token=getOAuthToken(redirect_uri,app,api,scope)
-  #With the below code block in order to be able to use it with shiny.
-  #Essentially if the token is null it will take you to login at DHIS2 if you
-  #already have your token(From Shiny) it will use that.
-
   if (is.null(token)) {
     token <- getOAuthToken(redirect_uri, app, api, scope)
   } else {
@@ -130,9 +122,7 @@ loginToDATIMOAuth <- function(
     httr::timeout(60),
     handle = handle
   )
-  if (r$status != 200L) {
-    stop("Could not authenticate you with the server!")
-  } else {
+  if (r$status == 200L) {
     me <- jsonlite::fromJSON(httr::content(r, as = "text"))
 
     # create the session object in the calling environment of the login function
@@ -141,12 +131,23 @@ loginToDATIMOAuth <- function(
                          handle = handle,
                          me = me),
            envir = d2_session_envir)
+  }else if (r$status == 302L) {
+    stop("Unable to authenticate due to DATIM currently undergoing maintenance.
+         Please try again later!")
+  } else if (r$status == 503L) {
+    stop("Unable to reach DATIM, the server may be experiencing issues.
+         Please try again later!")
+  } else if (r$status == 404L) {
+    stop("Unable to authenticate due to an invalid URL.Please check the
+         'base_url' parameter you provided.")
+  } else if (r$status == 401L) {
+    stop("Unable to authenticate due to an invalid username or password.
+         Please update your credentials and try again.")
+  } else {
+    stop("An unknowon error has occured during authentication!")
   }
-
-
 }
 
-### Will move to vignette
 ### Example of using the above.
 # {
 # ### Define variables

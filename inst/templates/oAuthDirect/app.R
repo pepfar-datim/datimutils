@@ -16,16 +16,16 @@ if (interactive()) {
     APP_URL <- "http://127.0.0.1:8100/"# This will be your local host path
 } else {
     # deployed URL
-    APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/96"# This will be your shiny server path
+    APP_URL <- "https://rstudio-connect.testing.ap.datim.org/content/XX"# This will be your shiny server path
 }
 
-app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
-                 key = "demo",         #dhis2 = Client ID
-                 secret = "852fa0557-1e3e-aec6-6e3d-b8891223c73",# dhis2 = Client Secret
+app <- oauth_app("Shiny App Datimutils", # dhis2 = Name
+                 key = "Shiny App Datimutils",# dhis2 = Client ID
+                 secret = "e74a0ced9-946d-8e9b-2b31-2a6b330f36e",# dhis2 = Client Secret
                  redirect_uri = APP_URL 
 )
 
-api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.7/uaa/oauth",
+api <- oauth_endpoint(base_url = "https://cop-test.datim.org/uaa/oauth",
                       request=NULL,# Documentation says to leave this NULL for OAuth2 
                       authorize = "authorize",
                       access="token"
@@ -76,7 +76,7 @@ server <- function(input, output, session) {
                                             use_basic_auth = TRUE)
     )
     
-    loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.7/",
+    loginToDATIMOAuth(base_url = "https://cop-test.datim.org/",
                       token = token,
                       app=app,
                       api = api,
@@ -85,18 +85,16 @@ server <- function(input, output, session) {
                       d2_session_envir = parent.env(environment())
     )
     
-        
     df=getMetadata(
-        end_point = "organisationUnits",
-        "organisationUnitGroups.name:eq:District",
-        fields = "id,name,level"
+        end_point = "organisationUnitGroups",
+        fields = "id,name"
     )
 
     output$mytable = DT::renderDataTable({
         df
     })
     
-    base_url="play.dhis2.org/2.36.7/"
+    base_url="https://cop-test.datim.org/"
     url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
     handle <- httr::handle(base_url)
     
