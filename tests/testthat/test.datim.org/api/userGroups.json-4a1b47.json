@@ -1,0 +1,36 @@
+{
+    "userGroups": [
+        {
+            "name": "Data DHI access",
+            "id": "zZ711zXQxw8"
+        },
+        {
+            "name": "Data ER access",
+            "id": "M9Uer9SioL7"
+        },
+        {
+            "name": "Data ESOP access",
+            "id": "TRBfaInIiOK"
+        },
+        {
+            "name": "Data HRH access",
+            "id": "seh1e61fwp1"
+        },
+        {
+            "name": "Data MCAE access",
+            "id": "d3E1aOVZZkZ"
+        },
+        {
+            "name": "Data MER access",
+            "id": "c6hGi8GEZot"
+        },
+        {
+            "name": "Global Partner 618022149 user administrators - JHPIEGO CORPORATION",
+            "id": "e1HnTm7vg38"
+        },
+        {
+            "name": "Global Partner 618022149 users - JHPIEGO CORPORATION",
+            "id": "tTSFg9jRcIB"
+        }
+    ]
+}

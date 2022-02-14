@@ -14,7 +14,7 @@ getMyUserType <- function(d2_session = dynGet("d2_default_session",inherits = TR
       )
     },
     error = function(e){ 
-      print(e)
+      stop("There was an error retrieving the user group information!")
     }
   )
   
@@ -37,7 +37,7 @@ getMyUserType <- function(d2_session = dynGet("d2_default_session",inherits = TR
     } else if ( length( regmatches(streams, regexpr("Global Partner (.+?) users - (.+?)",streams)) ) > 0 ) {
       return("Global Partner")
     } else {
-      return("Unclassified user")
+      return("Unclassified User")
     }
 }
 

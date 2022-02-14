@@ -1,0 +1,28 @@
+{
+    "userGroups": [
+        {
+            "name": "Data ER access",
+            "id": "M9Uer9SioL7"
+        },
+        {
+            "name": "Data ER entry",
+            "id": "XgctRYBpSiR"
+        },
+        {
+            "name": "Data ESOP access",
+            "id": "TRBfaInIiOK"
+        },
+        {
+            "name": "Data HRH access",
+            "id": "seh1e61fwp1"
+        },
+        {
+            "name": "Data HRH entry",
+            "id": "LLXM2rpL69u"
+        },
+        {
+            "name": "OU Cameroon Partner 557733512 users - Global Health Systems Solutio ns",
+            "id": "BQCE8Nh9TRn"
+        }
+    ]
+}

@@ -541,6 +541,13 @@ data <- getOrgUnits("Afro Arab Clinic",
         d2_session = play235)
       testthat::expect_identical(data,"ART monthly summary")
       rm(data)
+      
+      data <- getUserGroups(
+        "ZrsVF7IJ93y",
+        d2_session = play2372
+        )
+      testthat::expect_identical(data,"Family Health Partner")
+      rm(data)
 
       data <- getIndicatorGroupSets(
         "tOwnTs7TL3Y",

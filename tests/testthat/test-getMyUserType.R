@@ -1,55 +1,53 @@
-# datim user accounts list
+# testing getMyUserType
 
-user_list <- list(
-  username = 
-    list(
-      "a_cmr_hhscdc",
-      "ga_usaid",
-      "global_user_tieriii",
-      "ia_zaf",
-      "moh_zaf",
-      "p_cmr_globalhealth",
-      "smokeGP"
-    ),
-  streams = 
-    list(
-      list("ER","ESOP","HRH"),
-      list("ER","ESOP","HRH"),
-      list("ER","ESOP","HRH","MER","MOH","SaSR","SIMS"),
-      list("ESOP","MER"),
-      list("MOH"),
-      list("ER","ESOP","HRH"),
-      list("DHI","ER","ESOP","HRH","MCAE","MER" )
-    ),
-  user_type = 
-    list(
-      "Agency",
-      "Global Agency",
-      "Global",
-      "Interagency",
-      "MOH",
-      "Partner",
-      "Global Partner"
+# STEPS
+# 1. mock apis are recorded in the "test" server
+# 2. we loop through uid_list a list object in helper.R with all response params and checks
+# 3. test base url and handle are passed from helper.R to this custom d2 session
+# 3. we test the response against th expected streams for that user in helper.R
+
+
+# test proper user classification ----
+httptest::with_mock_api({
+  test_that("test that user types returned are accurate for specific accounts...",
+            {
+              lapply(1:length(uid_list$uids), function(user) {
+                # parameters
+                uids <- unlist(uid_list$uids[user])
+                user_type <- unlist(uid_list$user_type[user])
+                
+                # pull data
+                data <-
+                  getMyUserType(d2_session = list(
+                    base_url = test$base_url,
+                    handle = test$handle,
+                    me = list(userGroups =
+                                as.data.frame(list(id = uids)))
+                  ))
+                
+                # compare data to existing
+                testthat::expect_equal(data, user_type)
+                rm(data, user_type)
+              })
+            })
+})
+
+# test error handling -----
+httptest::with_mock_api({
+  test_that("testing error...", {
+    # expect error with invalid ids
+    expect_error(
+      getMyUserType(
+        d2_session = list(
+          base_url = test$base_url,
+          handle = test$handle,
+          me = list(userGroups =
+                      as.data.frame(list(id = c(
+                        "0001"
+                      ))))
+        )
+      ),
+      "There was an error retrieving the user group information!"
     )
-)
-
-
-with_mock_api({
-  
-  test_that("test user type returned is accurate", {
-    
-    # loop through users to test each account stream response
-    for (i in 1:length(user_list[["username"]])) {
-      
-      # the user
-      user <- i
-      
-      # test user type response
-      user_to_expect <- unlist(user_list[["user_type"]][user])
-      response <- getMyUserType()
-      print(response)
-      print(response == user_to_expect)
-      
-    }
   })
 })
