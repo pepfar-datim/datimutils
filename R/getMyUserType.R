@@ -1,6 +1,7 @@
 #' @export
 #' @title getMyUserType(d2_session = dynGet("d2_default_session", inherits = TRUE))
-#' @description Returns a classified user type based on accessible data streams. 
+#' @description Returns a classified user type based on accessible data streams. For an implementation
+#' example see: https://github.com/flopez-bao/shinyapps-datimutils-security-example-usgandpartners
 #' @param d2_session the d2Session object, default is "d2_default_session"
 
 getMyUserType <- function(d2_session = dynGet("d2_default_session",inherits = TRUE)) {

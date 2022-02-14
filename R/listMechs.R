@@ -2,7 +2,8 @@
 #' @title listMechs(option_fields = c("name", "id", "code"),
 #' combo_fields = "id", 
 #' d2_session = dynGet("d2_default_session",inherits = TRUE)
-#' @description Returns a dataframe with all mechanisms a user has access to. 
+#' @description Returns a dataframe with all mechanisms a user has access to. For an implementation
+#' example see: https://github.com/flopez-bao/shinyapps-datimutils-security-example-usgandpartners 
 #' @param option_fields fields passed to the getMetaData endpoint.
 #' @param combo_fields fields passed to getCatOptionCombos call.
 #' @param d2_session the d2Session object, default is "d2_default_session"
