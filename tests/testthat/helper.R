@@ -14,7 +14,6 @@ play2372 <- list(base_url = "https://play.dhis2.org/2.37.2/",
 test <- list(base_url = "https://test.datim.org/",
                  handle = httr::handle("https://test.datim.org/"))
 
-
 # accounts ----------
 
 # list out uids
