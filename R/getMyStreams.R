@@ -13,7 +13,7 @@ getMyStreams <-
                                      d2_session = d2_session)
       },
       error = function(e) {
-        stop("There was an error retrieving the user group information!")
+        stop("There was an error retrieving the user group information! Make sure you are logged into DATIM.")
       }
     )
     

@@ -21,7 +21,13 @@ httptest::with_mock_api({
                     base_url = test$base_url,
                     handle = test$handle,
                     me = list(userGroups =
-                                as.data.frame(list(id = uids)))
+                                as.data.frame(
+                                  list(
+                                    id = as.character(uids)
+                                    ),
+                                  stringsAsFactors = F
+                                  )
+                              )
                   ))
                 
                 # compare data to existing
@@ -32,21 +38,21 @@ httptest::with_mock_api({
 })
 
 # test error handling ----
-httptest::with_mock_api({
-  test_that("testing error where user group is not returned...", {
-    # expect error with invalid ids
-    expect_error(
-      getMyStreams(
-        d2_session = list(
-          base_url = test$base_url,
-          handle = test$handle,
-          me = list(userGroups =
-                      as.data.frame(list(id = c(
-                        "0001"
-                      ))))
-        )
-      ),
-      "There was an error retrieving the user group information!"
-    )
-  })
-})
+ httptest::with_mock_api({
+   test_that("testing error where user group is not returned...", {
+     # expect error with invalid ids
+     expect_error(
+       getMyStreams(
+         d2_session = list(
+           base_url = test$base_url,
+           handle = test$handle,
+           me = list(userGroups =
+                       as.data.frame(list(id = c(
+                         "0001"
+                       ))))
+         )
+       ),
+       "There was an error retrieving the user group information! Make sure you are logged into DATIM."
+     )
+   })
+ })

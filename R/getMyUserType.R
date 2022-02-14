@@ -14,7 +14,7 @@ getMyUserType <- function(d2_session = dynGet("d2_default_session",inherits = TR
       )
     },
     error = function(e){ 
-      stop("There was an error retrieving the user group information!")
+      stop("There was an error retrieving the user group information! Make sure you are logged into DATIM.")
     }
   )
   
