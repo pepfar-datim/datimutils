@@ -122,38 +122,31 @@ loginToDATIMOAuth <- function(
     httr::timeout(60),
     handle = handle
   )
-  if (r$status == 200L) {
-    me <- jsonlite::fromJSON(httr::content(r, as = "text"))
-
+  if (r$status != 200L) {
+    stop("Could not authenticate you with the server!")
+  } else {
+    me <- jsonlite::fromJSON(httr::content(r, as = "text")) 
+    
+    
     # create the session object in the calling environment of the login function
-    assign(d2_session_name,
+    assign(d2_session_name, 
            d2Session$new(base_url = base_url,
                          handle = handle,
-                         me = me),
+                         me = me), 
            envir = d2_session_envir)
-  }else if (r$status == 302L) {
-    stop("Unable to authenticate due to DATIM currently undergoing maintenance.
-         Please try again later!")
-  } else if (r$status == 503L) {
-    stop("Unable to reach DATIM, the server may be experiencing issues.
-         Please try again later!")
-  } else if (r$status == 404L) {
-    stop("Unable to authenticate due to an invalid URL.Please check the
-         'base_url' parameter you provided.")
-  } else if (r$status == 401L) {
-    stop("Unable to authenticate due to an invalid username or password.
-         Please update your credentials and try again.")
-  } else {
-    stop("An unknowon error has occured during authentication!")
   }
+  
+  
 }
+
+
 
 ### Example of using the above.
 # {
 # ### Define variables
 # #
 # redirect_uri <- "http://127.0.0.1:8100/"
-#
+# 
 # # Copy information directly from the dhis2.org web settings
 # app <- oauth_app("OAuth2 Demo Client", #dhis2 = Name
 #                  key = "demo",         #dhis2 = Client ID
@@ -161,25 +154,25 @@ loginToDATIMOAuth <- function(
 #                "76fd0224e-923c-fc67-151a-7619de5c5f7", #dhis2 = Client Secret
 #                  redirect_uri = redirect_uri #"http://127.0.0.1:8100/"
 # )
-#
-### Endpoint details
+# 
+# ## Endpoint details
 # api <- oauth_endpoint(base_url = "https://play.dhis2.org/2.36.4/uaa/oauth",
 #                       request=NULL,#Documentation says to leave this NULL
-#                       for OAuth2
+#                       #for OAuth2
 #                       authorize = "authorize",
 #                       access="token"
 # )
-#
-### Scope of what is to be returned
+# 
+# ## Scope of what is to be returned
 # scope <- "ALL"
 # ## Set options
 # options(httr_oob_default=TRUE)
-#
-### Use function created above
+# 
+# ## Use function created above
 # loginToDATIMOAuth(base_url = "play.dhis2.org/2.36.4/",app=app, api = api,
 # redirect_uri=redirect_uri,scope = scope)
-#
-### Try to query the API using the D2Session created above.
+# 
+# ## Try to query the API using the D2Session created above.
 # data <- getMetadata(
 #   end_point = "organisationUnits",
 #   "organisationUnitGroups.name:eq:District",
