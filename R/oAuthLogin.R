@@ -22,7 +22,6 @@ d2Session <- R6::R6Class("d2Session",
                            max_cache_age  = NULL,
                            #' @description
                            #' Create a new DHISLogin object
-                           #' @param config_path Configuration file path
                            #' @param base_url URL to the server.
                            #' @param handle httr handle to be used for dhis2
                            #' connections

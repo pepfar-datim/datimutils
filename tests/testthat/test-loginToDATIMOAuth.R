@@ -20,7 +20,9 @@ scope <- "ALL"
 ### Set options
 options(httr_oob_default=TRUE)
 
-token <- readRDS("~/Documents/Repos/datimutils/tests/testthat/token.rds")
+# Thu Feb 17 16:18:29 2022 ------------------------------
+#This is going to throw an error until I meet with Adam and Chuq about storing a token
+#token <- readRDS("~/Documents/Repos/datimutils/tests/testthat/token.rds")
 
 #capture_requests({
 
@@ -97,7 +99,10 @@ httptest::with_mock_api({
     x <- loginToDATIMOAuth(
       base_url = "play.dhis2.org/2.37/",
       token = token,
-      app=app, api = api, redirect_uri="http://127.0.0.1:8100/", scope = scope
+      app=app,
+      api = api,
+      redirect_uri="http://127.0.0.1:8100/",
+      scope = scope
     )
 
     testthat::expect_identical(x$me$userCredentials$username, "admin")

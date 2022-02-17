@@ -46,23 +46,23 @@ httptest::with_mock_api({
 ################################################################################
 # TEST 2
 ################################################################################
-context("Get a successful login")
-
-httptest::with_mock_api({
-
-  test_that("We get logged in successfully", {
-
-    x <- loginToDATIM(
-      #Found in folder 2.37/api/me.json
-      base_url = "play.dhis2.org/2.37/",
-      username = "admin",
-      password = "district"
-    )
-
-    testthat::expect_identical(x$me$userCredentials$username, "admin")
-
-  })
-})
+# context("Get a successful login")
+# 
+# httptest::with_mock_api({
+# 
+#   test_that("We get logged in successfully", {
+# 
+#     x <- loginToDATIM(
+#       #Found in folder 2.37/api/me.json
+#       base_url = "play.dhis2.org/2.37/",
+#       username = "admin",
+#       password = "district"
+#     )
+# 
+#     testthat::expect_identical(x$me$userCredentials$username, "admin")
+# 
+#   })
+# })
 ################################################################################
 # TEST 3
 ################################################################################
