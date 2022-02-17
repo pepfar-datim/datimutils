@@ -105,3 +105,24 @@ httptest::with_mock_api({
   })
 })
 
+################################################################################
+# TEST 4
+################################################################################
+context("Get a non-successful login")
+
+httptest::with_mock_api({
+  
+  test_that("We do not get logged in successfully", {
+    
+    testthat::expect_error(
+    loginToDATIMOAuth(
+      base_url = "play.dhis2.org/oauth/",
+      token = token,
+      app=app, api = api, redirect_uri="http://127.0.0.1:8100/", scope = scope
+    ),
+    "Could not authenticate you with the server!",
+    fixed = TRUE #Checks against a regular expression so must be here
+    )
+  })
+})
+
