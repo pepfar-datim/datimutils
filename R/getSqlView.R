@@ -8,7 +8,7 @@
 #' @param variable_values character list - list of the variable values ordered to correspond with
 #' the related variable key
 #' @param d2_session the d2Session object, default is "d2_default_session",
-#' it will be made upon logining in to datim with loginToDATIM
+#' it will be made upon logging in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout number of seconds to wait during call
 #' @return dataframe with the results of the sql view
@@ -65,7 +65,7 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
 #' @export
 #' @title listSqlViews
 #' @param d2_session the d2Session object, default is "d2_default_session",
-#' it will be made upon logining in to datim with loginToDATIM
+#' it will be made upon logging in to datim with loginToDATIM
 #' @return dataframe with the list of sql views
 
 listSqlViews <- function(d2_session = dynGet("d2_default_session", inherits = TRUE)){
