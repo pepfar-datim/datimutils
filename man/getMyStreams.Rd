@@ -10,5 +10,6 @@ getMyStreams(d2_session = dynGet("d2_default_session", inherits = TRUE))
 \item{d2_session}{the d2Session object, default is "d2_default_session",}
 }
 \description{
-Returns datim user streams.
+Returns datim user streams. For an implementation
+example see: https://github.com/flopez-bao/shinyapps-datimutils-security-example-usgandpartners
 }
