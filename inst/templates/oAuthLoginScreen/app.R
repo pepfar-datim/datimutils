@@ -27,7 +27,7 @@ if (interactive()) {
 {
     app <- oauth_app("Shiny App Datimutils", # dhis2 = Name
                      key = "Shiny App Datimutils",         # dhis2 = Client ID
-                     secret = "e74a0ced9-946d-8e9b-2b31-2a6b330f36e", #dhis2 = Client Secret
+                     secret = "a2d4311a8-a0d6-04cb-f885-45a3d5b0b2a", #dhis2 = Client Secret
                      redirect_uri = APP_URL
     )
     
