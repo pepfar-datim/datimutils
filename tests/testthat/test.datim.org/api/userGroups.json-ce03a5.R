@@ -1,15 +1,15 @@
-structure(list(url = "https://test.datim.org/api/userGroups.json?paging=false&filter=id:in:[OoiLAfMTyMx,cveLo35sHE9]&fields=id,name", 
+structure(list(url = "https://test.datim.org/api/userGroups.json?paging=false&filter=id:in:[zY2t7de7Jzz,TRBfaInIiOK,o8ap0XE01bh,c6hGi8GEZot]&fields=id,name", 
     status_code = 200L, headers = structure(list(server = "nginx", 
-        date = "Thu, 03 Mar 2022 22:47:02 GMT", `content-type` = "application/json;charset=UTF-8", 
-        `cache-control` = "no-cache, private", etag = "W/\"0003eb8f88f8fabbc0664b579e0f850f3\"", 
+        date = "Thu, 03 Mar 2022 22:46:56 GMT", `content-type` = "application/json;charset=UTF-8", 
+        `cache-control` = "no-cache, private", etag = "W/\"099a995fbe39fb24f48dc135ffba21e13\"", 
         `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
         `x-frame-options` = "SAMEORIGIN", `x-frame-options` = "SAMEORIGIN", 
         `strict-transport-security` = "max-age=63072000; includeSubdomains; preload", 
         `content-encoding` = "gzip"), class = c("insensitive", 
     "list")), all_headers = list(list(status = 200L, version = "HTTP/2", 
-        headers = structure(list(server = "nginx", date = "Thu, 03 Mar 2022 22:47:02 GMT", 
+        headers = structure(list(server = "nginx", date = "Thu, 03 Mar 2022 22:46:56 GMT", 
             `content-type` = "application/json;charset=UTF-8", 
-            `cache-control` = "no-cache, private", etag = "W/\"0003eb8f88f8fabbc0664b579e0f850f3\"", 
+            `cache-control` = "no-cache, private", etag = "W/\"099a995fbe39fb24f48dc135ffba21e13\"", 
             `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
             `x-frame-options` = "SAMEORIGIN", `x-frame-options` = "SAMEORIGIN", 
             `strict-transport-security` = "max-age=63072000; includeSubdomains; preload", 
@@ -17,8 +17,8 @@ structure(list(url = "https://test.datim.org/api/userGroups.json?paging=false&fi
         "list")))), cookies = structure(list(domain = "#HttpOnly_test.datim.org", 
         flag = FALSE, path = "/", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
         "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
-    -1L), class = "data.frame"), content = charToRaw("{\"userGroups\":[{\"name\":\"Data MOH access\",\"id\":\"OoiLAfMTyMx\"},{\"name\":\"OU South Africa MOH users\",\"id\":\"cveLo35sHE9\"}]}"), 
-    date = structure(1646347622, class = c("POSIXct", "POSIXt"
+    -1L), class = "data.frame"), content = charToRaw("{\"userGroups\":[{\"name\":\"Data ESOP access\",\"id\":\"TRBfaInIiOK\"},{\"name\":\"Data MER access\",\"id\":\"c6hGi8GEZot\"},{\"name\":\"Data MER Interagency entry\",\"id\":\"zY2t7de7Jzz\"},{\"name\":\"OU South Africa Interagency users\",\"id\":\"o8ap0XE01bh\"}]}"), 
+    date = structure(1646347616, class = c("POSIXct", "POSIXt"
     ), tzone = "GMT"), times = c(redirect = 0, namelookup = 4.2e-05, 
-    connect = 4.3e-05, pretransfer = 0.000105, starttransfer = 0.041371, 
-    total = 0.041426)), class = "response")
+    connect = 4.3e-05, pretransfer = 0.000104, starttransfer = 0.048239, 
+    total = 0.048313)), class = "response")

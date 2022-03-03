@@ -1,13 +1,13 @@
 structure(list(url = "https://test.datim.org/api/userGroups.json?paging=false&filter=id:in:[BQCE8Nh9TRn,M9Uer9SioL7,seh1e61fwp1,XgctRYBpSiR,TRBfaInIiOK,LLXM2rpL69u]&fields=id,name", 
     status_code = 200L, headers = structure(list(server = "nginx", 
-        date = "Mon, 14 Feb 2022 16:57:58 GMT", `content-type` = "application/json;charset=UTF-8", 
+        date = "Thu, 03 Mar 2022 22:47:17 GMT", `content-type` = "application/json;charset=UTF-8", 
         `cache-control` = "no-cache, private", etag = "W/\"03fa7df44f93fe26f2d865f06474d513a\"", 
         `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
         `x-frame-options` = "SAMEORIGIN", `x-frame-options` = "SAMEORIGIN", 
         `strict-transport-security` = "max-age=63072000; includeSubdomains; preload", 
         `content-encoding` = "gzip"), class = c("insensitive", 
     "list")), all_headers = list(list(status = 200L, version = "HTTP/2", 
-        headers = structure(list(server = "nginx", date = "Mon, 14 Feb 2022 16:57:58 GMT", 
+        headers = structure(list(server = "nginx", date = "Thu, 03 Mar 2022 22:47:17 GMT", 
             `content-type` = "application/json;charset=UTF-8", 
             `cache-control` = "no-cache, private", etag = "W/\"03fa7df44f93fe26f2d865f06474d513a\"", 
             `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
@@ -18,7 +18,7 @@ structure(list(url = "https://test.datim.org/api/userGroups.json?paging=false&fi
         flag = FALSE, path = "/", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
         "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
     -1L), class = "data.frame"), content = charToRaw("{\"userGroups\":[{\"name\":\"Data ER access\",\"id\":\"M9Uer9SioL7\"},{\"name\":\"Data ER entry\",\"id\":\"XgctRYBpSiR\"},{\"name\":\"Data ESOP access\",\"id\":\"TRBfaInIiOK\"},{\"name\":\"Data HRH access\",\"id\":\"seh1e61fwp1\"},{\"name\":\"Data HRH entry\",\"id\":\"LLXM2rpL69u\"},{\"name\":\"OU Cameroon Partner 557733512 users - Global Health Systems Solutio ns\",\"id\":\"BQCE8Nh9TRn\"}]}"), 
-    date = structure(1644857878, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 3.1e-05, 
-    connect = 3.2e-05, pretransfer = 7.8e-05, starttransfer = 0.034289, 
-    total = 0.034363)), class = "response")
+    date = structure(1646347637, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0, namelookup = 4.1e-05, 
+    connect = 4.3e-05, pretransfer = 0.000105, starttransfer = 0.476694, 
+    total = 0.476818)), class = "response")

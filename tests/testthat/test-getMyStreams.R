@@ -31,7 +31,7 @@ httptest::with_mock_api({
                   ))
                 
                 # compare data to existing
-                testthat::expect_equal(data, streams)
+                testthat::expect_equal(sort(data), sort(streams))
                 rm(data, streams)
               })
             })
