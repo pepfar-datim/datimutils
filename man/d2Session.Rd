@@ -11,15 +11,19 @@ d2Session
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{config_path}}{Path to a JSON configuration file.}
+\item{\code{config_path}}{Path to a JSON configuration
+file.}
 
-\item{\code{base_url}}{The URL of the server, e.g. https://www.datim.org/.}
+\item{\code{base_url}}{The URL of the server,
+e.g. https://www.datim.org/.}
 
 \item{\code{username}}{Your user name.}
 
-\item{\code{user_orgunit}}{UID of the users assigned organisation unit}
+\item{\code{user_orgunit}}{UID of the users assigned
+organisation unit}
 
-\item{\code{handle}}{An httr handle used to communicate with the DHIS2 instance.}
+\item{\code{handle}}{An httr handle used to communicate
+with the DHIS2 instance.}
 
 \item{\code{me}}{dhis2 api/me response}
 }
@@ -48,11 +52,13 @@ Create a new DHISLogin object
 
 \item{\code{base_url}}{URL to the server.}
 
-\item{\code{handle}}{httr handle to be used for dhis2 connections}
+\item{\code{handle}}{httr handle to be used for dhis2
+connections}
 
 \item{\code{me}}{DHIS2 me response object}
 
-\item{\code{max_cache_age}}{cache expiry currently used by datim validation}
+\item{\code{max_cache_age}}{cache expiry currently used
+by datim validation}
 }
 \if{html}{\out{</div>}}
 }
