@@ -19,8 +19,9 @@ httptest::with_mock_api({
 })
 
 # test that the right mech list count is returned ----
+# pulled mock mech list from test user a_cmr_hhscdc
 httptest::with_mock_api({
-test_that("test should return less than 3000 mechs for this user...", {
+test_that("test should return less than 8000 mechs for this user...", {
   
   # pull data, compare, clean
   data <- listMechs(d2_session = test)
