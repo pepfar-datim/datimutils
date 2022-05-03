@@ -1,7 +1,0 @@
-{
-"dhis": {
-  "baseurl": "play.dhis2.org/2.34.1/",
-  "username": "admin",
-  "password": "district"
-}
-}

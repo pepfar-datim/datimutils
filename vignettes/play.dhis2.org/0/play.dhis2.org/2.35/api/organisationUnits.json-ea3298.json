@@ -1,0 +1,69 @@
+{
+    "organisationUnits": [
+        {
+            "level": 2,
+            "name": "Bo",
+            "id": "O6uvpzGd5pu"
+        },
+        {
+            "level": 2,
+            "name": "Bombali",
+            "id": "fdc6uOvgoji"
+        },
+        {
+            "level": 2,
+            "name": "Bonthe",
+            "id": "lc3eMKXaEfw"
+        },
+        {
+            "level": 2,
+            "name": "Kailahun",
+            "id": "jUb8gELQApl"
+        },
+        {
+            "level": 2,
+            "name": "Kambia",
+            "id": "PMa2VCrupOd"
+        },
+        {
+            "level": 2,
+            "name": "Kenema",
+            "id": "kJq2mPyFEHo"
+        },
+        {
+            "level": 2,
+            "name": "Koinadugu",
+            "id": "qhqAxPSTUXp"
+        },
+        {
+            "level": 2,
+            "name": "Kono",
+            "id": "Vth0fbpFcsO"
+        },
+        {
+            "level": 2,
+            "name": "Moyamba",
+            "id": "jmIPBj66vD6"
+        },
+        {
+            "level": 2,
+            "name": "Port Loko",
+            "id": "TEQlaapDQoK"
+        },
+        {
+            "level": 2,
+            "name": "Pujehun",
+            "id": "bL4ooGhyHRQ"
+        },
+        {
+            "level": 2,
+            "name": "Tonkolili",
+            "id": "eIQbndfxQMb"
+        },
+        {
+            "level": 2,
+            "name": "Western Area",
+            "id": "at6UHUQatSo"
+        }
+    ]
+}

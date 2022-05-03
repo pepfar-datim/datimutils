@@ -1,8 +1,8 @@
 Package: datimutils
 Type: Package
 Title: Utilities for interacting with the DATIM api from R
-Version: 0.1.1
-Date: 2019-09-11
+Version: 0.2.0
+Date: 2022-03-08
 Authors@R: 
     c(
     person("Scott", "Jackson", email = "sjackson@baosystems.com",
@@ -11,7 +11,7 @@ Authors@R:
         role = c("aut")),
     person("Sam", "Garman", email = "sgarman@baosystems.com",
         role = c("aut")),
-    person("Maxwell", "Chandler", email = "mchandler@baosystems.com",
+    person("Jordan", "Bales", email = "jbales@baosystems.com",
         role = c("aut"))
   )
 Description: General utilities for interacting with the DATIM api from R.
@@ -47,5 +47,5 @@ Suggests:
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

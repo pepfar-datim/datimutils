@@ -12,6 +12,7 @@
 \alias{getDataElementGroups}
 \alias{getDataElements}
 \alias{getDataSets}
+\alias{getUserGroups}
 \alias{getIndicatorGroupSets}
 \alias{getIndicatorGroups}
 \alias{getIndicators}
@@ -142,6 +143,14 @@ getDataElements(
 )
 
 getDataSets(
+  values,
+  by = "id",
+  fields = NULL,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
+  retry = 1
+)
+
+getUserGroups(
   values,
   by = "id",
   fields = NULL,
