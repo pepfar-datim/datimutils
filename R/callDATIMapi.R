@@ -27,7 +27,11 @@ api_get <- function(path,
 
   # make sure all "?" outside of the .json?paging=false are &'s
   path <- gsub("\\?", "&", path)
+
+
+  if((!grepl("data.json", path))){
   path <- gsub("json&", "json?", path)
+  }
 
   # remove trailing / from path
   if (substr(path, nchar(path), nchar(path)) == "/") {
@@ -58,7 +62,7 @@ api_get <- function(path,
     }
   }
 
-  # this block adds pagin=false in the case that only .json was passed in
+  # this block adds paging=false in the case that only .json was passed in
   if (grepl("json", url) & !(grepl("paging", url))) {
     url <- sub(".json", ".json?paging=false", url)
   }
@@ -74,6 +78,7 @@ api_get <- function(path,
 
   # removes whitespace
   url <- gsub(" ", "", url)
+  print(url)
   # retry api get block, only retries if reponse code not in 400s
   i <- 1
   response_code <- 5
