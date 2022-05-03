@@ -1,8 +1,8 @@
 Package: datimutils
 Type: Package
 Title: Utilities for interacting with the DATIM api from R
-Version: 0.2.0
-Date: 2022-03-08
+Version: 0.3.0
+Date: 2022-05-03
 Authors@R: 
     c(
     person("Scott", "Jackson", email = "sjackson@baosystems.com",
