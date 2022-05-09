@@ -14,22 +14,23 @@
 #' @return dataframe with the results of the sql view
 
 getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values = NULL,
+                       paging=TRUE, page_number=NULL,
                        d2_session = dynGet("d2_default_session", inherits = TRUE),
                        retry=1, timeout = 180){
-
+  
   assertthat::assert_that(length(variable_keys) == length(variable_values))
-
+  
   variable_k_v_pairs <- NULL
-
+  
   # format sql variable key value pairs for api call
   if(length(variable_keys) > 0){
-
-     variable_k_v_pairs <- mapply(function(x,y) paste0("var=", x, ":", y),
-                                  variable_keys, variable_values)
+    
+    variable_k_v_pairs <- mapply(function(x,y) paste0("var=", x, ":", y),
+                                 variable_keys, variable_values)
     variable_k_v_pairs <- paste0( "&",variable_k_v_pairs, collapse = "&")
-
+    
   }
-
+  
   if (missing(...)) {
     add <- NULL
   } else {
@@ -38,23 +39,20 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
     add <- stringr::str_flatten(filters_chr, "filter=")
     add <- paste0("filter=", add)
   }
-
-  path <-paste0("sqlViews/", sql_view_uid, "/data.json?paging=false",
-                     variable_k_v_pairs, add)
-
-   resp <- api_get(
+  
+  path <-paste0("sqlViews/", sql_view_uid, "/data.json?paging=",paging,
+                variable_k_v_pairs, add)
+  
+  resp <- api_get(
     path = path, 
     d2_session = d2_session,
     retry = retry,
     timeout = timeout
   )
-
-  headers <- resp$listGrid$headers$column
-
-  resp <- as.data.frame(do.call("rbind",resp$listGrid$rows),stringsAsFactors = FALSE)
-
-  colnames(resp) <- headers
-
+  
+  resp <- as.data.frame(resp$listGrid$rows, stringsAsFactors = FALSE)
+  colnames(resp) <- resp$listGrid$headers$name
+  
   return(resp)
 }
 
@@ -71,9 +69,40 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
 listSqlViews <- function(d2_session = dynGet("d2_default_session", inherits = TRUE)){
   
    api_get(
-    path = "sqlViews/", 
+    path = "sqlViews/data.json?paging=false", 
     d2_session = d2_session ) %>% 
     purrr::pluck('sqlViews')
 
 }
+
+
+
+##################### Testing to be removed before merge #####################
+
+mechs3 <- getSqlView(sql_view_uid = "fgUtV6e9YIX",
+                                 d2_session = d2_default_session,
+                                 timeout = 180,
+                                 paging = FALSE)
+
+data <- getSqlView(sql_view_uid = "fgUtV6e9YIX", 
+                   variable_keys = c("valuetype"), 
+                   variable_values = c("TEXT"),
+                   valuetype %.like% "TEXT",
+                   d2_session = d2_default_session)
+#####################################################################################
+
+# be sure we are running master
+# devtools::install_github("https://github.com/pepfar-datim/datapackr",
+#                          upgrade = FALSE)
+
+require(datimutils)
+require(datapackr)
+require(datimvalidation)
+require(httr)
+require(jsonlite)
+require(magrittr)
+
+secrets <- Sys.getenv("SECRETS_FOLDER") %>% paste0(., "triage.json")
+datimutils::loginToDATIM(secrets)
+
 
