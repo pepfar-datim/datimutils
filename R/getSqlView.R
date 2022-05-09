@@ -14,7 +14,6 @@
 #' @return dataframe with the results of the sql view
 
 getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values = NULL,
-                       paging=TRUE, page_number=NULL,
                        d2_session = dynGet("d2_default_session", inherits = TRUE),
                        retry=1, timeout = 180){
   
@@ -40,7 +39,7 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
     add <- paste0("filter=", add)
   }
   
-  path <-paste0("sqlViews/", sql_view_uid, "/data.json?paging=",paging,
+  path <-paste0("sqlViews/", sql_view_uid, "/data.json?paging=false",
                 variable_k_v_pairs, add)
   
   resp <- api_get(
@@ -69,20 +68,18 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
 listSqlViews <- function(d2_session = dynGet("d2_default_session", inherits = TRUE)){
   
    api_get(
-    path = "sqlViews/data.json?paging=false", 
+    path = "sqlViews/", 
     d2_session = d2_session ) %>% 
     purrr::pluck('sqlViews')
 
 }
 
 
-
 ##################### Testing to be removed before merge #####################
 
 mechs3 <- getSqlView(sql_view_uid = "fgUtV6e9YIX",
                                  d2_session = d2_default_session,
-                                 timeout = 180,
-                                 paging = FALSE)
+                                 timeout = 180)
 
 data <- getSqlView(sql_view_uid = "fgUtV6e9YIX", 
                    variable_keys = c("valuetype"), 
@@ -91,7 +88,6 @@ data <- getSqlView(sql_view_uid = "fgUtV6e9YIX",
                    d2_session = d2_default_session)
 #####################################################################################
 
-# be sure we are running master
 # devtools::install_github("https://github.com/pepfar-datim/datapackr",
 #                          upgrade = FALSE)
 
