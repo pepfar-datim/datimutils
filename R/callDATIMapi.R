@@ -26,13 +26,14 @@ api_get <- function(path,
   }
 
   # make sure all "?" outside of the .json?paging=false are &'s
-  path <- gsub("\\?", "&", path)
+  #path <- gsub("\\?", "&", path)
 
 
   # make sure all "?" outside of the .json?paging=false are &'s
   path <- gsub("\\?", "&", path)
   path <- gsub("json&", "json?", path)
   
+
   # remove trailing / from path
   if (substr(path, nchar(path), nchar(path)) == "/") {
     path <- substr(path, 1, nchar(path) - 1)
