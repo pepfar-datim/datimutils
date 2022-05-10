@@ -73,32 +73,3 @@ listSqlViews <- function(d2_session = dynGet("d2_default_session", inherits = TR
     purrr::pluck('sqlViews')
 
 }
-
-
-##################### Testing to be removed before merge #####################
-
-mechs3 <- getSqlView(sql_view_uid = "fgUtV6e9YIX",
-                                 d2_session = d2_default_session,
-                                 timeout = 180)
-
-data <- getSqlView(sql_view_uid = "fgUtV6e9YIX", 
-                   variable_keys = c("valuetype"), 
-                   variable_values = c("TEXT"),
-                   valuetype %.like% "TEXT",
-                   d2_session = d2_default_session)
-#####################################################################################
-
-# devtools::install_github("https://github.com/pepfar-datim/datapackr",
-#                          upgrade = FALSE)
-
-require(datimutils)
-require(datapackr)
-require(datimvalidation)
-require(httr)
-require(jsonlite)
-require(magrittr)
-
-secrets <- Sys.getenv("SECRETS_FOLDER") %>% paste0(., "triage.json")
-datimutils::loginToDATIM(secrets)
-
-

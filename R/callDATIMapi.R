@@ -25,8 +25,14 @@ api_get <- function(path,
     stop("invalid file extension, either pass in a link with json or a link without a file format")
   }
 
+  # Tue May 10 14:48:14 2022 ------------------------------
+  #This was removed after causing errors with datimutils::getSqlView()
   # make sure all "?" outside of the .json?paging=false are &'s
   #path <- gsub("\\?", "&", path)
+  # 
+  # if((!grepl("data.json", path))){
+  #   path <- gsub("json&", "json?", path)
+  # }
 
 
   # make sure all "?" outside of the .json?paging=false are &'s
