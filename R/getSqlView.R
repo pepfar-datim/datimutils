@@ -35,8 +35,8 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
   } else {
     # turn filters received as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
-    add <- stringr::str_flatten(filters_chr, "filter=")
-    add <- paste0("filter=", add)
+    add <- stringr::str_flatten(filters_chr, "&filter=")
+    add <- paste0("&filter=", add)
   }
   
   path <-paste0("sqlViews/", sql_view_uid, "/data.json?paging=false",
