@@ -49,8 +49,11 @@ getSqlView <- function(...,sql_view_uid, variable_keys = NULL, variable_values =
     timeout = timeout
   )
   
-  resp <- as.data.frame(resp$listGrid$rows, stringsAsFactors = FALSE)
-  colnames(resp) <- resp$listGrid$headers$name
+  x <- resp$listGrid$headers$name
+  
+  resp <- as.data.frame(resp$listGrid$rows,
+                        stringsAsFactors = FALSE)
+  colnames(resp) <- x
   
   return(resp)
 }
