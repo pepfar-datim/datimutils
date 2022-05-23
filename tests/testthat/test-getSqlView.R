@@ -59,5 +59,5 @@ test_that("getSqlView: add", {
                      d2_session = play237)
   
   testthat::expect_s3_class(data, "data.frame")
-  testthat::expect_equal(NROW(data), 1039)
+  testthat::expect_equal(NROW(data), 1038)
   rm(data) })
