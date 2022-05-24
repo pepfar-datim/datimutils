@@ -3,7 +3,7 @@ description: Datapackr Test Suite
 jobs:
   build:
     docker:
-      - image: rocker/verse:3.6.3
+      - image: rocker/verse:4.1.1
     steps:
       - checkout
       - restore_cache: 
@@ -29,3 +29,8 @@ jobs:
       - run: 
           name: Test package
           command: R -e "devtools::test()" 
+      - run:
+          name: Lint package
+          command: |
+                R -e "install.packages('lintr')"
+                R -e "foo<-unique(names(lintr::lint_package())); if (length(food > 0 ) stop(foo)"
