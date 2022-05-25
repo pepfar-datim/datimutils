@@ -15,7 +15,6 @@ library(httptest)
 # 
 # })
 
-
 with_mock_api({
 
 test_that("list all sql views: ", {
@@ -27,14 +26,15 @@ data <- listSqlViews(d2_session = play2335)
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 10)
 testthat::expect_named(data, c("id", "displayName"))
+testthat::expect_error(listSqlViews("foo"))
 rm(data) })
-
+  
 test_that("getSqlView: ", {
 #httr::content(httr::GET(
 #"https://play.dhis2.org/2.35.6/api/sqlViews/tw3A6ZXOdbA/data.json?paging=false&var=valuetype:TEXT&filter=valuetype:ilike:TEXT"))
 
-data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA", 
-                  variable_keys = c("valuetype"), 
+data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
+                  variable_keys = c("valuetype"),
                   variable_values = c("TEXT"),
                   valuetype %.like% "TEXT",
                   d2_session = play2335)
@@ -43,6 +43,8 @@ testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 172)
 rm(data) })
   
+})
+
 test_that("getSqlView: add", {
   # httr::content(httr::GET(
   # "play.dhis2.org/2.37/api/sqlViews/tw3A6ZXOdbA/data.json&paging=false"))
@@ -53,10 +55,9 @@ test_that("getSqlView: add", {
       password = 'district')
 
   
-  data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA")
+  data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
+                     d2_session = play237)
   
   testthat::expect_s3_class(data, "data.frame")
-  #testthat::expect_equal(NROW(data), 172)
+  testthat::expect_equal(NROW(data), 1036)
   rm(data) })
-
-})
