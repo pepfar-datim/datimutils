@@ -59,6 +59,17 @@ test_that("We can fetch a SQL view without nested lists", {
   
 })
 
+
+# https://play.dhis2.org/2.35.13/api/sqlViews/QAlOivHBY3a/data.json?paging=false&filter=categoryoptioncomboid:eq:1
+test_that("We can fetch a SQL view with zero rows", {
+  test_dataset <-  getSqlView("categoryoptioncomboid:eq:1",
+                              sql_view_uid ="QAlOivHBY3a",
+                              d2_session = play23513)
+  
+  testthat::expect_null(test_dataset, "data.frame")
+  testthat::expect_equal(NROW(test_dataset), 0)
+})
+
 })
 
 test_that("getSqlView: add", {
