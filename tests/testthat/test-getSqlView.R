@@ -42,7 +42,23 @@ data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 172)
 rm(data) })
+
+# https://play.dhis2.org/2.35.13/api/sqlViews/QAlOivHBY3a/data.json?paging=false
+test_that("We can fetch a SQL view without nested lists", {
+  test_dataset <-  getSqlView(sql_view_uid ="QAlOivHBY3a",
+                              d2_session = play23513)
   
+  testthat::expect_s3_class(test_dataset, "data.frame")
+  test_dataset_names <-  c("categoryoptioncomboid",
+                           "categoryoptioncomboname",
+                           "approvallevel",
+                           "startdate",              
+                           "enddate",
+                           "uid")
+  testthat::expect_true(setequal(test_dataset_names, names(test_dataset)))
+  
+})
+
 })
 
 test_that("getSqlView: add", {
