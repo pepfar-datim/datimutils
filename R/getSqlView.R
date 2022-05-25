@@ -56,7 +56,7 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
   )
 
   x <- resp$listGrid$headers$name
-  
+
   #Some SQL views can have nested lists as columns.
   has_nested_lists <-
     any(Reduce("|", lapply(resp$listGrid$rows, function(x)
@@ -69,15 +69,10 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
     resp <- as.data.frame(resp$listGrid$rows,stringsAsFactors = FALSE)
   }
 
-  
   colnames(resp) <- x
 
   return(resp)
 }
-
-#?filter=orgunit_level:eq:2&filter=orgunit_name:ilike:bo
-#?criteria=level:4
-
 
 #' @export
 #' @title listSqlViews
