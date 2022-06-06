@@ -11,5 +11,7 @@ play2341 <- list(base_url = "https://play.dhis2.org/2.34.1/",
                 handle = httr::handle("https://play.dhis2.org/2.34.1/"))
 play2372 <- list(base_url = "https://play.dhis2.org/2.37.2/",
                  handle = httr::handle("https://play.dhis2.org/2.37.2/"))
+play23513 <- list(base_url = "https://play.dhis2.org/2.35.13/",
+                 handle = httr::handle("https://play.dhis2.org/2.35.13/"))
 test <- list(base_url = "https://test.datim.org/",
                  handle = httr::handle("https://test.datim.org/"))

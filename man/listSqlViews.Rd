@@ -4,10 +4,11 @@
 \alias{listSqlViews}
 \title{listSqlViews}
 \usage{
-listSqlViews(base_url = getOption("baseurl"))
+listSqlViews(d2_session = dynGet("d2_default_session", inherits = TRUE))
 }
 \arguments{
-\item{base_url}{base_url}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logging in to datim with loginToDATIM}
 }
 \value{
 dataframe with the list of sql views

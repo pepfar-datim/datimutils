@@ -9,7 +9,7 @@ getSqlView(
   sql_view_uid,
   variable_keys = NULL,
   variable_values = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 180
 )
@@ -19,12 +19,15 @@ getSqlView(
 
 \item{sql_view_uid}{chr - the uid of the sql view}
 
-\item{variable_keys}{character list - list of the variable names for the sql view}
+\item{variable_keys}{character list - list of the variable names for the
+sql view}
 
-\item{variable_values}{character list - list of the variable values ordered to correspond with
+\item{variable_values}{character list - list of the variable values ordered
+ to correspond with
 the related variable key}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logging in to datim with loginToDATIM}
 
 \item{retry}{number of times to retry}
 
@@ -34,6 +37,8 @@ the related variable key}
 dataframe with the results of the sql view
 }
 \description{
-Runs specified sql view with specified sql view variables and returns
-a tibble with the results. It is possible to specify the col_types when reading in the data
+Runs specified sql view with specified sql view variables
+ and returns
+a tibble with the results. It is possible to specify the col_types when
+ reading in the data
 }
