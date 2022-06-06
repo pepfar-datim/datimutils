@@ -54,13 +54,11 @@ user_group_list <-
 
 # test proper user classification ----
 httptest::with_mock_api({
-  test_that("test that user types returned are accurate for specific accounts...",
-            {
-              lapply(1:length(user_group_list$uids), function(user) {
+  test_that("test that user types returned are accurate for specific accounts...", {
+              lapply(user_group_list$user_type, function(user_type) {
                 # parameters
-                uids <- unlist(user_group_list$uids[user])
-                user_type <- unlist(user_group_list$user_type[user])
-                
+                uids <- unlist(user_group_list$uids[user_group_list$user_type == user_type])
+
                 # pull data
                 data <-
                   getMyUserType(d2_session = list(

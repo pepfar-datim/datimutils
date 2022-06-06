@@ -53,13 +53,12 @@ user_group_list <-
 
 # test data streams -----
 httptest::with_mock_api({
-  test_that("test data streams returned are accurate for specific accounts...",
-            {
-              lapply(1:length(user_group_list$uids), function(user) {
+  test_that("test data streams returned are accurate for specific accounts...", {
+              lapply(user_group_list$user_type, function(user) {
                 # parameters
-                uids <- unlist(user_group_list$uids[user])
-                streams <- unlist(user_group_list$streams[user])
-                
+                uids <- unlist(user_group_list$uids[user_group_list$user_type == user])
+                streams <- unlist(user_group_list$streams[user_group_list$user_type == user])
+
                 # pull data
                 data <-
                   getMyStreams(d2_session = list(
