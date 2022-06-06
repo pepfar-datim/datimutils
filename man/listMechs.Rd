@@ -3,7 +3,7 @@
 \name{listMechs}
 \alias{listMechs}
 \title{listMechs(option_fields = c("name", "id", "code"),
-combo_fields = "id", 
+combo_fields = "id",
 d2_session = dynGet("d2_default_session",inherits = TRUE)}
 \usage{
 listMechs(
