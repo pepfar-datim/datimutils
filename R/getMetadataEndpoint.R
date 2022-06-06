@@ -23,12 +23,11 @@ duplicateResponse <- function(resp, expand, by) {
 #' @return a list with the splits
 #'
 
-.splitUrlComponent <- function(values, limit){
+.splitUrlComponent <- function(values, limit) {
     values_list <- list()
     times_to_split <- ceiling(sum(nchar(values)) / limit) + 1
     seq_to_use <- ceiling(seq(1, length(values), length = times_to_split))
-    for (i in seq_along(seq_to_use))
-    {
+    for (i in seq_along(seq_to_use)) {
       if (i == 1) {
         values_list[[i]] <- values[seq_to_use[i]:seq_to_use[i + 1]]
       } else if (i != length(seq_to_use)) {
@@ -110,13 +109,15 @@ duplicateResponse <- function(resp, expand, by) {
   } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
   } else if (length(see) != 0 & class(see) != "try-error") {
-    if (grepl("name", see) & 
-        !(grepl("name", 
-                gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)), 
-                     "", 
+    if (grepl("name", see) &
+        !(grepl("name",
+                gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)),
+                     "",
                      fields)))) {
       c(by, fields, "name")
-    } else {fields}
+    } else {
+      fields
+    }
   } else {
     fields
   }
@@ -158,18 +159,18 @@ duplicateResponse <- function(resp, expand, by) {
     })
 
     # call getMetadata multiple times
-   data_list <-  lapply(filters, function(x) {getMetadata(
-        end_point = !!end_point,
-        d2_session = d2_session,
-        x,
-        fields = default_fields, retry = retry
-      ) } )
+   data_list <-  lapply(filters, function(x) {
+     getMetadata(
+       end_point = !!end_point,
+       d2_session = d2_session,
+       x,
+       fields = default_fields, retry = retry
+     )})
 
-    # bind the responses
-    data <- do.call("rbind",data_list)
-  } else
-  #normal route
-  {
+   # bind the responses
+   data <- do.call("rbind", data_list)
+  } else {
+    #normal route
     filters <- metadataFilter(
       values = unique_values,
       property = by,

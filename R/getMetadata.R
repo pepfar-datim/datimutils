@@ -3,7 +3,6 @@
 #' @param resp raw text response recieved from datim api
 #' @return api response reduced to most simple data structure
 #'
-
 simplifyStructure <- function(resp) {
 
   # only enter if class is list and length one, otherwise it is already simplified
@@ -19,7 +18,7 @@ simplifyStructure <- function(resp) {
         possible_resp <- possible_resp[[1]]
         dim1 <- dim(possible_resp)[1]
         dim2 <- dim(possible_resp)[2]
-        if(!(is.null(dim1)) && !(is.null(dim2))){
+        if (!(is.null(dim1)) && !(is.null(dim2))) {
        if (dim1 == 1 & dim2 == 1) {
         possible_resp <- possible_resp[[1]]
       }
@@ -40,8 +39,7 @@ simplifyStructure <- function(resp) {
           resp <- possible_resp
         }
       }
-    } else if(is.atomic(possible_resp))
-      {
+    } else if (is.atomic(possible_resp)) {
       resp <- possible_resp
     }
   }

@@ -200,10 +200,10 @@ httptest::with_mock_api({
 #   "&fields=id,name")))
 
              data <- getOrgUnitGroups(
-               c("w1Atoz18PCL","CXw2yu5fodb"),
+               c("w1Atoz18PCL", "CXw2yu5fodb"),
                d2_session = play233
              )
-             testthat::expect_identical(data, c("District","CHC"))
+             testthat::expect_identical(data, c("District", "CHC"))
              rm(data)
            })
 
@@ -217,21 +217,21 @@ httptest::with_mock_api({
 #   "&fields=name,id")))
 
       data <- getOrgUnitGroups(
-        c("w1Atoz18PCL","CXw2yu5fodb",
-          "w1Atoz18PCL","w1Atoz18PCL",
-          "CXw2yu5fodb","CXw2yu5fodb"),
+        c("w1Atoz18PCL", "CXw2yu5fodb",
+          "w1Atoz18PCL", "w1Atoz18PCL",
+          "CXw2yu5fodb", "CXw2yu5fodb"),
         d2_session = play233
       )
-      testthat::expect_identical(data, c("District","CHC",
-                                         "District","District",
-                                         "CHC","CHC"))
+      testthat::expect_identical(data, c("District", "CHC",
+                                         "District", "District",
+                                         "CHC", "CHC"))
       rm(data)
     }
   )
 
   test_that(
     paste0("Provide vector of non-repeating names and get back ordered",
-           "character vector of ids: "),{
+           "character vector of ids: "), {
 
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
@@ -241,10 +241,10 @@ httptest::with_mock_api({
 #   "paging=false&filter=name:in:[District,CHC]&fields=id")))
 
       data <- getOrgUnitGroups(
-        c("District","CHC"), by = name,
+        c("District", "CHC"), by = name,
         d2_session = play233
       )
-      testthat::expect_identical(data,  c("w1Atoz18PCL","CXw2yu5fodb"))
+      testthat::expect_identical(data,  c("w1Atoz18PCL", "CXw2yu5fodb"))
       rm(data)
     }
   )
@@ -357,7 +357,7 @@ httptest::with_mock_api({
                     fields = "organisationUnitGroups[name,id],ancestors[name,id]",
                     d2_session = play234)
       )
-    
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Afro%20Arab%20Clinic]",
@@ -416,7 +416,8 @@ data <- getOrgUnits("Afro Arab Clinic",
 #"https://play.dhis2.org/2.33.5/api/categoryOptionCombos.json?paging=false&filter=id:in:[sqGRzCziswD]&fields=id,name")))
 #
 #      httr::content(httr::GET(paste0(
-#"https://play.dhis2.org/2.33.5/api/categoryOptionGroupSets.json?paging=false&filter=id:in:[C31vHZqu0qU]&fields=id,name")))
+#"https://play.dhis2.org/2.33.5/api/categoryOptionGroupSets.json?",
+#"paging=false&filter=id:in:[C31vHZqu0qU]&fields=id,name")))
 #
 #      httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33.5/api/categoryOptionGroups.json?paging=false&filter=id:in:[OK2Nr4wdfrZ]&fields=id,name")))
@@ -458,7 +459,8 @@ data <- getOrgUnits("Afro Arab Clinic",
 #"https://play.dhis2.org/2.33.5/api/options.json?paging=false&filter=id:in:[Y1ILwhy5VDY]&fields=id,name")))
 #
 #        httr::content(httr::GET(paste0(
-#"https://play.dhis2.org/2.33.5/api/organisationUnitGroupSets.json?paging=false&filter=id:in:[uIuxlbV1vRT]&fields=id,name")))
+#"https://play.dhis2.org/2.33.5/api/organisationUnitGroupSets.json?",
+#"paging=false&filter=id:in:[uIuxlbV1vRT]&fields=id,name")))
 #
 #        httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33.5/api/organisationUnits.json?paging=false&filter=id:in:[Rp268JB6Ne4]&fields=id,name")))
@@ -473,11 +475,12 @@ data <- getOrgUnits("Afro Arab Clinic",
    #"https://play.dhis2.org/2.33.5/api/dimensions.json?paging=false&filter=id:in:[yY2bQYqNt0o]&fields=id,name")))
 
       #httr::content(httr::GET(paste0(
-      #"https://play.dhis2.org/2.33/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country,Facility]&fields=name,organisationUnits[id]")))
+      #"https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
+      #"paging=false&filter=name:in:[Country,Facility]&fields=name,organisationUnits[id]")))
 
       data <- getOrgUnitGroups(c("Country", "Facility"), by = name, fields = "name,organisationUnits[id]",
                  d2_session = play233)
-      testthat::expect_equal(NROW(data),2)
+      testthat::expect_equal(NROW(data), 2)
       testthat::expect_named(data, c("name",
                                      "organisationUnits"))
       rm(data)
@@ -485,128 +488,128 @@ data <- getOrgUnits("Afro Arab Clinic",
       data <- getCategories(
         "KfdsGBcoiCa",
         d2_session = play235)
-      testthat::expect_identical(data,"Births attended by")
+      testthat::expect_identical(data, "Births attended by")
       rm(data)
 
       data <- getCatCombos(
         "m2jTvAj5kkm",
         d2_session = play235)
-      testthat::expect_identical(data,"Births")
+      testthat::expect_identical(data, "Births")
       rm(data)
 
       data <- getCatOptionCombos(
         "sqGRzCziswD",
         d2_session = play235)
-      testthat::expect_identical(data,"0-11m")
+      testthat::expect_identical(data, "0-11m")
       rm(data)
 
       data <- getCatOptionGroupSets(
         "C31vHZqu0qU",
         d2_session = play235)
-      testthat::expect_identical(data,"Donor")
+      testthat::expect_identical(data, "Donor")
       rm(data)
 
       data <- getCatOptionGroups(
         "OK2Nr4wdfrZ",
         d2_session = play235)
-      testthat::expect_identical(data,"CDC")
+      testthat::expect_identical(data, "CDC")
       rm(data)
 
       data <- getCatOptions(
         "FbLZS3ueWbQ",
         d2_session = play235)
-      testthat::expect_identical(data,"0-11m")
+      testthat::expect_identical(data, "0-11m")
       rm(data)
 
       data <- getDataElementGroupSets(
         "jp826jAJHUc",
         d2_session = play235)
-      testthat::expect_identical(data,"Diagnosis")
+      testthat::expect_identical(data, "Diagnosis")
       rm(data)
 
       data <- getDataElementGroups(
         "oDkJh5Ddh7d",
         d2_session = play235)
-      testthat::expect_identical(data,"Acute Flaccid Paralysis (AFP) ")
+      testthat::expect_identical(data, "Acute Flaccid Paralysis (AFP) ")
       rm(data)
 
       data <- getDataElements(
         "FTRrcoaog83",
         d2_session = play235)
-      testthat::expect_identical(data,"Accute Flaccid Paralysis (Deaths < 5 yrs)")
+      testthat::expect_identical(data, "Accute Flaccid Paralysis (Deaths < 5 yrs)")
       rm(data)
 
       data <- getDataSets(
         "lyLU2wR22tC",
         d2_session = play235)
-      testthat::expect_identical(data,"ART monthly summary")
+      testthat::expect_identical(data, "ART monthly summary")
       rm(data)
-      
+
       data <- getUserGroups(
         "ZrsVF7IJ93y",
         d2_session = play2372
         )
-      testthat::expect_identical(data,"Family Health Partner")
+      testthat::expect_identical(data, "Family Health Partner")
       rm(data)
 
       data <- getIndicatorGroupSets(
         "tOwnTs7TL3Y",
         d2_session = play235)
-      testthat::expect_identical(data,"Child health")
+      testthat::expect_identical(data, "Child health")
       rm(data)
 
       data <- getIndicatorGroups(
         "oehv9EO3vP7",
         d2_session = play235)
-      testthat::expect_identical(data,"ANC")
+      testthat::expect_identical(data, "ANC")
       rm(data)
 
       data <- getIndicators(
         "ReUHfIn0pTQ",
         d2_session = play235)
-      testthat::expect_identical(data,"ANC 1-3 Dropout Rate")
+      testthat::expect_identical(data, "ANC 1-3 Dropout Rate")
       rm(data)
 
       data <- getOptionGroupSets(
         "Wonln7Yg5Am",
         d2_session = play235)
-      testthat::expect_identical(data,"test")
+      testthat::expect_identical(data, "test")
       rm(data)
 
       data <- getOptionGroups(
         "hTDovVfKAuN",
         d2_session = play235)
-      testthat::expect_identical(data,NULL)
+      testthat::expect_identical(data, NULL)
       rm(data)
 
       data <- getOptionSets(
         "VQ2lai3OfVG",
         d2_session = play235)
-      testthat::expect_identical(data,"Age category")
+      testthat::expect_identical(data, "Age category")
       rm(data)
 
       data <- getOptions(
         "Y1ILwhy5VDY",
         d2_session = play235)
-      testthat::expect_identical(data,"0-14 years")
+      testthat::expect_identical(data, "0-14 years")
       rm(data)
 
       data <- getOrgUnitGroupSets(
         "uIuxlbV1vRT",
         d2_session = play235)
-      testthat::expect_identical(data,"Area")
+      testthat::expect_identical(data, "Area")
       rm(data)
 
       data <- getOrgUnits(
         "Rp268JB6Ne4",
         d2_session = play235)
-      testthat::expect_identical(data,"Adonkia CHP")
+      testthat::expect_identical(data, "Adonkia CHP")
       rm(data)
 
        data <- getDimensions(
         "yY2bQYqNt0o",
         d2_session = play235)
-      testthat::expect_identical(data,"Project")
+      testthat::expect_identical(data, "Project")
       rm(data)
 
       })
@@ -617,8 +620,9 @@ data <- getOrgUnits("Afro Arab Clinic",
                              d2_session = play235)
   testthat::expect_equal(NROW(data), 1)
   rm(data)
- #httr::content(httr::GET(paste0(
-  #"https://play.dhis2.org/2.33.5/api/organisationUnitGroups.json?paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
+ # httr::content(httr::GET(paste0(
+ # "https://play.dhis2.org/2.33.5/api/organisationUnitGroups.json?",
+ # "paging=false&filter=name:in:[Country]&fields=organisationUnits[id,name,level,ancestors[id,name]]")))
    })
   # httr::content(httr::GET(paste0(
   # "https://play.dhis2.org/2.33/api/organisationUnits.json?paging=false&fields=name,id")))
@@ -627,16 +631,16 @@ data <- getOrgUnits("Afro Arab Clinic",
     long_list <- getMetadata(organisationUnits,
                              d2_session = play233)
     long_list_ordered <- long_list[order(long_list$id), ]
-    
-    data <- getOrgUnits(c(long_list$id, 
-                          long_list_ordered$id), 
+
+    data <- getOrgUnits(c(long_list$id,
+                          long_list_ordered$id),
                         d2_session = play233)
     testthat::expect_equal(length(data), 2664)
-    testthat::expect_identical(data, c(long_list$name, 
+    testthat::expect_identical(data, c(long_list$name,
                                        long_list_ordered$name))
     rm(data)
   })
-  
+
 #test for split url component function
 test_that(
   paste0("splitUrlComponent splits up a large vector into smaller vectors"), {
@@ -647,14 +651,14 @@ test_that(
   values <- long_list
   resp <- .splitUrlComponent(long_list, 2000)
       testthat::expect_type(resp, "list")
-      testthat::expect_lt(sum(nchar(resp[[1]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[2]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[3]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[4]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[5]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[6]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[7]])),2000)
-      testthat::expect_lt(sum(nchar(resp[[8]])),2000)
+      testthat::expect_lt(sum(nchar(resp[[1]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[2]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[3]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[4]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[5]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[6]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[7]])), 2000)
+      testthat::expect_lt(sum(nchar(resp[[8]])), 2000)
 
       rm(resp)
       rm(long_list)
@@ -673,7 +677,7 @@ test_that(
 #test for duplicateResponse function on dataframes
 test_that(
   paste0("duplicateResponse works on dataframes"), {
-      resp <- data.frame("a" = c(1,2,3), "b" = c("a","b","c"),
+      resp <- data.frame("a" = c(1, 2, 3), "b" = c("a", "b",  "c"),
                          stringsAsFactors = F)
       expand <- c("a", "a", "a", "b", "c", "c")
       resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
@@ -684,7 +688,7 @@ test_that(
 #test for duplicateResponse function on vectors
 test_that(
   paste0("duplicateResponse works on dataframes"), {
-      resp <- c("a","a","b","c")
+      resp <- c("a", "a", "b", "c")
       expand <- c("a", "a", "a", "b", "c", "c")
       resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
       testthat::expect_equal(length(resp), 6)
@@ -695,7 +699,7 @@ test_that(
 #test for simplify structure function
 test_that(
   paste0("simplifySttructure works on nested dataframes contained in lists"), {
-      resp <- data.frame("a" = c(1,2,3), "b" = c("a","b","c"),
+      resp <- data.frame("a" = c(1, 2, 3), "b" = c("a", "b", "c"),
                          stringsAsFactors = F)
       resp <- data.frame("a" = data.frame("a" = "b"), "b" = list(resp))
       resp <- list(resp)
