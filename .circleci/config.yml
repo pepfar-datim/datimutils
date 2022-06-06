@@ -33,4 +33,4 @@ jobs:
           name: Lint package
           command: |
                 R -e "install.packages('lintr')"
-                R -e "foo<-unique(names(lintr::lint_package(exclusions = grep('/(api|apii)/', list.files(pattern = '\\\.R', full.names = TRUE, recursive = TRUE), value = TRUE)))); if (length(food > 0 ) stop(foo)"
+                R -e "foo<-unique(names(lintr::lint_package(exclusions = grep('/(api|apii)/', list.files(pattern = '\\\.R', full.names = TRUE, recursive = TRUE), value = TRUE)))); if (length(foo > 0 ) stop(foo)"
