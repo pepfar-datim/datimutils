@@ -6,9 +6,9 @@ jobs:
       - image: rocker/verse:4.1.1
     steps:
       - checkout
-      - restore_cache: 
+      - restore_cache:
           key: deps1-{{ checksum "renv.lock" }}
-      - run: 
+      - run:
          name: Install curl sytem deps
          command: |
              sudo apt-get update
@@ -26,11 +26,11 @@ jobs:
       - run:
           name: Build package
           command: R CMD build --no-build-vignettes --no-manual .
-      - run: 
+      - run:
           name: Test package
           command:  R -e "devtools::check(error_on='error')"
       - run:
           name: Lint package
           command: |
                 R -e "install.packages('lintr')"
-                R -e "foo<-unique(names(lintr::lint_package())); if (length(food > 0 ) stop(foo)"
+                R -e "foo<-unique(names(lintr::lint_package(exclusions = grep("/(api|apii)/", list.files(pattern = "\\.R", full.names = TRUE, recursive = TRUE), value = TRUE)))); if (length(food > 0 ) stop(foo)"
