@@ -565,10 +565,8 @@
     },
     "rlang": {
       "Package": "rlang",
-      "Version": "0.4.11",
+      "Version": "1.0.2",
       "Source": "Repository",
-      "Repository": "RSPM",
-      "Hash": "515f341d3affe0de9e4a7f762efb0456",
       "Requirements": []
     },
     "rlist": {
