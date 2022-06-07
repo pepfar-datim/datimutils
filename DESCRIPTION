@@ -26,6 +26,7 @@ Imports:
     stringr (>= 1.4.0),
     httr (>= 1.4.0),
     magrittr (>= 1.5),
+    keyring,
     rlang
 Suggests:
     devtools (>= 2.0.1),
