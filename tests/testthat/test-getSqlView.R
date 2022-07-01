@@ -70,21 +70,17 @@ test_that("We can fetch a SQL view with zero rows", {
   testthat::expect_equal(NROW(test_dataset), 0)
 })
 
-})
-
 test_that("getSqlView: add", {
-  # httr::content(httr::GET(
-  # "play.dhis2.org/2.37/api/sqlViews/tw3A6ZXOdbA/data.json&paging=false"))
-  
-  play237=loginToDATIM(
-      base_url = 'play.dhis2.org/2.37/',
-      username = 'admin',
-      password = 'district')
 
   
   data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
-                     d2_session = play237)
+                     d2_session = play2372
+  )
   
   testthat::expect_s3_class(data, "data.frame")
-  testthat::expect_equal(NROW(data), 1039)
+  testthat::expect_equal(NROW(data), 1036)
   rm(data) })
+
+})
+
+
