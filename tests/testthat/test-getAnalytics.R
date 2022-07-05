@@ -3,6 +3,15 @@
 #httptest::stop_capturing()
 
 with_mock_api({
+  
+test_that("package stops when timeout is too high: ", {
+    #httr::content(httr::GET(
+    #"https://play.dhis2.org/2.33.5/api/analytics.json?paging=false&dimension=Data:fbfJHSPpUQD;cYeuwXTCPkU&dimension=pe:THIS_YEAR;LAST_YEAR&dimension=ou:ImspTQPwCqd;LEVEL-4&displayProperty=NAME&hierarchyMeta=true&outputIdScheme=UID"))
+    
+    expect_error(getAnalytics("displayProperty=NAME", "hierarchyMeta=true", dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
+                              pe = c("THIS_YEAR","LAST_YEAR"), ou = c("ImspTQPwCqd","LEVEL-4"), d2_session = play2335, timeout = 301),
+                 "Timeout must be 5 minutes or less, please change the timeout parameter!", fixed=TRUE)
+})  
 
 test_that("all arguments in getAnalytics function: ", {
 #httr::content(httr::GET(paste0(
@@ -10,8 +19,8 @@ test_that("all arguments in getAnalytics function: ", {
 #"dimension=Data:fbfJHSPpUQD;cYeuwXTCPkU&dimension=pe:THIS_YEAR;LAST_YEAR&",
 #"dimension=ou:ImspTQPwCqd;LEVEL-4&displayProperty=NAME&hierarchyMeta=true&outputIdScheme=UID")))
 
-data <- getAnalytics("displayProperty=NAME", "hierarchyMeta=true", dx = c("fbfJHSPpUQD", "cYeuwXTCPkU"),
-                     pe = c("THIS_YEAR", "LAST_YEAR"), ou = c("ImspTQPwCqd", "LEVEL-4"), d2_session = play2335)
+data <- getAnalytics("displayProperty=NAME", "hierarchyMeta=true", dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
+                     pe = c("THIS_YEAR","LAST_YEAR"), ou = c("ImspTQPwCqd","LEVEL-4"), d2_session = play2335, timeout = 80)
 
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 4394)
