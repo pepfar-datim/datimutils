@@ -25,7 +25,7 @@ test_that("test should return less than 8000 mechs for this user...", {
 
   # pull data, compare, clean
   data <- listMechs(d2_session = test)
-  testthat:::expect_lt(nrow(data), 8000)
+  testthat::expect_lt(nrow(data), 8000)
   rm(data)
 
   })

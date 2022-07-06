@@ -87,5 +87,3 @@ test_that("getSqlView: add", {
   rm(data) })
 
 })
-
-

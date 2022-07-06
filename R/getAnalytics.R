@@ -31,10 +31,10 @@ getAnalytics <-  function(...,
                           return_names = F,
                           d2_session = dynGet("d2_default_session", inherits = TRUE),
                           retry = 1,
-                          timeout = 60){
-  
+                          timeout = 60) {
+
   # cap time out at 5 minutes
-  if(timeout > 300) {
+  if (timeout > 300) {
     stop("Timeout must be 5 minutes or less, please change the timeout parameter!")
   }
 

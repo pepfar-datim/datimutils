@@ -83,7 +83,6 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
 #' @param d2_session the d2Session object, default is "d2_default_session",
 #' it will be made upon logging in to datim with loginToDATIM
 #' @return dataframe with the list of sql views
-
 listSqlViews <- function(d2_session = dynGet("d2_default_session",
                                              inherits = TRUE)) {
 
