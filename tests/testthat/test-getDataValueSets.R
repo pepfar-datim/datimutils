@@ -16,15 +16,15 @@ test_that("GetDataValueSets", {
                              d2_session = play2372)
   
   
-    testthat::expect_named(data, c("data_element",
+    testthat::expect_named(data, c("dataElement",
                                    "period",
-                                   "org_unit",
-                                   "category_option_combo",
-                                   "attribute_option_combo",
+                                   "orgUnit",
+                                   "categoryOptionCombo",
+                                   "attributeOptionCombo",
                                    "value",
-                                   "stored_by",
+                                   "storedBy",
                                    "created",
-                                   "last_updated",
+                                   "lastUpdated",
                                    #"comment",
                                    "followup"))
     testthat::expect_equal(NROW(data), 3)

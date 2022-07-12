@@ -79,13 +79,7 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
     )
 
     #Create Dataframe from api response
-    resp <- as.data.frame(resp$dataValues, stringsAsFactors = FALSE) %>%
-      dplyr::rename(data_element = dataElement,
-                    org_unit = orgUnit,
-                    category_option_combo = categoryOptionCombo,
-                    attribute_option_combo = attributeOptionCombo,
-                    stored_by = storedBy,
-                    last_updated = lastUpdated)
+    resp <- as.data.frame(resp$dataValues, stringsAsFactors = FALSE)
 
     return(resp)
 }
