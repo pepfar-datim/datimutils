@@ -56,7 +56,8 @@ getAnalytics <-  function(...,
                                  ends,
                                  paste0("outputIdScheme=",
                                         return_type),
-                                 sep = "&"))
+                                 sep = "&",
+                                 ignore_null = TRUE))
 
   #make 2 or more consecutive & into single &
   path <- gsub("[&]{2,}","&", path)
