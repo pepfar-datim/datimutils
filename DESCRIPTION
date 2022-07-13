@@ -21,7 +21,7 @@ Depends: R (>= 3.6.0)
 Imports:
     tidyr (>= 0.8.3),
     jsonlite (>= 1.6),
-    stringr (>= 1.4.0),
+    stringi (>= 1.7.6),
     httr (>= 1.4.0),
     keyring,
     rlang
