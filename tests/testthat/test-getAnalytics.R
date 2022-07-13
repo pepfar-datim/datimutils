@@ -11,7 +11,7 @@ test_that("package stops when timeout is too high: ", {
     #"&hierarchyMeta=true&outputIdScheme=UID")))
 
     expect_error(getAnalytics("displayProperty=NAME", "hierarchyMeta=true",
-                              dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
+                              dx = c("fbfJHSPpUQD", "cYeuwXTCPkU"),
                               pe = c("THIS_YEAR", "LAST_YEAR"),
                               ou = c("ImspTQPwCqd", "LEVEL-4"),
                               d2_session = play2335, timeout = 301),
