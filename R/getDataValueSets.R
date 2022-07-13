@@ -20,7 +20,9 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
 
   #Test that the provided variables have their associated values used for
   # munging
-  assertthat::assert_that(length(variable_keys) == length(variable_values))
+  assertthat::assert_that(length(variable_keys) == length(variable_values),
+    msg = "The number of keys provided is not equal to the number of values provided.
+    Please ensure these match and try again.")
 
   #Example api call
   #/api/dataValueSets.json?dataSet=pBOMPrpg1QX&period=201401&orgUnit=DiszpKrYNg8
