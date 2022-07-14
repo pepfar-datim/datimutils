@@ -25,7 +25,7 @@ test_that("GetDataValueSets", {
                                    "storedBy",
                                    "created",
                                    "lastUpdated",
-                                   #"comment",
+                                   "comment",
                                    "followup"))
     testthat::expect_equal(NROW(data), 3)
     testthat::expect_error(getDataValueSets(c("limit"),
