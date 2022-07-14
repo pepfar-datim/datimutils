@@ -83,5 +83,4 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
     #Create Dataframe from api response
     resp <- as.data.frame(resp$dataValues, stringsAsFactors = FALSE)
 
-    return(resp)
 }
