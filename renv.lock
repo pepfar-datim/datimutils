@@ -511,7 +511,7 @@
     },
     "qpdf": {
       "Package": "qpdf",
-      "Version": "1.2.0",
+      "Version": "1.1",
       "Source": "Repository",
       "Requirements": []
     },
@@ -557,11 +557,8 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.13.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "079cb1f03ff972b30401ed05623cbe92",
-      "Requirements": []
+      "Version": "0.15.5",
+      "Source": "Repository"
     },
     "rlang": {
       "Package": "rlang",
@@ -633,10 +630,8 @@
     },
     "stringi": {
       "Package": "stringi",
-      "Version": "1.7.3",
+      "Version": "1.6.1",
       "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "7943cfae120c77a255025e5f63856532",
       "Requirements": []
     },
     "stringr": {
