@@ -115,7 +115,7 @@ httptest::with_mock_api({
       ))
       testthat::expect_error(
         # httr::GET("http://httpstat.us/504")
-        api_get(path = "504",
+        api_get(path = "504", retry = 2,
                 d2_session = list(base_url = "http://httpstat.us/")))
   })
 
