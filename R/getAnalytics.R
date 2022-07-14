@@ -30,7 +30,14 @@ getAnalytics <-  function(...,
                           ao = NULL, ao_f = NULL,
                           return_names = F,
                           d2_session = dynGet("d2_default_session", inherits = TRUE),
-                          retry = 1){
+                          retry = 1,
+                          timeout = 60){
+  
+  # cap time out at 5 minutes
+  if(timeout > 300) {
+    stop("Timeout must be 5 minutes or less, please change the timeout parameter!")
+  }
+  
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
   pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
@@ -65,7 +72,8 @@ getAnalytics <-  function(...,
   #call api
   resp <- api_get(path = path,
                   d2_session = d2_session,
-                  retry = retry)
+                  retry = retry,
+                  timeout = timeout)
 
   if(NROW(resp$rows) == 0){
     return(NULL)
