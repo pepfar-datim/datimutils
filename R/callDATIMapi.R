@@ -87,9 +87,10 @@ api_get <- function(path,
     response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
-    if (response_code == 200 &&
-       resp$url == url &&
-       httr::http_type(resp) == "application/json")
+    if (response_code == 200L &&
+        stringi::stri_replace(resp$url, regex = ".*/api/", replacement = "") ==
+        stringi::stri_replace(url, regex = ".*/api/", replacement = "") &&
+        httr::http_type(resp) == "application/json")
     {
       break
     }
