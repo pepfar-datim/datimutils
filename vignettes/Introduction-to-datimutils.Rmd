@@ -30,6 +30,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(datimutils)
 library(httptest)
+library(magrittr)
 ```
 
 ```{r, include = FALSE}

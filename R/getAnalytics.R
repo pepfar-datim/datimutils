@@ -31,13 +31,13 @@ getAnalytics <-  function(...,
                           return_names = F,
                           d2_session = dynGet("d2_default_session", inherits = TRUE),
                           retry = 1,
-                          timeout = 60){
-  
+                          timeout = 60) {
+
   # cap time out at 5 minutes
-  if(timeout > 300) {
+  if (timeout > 300) {
     stop("Timeout must be 5 minutes or less, please change the timeout parameter!")
   }
-  
+
   #variable set up
   dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
   pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
@@ -48,18 +48,18 @@ getAnalytics <-  function(...,
   #process ...
   end_point <- "analytics?"
   ends <- unlist(list(...))
-  z <- names(sapply(ends,names))
+  z <- names(sapply(ends, names))
   z <- ifelse(z == ends, "", z)
-  ends <- unname(mapply(function(x,y) if(nchar(x) != 0){ paste0(x, "=", y)} else{y}, z, ends))
+  ends <- unname(mapply(function(x, y) if(nchar(x) != 0){ paste0(x, "=", y) } else {y}, z, ends)) #nolint
   ends <- paste0(ends, collapse = "&")
 
   #decide return type
-  return_type <- if(return_names){"NAME"} else{"UID"}
+  return_type <- if (return_names) {"NAME"} else {"UID"} #nolint
 
   #collapse everything and form path
   path <- paste0(end_point,
-                 stringi::stri_c(dx,pe,ou,co,ao,
-                                 dx_f,pe_f,ou_f,co_f,ao_f,
+                 stringi::stri_c(dx, pe, ou, co, ao,
+                                 dx_f, pe_f, ou_f, co_f, ao_f,
                                  ends,
                                  paste0("outputIdScheme=",
                                         return_type),
@@ -67,7 +67,7 @@ getAnalytics <-  function(...,
                                  ignore_null = TRUE))
 
   #make 2 or more consecutive & into single &
-  path <- gsub("[&]{2,}","&", path)
+  path <- gsub("[&]{2,}", "&", path)
 
   #call api
   resp <- api_get(path = path,
@@ -75,7 +75,7 @@ getAnalytics <-  function(...,
                   retry = retry,
                   timeout = timeout)
 
-  if(NROW(resp$rows) == 0){
+  if (NROW(resp$rows) == 0) {
     return(NULL)
   }
   #collect data types
@@ -97,7 +97,7 @@ getAnalytics <-  function(...,
   #resp <- as.data.frame(resp, stringsAsFactors = F)
 
   #change data types to numeric where possible
-  resp[,coercions == "NUMBER"] <- sapply(resp[,coercions == "NUMBER"], as.numeric)
+  resp[, coercions == "NUMBER"] <- sapply(resp[, coercions == "NUMBER"], as.numeric)
 
   return(resp)
 }
@@ -109,17 +109,16 @@ getAnalytics <-  function(...,
 #' @param id id
 #' @return formatted dimensions
 
-.dForm <- function(..., id = NULL){
-  if(missing(...)|is.null(...)){
+.dForm <- function(..., id = NULL) {
+  if (missing(...) | is.null(...)) {
     return(NULL)
   }
   values <- list(...)
-  if(values[[1]][1] == "all")
-  {
+  if (values[[1]][1] == "all") {
     return(paste0("dimension=", id))
   }
   values <- lapply(values, function(x) paste0(x, collapse = ";"))
-  values <- mapply(function(x,y) paste0("dimension=", y, ":", x), values, id)
+  values <- mapply(function(x, y) paste0("dimension=", y, ":", x), values, id)
   return(paste0(unlist(values), collapse = "&"))
 }
 
@@ -131,13 +130,13 @@ getAnalytics <-  function(...,
 #' @param id id
 #' @return formatted filters
 
-.fForm <- function(..., id = NULL){
-  if(missing(...)|is.null(...)){
+.fForm <- function(..., id = NULL) {
+  if (missing(...) | is.null(...)) {
     return(NULL)
   }
   values <- list(...)
   values <- lapply(values, function(x) paste0(x, collapse = ";"))
-  values <- mapply(function(x,y) paste0("filter=", y, ":", x), values, id)
+  values <- mapply(function(x, y) paste0("filter=", y, ":", x), values, id)
   return(paste0(unlist(values), collapse = "&"))
 }
 
@@ -160,7 +159,7 @@ getAnalytics <-  function(...,
 
     values <- paste0(values, collapse = ";")
 
-  if(values == "all") {
+  if (values == "all") {
     return(paste0(property, "=", operator))
   }
 

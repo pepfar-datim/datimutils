@@ -1,0 +1,14 @@
+linters: with_defaults(
+    line_length_linter(120), # 846
+    object_name_linter = NULL, # 270
+    commented_code_linter = NULL, # 88
+    object_usage_linter = NULL, # 84
+    cyclocomp_linter = NULL, # 7
+    dummy_linter = NULL
+  )
+exclusions: list(
+    "tests/testthat/FALSE",
+    "tests/testthat/httpstat.us",
+    "tests/testthat/play.dhis2.org",
+    "tests/testthat/test.datim.org",
+  )
