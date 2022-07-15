@@ -647,6 +647,12 @@
         "rlang"
       ]
     },
+    "qpdf": {
+      "Package": "qpdf",
+      "Version": "1.2.0",
+      "Source": "Repository",
+      "Requirements": []
+    },
     "rappdirs": {
       "Package": "rappdirs",
       "Version": "0.3.3",
