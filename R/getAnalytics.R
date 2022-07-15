@@ -58,12 +58,13 @@ getAnalytics <-  function(...,
 
   #collapse everything and form path
   path <- paste0(end_point,
-                 stringr::str_c(dx, pe, ou, co, ao,
-                                dx_f, pe_f, ou_f, co_f, ao_f,
-                                ends,
-                                paste0("outputIdScheme=",
-                                       return_type),
-                                sep = "&"))
+                 stringi::stri_c(dx, pe, ou, co, ao,
+                                 dx_f, pe_f, ou_f, co_f, ao_f,
+                                 ends,
+                                 paste0("outputIdScheme=",
+                                        return_type),
+                                 sep = "&",
+                                 ignore_null = TRUE))
 
   #make 2 or more consecutive & into single &
   path <- gsub("[&]{2,}", "&", path)

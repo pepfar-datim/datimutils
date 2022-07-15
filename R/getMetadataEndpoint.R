@@ -100,7 +100,7 @@ duplicateResponse <- function(resp, expand, by) {
                                  by = "id",
                                  fields = NULL,
                                  d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1) {
-  see <- try(stringr::str_extract_all(fields, "\\[[^()]+\\]")[[1]], silent = T)
+  see <- try(stringi::stri_extract_all_regex(fields, "\\[[^()]+\\]")[[1]], silent = T)
 
   name_reduce <- NULL
 
@@ -121,7 +121,7 @@ duplicateResponse <- function(resp, expand, by) {
   } else {
     fields
   }
-  default_fields <- stringr::str_remove_all(default_fields, " ")
+  default_fields <- stringi::stri_replace_all_fixed(default_fields, " ", "")
   default_fields <- unique(default_fields)
   # by parameter restricted to being an identifiable property
   # as defined in DHIS2 docs
