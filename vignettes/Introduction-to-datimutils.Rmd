@@ -249,7 +249,7 @@ head(data)
 ```
 
 Though the return of these commands includes list columns which may require further processing to be used in an application, `datimutils` does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON which might look like the example below with its own nested elements<!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
-```{html}
+```{=html}
     {
     "organisationUnits": [
         {
@@ -362,6 +362,7 @@ Though the return of these commands includes list columns which may require furt
             ]
         }
     ]
+    }
 ```
 
 

@@ -111,12 +111,12 @@ getMetadata <- function(end_point,
   } else {
     # turn filters recieved as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
-    ex <- stringr::str_flatten(filters_chr, "&filter=")
+    ex <- stringi::stri_flatten(filters_chr, "&filter=")
     ex <- paste0("&filter=", ex)
   }
 
   # flattens fields and adds ?fields= if needed
-  ef <- stringr::str_flatten(fields, ",")
+  ef <- stringi::stri_flatten(fields, ",")
   ef <- paste0("&fields=", ef)
 
   # create final path
