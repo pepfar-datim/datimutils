@@ -74,7 +74,7 @@ makeKeyring <- function(username,
                         ring = "DatimLogin",
                         service = getOption("baseurl")) {
   # checks if keyring exists and if it doesnt, it makes one and then locks it
-  result <- try(keyring::key_list(keyring = ring), silent = T)
+  result <- try(keyring::key_list(keyring = ring), silent = TRUE)
   if ("try-error" %in% class(result)) {
     error_type <- attr(result, "condition")
     if (grepl(

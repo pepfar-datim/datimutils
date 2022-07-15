@@ -100,7 +100,7 @@ duplicateResponse <- function(resp, expand, by) {
                                  by = "id",
                                  fields = NULL,
                                  d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1) {
-  see <- try(stringi::stri_extract_all_regex(fields, "\\[[^()]+\\]")[[1]], silent = T)
+  see <- try(stringi::stri_extract_all_regex(fields, "\\[[^()]+\\]")[[1]], silent = TRUE)
 
   name_reduce <- NULL
 
@@ -108,8 +108,8 @@ duplicateResponse <- function(resp, expand, by) {
     c(by, "name", "id")
   } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
-  } else if (length(see) != 0 & class(see) != "try-error") {
-    if (grepl("name", see) &
+  } else if (length(see) != 0 && class(see) != "try-error") {
+    if (grepl("name", see) &&
         !(grepl("name",
                 gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)),
                      "",
@@ -133,7 +133,7 @@ duplicateResponse <- function(resp, expand, by) {
     )
   }
 
-  if ((by == "name" & is.null(fields))) {
+  if ((by == "name" && is.null(fields))) {
     name_reduce <- "id"
   } else if (is.null(fields)) {
     name_reduce <- "name"
@@ -187,7 +187,7 @@ duplicateResponse <- function(resp, expand, by) {
   }
 
   #return NULL if there is nothing to return
-  length_response <- try(length(data[[1]]), silent = T)
+  length_response <- try(length(data[[1]]), silent = TRUE)
   if (length_response == 0) {
     return(NULL)
   }
@@ -197,7 +197,7 @@ duplicateResponse <- function(resp, expand, by) {
 
   #reduce fields returned
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
-    potential_data <- try(data[, name_reduce], silent = T)
+    potential_data <- try(data[, name_reduce], silent = TRUE)
     if (!(class(potential_data) == "try-error")) {
       data <- potential_data
     }

@@ -6,11 +6,11 @@
 simplifyStructure <- function(resp) {
 
   # only enter if class is list and length one, otherwise it is already simplified
-  if (class(resp) == "list" &
-    length(resp) == 1 &
+  if (class(resp) == "list" &&
+    length(resp) == 1 &&
     length(resp[[1]]) != 0) {
     possible_resp <- resp
-    continue <- T
+    continue <- TRUE
 
     # the while block reduces the structure till it can't
     while (continue) {
@@ -19,12 +19,14 @@ simplifyStructure <- function(resp) {
         dim1 <- dim(possible_resp)[1]
         dim2 <- dim(possible_resp)[2]
         if (!(is.null(dim1)) && !(is.null(dim2))) {
-       if (dim1 == 1 & dim2 == 1) {
+       if (dim1 == 1 && dim2 == 1) {
         possible_resp <- possible_resp[[1]]
       }
-      }}else {
-        continue <- F
-      }}
+      }
+      } else {
+        continue <- FALSE
+      }
+    }
 
 
     # if it is a data frame check if it is nested or standard
@@ -33,8 +35,8 @@ simplifyStructure <- function(resp) {
         resp <- possible_resp
       } else {
         # unnest dataframe if has list type in columns
-        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)  & ncol(possible_resp) == 1) {
-          resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = T)
+        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)  && ncol(possible_resp) == 1) {
+          resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = TRUE)
         } else {
           resp <- possible_resp
         }
@@ -83,7 +85,7 @@ simplifyStructure <- function(resp) {
 getMetadata <- function(end_point,
                         ...,
                         fields = "name,id",
-                        as_vector = T,
+                        as_vector = TRUE,
                         d2_session = dynGet("d2_default_session",
                                             inherits = TRUE),
                         retry = 1,

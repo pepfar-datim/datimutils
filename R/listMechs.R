@@ -27,14 +27,14 @@ listMechs <- function(option_fields = c("name", "id", "code"),
                       d2_session = d2_session)
 
     # Adorn with category option combos
-    df["combo_id"] = datimutils::getCatOptionCombos(df$code,
-                                                    by = code,
-                                                    fields = combo_fields,
-                                                    d2_session = d2_session)
+    df["combo_id"] <- datimutils::getCatOptionCombos(df$code,
+                                                     by = code,
+                                                     fields = combo_fields,
+                                                     d2_session = d2_session)
 
     # Rename columns
-    names(df)[names(df) == "id"] = "option_id"
-    names(df)[names(df) == "code"] = "mech_code"
+    names(df)[names(df) == "id"] <- "option_id"
+    names(df)[names(df) == "code"] <- "mech_code"
 
     # Select columns for export
     df <- df[, c("mech_code", "name", "option_id", "combo_id")]

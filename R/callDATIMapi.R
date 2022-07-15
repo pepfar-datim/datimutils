@@ -61,7 +61,7 @@ api_get <- function(path,
   }
 
   # this block adds paging=false in the case that only .json was passed in
-  if (grepl("json", url) & !(grepl("paging", url))) {
+  if (grepl("json", url) && !(grepl("paging", url))) {
     url <- sub(".json", ".json?paging=false", url)
   }
 
@@ -81,7 +81,7 @@ api_get <- function(path,
   i <- 1
   response_code <- 5
 
-  while (i <= retry & (response_code < 400 | response_code >= 500)) {
+  while (i <= retry && (response_code < 400 || response_code >= 500)) {
     resp <- httr::GET(url, httr::timeout(timeout),
                       handle = handle)
     response_code <- httr::status_code(resp)
@@ -90,15 +90,14 @@ api_get <- function(path,
     if (response_code == 200L &&
         stringi::stri_replace(resp$url, regex = ".*/api/", replacement = "") ==
         stringi::stri_replace(url, regex = ".*/api/", replacement = "") &&
-        httr::http_type(resp) == "application/json")
-    {
+        httr::http_type(resp) == "application/json") {
       break
     }
 
   }
 
   # unknown error catching which returns message and response code
-  if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500) {
+  if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 500) {
     stop(paste0(
       "client error returned by url, this normally means a malformed link ", url,
       " response code: ", httr::status_code(resp)
@@ -122,8 +121,8 @@ api_get <- function(path,
 
   # extract text response from api response
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"),
-    simplifyDataFrame = T,
-    flatten = T
+    simplifyDataFrame = TRUE,
+    flatten = TRUE
   )
 
   return(resp)

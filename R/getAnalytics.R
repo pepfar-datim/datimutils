@@ -28,7 +28,7 @@ getAnalytics <-  function(...,
                           ou = NULL, ou_f = NULL,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
-                          return_names = F,
+                          return_names = FALSE,
                           d2_session = dynGet("d2_default_session", inherits = TRUE),
                           retry = 1,
                           timeout = 60) {
@@ -39,11 +39,16 @@ getAnalytics <-  function(...,
   }
 
   #variable set up
-  dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
-  pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
-  ou <- .dForm(ou, id = "ou");ou_f <- .fForm(ou_f, id = "ou")
-  co <- .dForm(co, id = "co");co_f <- .fForm(co_f, id = "co")
-  ao <- .dForm(ao, id = "ao");ao_f <- .fForm(ao_f, id = "ao")
+  dx <- .dForm(dx, id = "dx")
+  pe <- .dForm(pe, id = "pe")
+  ou <- .dForm(ou, id = "ou")
+  co <- .dForm(co, id = "co")
+  ao <- .dForm(ao, id = "ao")
+  dx_f <- .fForm(dx_f, id = "dx")
+  pe_f <- .fForm(pe_f, id = "pe")
+  ou_f <- .fForm(ou_f, id = "ou")
+  co_f <- .fForm(co_f, id = "co")
+  ao_f <- .fForm(ao_f, id = "ao")
 
   #process ...
   end_point <- "analytics?"
@@ -85,7 +90,7 @@ getAnalytics <-  function(...,
   #collect column names
   col_names <- resp$headers$column
   #get data
-  resp <- as.data.frame(resp$rows, stringsAsFactors = F)
+  resp <- as.data.frame(resp$rows, stringsAsFactors = FALSE)
   #change column names
   colnames(resp) <- col_names
 
@@ -110,7 +115,7 @@ getAnalytics <-  function(...,
 #' @return formatted dimensions
 
 .dForm <- function(..., id = NULL) {
-  if (missing(...) | is.null(...)) {
+  if (missing(...) || is.null(...)) {
     return(NULL)
   }
   values <- list(...)
@@ -131,7 +136,7 @@ getAnalytics <-  function(...,
 #' @return formatted filters
 
 .fForm <- function(..., id = NULL) {
-  if (missing(...) | is.null(...)) {
+  if (missing(...) || is.null(...)) {
     return(NULL)
   }
   values <- list(...)
