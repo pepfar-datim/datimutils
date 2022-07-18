@@ -31,6 +31,4 @@ jobs:
           command:  R -e "devtools::check(error_on='error')"
       - run:
           name: Lint package
-          command: |
-                R -e "install.packages('lintr')"
-                R -e "foo<-unique(names(lintr::lint_package())); if ( length(foo) > 0 ) stop(foo)"
+          command:  R -e "foo<-unique(names(lintr::lint_package())); if ( length(foo) > 0 ) stop(foo)"
