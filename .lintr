@@ -6,8 +6,24 @@ linters: linters_with_defaults(
     cyclocomp_linter = NULL # 7
   )
 exclusions: list(
-    "tests/testthat/FALSE",
-    "tests/testthat/httpstat.us",
-    "tests/testthat/play.dhis2.org",
-    "tests/testthat/test.datim.org",
+    "tests/testthat/FALSE/play.dhis2.org" = list(
+      line_length_linter = Inf,
+      trailing_whitespace_linter = Inf
+    ),
+    "tests/testthat/httpstat.us" = list(
+      line_length_linter = Inf,
+      trailing_whitespace_linter = Inf
+    ),
+    "tests/testthat/play.dhis2.org" = list(
+      line_length_linter = Inf,
+      trailing_whitespace_linter = Inf
+    ),
+    "tests/testthat/test.datim.org" = list(
+      line_length_linter = Inf,
+      trailing_whitespace_linter = Inf
+    ),
+    "vignettes/play.dhis2.org" = list(
+      line_length_linter = Inf,
+      trailing_whitespace_linter = Inf
+    )
   )
