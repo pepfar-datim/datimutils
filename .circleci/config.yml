@@ -32,5 +32,5 @@ jobs:
       - run:
           name: Lint package
           command: |
-                R -e "install.packages('lintr')"
+                R -e "renv::install('lintr@3.0.0')"
                 R -e "foo<-unique(names(lintr::lint_package())); if ( length(foo) > 0 ) stop(foo)"
