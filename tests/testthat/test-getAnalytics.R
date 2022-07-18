@@ -46,7 +46,7 @@ test_that("other arguments: ", {
                             "cYeuwXTCPkU.PT59n8BQbqM", "o15CyZiTvxa", "f27B1G7B3m3", "hJNC4Bu2Mkv"),
                      pe = c("201908", "201909", "201910", "201911", "201912", "202001",
                             "202002", "202003", "202004", "202005", "202006", "202007"),
-                     ou_f = "ImspTQPwCqd", return_names = T, d2_session = play2335)
+                     ou_f = "ImspTQPwCqd", return_names = TRUE, d2_session = play2335)
 
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
@@ -62,7 +62,7 @@ data <- getAnalytics("startDate=2017-01-01", "displayProperty=NAME",
                             "cYeuwXTCPkU.PT59n8BQbqM", "o15CyZiTvxa", "f27B1G7B3m3", "hJNC4Bu2Mkv"),
                      pe = c("201908", "201909", "201910", "201911", "201912", "202001",
                             "202002", "202003", "202004", "202005", "202006", "202007"),
-                     ou_f = "ImspTQPwCqd", return_names = T,  d2_session = play2335)
+                     ou_f = "ImspTQPwCqd", return_names = TRUE,  d2_session = play2335)
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
 testthat::expect_named(data, c("Data", "Period", "Value"))
@@ -77,7 +77,7 @@ rm(data)
                             "cYeuwXTCPkU.PT59n8BQbqM", "o15CyZiTvxa", "f27B1G7B3m3", "hJNC4Bu2Mkv"),
                      pe = c("201908", "201909", "201910", "201911", "201912", "202001",
                             "202002", "202003", "202004", "202005", "202006", "202007"),
-                     ou_f = "ImspTQPwCqd", return_names = T,  d2_session = play2335)
+                     ou_f = "ImspTQPwCqd", return_names = TRUE,  d2_session = play2335)
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
 testthat::expect_named(data, c("Data", "Period", "Value"))
@@ -94,7 +94,7 @@ rm(data)
                             "cYeuwXTCPkU.PT59n8BQbqM", "o15CyZiTvxa", "f27B1G7B3m3", "hJNC4Bu2Mkv"),
                      pe = c("201908", "201909", "201910", "201911", "201912", "202001",
                             "202002", "202003", "202004", "202005", "202006", "202007"),
-                     ou_f = "ImspTQPwCqd", return_names = T,  d2_session = play2335)
+                     ou_f = "ImspTQPwCqd", return_names = TRUE,  d2_session = play2335)
 
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 84)
@@ -112,7 +112,7 @@ testthat::expect_identical(data$Value[1], 362454.0)
                             "cYeuwXTCPkU.PT59n8BQbqM", "o15CyZiTvxa", "f27B1G7B3m3", "hJNC4Bu2Mkv"),
                      pe = c("201908", "201909", "201910", "201911", "201912", "202001",
                             "202002", "202003", "202004", "202005", "202006", "202007"),
-                     ou_f = "ImspTQPwCqd", return_names = T, d2_session = play2335)
+                     ou_f = "ImspTQPwCqd", return_names = TRUE, d2_session = play2335)
 testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 7)
   testthat::expect_equal(NCOL(data), 16)

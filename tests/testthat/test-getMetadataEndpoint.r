@@ -678,7 +678,7 @@ test_that(
 test_that(
   paste0("duplicateResponse works on dataframes"), {
       resp <- data.frame("a" = c(1, 2, 3), "b" = c("a", "b",  "c"),
-                         stringsAsFactors = F)
+                         stringsAsFactors = FALSE)
       expand <- c("a", "a", "a", "b", "c", "c")
       resp <- duplicateResponse(resp = resp, expand = expand, by = "b")
       testthat::expect_equal(NROW(resp), 6)
@@ -700,7 +700,7 @@ test_that(
 test_that(
   paste0("simplifySttructure works on nested dataframes contained in lists"), {
       resp <- data.frame("a" = c(1, 2, 3), "b" = c("a", "b", "c"),
-                         stringsAsFactors = F)
+                         stringsAsFactors = FALSE)
       resp <- data.frame("a" = data.frame("a" = "b"), "b" = list(resp))
       resp <- list(resp)
       resp <- simplifyStructure(resp)

@@ -69,7 +69,7 @@ httptest::with_mock_api({
                                   list(
                                     id = uids
                                     ),
-                                  stringsAsFactors = F
+                                  stringsAsFactors = FALSE
                                   )
                               )
                   ))
