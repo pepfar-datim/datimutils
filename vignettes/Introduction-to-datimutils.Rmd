@@ -23,13 +23,14 @@ Below the user will see how `datimutils` can be used to log into a DHIS2 instanc
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = T
+  eval = TRUE
 )
 ```
 
 ```{r setup}
 library(datimutils)
 library(httptest)
+library(magrittr)
 ```
 
 ```{r, include = FALSE}
@@ -50,9 +51,9 @@ The most basic method is for the user to pass their respective username and pass
 
 ```{r eval = F}
 loginToDATIM(
-  base_url = 'play.dhis2.org/2.36/',
-  username = 'admin',
-  password = 'district'
+  base_url = "play.dhis2.org/2.36/",
+  username = "admin",
+  password = "district"
 )
 ```
 
@@ -66,25 +67,25 @@ There are two ways to set up this configuration file one in which the password i
 
 The first option entails the user entering the following: baseurl, username, and password.
 
-```{r eval = F}
+```{js eval = F}
 {
-"dhis": {
-  "baseurl": "play.dhis2.org/2.36/",
-  "username": "admin",
-  "password": "district"
-}
+  "dhis": {
+    "baseurl": "play.dhis2.org/2.36/",
+    "username": "admin",
+    "password": "district"
+  }
 }
 ```
 
 Alternatively, the the entry for password can be blank such that the file resembles this
 
-```{r eval = F}
+```{js eval = F}
 {
-"dhis": {
-  "baseurl": "play.dhis2.org/2.36/",
-  "username": "admin",
-  "password": ""
-}
+  "dhis": {
+    "baseurl": "play.dhis2.org/2.36/",
+    "username": "admin",
+    "password": ""
+  }
 }
 ```
 
@@ -124,7 +125,7 @@ print(data)
 tabl <- "
 |                       datimutils function                      | DATIM Source               |
 |----------------------------------------------------------------|:--------------------------:|
-| getCategories           | categories                 | 
+| getCategories           | categories                 |
 | getCatCombos            | categoryCombinations       |
 | getCatOptionCombos      | categoryOptionCombinations |
 | getCatOptionGroupSets   | categoryOptionGroupSets    |
@@ -178,8 +179,8 @@ url <- paste0("https://play.dhis2.org/2.35/api/dataElements.csv?",
 httr::GET(url,
           httr::authenticate("admin",
                              "district")) %>%
-  httr::content() %>% 
-  readr::read_csv() %>% 
+  httr::content() %>%
+  readr::read_csv() %>%
   print()
 ```
 
@@ -188,13 +189,13 @@ httr::GET(url,
 It is also possible to look up metadata using a different identifier such as name or code, but the user must specify the look up identifier for their input vector.
 
 ```{r}
-getOrgUnits("Bo", 
+getOrgUnits("Bo",
             by = name)
 
 ```
 
 ```{r}
-getDataElements("DE_359596", 
+getDataElements("DE_359596",
                 by = code)
 
 ```
@@ -249,7 +250,7 @@ head(data)
 ```
 
 Though the return of these commands includes list columns which may require further processing to be used in an application, `datimutils` does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON which might look like the example below with its own nested elements<!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
-```{html}
+```{=html}
     {
     "organisationUnits": [
         {
@@ -362,6 +363,7 @@ Though the return of these commands includes list columns which may require furt
             ]
         }
     ]
+    }
 ```
 
 

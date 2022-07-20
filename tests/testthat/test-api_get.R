@@ -123,8 +123,7 @@ httptest::with_mock_api({
   # TEST 4
   ##############################################################################
   testthat::test_that(
-    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false",
-    {
+    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
       user <- api_get(
         path = "api/me",
         d2_session = play233
@@ -163,8 +162,7 @@ httptest::with_mock_api({
     paste0(
       "Specific id: https://play.dhis2.org/2.33/",
       "api/indicators/ReUHfIn0pTQ.json?paging=false"
-    ),
-    {
+    ), {
       ind <- api_get(
         path = "api/indicators/ReUHfIn0pTQ",
         d2_session = play233

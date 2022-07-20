@@ -21,7 +21,7 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
                        variable_values = NULL,
                        d2_session = dynGet("d2_default_session",
                                            inherits = TRUE),
-                       retry=1, timeout = 180) {
+                       retry = 1, timeout = 180) {
 
   assertthat::assert_that(length(variable_keys) == length(variable_values))
 
@@ -41,7 +41,7 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
   } else {
     # turn filters received as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
-    add <- stringr::str_flatten(filters_chr, "&filter=")
+    add <- stringi::stri_flatten(filters_chr, "&filter=")
     add <- paste0("&filter=", add)
   }
 
@@ -60,17 +60,19 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
   if (length(resp$listGrid$rows) == 0) {
     return(NULL)
   }
-  
+
   #Some SQL views can have nested lists as columns.
   has_nested_lists <-
-    any(Reduce("|", lapply(resp$listGrid$rows, function(x)
-      lapply(x, class) == "list")))
-  
+    any(Reduce("|", lapply(resp$listGrid$rows, function(x) {
+      lapply(x, class) == "list"
+    }
+    )))
+
   if (has_nested_lists) {
-    resp <- as.data.frame(do.call("rbind",resp$listGrid$rows),
+    resp <- as.data.frame(do.call("rbind", resp$listGrid$rows),
                   stringsAsFactors = FALSE)
   } else {
-    resp <- as.data.frame(resp$listGrid$rows,stringsAsFactors = FALSE)
+    resp <- as.data.frame(resp$listGrid$rows, stringsAsFactors = FALSE)
   }
 
   colnames(resp) <- x
@@ -83,13 +85,9 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
 #' @param d2_session the d2Session object, default is "d2_default_session",
 #' it will be made upon logging in to datim with loginToDATIM
 #' @return dataframe with the list of sql views
-
 listSqlViews <- function(d2_session = dynGet("d2_default_session",
                                              inherits = TRUE)) {
 
-   api_get(
-    path = "sqlViews/",
-    d2_session = d2_session) %>%
-    purrr::pluck('sqlViews')
+   api_get(path = "sqlViews/", d2_session = d2_session)$"sqlViews"
 
 }
