@@ -16,12 +16,12 @@ api_get <- function(path,
 
   base_url <- d2_session$base_url
   handle <- d2_session$handle
-  if (is.null(base_url))
-    {
+  if (is.null(base_url)) {
     stop("You are not logged into DATIM")
   }
   # error if unsported file format desired
-  if (grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", path) || grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", base_url)) {
+  if (grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", path) ||
+      grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", base_url)) {
     stop("invalid file extension, either pass in a link with json or a link without a file format")
   }
 
@@ -61,7 +61,7 @@ api_get <- function(path,
   }
 
   # this block adds paging=false in the case that only .json was passed in
-  if (grepl("json", url) & !(grepl("paging", url))) {
+  if (grepl("json", url) && !(grepl("paging", url))) {
     url <- sub(".json", ".json?paging=false", url)
   }
 
@@ -81,24 +81,23 @@ api_get <- function(path,
   i <- 1
   response_code <- 5
 
-  while (i <= retry & (response_code < 400 | response_code >= 500)) {
+  while (i <= retry && (response_code < 400 || response_code >= 500)) {
     resp <- httr::GET(url, httr::timeout(timeout),
                       handle = handle)
     response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
-    if (response_code == 200L && 
-        stringr::str_remove(resp$url, ".*/api/") ==
-        stringr::str_remove(url,  ".*/api/") &&
-        httr::http_type(resp) == "application/json")
-    {
+    if (response_code == 200L &&
+        stringi::stri_replace(resp$url, regex = ".*/api/", replacement = "") ==
+        stringi::stri_replace(url, regex = ".*/api/", replacement = "") &&
+        httr::http_type(resp) == "application/json") {
       break
     }
 
   }
 
   # unknown error catching which returns message and response code
-  if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500) {
+  if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 500) {
     stop(paste0(
       "client error returned by url, this normally means a malformed link ", url,
       " response code: ", httr::status_code(resp)
@@ -122,8 +121,8 @@ api_get <- function(path,
 
   # extract text response from api response
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"),
-    simplifyDataFrame = T,
-    flatten = T
+    simplifyDataFrame = TRUE,
+    flatten = TRUE
   )
 
   return(resp)
