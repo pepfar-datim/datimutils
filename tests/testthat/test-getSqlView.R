@@ -73,11 +73,6 @@ test_that("We can fetch a SQL view with zero rows", {
 
 test_that("getSqlView: add", {
 
-  play237 <- loginToDATIM(
-      base_url = "play.dhis2.org/2.37/",
-      username = "admin",
-      password = "district")
-
   data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
                      d2_session = play2372
   )
