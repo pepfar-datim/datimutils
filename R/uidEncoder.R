@@ -32,7 +32,10 @@
 #  x <- rawToChar(response$content)
 #  replacements <- as.character(sample(10000000000:99999999999, stringr::str_count(x,'"[a-zA-Z0-9]{11}\\"')))
 #  extracts <- stringr::str_extract_all(x, '"[a-zA-Z0-9]{11}\\"')[[1]]
-#  response$content <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
+#  response$content <- stringi::stri_replace_all_fixed(x,
+#                                                      pattern = extracts,
+#                                                      replacement = replacements,
+#                                                      vectorize_all = F)
 #  passkey <- sodium::sha256(charToRaw(password))
 #  plaintext.raw <- serialize(extracts, NULL)
 #  response$encrypted <- sodium::data_encrypt(plaintext.raw, key = passkey)
@@ -62,10 +65,16 @@
 #' @param salt_front the salt to add on front
 #' @param algo the algorithm to use to anonimize
 #' @return anonimized vector
-.anonymize <- function(x, salt_front, salt_back, algo="sha512"){
-  hashes <- vapply(paste0(salt_front,x,salt_back), function(object) digest::digest(object, algo=algo), FUN.VALUE="", USE.NAMES=TRUE)
-  hashes <- substring(hashes,1,11)
-  hashes <- ifelse(grepl("^[0-9]",hashes), paste0(sample(LETTERS, sum(stringr::str_count(hashes,"^[0-9]")), replace = T), substr(hashes,2,11)),  hashes)
+.anonymize <- function(x, salt_front, salt_back, algo = "sha512") {
+  hashes <- vapply(paste0(salt_front, x, salt_back),
+                   function(object) digest::digest(object, algo = algo),
+                   FUN.VALUE = "",
+                   USE.NAMES = TRUE)
+  hashes <- substring(hashes, 1, 11)
+  hashes <- ifelse(grepl("^[0-9]", hashes),
+                   paste0(sample(LETTERS, sum(stringr::str_count(hashes, "^[0-9]")), replace = TRUE),
+                          substr(hashes, 2, 11)),
+                   hashes)
   return(hashes)
 }
 
@@ -81,8 +90,15 @@
 #' @param format csv for csv style reponse, anything else for json
 #' @param exception a single uid to NOT anonimize
 #'
-anonimizeUIDS <- function(url = NULL, salt_front = NULL, salt_back = NULL, username = NULL, password = NULL, first_time = NULL, format = NULL, exception = NULL){
-  if(first_time){
+anonimizeUIDS <- function(url = NULL,
+                          salt_front = NULL,
+                          salt_back = NULL,
+                          username = NULL,
+                          password = NULL,
+                          first_time = NULL,
+                          format = NULL,
+                          exception = NULL) {
+  if (first_time) {
     httptest::start_capturing(simplify = FALSE)
     httr::content(httr::GET(url, httr::authenticate(user = username,
                                                     password = password)))
@@ -90,19 +106,20 @@ anonimizeUIDS <- function(url = NULL, salt_front = NULL, salt_back = NULL, usern
   }
   response <- dget(paste0(httptest::build_mock_url(url), ".R"))
   x <- rawToChar(response$content)
-  if(format == "csv")
-  {
-    extracts <- stringr::str_extract_all(x, '(,[a-zA-Z0-9]{11})')[[1]]
+  if (format == "csv") {
+    extracts <- stringr::str_extract_all(x, "(,[a-zA-Z0-9]{11})")[[1]]
     extracts <- setdiff(extracts, c(",dataelement", ",categoryopt"))
-  } else{
-  extracts <- stringr::str_extract_all(x, '(id.{2})("[a-zA-Z0-9]{11}\\")')[[1]]
-  extracts <- gsub('id.{3}', "", extracts)}
+  } else {
+    extracts <- stringr::str_extract_all(x, '(id.{2})("[a-zA-Z0-9]{11}\\")')[[1]]
+    extracts <- gsub("id.{3}", "", extracts)
+  }
   extracts <- gsub("[^[:alnum:] ]", "", extracts)
-  replacements <- .anonymize(extracts, salt_front=salt_front, salt_back=salt_back)
-  if(!(is.null(exception))){
+  replacements <- .anonymize(extracts, salt_front = salt_front, salt_back = salt_back)
+  if (!(is.null(exception))) {
     exception_pos <- which(extracts %in% exception)
-    replacements[exception_pos] <- exception}
-  put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = F)
+    replacements[exception_pos] <- exception
+  }
+  put_in <- stringi::stri_replace_all_fixed(x, pattern = extracts, replacement = replacements, vectorize_all = FALSE)
   response$content <- substitute(charToRaw(put_in))
   dput(response, paste0(httptest::build_mock_url(url), ".R"))
 }
