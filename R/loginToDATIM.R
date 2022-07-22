@@ -74,7 +74,7 @@ makeKeyring <- function(username,
                         ring = "DatimLogin",
                         service = getOption("baseurl")) {
   # checks if keyring exists and if it doesnt, it makes one and then locks it
-  result <- try(keyring::key_list(keyring = ring), silent = T)
+  result <- try(keyring::key_list(keyring = ring), silent = TRUE)
   if ("try-error" %in% class(result)) {
     error_type <- attr(result, "condition")
     if (grepl(
@@ -141,18 +141,18 @@ loginToDATIM <- function(config_path = NULL,
                          d2_session_name = "d2_default_session",
                          d2_session_envir = parent.frame()) {
 
-  if((!(is.null(username)) && is.null(password)) || (is.null(username) && !(is.null(password)))){
+  if ((!(is.null(username)) && is.null(password)) || (is.null(username) && !(is.null(password)))) {
     stop("If directly providing function credentials you must specify both username and password")
   }
-  if((!(is.null(config_path)) && !(is.null(password))) && !(is.null(username))){
+  if ((!(is.null(config_path)) && !(is.null(password))) && !(is.null(username))) {
     stop("If using config_path then credentials can not be passed in directly")
   }
-   if(!(is.null(password)) && !(is.null(username)) && is.null(base_url)){
+  if (!(is.null(password)) && !(is.null(username)) && is.null(base_url)) {
     stop("If directly passing password and username, base_url can't be null")
   }
 
   ## TODO modify to use username and password instead of config file if username and password are provided
-  if(!(is.null(username)) && !(is.null(password))){
+  if (!(is.null(username)) && !(is.null(password))) {
     password <- password
     username <- username
     base_url <- base_url

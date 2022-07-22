@@ -23,12 +23,11 @@ duplicateResponse <- function(resp, expand, by) {
 #' @return a list with the splits
 #'
 
-.splitUrlComponent <- function(values, limit){
+.splitUrlComponent <- function(values, limit) {
     values_list <- list()
     times_to_split <- ceiling(sum(nchar(values)) / limit) + 1
     seq_to_use <- ceiling(seq(1, length(values), length = times_to_split))
-    for (i in seq_along(seq_to_use))
-    {
+    for (i in seq_along(seq_to_use)) {
       if (i == 1) {
         values_list[[i]] <- values[seq_to_use[i]:seq_to_use[i + 1]]
       } else if (i != length(seq_to_use)) {
@@ -101,7 +100,7 @@ duplicateResponse <- function(resp, expand, by) {
                                  by = "id",
                                  fields = NULL,
                                  d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1) {
-  see <- try(stringi::stri_extract_all_regex(fields, "\\[[^()]+\\]")[[1]], silent = T)
+  see <- try(stringi::stri_extract_all_regex(fields, "\\[[^()]+\\]")[[1]], silent = TRUE)
 
   name_reduce <- NULL
 
@@ -109,14 +108,16 @@ duplicateResponse <- function(resp, expand, by) {
     c(by, "name", "id")
   } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
-  } else if (length(see) != 0 & class(see) != "try-error") {
-    if (grepl("name", see) &
+  } else if (length(see) != 0 && class(see) != "try-error") {
+    if (grepl("name", see) &&
         !(grepl("name",
                 gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)),
                      "",
                      fields)))) {
       c(by, fields, "name")
-    } else {fields}
+    } else {
+      fields
+    }
   } else {
     fields
   }
@@ -132,7 +133,7 @@ duplicateResponse <- function(resp, expand, by) {
     )
   }
 
-  if ((by == "name" & is.null(fields))) {
+  if ((by == "name" && is.null(fields))) {
     name_reduce <- "id"
   } else if (is.null(fields)) {
     name_reduce <- "name"
@@ -158,18 +159,18 @@ duplicateResponse <- function(resp, expand, by) {
     })
 
     # call getMetadata multiple times
-   data_list <-  lapply(filters, function(x) {getMetadata(
-        end_point = !!end_point,
-        d2_session = d2_session,
-        x,
-        fields = default_fields, retry = retry
-      ) } )
+   data_list <-  lapply(filters, function(x) {
+     getMetadata(
+       end_point = !!end_point,
+       d2_session = d2_session,
+       x,
+       fields = default_fields, retry = retry
+     )})
 
-    # bind the responses
-    data <- do.call("rbind",data_list)
-  } else
-  #normal route
-  {
+   # bind the responses
+   data <- do.call("rbind", data_list)
+  } else {
+    #normal route
     filters <- metadataFilter(
       values = unique_values,
       property = by,
@@ -186,7 +187,7 @@ duplicateResponse <- function(resp, expand, by) {
   }
 
   #return NULL if there is nothing to return
-  length_response <- try(length(data[[1]]), silent = T)
+  length_response <- try(length(data[[1]]), silent = TRUE)
   if (length_response == 0) {
     return(NULL)
   }
@@ -196,7 +197,7 @@ duplicateResponse <- function(resp, expand, by) {
 
   #reduce fields returned
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
-    potential_data <- try(data[, name_reduce], silent = T)
+    potential_data <- try(data[, name_reduce], silent = TRUE)
     if (!(class(potential_data) == "try-error")) {
       data <- potential_data
     }

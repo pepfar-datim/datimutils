@@ -21,7 +21,7 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
                        variable_values = NULL,
                        d2_session = dynGet("d2_default_session",
                                            inherits = TRUE),
-                       retry=1, timeout = 180) {
+                       retry = 1, timeout = 180) {
 
   assertthat::assert_that(length(variable_keys) == length(variable_values))
 
@@ -63,14 +63,16 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
 
   #Some SQL views can have nested lists as columns.
   has_nested_lists <-
-    any(Reduce("|", lapply(resp$listGrid$rows, function(x)
-      lapply(x, class) == "list")))
+    any(Reduce("|", lapply(resp$listGrid$rows, function(x) {
+      lapply(x, class) == "list"
+    }
+    )))
 
   if (has_nested_lists) {
-    resp <- as.data.frame(do.call("rbind",resp$listGrid$rows),
+    resp <- as.data.frame(do.call("rbind", resp$listGrid$rows),
                   stringsAsFactors = FALSE)
   } else {
-    resp <- as.data.frame(resp$listGrid$rows,stringsAsFactors = FALSE)
+    resp <- as.data.frame(resp$listGrid$rows, stringsAsFactors = FALSE)
   }
 
   colnames(resp) <- x
@@ -83,7 +85,6 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
 #' @param d2_session the d2Session object, default is "d2_default_session",
 #' it will be made upon logging in to datim with loginToDATIM
 #' @return dataframe with the list of sql views
-
 listSqlViews <- function(d2_session = dynGet("d2_default_session",
                                              inherits = TRUE)) {
 
