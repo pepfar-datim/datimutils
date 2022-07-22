@@ -16,7 +16,7 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
                              variable_values = NULL, #values,
                              d2_session = dynGet("d2_default_session",
                                                  inherits = TRUE),
-                             retry=1, timeout = 180) {
+                             retry = 1, timeout = 180) {
 
   #Test that the provided variables have their associated values used for
   # munging
@@ -40,9 +40,9 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
 
   #2 Either at least one period or a start date and end date must be specified.
   if ((
-    (!(is.element("startDate", variable_keys)) |
+    (!(is.element("startDate", variable_keys)) ||
      !(is.element("endDate", variable_keys)))
-    &
+    &&
     !(is.element("period", variable_keys))
     )) {
     stop("Either at least one period or a start date and end date must be
