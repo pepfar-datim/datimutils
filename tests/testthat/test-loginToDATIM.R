@@ -13,7 +13,7 @@ library(datimutils)
 #     base_url = 'play.dhis2.org/2.37/',
 #     username = 'admin',
 #     password = 'district')
-  
+
 # Unsuccessful based on bad base_url.
    # loginToDATIM(
    #    base_url = 'play.dhis2.org/badBaseUrl/',
