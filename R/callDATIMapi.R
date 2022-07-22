@@ -82,17 +82,8 @@ api_get <- function(path,
   response_code <- 5
 
   while (i <= retry && (response_code < 400 || response_code >= 500)) {
-    resp <- NULL
-    resp <-
-      try(
-      httr::GET(url, httr::timeout(timeout),
+    resp <- httr::GET(url, httr::timeout(timeout),
                       handle = handle)
-      )
-
-    if (is.null(resp)) {
-      next
-    }
-
     response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
