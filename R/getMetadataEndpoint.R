@@ -79,7 +79,7 @@ duplicateResponse <- function(resp, expand, by) {
 #'
 #' getIndicatorGroupSets(values, by, fields, d2_session, retry)
 #'
-#' getIndicatorGroups(values, by, fields,  d2_session, retry)
+#' getIndicatorGroups(values, by, fields, d2_session, retry)
 #'
 #' getIndicators(values, by, fields, d2_session, retry)
 #'
@@ -135,6 +135,7 @@ duplicateResponse <- function(resp, expand, by) {
       "more general getMetadata function for other scenarios."
     )
   }
+
   if ((by == "name" && is.null(fields))) {
     name_reduce <- "id"
   } else if (is.null(fields)) {
@@ -220,7 +221,7 @@ duplicateResponse <- function(resp, expand, by) {
 getCategories <- function(values,
                           by = "id",
                           fields = NULL,
-                                 d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1) {
+                          d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1) {
   .getMetadataEndpoint("categories",
                        values = values,
                        by = as.character(rlang::ensym(by)),

@@ -15,7 +15,6 @@
 #' @param fields - the fields of information for those ancestors
 #' @param rename c(current_name1 = "rename1", current_name2 = "rename2")
 #' @param retry the number of times to try the call
-#' @importFrom dplyr %>%
 #' @return nested data frame with org unit group for provided uids
 
 .getOrgUnitsByOrgUnitGroup <- function(
@@ -31,15 +30,16 @@
   oug_list <- getOrgUnitGroups(org_unit_group,
                           fields = fields, retry = retry)
 
-  oug_df<- purrr::map(uids, ~dplyr::filter(oug_list,
-                               stringr::str_detect(path, .x)) %>%
-                                 dplyr::select(to_subset))
+  oug_df<- purrr::map(uids, ~dplyr::select(dplyr::filter(oug_list,
+                                                         stringr::str_detect(path, .x)),
+                                           to_subset))
+
 
   if(!(is.null(rename))){
   oug_df <- .renameFields(oug_df, rename)
   }
 
-  oug_df <- oug_df %>% dplyr::tibble()
+  oug_df <- dplyr::tibble(oug_df)
 
   return(oug_df)
 }
