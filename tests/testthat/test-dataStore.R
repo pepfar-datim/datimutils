@@ -30,7 +30,7 @@ with_mock_api({
   })
 
   test_that("Can error with missing key", {
-    expect_error(getDataStoreKey(NA, "repositories", d2_session = play2363))
+    expect_error(getDataStoreKey("repositories", NA, d2_session = play2363))
   })
 
   test_that("Can error with a list as namespace", {
