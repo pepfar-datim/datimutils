@@ -8,7 +8,7 @@
 #'
 duplicateResponse <- function(resp, expand, by) {
   if (!(is.vector(resp))) {
-    if(all(is.na(match(expand, resp[, by])))){
+    if (all(is.na(match(expand, resp[, by])))) {
       return(resp)
     }
     resp <- resp[match(expand, resp[, by]), ]

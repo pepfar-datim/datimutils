@@ -4,8 +4,11 @@
 #' @param name_key c(current_name1 = "rename1", current_name2 = "rename2")
 #' @return list of dataframes with renamed columns
 
-.renameFields <- function(df, name_key){
-  df <- lapply(df, function(x) {names(x) <- name_key[names(x)]; return(x)})
+.renameFields <- function(df, name_key) {
+  df <- lapply(df, function(x) {
+    names(x) <- name_key[names(x)]
+    return(x)
+  })
   return(df)
 }
 #' @title .getOrgUnitsByOrgUnitGroup
@@ -25,18 +28,18 @@
 
   to_subset <- fields
   fields <- paste0(fields, collapse = ",")
-  fields <- paste0("organisationUnits[path," ,fields,"]")
+  fields <- paste0("organisationUnits[path,", fields, "]")
 
   oug_list <- getOrgUnitGroups(org_unit_group,
                           fields = fields, retry = retry)
 
-  oug_df<- purrr::map(uids, ~dplyr::select(dplyr::filter(oug_list,
-                                                         stringr::str_detect(path, .x)),
-                                           to_subset))
+  oug_df <- purrr::map(uids, ~dplyr::select(dplyr::filter(oug_list,
+                                                          stringr::str_detect(path, .x)),
+                                            to_subset))
 
 
-  if(!(is.null(rename))){
-  oug_df <- .renameFields(oug_df, rename)
+  if (!(is.null(rename))) {
+    oug_df <- .renameFields(oug_df, rename)
   }
 
   oug_df <- dplyr::tibble(oug_df)
