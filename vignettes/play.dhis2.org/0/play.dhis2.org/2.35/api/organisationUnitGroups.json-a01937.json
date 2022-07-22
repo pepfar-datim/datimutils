@@ -1,0 +1,58 @@
+{
+    "organisationUnitGroups": [
+        {
+            "name": "CHC"
+        },
+        {
+            "name": "Chiefdom"
+        },
+        {
+            "name": "CHP"
+        },
+        {
+            "name": "Clinic"
+        },
+        {
+            "name": "Country"
+        },
+        {
+            "name": "District"
+        },
+        {
+            "name": "Eastern Area"
+        },
+        {
+            "name": "Hospital"
+        },
+        {
+            "name": "MCHP"
+        },
+        {
+            "name": "Mission"
+        },
+        {
+            "name": "NGO"
+        },
+        {
+            "name": "Northern Area"
+        },
+        {
+            "name": "Private Clinic"
+        },
+        {
+            "name": "Public facilities"
+        },
+        {
+            "name": "Rural"
+        },
+        {
+            "name": "Southern Area"
+        },
+        {
+            "name": "Urban"
+        },
+        {
+            "name": "Western Area"
+        }
+    ]
+}

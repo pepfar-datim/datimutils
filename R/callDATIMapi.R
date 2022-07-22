@@ -9,25 +9,26 @@
 #' @param api_version defaults to current but can pass in version number
 #' @return Result of DATIM API query returned as named list.
 #'
-api_get <- function(path, 
+api_get <- function(path,
                     d2_session,
                     retry = 1, timeout = 60,
                     api_version = NULL) {
-  
+
   base_url <- d2_session$base_url
   handle <- d2_session$handle
-  if(is.null(base_url))
-    {
+  if (is.null(base_url)) {
     stop("You are not logged into DATIM")
   }
   # error if unsported file format desired
-  if (grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx",path) || grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", base_url)) {
+  if (grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", path) ||
+      grepl("\\.jsonp|\\.html|\\.xml|\\.pdf|\\.xls|\\.csv|\\.html\\+css|\\.adx", base_url)) {
     stop("invalid file extension, either pass in a link with json or a link without a file format")
   }
 
   # make sure all "?" outside of the .json?paging=false are &'s
   path <- gsub("\\?", "&", path)
   path <- gsub("json&", "json?", path)
+
 
   # remove trailing / from path
   if (substr(path, nchar(path), nchar(path)) == "/") {
@@ -49,7 +50,8 @@ api_get <- function(path,
 
   url <- paste0(url = base_url, path = path)
 
-  # this if else block will add .json?paging=false where it is needed, depending on the path
+  # this if else block will add .json?paging=false where it is needed,
+  # depending on the path
   if (!(grepl("json", url))) {
     if (grepl("&", url)) {
       url <- sub("(.*?)(&)", "\\1.json?paging=false\\2", url)
@@ -58,8 +60,8 @@ api_get <- function(path,
     }
   }
 
-  # this block adds pagin=false in the case that only .json was passed in
-  if (grepl("json", url) & !(grepl("paging", url))) {
+  # this block adds paging=false in the case that only .json was passed in
+  if (grepl("json", url) && !(grepl("paging", url))) {
     url <- sub(".json", ".json?paging=false", url)
   }
 
@@ -74,27 +76,37 @@ api_get <- function(path,
 
   # removes whitespace
   url <- gsub(" ", "", url)
+  print(url)
   # retry api get block, only retries if reponse code not in 400s
   i <- 1
   response_code <- 5
 
-  while (i <= retry & (response_code < 400 | response_code >= 500)) {
-    resp <- httr::GET(url, httr::timeout(timeout),
+  while (i <= retry && (response_code < 400 || response_code >= 500)) {
+    resp <- NULL
+    resp <-
+      try(
+      httr::GET(url, httr::timeout(timeout),
                       handle = handle)
+      )
+
+    if (is.null(resp)) {
+      next
+    }
+
     response_code <- httr::status_code(resp)
-    Sys.sleep(i-1)
+    Sys.sleep(i - 1)
     i <- i + 1
-    if(response_code == 200 && 
-       resp$url == url &&
-       httr::http_type(resp) == "application/json")
-    {
+    if (response_code == 200L &&
+        stringi::stri_replace(resp$url, regex = ".*/api/", replacement = "") ==
+        stringi::stri_replace(url, regex = ".*/api/", replacement = "") &&
+        httr::http_type(resp) == "application/json") {
       break
     }
-    
+
   }
 
   # unknown error catching which returns message and response code
-  if (httr::status_code(resp) >= 400 & httr::status_code(resp) <= 500) {
+  if (httr::status_code(resp) >= 400 && httr::status_code(resp) <= 500) {
     stop(paste0(
       "client error returned by url, this normally means a malformed link ", url,
       " response code: ", httr::status_code(resp)
@@ -106,7 +118,8 @@ api_get <- function(path,
     ))
   }
 
-  # if the response comes back in html and not json it means you landed on the login page
+  # if the response comes back in html and not json it means you landed on the
+  # login page
   if (httr::http_type(resp) != "application/json") {
     stop(
       paste0("API did not return json, are you logged into DATIM?
@@ -117,8 +130,8 @@ api_get <- function(path,
 
   # extract text response from api response
   resp <- jsonlite::fromJSON(httr::content(resp, as = "text"),
-    simplifyDataFrame = T,
-    flatten = T
+    simplifyDataFrame = TRUE,
+    flatten = TRUE
   )
 
   return(resp)

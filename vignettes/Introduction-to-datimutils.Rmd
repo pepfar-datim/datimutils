@@ -7,166 +7,410 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include=FALSE}
-library(httptest)
-start_vignette("play.dhis2.org")
-```
+The `datimutils` package was developed to simplify the interaction with the DATIM/DHIS2 api from R. The package was designed to work well with the `tidyverse` package and its suite of functions. It currently supports requesting metadata and metadata properties as well as aggregated data from the analytics resource of the API. This enables users to pull any data that they would normally be able to get in a DHIS2 pivot table.
 
+In order to make use of the `datimutils` package the user should already have a basic understanding of DATIM/DHIS2. For instance the user should understand:
+
+-   the data in DHIS2 instances are associated with organisation units, data elements, time periods, and categories and category options such as age and sex;
+
+-   the metadata in DHIS2 have additional properties depending on the metadata type, for instance latitude and longitude for organisation units or description for data elements;
+
+-   organisation units are structured in a hierarchy and data can be aggregated within that hierarchy.
+
+Below the user will see how `datimutils` can be used to log into a DHIS2 instance, retrieve metadata, and retrieve aggregated data in order to perform further analysis in R.
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  eval = T
+  eval = TRUE
 )
 ```
 
 ```{r setup}
 library(datimutils)
-play233 <- list(base_url = "https://play.dhis2.org/2.33/",
-                handle = httr::handle("https://play.dhis2.org/2.33/"))
-play235 <- list(base_url = "https://play.dhis2.org/2.33.5/",
-                handle = httr::handle("https://play.dhis2.org/2.33.5/"))
-play234 <- list(base_url = "https://play.dhis2.org/2.34/",
-                handle = httr::handle("https://play.dhis2.org/2.34/"))
-play2335 <- list(base_url = "https://play.dhis2.org/2.33.5/",
-                handle = httr::handle("https://play.dhis2.org/2.33.5/"))
-play2341 <- list(base_url = "https://play.dhis2.org/2.34.1/",
-                handle = httr::handle("https://play.dhis2.org/2.34.1/"))
+library(httptest)
+library(magrittr)
+```
 
+```{r, include = FALSE}
+httptest::start_vignette("play.dhis2.org")
 ```
-Logging in can be done with the `loginToDATIM` function. It takes a file path that contains the login credentials to Datim.
-For example here is a play server file called `play.json`
-```{r eval = F}
-{
-"dhis": {
-  "baseurl": "play.dhis2.org/2.33/",
-  "username": "admin",
-  "password": "district"
-}
-}
-```
-Alternatively if the the entry for password is blank such that the file looks like this
-```{r eval = F}
-{
-"dhis": {
-  "baseurl": "play.dhis2.org/2.33/",
-  "username": "admin",
-  "password": ""
-}
-}
-```
-Then the function will look in your keyring for the password, and if not found, will prompt you to enter a password and will store it automatically under that username and service (baseurl) for the next login.
 
-Call the function as so:
+## Logging into DATIM
+
+Before querying the DATIM api, the user must log into a DATIM instance. There are three basic ways to accomplish this with datimutils. All three methods utilize the `loginToDATIM` function. NOTE this function can log into any DHIS2 instance, not just DATIM, based on the provided baseurl.
+
+By default the `loginToDATIM` function will create an R object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming the user is logging in from the global environment. All `datimutils` functions will search for the d2_default_session by default, thus enabling the user to make multiple DATIM api requests through `datimutils` without individually specifying unique login objects with each request.
+
+> Note: By default, this DHIS2 session will expire after 60 minutes. When it does, the user will need to re-authenticate
+
+### Method 1 - username and password parameters
+
+The most basic method is for the user to pass their respective username and password directly into the `loginToDATIM` function, along with the web address of the server the user wishes to log in to.
+
+```{r eval = F}
+loginToDATIM(
+  base_url = "play.dhis2.org/2.36/",
+  username = "admin",
+  password = "district"
+)
+```
+
+### Methods 2 and 3 - Configuration Files
+
+The other two log in methods require the user to create a reusable configuration file in the format below. The location of this configuration file on the users's machine will be passed to the `loginToDATIM` function. If a user wants the ability to quickly log into multiple different servers, they can have a config file for each server instance.
+
+In this vignette, the example config file is part of the package, *play.json*.
+
+There are two ways to set up this configuration file one in which the password is stored in the file and the other in which the password is stored the the user's operating system credential management system.
+
+The first option entails the user entering the following: baseurl, username, and password.
+
+```{js eval = F}
+{
+  "dhis": {
+    "baseurl": "play.dhis2.org/2.36/",
+    "username": "admin",
+    "password": "district"
+  }
+}
+```
+
+Alternatively, the the entry for password can be blank such that the file resembles this
+
+```{js eval = F}
+{
+  "dhis": {
+    "baseurl": "play.dhis2.org/2.36/",
+    "username": "admin",
+    "password": ""
+  }
+}
+```
+
+The function will look in the users keyring/credential store for the aforementioned password, if not found, the user will be prompted to enter a password that will store automatically under that username and service (baseurl) for the next log in. A user may prefer storing their passwords in their operating systems credential store due to the fact it enables them to avoid storing this data in a plain text fomat on their computer, which is a potential security risk.
+
+>Note: keyrings operate differently on different operating systems
+
+In both methods, call the `loginToDATIM` function as so: \> Note: replace `play.json` with the path of your config file
+
 ```{r}
-# logging in generates a cookie so the other funcitons can be used freely without credentials
+# logging in generates a cookie so the other functions can be used freely without credentials
 loginToDATIM(config_path = "play.json")
 ```
 
-There is a wrapper for every metadata endpoint within datimutils.
-Here are calls to  dataElements and categoryOptionGroups for example:
+## Features for working with DATIM/DHIS2 metadata
+
+A DHIS2 configuration such as DATIM includes many different types of metadata; such as data elements, indicators, and organisation units. The DHIS2 web API allows a user to look up these pieces of metadata and obtain their related properties. For instance, a property of an organisation unit is its path, or the hierarchy or organization units above the organisation unit.
+
+For demonstration purposes, we will use a small sample data set with columns containing data element uids, organisation unit uids, and a value column:
+
 ```{r}
-getDataElements(
-    "FTRrcoaog83",
-    d2_session = play2335)
-getCatOptionGroups(
-    "OK2Nr4wdfrZ",
-    d2_session = play2335)
+data <- tibble::tribble(~dataElement, ~orgUnit, ~value,
+                "fbfJHSPpUQD", "kJq2mPyFEHo", 1,
+                "cYeuwXTCPkU", "kJq2mPyFEHo", 2,
+                "fbfJHSPpUQD", "Vth0fbpFcsO", 3
+                )
+print(data)
 ```
 
-Here is one to the Indicators endpoint:
-```{r}
-  getIndicators(
-        "ReUHfIn0pTQ",
-        d2_session = play2335)
+`Datimutils` offers a number of different ways to retrieve metadata from DHIS2 including some high level metadata helpers for each type of metadata and a more general criteria based search using metadata filters.
+
+### Metadata helpers when a user has a vector of identifiers (e.g. uids or names)
+
+`Datimutils` provides a number of high level metadata helpers for obtaining details (properties) of the different types of metadata. These helpers are designed assuming the user has a vector of identifiers for a particular type of metadata (e.g. uids) and wishes to look up one or more other properties for each element of the vector.  There is a helper for each of the main metadata categories in DHIS2, in fact auto complete in the users R IDE will often make typing these very fast. This is the list of the numerous high level metadata helpers in `datimutils`.
+
+```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
+tabl <- "
+|                       datimutils function                      | DATIM Source               |
+|----------------------------------------------------------------|:--------------------------:|
+| getCategories           | categories                 |
+| getCatCombos            | categoryCombinations       |
+| getCatOptionCombos      | categoryOptionCombinations |
+| getCatOptionGroupSets   | categoryOptionGroupSets    |
+| getCatOptionGroups      | categoryOptionGroups       |
+| getCatOptions           | categoryOptions            |
+| getDataElementGroupSets | dataElementGroupSets       |
+| getDataElementGroups    | dataElementGroups          |
+| getDataElements         | dataElements               |
+| getDataSets             | dataSets                   |
+| getIndicatorGroupSets   | indicatorGroupSets         |
+| getIndicatorGroups      | indicatorGroups            |
+| getIndicators           | indicators                 |
+| getOptionGroupSets      | optionGroupSets            |
+| getOptionGroups         | optionGroups               |
+| getOptionSets           | optionSets                 |
+| getOptions              | options                    |
+| getOrgUnitGroupSets     | organisationUnitGroupSets  |
+| getOrgUnitGroups        | organisationUnitGroups     |
+| getOrgUnits             | organisationUnits          |
+| getDimensions           | dimensions                 |
+| getUserGroups           | userGroups                 |
+"
+cat(tabl)
 ```
 
-These helpers will create repeated values and sorting based on input
+#### Easily Convert UIDs to names
+
+By default high level metadata helpers such as `getDataElements` support the conversion of a vector of uids into a vector of names. The command
+
 ```{r}
-# make a random order and duplicated uid group
- groups <- rep(c(
-    "gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG"), 20)
- rows <- sample(length(groups))
- groups <- c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
-              groups[rows])
-
-  data <-
-    getOrgUnitGroups(
-      groups,
-      fields = "code,name,id",
-      d2_session = play233
-    )
-
-# even though the actual api call only returns the 3 unique uids in a random
-# order, the wrapper returns it in the order called.
-str(data)
+getOrgUnits(data$orgUnit)
 ```
 
-The `getMetadata` function can be used to call metadata returning endpoints. It should be used for more complicated metadata calls with more than one filter. It takes an endpoint, any number of filters, and fields as its basic arguments. For example, to call the organisationUnits endpoint with two filters the following call can be used:
+returns `[1] "Kenema" "Kenema" "Kono"`, as the orgUnit uid "kJq2mPyFEHo" corresponds to the name "Kenema."
+
+Note that the user gets a result for "Kenema" both times it appears. This is an advantage of `datimutils`. The metadata helpers will return matched results in the same order as the lookup vector passed to the function. This key design element enables it to work well with the tidyverse suite of functions such as `dplyr::mutate`. Here a new column is added with data element names corresponding to the existing data element uid columns.
+
+```{r}
+dplyr::mutate(data,
+              dataElementName = datimutils::getDataElements(dataElement))
+
+```
+
+As you can see returning multiple, properly ordered rows for ANC 1st visit is critical for inserting the new metadata in the data frame. If a user called the DHIS2 api directly like this they would only get one result for each unique uid. `Datimutils` takes care of ensuring the output order matches the input vector order when using the high level metadata helpers.
+
+```{r}
+url <- paste0("https://play.dhis2.org/2.35/api/dataElements.csv?",
+"filter=id:in:[fbfJHSPpUQD,cYeuwXTCPkU,fbfJHSPpUQD]",
+"&fields=name")
+
+httr::GET(url,
+          httr::authenticate("admin",
+                             "district")) %>%
+  httr::content() %>%
+  readr::read_csv() %>%
+  print()
+```
+
+#### Convert other identifiers to uids
+
+It is also possible to look up metadata using a different identifier such as name or code, but the user must specify the look up identifier for their input vector.
+
+```{r}
+getOrgUnits("Bo",
+            by = name)
+
+```
+
+```{r}
+getDataElements("DE_359596",
+                by = code)
+
+```
+
+```{=html}
+<!--
+> Note: The name passed in the function can be written with single quotes (as seen above), with no quotes at all `getOrgUnits(Bo, by = name)`, but not with double quotes.
+
+It seems that neither double quotes nor no quotes works. Single quotes is the only one I tested that worked.
+-->
+```
+#### Working with `getMetadata`
+
+The `getMetadata` function is a more generic but flexible way to look up metadata and their properties. It takes an endpoint (see list in DATIM source column above) and filters as its basic arguments. The main difference between `getMetadata` and other metadata helpers is that `getMetadata` does not require a vector of identifiers as input. This also means that you will not know the exact length of your response. This is disadvantageous for implementation in tidyverse functions like dplyr, but very beneficial if you want the full scope of information in a specific query.
 
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
   "organisationUnitGroups.name:eq:District",
-  "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
-  fields = "id,name,level",
-  d2_session = play233
+  fields = "id,name,level"
 )
 
 head(data)
 ```
 
-This is equivalent to:
+#### Metadata filters
+
+In the above function, the second argument is called a filter. In this case, it filters the list of 'organisationUnits' to only those which are part of the District organization unit group.
+
+To improve the readability of code using `datimutils`, `datimutils` has included its own API comparison infix operators. A full list of `datimutils`' custom api comparison operators can be found at the end of the section. The above and below commands are equivalent.
 
 ```{r}
-# notice the use of non-standard evaluation
+data <- getMetadata(
+  end_point = "organisationUnits",
+  organisationUnitGroups.name %.eq% "District",
+  fields = "id,name,level"
+)
+
+head(data)
+```
+
+If the user is familiar with the technology common in tidyverse, `datimutils` also supports non-standard evaluation so the end_point parameter need not be a string:
+
+```{r}
 data <- getMetadata(
   end_point = organisationUnits,
   organisationUnitGroups.name %.eq% "District",
-  children.id %.in% c("YuQRtpLP10I","fwH9ipvXde9"),
-  fields = "id,name,level",
-  d2_session = play233
+  fields = "id,name,level"
 )
 
 head(data)
 ```
 
-Data is usually returned in its most base class:
+Though the return of these commands includes list columns which may require further processing to be used in an application, `datimutils` does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON which might look like the example below with its own nested elements<!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
+```{=html}
+    {
+    "organisationUnits": [
+        {
+            "lastUpdated": "2014-11-25T09:37:53.212",
+            "id": "vWbkYPRmKyS",
+            "href": "https://play.dhis2.org/2.35.7/api/organisationUnits/vWbkYPRmKyS",
+            "level": 3,
+            "created": "2012-02-17T15:54:39.987",
+            "name": "Baoma",
+            "shortName": "Baoma",
+            "code": "OU_540",
+            "leaf": false,
+            "path": "/ImspTQPwCqd/O6uvpzGd5pu/vWbkYPRmKyS",
+            "displayFormName": "Baoma",
+            "favorite": false,
+            "dimensionItemType": "ORGANISATION_UNIT",
+            "displayName": "Baoma",
+            "displayShortName": "Baoma",
+            "externalAccess": false,
+            "periodOffset": 0,
+            "openingDate": "1970-01-01T00:00:00.000",
+            "dimensionItem": "vWbkYPRmKyS",
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -11.3517,
+                            7.9604
+                        ],
+                        [
+                            -11.3547,
+                            7.9582
+                        ]
+                    ]
+                ]
+            },
+            "parent": {
+                "id": "O6uvpzGd5pu"
+            },
+            "access": {
+                "read": true,
+                "update": true,
+                "externalize": false,
+                "delete": true,
+                "write": true,
+                "manage": true
+            },
+            "children": [
+                {
+                    "id": "ZpE2POxvl9P"
+                },
+                {
+                    "id": "TSyzvBiovKh"
+                }
+            ],
+            "translations": [
+                {
+                    "property": "NAME",
+                    "locale": "en_GB",
+                    "value": "Baoma"
+                },
+                {
+                    "property": "SHORT_NAME",
+                    "locale": "en_GB",
+                    "value": "Baoma"
+                }
+            ],
+            "organisationUnitGroups": [
+                {
+                    "id": "gzcv65VyaGq"
+                }
+            ],
+            "ancestors": [
+                {
+                    "id": "ImspTQPwCqd"
+                },
+                {
+                    "id": "O6uvpzGd5pu"
+                }
+            ],
+            "userGroupAccesses": [
+
+            ],
+            "attributeValues": [
+
+            ],
+            "users": [
+
+            ],
+            "userAccesses": [
+
+            ],
+            "dataSets": [
+                {
+                    "id": "N4fIX1HL3TQ"
+                },
+                {
+                    "id": "V8MHeZHIrcP"
+                }
+            ],
+            "legendSets": [
+
+            ],
+            "programs": [
+
+            ],
+            "favorites": [
+
+            ]
+        }
+    ]
+    }
+```
+
+
+In the case of returning a single column of data, `getMetadata` will try to return a vector as opposed to a data frame:
 ```{r}
 # returns a vector
 data <- getMetadata(
   end_point = "organisationUnitGroups",
-  fields = "name",
-  d2_session = play233
+  fields = "name"
 )
 print(data)
 ```
 
-many different types of calls call be made, here we have two filters passed in as a vector. This call returns a nested data frame
+many different types of calls can be made, below are two filters passed in as a vector. This call returns a nested data frame
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
-  c(
-    "name:like:Baoma",
-    "level:eq:3"
-  ),
-  fields = ":all",
-  d2_session = play233
+  "name:like:Baoma",
+  "level:eq:3",
+  fields = ":all"
 )
 str(data$translations)
 ```
 
-There is a filter format helper for every comparison operator in Datim, here like is used.
+Unnamed function arguments other than the `end_point` are assumed to be metadata filters, so this is equivalent
+
 ```{r}
-data <- getMetadata(
-  end_point = "organisationUnits",
-  name %.Like% "Sierra Leone",
-  d2_session = play233
+data <- getMetadata(organisationUnits,
+                    "name:like:Baoma",
+                    "level:eq:3",
+                    fields = ":all"
 )
+str(data$translations)
 ```
 
-Here is a list of the api comparison operators and their datimutils equivalents:
+There is a filter format helper for every comparison operator in dhis2. These were added to improve readability of code written with datimutils. Again this is equivalent
+
+```{r}
+data <- getMetadata(organisationUnits,
+                    name %.Like%  "Baoma",
+                    level %.eq% 3,
+                    fields = ":all"
+)
+str(data$translations)
+```
+
+Here is a list of the api comparison operators and their `datimutils` equivalents:
 
 ```{r table2, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl <- "
@@ -198,35 +442,46 @@ tabl <- "
 cat(tabl)
 ```
 
-There is a analytics endpoint helper, `getAnalytics`. It takes arguments for dimensions and filters, and can also take any number of additional specifications as the first argument, which will get pasted on the end of the api call made. Here are some examples:
+## Retrieving data using `getAnalytics`
+
+Getting metadata deatils is very useful, but if you are interacting with DATIM from R, you probably want some data too. For this you will use `getAnalytics`. It takes arguments for dimensions and filters which then returns aggregated data (tracker and event data are not currently supported). Here is an example:
 
 ```{r}
-loginToDATIM(config_path = "play34.1.json")
 #Get ANC: Key Coverages
 #this call uses only dimension arguments, dx, ou, and pe
-data <- getAnalytics("displayProperty=NAME",
-dx = c("Uvn6LCg7dVU","OdiHJayrsKo","sB79w2hiLp8"), pe = c("THIS_YEAR"),
-ou = c("ImspTQPwCqd"), d2_session = play2341)
-
-head(data)
-
-#Get Infrastructure: Public facilities 2014 and 2013
-#this call uses a filter ou argument, which are followed by _f
-data <- getAnalytics("displayProperty=NAME",
-dx = c("v27b2y9kKh7","vEBapQFZ1AA","DwEVHQvMnDZ"), pe = c("THIS_YEAR"),
-ou_f = c("ImspTQPwCqd"), d2_session = play2341)
+data <- datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
+                                 ou = "O6uvpzGd5pu",
+                                 pe = "LAST_12_MONTHS",
+                                 return_names = TRUE)
 
 head(data)
 ```
 
-To use `getAnalytics` you can pass in the uids into their respective arguments and will be formatted correctly, but there are also two operators which can format strings for use in analytics api calls.
+### Anatomy of an analytics call
+
+A simple `getAnalytics` call uses three main parameters dx, ou, and pe. The parameter 'dx' is used to specify the data element or indicator, 'ou' is used to specify the organisation units, and 'pe' is used to specify the period.
+
+In this sample case, the data element passed was the uuid for 'ANC 1 Coverage,' The organisation unit passed was the uuid for 'Bo,' and the period was the last 12 months.
+
+### Dimensions vs filters
+
+Adding '\_f' to the end of a parameter in `getAnalytics` turns it from a dimension into a filter ('ou' to 'ou_f'). Because of this change, the following commands look similar, but have one key difference.
+
+In the first command, because the 'ou' argument is a *dimension*, the `getAnalytics` function queries each of the uuids in the array individually, meaning that the organisation unit appears as a column in the resulting dataframe. In the second command, because the 'ou_f' argument is a *filter*, the `getAnalytics` aggregates data from the array of uuids as a whole and does not include the organisation unit as a column in the resulting dataframe.
 
 ```{r}
-a %.d% c("123","456")
-a %.f% c("123","456")
+datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
+                         ou = c("O6uvpzGd5pu", "fdc6uOvgoji"),
+                         pe = "LAST_12_MONTHS",
+                         return_names = TRUE)
+
+datimutils::getAnalytics(dx = "Uvn6LCg7dVU",
+                         ou_f = c("O6uvpzGd5pu", "fdc6uOvgoji"),
+                         pe = "LAST_12_MONTHS",
+                         return_names = TRUE)
+
 ```
 
-
-```{r, include=FALSE}
-end_vignette()
+```{r, include = FALSE}
+httptest::end_vignette()
 ```
