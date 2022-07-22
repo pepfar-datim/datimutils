@@ -13,15 +13,18 @@ getDataValueSets(
 )
 }
 \arguments{
-\item{d2_session}{R6 datimutils object which handles authentication with DATIM}
+\item{d2_session}{R6 datimutils object which handles authentication
+with DATIM}
 
 \item{retry}{number of times to retry}
 
 \item{timeout}{number of seconds to wait during call}
 
-\item{keys}{character vector - data value set parameter keys (e.g. "dataSet", "period")}
+\item{keys}{character vector - data value set parameter keys
+(e.g. "dataSet", "period")}
 
-\item{values}{character vector - values marching the key from keys (e.g. "Abcde123456", "2019Q1"}
+\item{values}{character vector - values marching the key from keys
+(e.g. "Abcde123456", "2019Q1"}
 }
 \value{
 Data frame with the data requested
