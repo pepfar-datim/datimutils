@@ -1,7 +1,16 @@
-^datimutils\.Rproj$
+^renv$
+^renv\.lock$
+^.*\.Rproj$
 ^\.Rproj\.user$
+^\.Rprofile$
 ^\.travis\.yml$
 ^codecov\.yml$
+^\.circleci$
+^\.lintr$
+^NEWS\.md$
+^\.git$
 ^doc$
 ^Meta$
 ^\.idea$
+^data-raw$
+^.*mechs\.rds$

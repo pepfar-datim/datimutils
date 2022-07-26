@@ -23,12 +23,11 @@ duplicateResponse <- function(resp, expand, by) {
 #' @return a list with the splits
 #'
 
-.splitUrlComponent <- function(values, limit){
+.splitUrlComponent <- function(values, limit) {
     values_list <- list()
     times_to_split <- ceiling(sum(nchar(values)) / limit) + 1
     seq_to_use <- ceiling(seq(1, length(values), length = times_to_split))
-    for (i in seq_along(seq_to_use))
-    {
+    for (i in seq_along(seq_to_use)) {
       if (i == 1) {
         values_list[[i]] <- values[seq_to_use[i]:seq_to_use[i + 1]]
       } else if (i != length(seq_to_use)) {
@@ -47,62 +46,63 @@ duplicateResponse <- function(resp, expand, by) {
 #' @param by - what to filter by, i.e. id or name, default is id
 #' @param fields - the fields, which can come in any formt as long as all
 #' components are present
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry the number of times to try the call
 #' @param verbose return raw content with data
 #' @return the metadata response in json format and flattened
 #' @usage
 #'
-#' .getMetadataEndpoint(end_point, values, by, fields, base_url, retry, verbose)
+#' .getMetadataEndpoint(end_point, values, by, fields, d2_session, retry, verbose)
 #'
-#' getCategories(values, by, fields, base_url, retry, verbose)
+#' getCategories(values, by, fields, d2_session, retry, verbose)
 #'
-#' getCatCombos(values, by, fields, base_url, retry, verbose)
+#' getCatCombos(values, by, fields, d2_session, retry, verbose)
 #'
-#' getCatOptionCombos(values, by, fields, base_url, retry, verbose)
+#' getCatOptionCombos(values, by, fields, d2_session, retry, verbose)
 #'
-#' getCatOptionGroupSets(values, by, fields, base_url, retry, verbose)
+#' getCatOptionGroupSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getCatOptionGroups(values, by, fields, base_url, retry, verbose)
+#' getCatOptionGroups(values, by, fields, d2_session, retry, verbose)
 #'
-#' getCatOptions(values, by, fields, base_url, retry, verbose)
+#' getCatOptions(values, by, fields, d2_session, retry, verbose)
 #'
-#' getDataElementGroupSets(values, by, fields, base_url, retry, verbose)
+#' getDataElementGroupSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getDataElementGroups(values, by, fields, base_url, retry, verbose)
+#' getDataElementGroups(values, by, fields, d2_session, retry, verbose)
 #'
-#' getDataElements(values, by, fields, base_url, retry, verbose)
+#' getDataElements(values, by, fields, d2_session, retry, verbose)
 #'
-#' getDataSets(values, by, fields, base_url, retry, verbose)
+#' getDataSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getIndicatorGroupSets(values, by, fields, base_url, retry, verbose)
+#' getIndicatorGroupSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getIndicatorGroups(values, by, fields, base_url, retry, verbose)
+#' getIndicatorGroups(values, by, fields, d2_session, retry, verbose)
 #'
-#' getIndicators(values, by, fields, base_url, retry, verbose)
+#' getIndicators(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOptionGroupSets(values, by, fields, base_url, retry, verbose)
+#' getOptionGroupSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOptionGroups(values, by, fields, base_url, retry, verbose)
+#' getOptionGroups(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOptionSets(values, by, fields, base_url, retry, verbose)
+#' getOptionSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOptions(values, by, fields, base_url, retry, verbose)
+#' getOptions(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOrgUnitGroupSets(values, by, fields, base_url, retry, verbose)
+#' getOrgUnitGroupSets(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOrgUnitGroups(values, by, fields, base_url, retry, verbose)
+#' getOrgUnitGroups(values, by, fields, d2_session, retry, verbose)
 #'
-#' getOrgUnits(values, by, fields, base_url, retry, verbose)
+#' getOrgUnits(values, by, fields, d2_session, retry, verbose)
 #'
-#' getDimensions(values, by, fields, base_url, retry, verbose)
+#' getDimensions(values, by, fields, d2_session, retry, verbose)
 #'
 .getMetadataEndpoint <- function(end_point, values,
                                  by = "id",
                                  fields = NULL,
-                                 base_url = getOption("baseurl"), retry = 1,
-                                 verbose = F) {
-  see <- try(stringr::str_extract_all(fields, "\\[[^()]+\\]")[[1]], silent = T)
+                                 d2_session = dynGet("d2_default_session", inherits = TRUE), retry = 1,
+                                 verbose = FALSE) {
+  see <- try(stringi::stri_extract_all_regex(fields, "\\[[^()]+\\]")[[1]], silent = TRUE)
 
   name_reduce <- NULL
 
@@ -110,18 +110,20 @@ duplicateResponse <- function(resp, expand, by) {
     c(by, "name", "id")
   } else if (!(any(grepl("name", fields)))) {
     c(by, fields, "name")
-  } else if (length(see) != 0 & class(see) != "try-error") {
-    if (grepl("name", see) & 
-        !(grepl("name", 
-                gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)), 
-                     "", 
+  } else if (length(see) != 0 && class(see) != "try-error") {
+    if (grepl("name", see) &&
+        !(grepl("name",
+                gsub(gsub("\\]", "\\\\]", gsub("\\[", "\\\\[", see)),
+                     "",
                      fields)))) {
       c(by, fields, "name")
-    } else {fields}
+    } else {
+      fields
+    }
   } else {
     fields
   }
-  default_fields <- stringr::str_remove_all(default_fields, " ")
+  default_fields <- stringi::stri_replace_all_fixed(default_fields, " ", "")
   default_fields <- unique(default_fields)
   # by parameter restricted to being an identifiable property
   # as defined in DHIS2 docs
@@ -133,7 +135,7 @@ duplicateResponse <- function(resp, expand, by) {
     )
   }
 
-  if ((by == "name" & is.null(fields))) {
+  if ((by == "name" && is.null(fields))) {
     name_reduce <- "id"
   } else if (is.null(fields)) {
     name_reduce <- "name"
@@ -159,15 +161,13 @@ duplicateResponse <- function(resp, expand, by) {
     })
 
     # call getMetadata multiple times
-   data_list <-  lapply(filters, function(x) {getMetadata(
-        end_point = !!end_point,
-        base_url = base_url,
-        x,
-        fields = default_fields, retry = retry, verbose = verbose
-      ) } )
-
-
-
+   data_list <-  lapply(filters, function(x) {
+     getMetadata(
+       end_point = !!end_point,
+       d2_session = d2_session,
+       x,
+       fields = default_fields, retry = retry, verbose = verbose
+     )})
 
     # bind the responses
     if(verbose){
@@ -190,21 +190,19 @@ duplicateResponse <- function(resp, expand, by) {
     # call getMetadataa single time
     data <- getMetadata(
       end_point = !!end_point,
-      base_url = base_url,
+      d2_session = d2_session,
       filters,
       fields = default_fields, retry = retry, verbose = verbose
     )
   }
 
-  if(verbose)
-  {
+  if (verbose) {
     meta_data <- data$api_responses
     data <- data$data
-
   }
 
   #return NULL if there is nothing to return
-  length_response <- try(length(data[[1]]), silent = T)
+  length_response <- try(length(data[[1]]), silent = TRUE)
   if (length_response == 0) {
     return(NULL)
   }
@@ -214,7 +212,7 @@ duplicateResponse <- function(resp, expand, by) {
 
   #reduce fields returned
   if (!(is.null(name_reduce)) && class(data) %in% "data.frame") {
-    potential_data <- try(data[, name_reduce], silent = T)
+    potential_data <- try(data[, name_reduce], silent = TRUE)
     if (!(class(potential_data) == "try-error")) {
       data <- potential_data
     }
@@ -238,13 +236,16 @@ duplicateResponse <- function(resp, expand, by) {
 getCategories <- function(values,
                           by = "id",
                           fields = NULL,
-                          base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                          d2_session = dynGet("d2_default_session", inherits = TRUE),
+                          retry = 1,
+                          verbose = FALSE) {
   .getMetadataEndpoint("categories",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
-  )
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose)
 }
 
 #' @export
@@ -252,12 +253,16 @@ getCategories <- function(values,
 getCatCombos <- function(values,
                          by = "id",
                          fields = NULL,
-                         base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                         d2_session = dynGet("d2_default_session", inherits = TRUE),
+                         retry = 1,
+                         verbose = FALSE) {
   .getMetadataEndpoint("categoryCombos",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -266,12 +271,16 @@ getCatCombos <- function(values,
 getCatOptionCombos <- function(values,
                                by = "id",
                                fields = NULL,
-                               base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                               d2_session = dynGet("d2_default_session", inherits = TRUE),
+                               retry = 1,
+                               verbose = FALSE) {
   .getMetadataEndpoint("categoryOptionCombos",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -280,12 +289,16 @@ getCatOptionCombos <- function(values,
 getCatOptionGroupSets <- function(values,
                                   by = "id",
                                   fields = NULL,
-                                  base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                                  d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                  retry = 1,
+                                  verbose = FALSE) {
   .getMetadataEndpoint("categoryOptionGroupSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -294,12 +307,16 @@ getCatOptionGroupSets <- function(values,
 getCatOptionGroups <- function(values,
                                by = "id",
                                fields = NULL,
-                               base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                               d2_session = dynGet("d2_default_session", inherits = TRUE),
+                               retry = 1,
+                               verbose = FALSE) {
   .getMetadataEndpoint("categoryOptionGroups",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -308,12 +325,16 @@ getCatOptionGroups <- function(values,
 getCatOptions <- function(values,
                           by = "id",
                           fields = NULL,
-                          base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                          d2_session = dynGet("d2_default_session", inherits = TRUE),
+                          retry = 1,
+                          verbose = FALSE) {
   .getMetadataEndpoint("categoryOptions",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -322,12 +343,16 @@ getCatOptions <- function(values,
 getDataElementGroupSets <- function(values,
                                     by = "id",
                                     fields = NULL,
-                                    base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                                    d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                    retry = 1,
+                                    verbose = FALSE) {
   .getMetadataEndpoint("dataElementGroupSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -336,12 +361,16 @@ getDataElementGroupSets <- function(values,
 getDataElementGroups <- function(values,
                                  by = "id",
                                  fields = NULL,
-                                 base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                                 d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                 retry = 1,
+                                 verbose = FALSE) {
   .getMetadataEndpoint("dataElementGroups",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -350,12 +379,16 @@ getDataElementGroups <- function(values,
 getDataElements <- function(values,
                             by = "id",
                             fields = NULL,
-                            base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                            d2_session = dynGet("d2_default_session", inherits = TRUE),
+                            retry = 1,
+                            verbose = FALSE) {
   .getMetadataEndpoint("dataElements",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -364,12 +397,34 @@ getDataElements <- function(values,
 getDataSets <- function(values,
                         by = "id",
                         fields = NULL,
-                        base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                        d2_session = dynGet("d2_default_session", inherits = TRUE),
+                        retry = 1,
+                        verbose = FALSE) {
   .getMetadataEndpoint("dataSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
+  )
+}
+
+#' @export
+#' @rdname dot-getMetadataEndpoint
+getUserGroups <- function(values,
+                        by = "id",
+                        fields = NULL,
+                        d2_session = dynGet("d2_default_session", inherits = TRUE),
+                        retry = 1,
+                        verbose = FALSE) {
+  .getMetadataEndpoint("userGroups",
+                       values = values,
+                       by = as.character(rlang::ensym(by)),
+                       fields = fields,
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -378,12 +433,16 @@ getDataSets <- function(values,
 getIndicatorGroupSets <- function(values,
                                   by = "id",
                                   fields = NULL,
-                                  base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                                  d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                  retry = 1,
+                                  verbose = FALSE) {
   .getMetadataEndpoint("indicatorGroupSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -392,12 +451,16 @@ getIndicatorGroupSets <- function(values,
 getIndicatorGroups <- function(values,
                                by = "id",
                                fields = NULL,
-                               base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                               d2_session = dynGet("d2_default_session", inherits = TRUE),
+                               retry = 1,
+                               verbose = FALSE) {
   .getMetadataEndpoint("indicatorGroups",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -406,12 +469,16 @@ getIndicatorGroups <- function(values,
 getIndicators <- function(values,
                           by = "id",
                           fields = NULL,
-                          base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                          d2_session = dynGet("d2_default_session", inherits = TRUE),
+                          retry = 1,
+                          verbose = FALSE) {
   .getMetadataEndpoint("indicators",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -420,12 +487,16 @@ getIndicators <- function(values,
 getOptionGroupSets <- function(values,
                                by = "id",
                                fields = NULL,
-                               base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                               d2_session = dynGet("d2_default_session", inherits = TRUE),
+                               retry = 1,
+                               verbose = FALSE) {
   .getMetadataEndpoint("optionGroupSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -434,12 +505,16 @@ getOptionGroupSets <- function(values,
 getOptionGroups <- function(values,
                             by = "id",
                             fields = NULL,
-                            base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                            d2_session = dynGet("d2_default_session", inherits = TRUE),
+                            retry = 1,
+                            verbose = FALSE) {
   .getMetadataEndpoint("optionGroups",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -448,12 +523,16 @@ getOptionGroups <- function(values,
 getOptionSets <- function(values,
                           by = "id",
                           fields = NULL,
-                          base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                          d2_session = dynGet("d2_default_session", inherits = TRUE),
+                          retry = 1,
+                          verbose = FALSE) {
   .getMetadataEndpoint("optionSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -462,12 +541,16 @@ getOptionSets <- function(values,
 getOptions <- function(values,
                        by = "id",
                        fields = NULL,
-                       base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                       d2_session = dynGet("d2_default_session", inherits = TRUE),
+                       retry = 1,
+                       verbose = FALSE) {
   .getMetadataEndpoint("options",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -476,12 +559,16 @@ getOptions <- function(values,
 getOrgUnitGroupSets <- function(values,
                                 by = "id",
                                 fields = NULL,
-                                base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                                d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                retry = 1,
+                                verbose = FALSE) {
   .getMetadataEndpoint("organisationUnitGroupSets",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -490,12 +577,16 @@ getOrgUnitGroupSets <- function(values,
 getOrgUnitGroups <- function(values,
                              by = "id",
                              fields = NULL,
-                             base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                             d2_session = dynGet("d2_default_session", inherits = TRUE),
+                             retry = 1,
+                             verbose = FALSE) {
   .getMetadataEndpoint("organisationUnitGroups",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -504,12 +595,16 @@ getOrgUnitGroups <- function(values,
 getOrgUnits <- function(values,
                         by = "id",
                         fields = NULL,
-                        base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                        d2_session = dynGet("d2_default_session", inherits = TRUE),
+                        retry = 1,
+                        verbose = FALSE) {
   .getMetadataEndpoint("organisationUnits",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }
 
@@ -518,11 +613,15 @@ getOrgUnits <- function(values,
 getDimensions <- function(values,
                           by = "id",
                           fields = NULL,
-                          base_url = getOption("baseurl"), retry = 1, verbose = F) {
+                          d2_session = dynGet("d2_default_session", inherits = TRUE),
+                          retry = 1,
+                          verbose = FALSE) {
   .getMetadataEndpoint("dimensions",
                        values = values,
                        by = as.character(rlang::ensym(by)),
                        fields = fields,
-                       base_url = base_url, retry = retry, verbose = verbose
+                       d2_session = d2_session,
+                       retry = retry,
+                       verbose = verbose
   )
 }

@@ -17,7 +17,8 @@
 #' @param ao dimensions ao
 #' @param ao_f filters ao
 #' @param return_names FALSE for uids, TRUE for names
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry retry
 #' @param verbose return raw content with data
 #' @return data frame with the rows of the response
@@ -28,43 +29,59 @@ getAnalytics <-  function(...,
                           ou = NULL, ou_f = NULL,
                           co = NULL, co_f = NULL,
                           ao = NULL, ao_f = NULL,
-                          return_names = F,
-                          base_url = getOption("baseurl"),
-                          retry = 1, verbose = F){
+                          return_names = FALSE,
+                          d2_session = dynGet("d2_default_session", inherits = TRUE),
+                          retry = 1,
+                          timeout = 60,
+                          verbose = FALSE) {
+
+  # cap time out at 5 minutes
+  if (timeout > 300) {
+    stop("Timeout must be 5 minutes or less, please change the timeout parameter!")
+  }
+
   #variable set up
-  dx <- .dForm(dx, id = "dx");dx_f <- .fForm(dx_f, id = "dx")
-  pe <- .dForm(pe, id = "pe");pe_f <- .fForm(pe_f, id = "pe")
-  ou <- .dForm(ou, id = "ou");ou_f <- .fForm(ou_f, id = "ou")
-  co <- .dForm(co, id = "co");co_f <- .fForm(co_f, id = "co")
-  ao <- .dForm(ao, id = "ao");ao_f <- .fForm(ao_f, id = "ao")
+  dx <- .dForm(dx, id = "dx")
+  pe <- .dForm(pe, id = "pe")
+  ou <- .dForm(ou, id = "ou")
+  co <- .dForm(co, id = "co")
+  ao <- .dForm(ao, id = "ao")
+  dx_f <- .fForm(dx_f, id = "dx")
+  pe_f <- .fForm(pe_f, id = "pe")
+  ou_f <- .fForm(ou_f, id = "ou")
+  co_f <- .fForm(co_f, id = "co")
+  ao_f <- .fForm(ao_f, id = "ao")
 
   #process ...
   end_point <- "analytics?"
   ends <- unlist(list(...))
-  z <- names(sapply(ends,names))
+  z <- names(sapply(ends, names))
   z <- ifelse(z == ends, "", z)
-  ends <- unname(mapply(function(x,y) if(nchar(x) != 0){ paste0(x, "=", y)} else{y}, z, ends))
+  ends <- unname(mapply(function(x, y) if(nchar(x) != 0){ paste0(x, "=", y) } else {y}, z, ends)) #nolint
   ends <- paste0(ends, collapse = "&")
 
   #decide return type
-  return_type <- if(return_names){"NAME"} else{"UID"}
+  return_type <- if (return_names) {"NAME"} else {"UID"} #nolint
 
   #collapse everything and form path
   path <- paste0(end_point,
-                 stringr::str_c(dx,pe,ou,co,ao,
-                                dx_f,pe_f,ou_f,co_f,ao_f,
-                                ends,
-                                paste0("outputIdScheme=",
-                                       return_type),
-                                sep = "&"))
+                 stringi::stri_c(dx, pe, ou, co, ao,
+                                 dx_f, pe_f, ou_f, co_f, ao_f,
+                                 ends,
+                                 paste0("outputIdScheme=",
+                                        return_type),
+                                 sep = "&",
+                                 ignore_null = TRUE))
 
   #make 2 or more consecutive & into single &
-  path <- gsub("[&]{2,}","&", path)
+  path <- gsub("[&]{2,}", "&", path)
 
   #call api
   resp <- api_get(path = path,
-                  base_url = base_url,
-                  retry = retry, verbose = verbose)
+                  d2_session = d2_session,
+                  retry = retry,
+                  timeout = timeout,
+                  verbose = verbose)
 
     if(verbose)
   {
@@ -72,7 +89,7 @@ getAnalytics <-  function(...,
     resp <- resp$data
   }
 
-  if(NROW(resp$rows) == 0){
+  if (NROW(resp$rows) == 0) {
     return(NULL)
   }
   #collect data types
@@ -82,7 +99,7 @@ getAnalytics <-  function(...,
   #collect column names
   col_names <- resp$headers$column
   #get data
-  resp <- as.data.frame(resp$rows, stringsAsFactors = F)
+  resp <- as.data.frame(resp$rows, stringsAsFactors = FALSE)
   #change column names
   colnames(resp) <- col_names
 
@@ -94,10 +111,12 @@ getAnalytics <-  function(...,
   #resp <- as.data.frame(resp, stringsAsFactors = F)
 
   #change data types to numeric where possible
-  resp[,coercions == "NUMBER"] <- sapply(resp[,coercions == "NUMBER"], as.numeric)
- if(verbose)
-  {return(list("data" = resp, "api_responses" = meta_data)) } else{
-  return(resp)}
+  resp[, coercions == "NUMBER"] <- sapply(resp[, coercions == "NUMBER"], as.numeric)
+  if (verbose) {
+    return(list("data" = resp, "api_responses" = meta_data))
+  } else {
+    return(resp)
+  }
 }
 
 
@@ -107,17 +126,16 @@ getAnalytics <-  function(...,
 #' @param id id
 #' @return formatted dimensions
 
-.dForm <- function(..., id = NULL){
-  if(missing(...)|is.null(...)){
+.dForm <- function(..., id = NULL) {
+  if (missing(...) || is.null(...)) {
     return(NULL)
   }
   values <- list(...)
-  if(values[[1]][1] == "all")
-  {
+  if (values[[1]][1] == "all") {
     return(paste0("dimension=", id))
   }
   values <- lapply(values, function(x) paste0(x, collapse = ";"))
-  values <- mapply(function(x,y) paste0("dimension=", y, ":", x), values, id)
+  values <- mapply(function(x, y) paste0("dimension=", y, ":", x), values, id)
   return(paste0(unlist(values), collapse = "&"))
 }
 
@@ -129,13 +147,13 @@ getAnalytics <-  function(...,
 #' @param id id
 #' @return formatted filters
 
-.fForm <- function(..., id = NULL){
-  if(missing(...)|is.null(...)){
+.fForm <- function(..., id = NULL) {
+  if (missing(...) || is.null(...)) {
     return(NULL)
   }
   values <- list(...)
   values <- lapply(values, function(x) paste0(x, collapse = ";"))
-  values <- mapply(function(x,y) paste0("filter=", y, ":", x), values, id)
+  values <- mapply(function(x, y) paste0("filter=", y, ":", x), values, id)
   return(paste0(unlist(values), collapse = "&"))
 }
 
@@ -158,7 +176,7 @@ getAnalytics <-  function(...,
 
     values <- paste0(values, collapse = ";")
 
-  if(values == "all") {
+  if (values == "all") {
     return(paste0(property, "=", operator))
   }
 

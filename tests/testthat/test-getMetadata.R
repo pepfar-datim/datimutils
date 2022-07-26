@@ -128,9 +128,9 @@ test_that("Error handling ", {
   testthat::expect_error(
     getMetadata(indicators,
                 fields = list(a = c("a", "a")),
-                base_url = "https://play.dhis2.org/2.33/"))
+                d2_session = play233))
   testthat::expect_error(
-    getMetadata(base_url = "https://play.dhis2.org/2.33/"))
+    getMetadata(d2_session = play233))
 })
 
 with_mock_api({
@@ -142,11 +142,11 @@ with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/dataElements.json?",
 #   "paging=false&filter=id:in:[FTRrcoaog83]&fields=name,id")))
-  
+
     data <- getMetadata(
       end_point = "dataElements",
       id %.eq% "FTRrcoaog83",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     # data <- data[["dataElements"]]
     testthat::expect_s3_class(data, "data.frame")
@@ -157,13 +157,13 @@ with_mock_api({
                      getMetadata(
                        end_point = "dataElements",
                        id %.in% "FTRrcoaog83",
-                       base_url = "https://play.dhis2.org/2.33/"
+                       d2_session = play233
                      ))
     rm(data)
   })
-  
+
   test_that("getMetadata can handle operator of null, !null, empty, : ", {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/indicators.json?",
 #   "paging=false&filter=code:null&fields=name,id")))
@@ -185,21 +185,21 @@ with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/indicators.json?",
 #   "paging=false&filter=legendSets:empty:NA&fields=name,id")))
-    
+
     data <- getMetadata(end_point = "indicators",
                         "code:null",
-                        base_url = "https://play.dhis2.org/2.33/")
+                        d2_session = play233)
     testthat::expect_equal(NROW(data), 39)
     rm(data)
     data <- getMetadata(end_point = "indicators",
                         "code:!null:",
-                        base_url = "https://play.dhis2.org/2.33/")
+                        d2_session = play233)
     testthat::expect_named(data, c("name", "id"))
     testthat::expect_equal(NROW(data), 38)
     rm(data)
     data <- getMetadata(end_point = "indicators",
                         "legendSets:empty",
-                        base_url = "https://play.dhis2.org/2.33/")
+                        d2_session = play233)
     testthat::expect_equal(NROW(data), 59)
     rm(data)
   })
@@ -213,7 +213,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:eq:gtuVl6NbXQV",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = "items[name,id]"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -229,7 +229,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:eq:gtuVl6NbXQV",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = "name,id,items[name,id]"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -247,11 +247,11 @@ with_mock_api({
 #        "paging=false&filter=id:eq:gtuVl6NbXQV",
 #        "&fields=id,items[name]"
 # )))
-    
+
     data <- getMetadata(
       end_point = "dimensions",
       "id:eq:gtuVl6NbXQV",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = "id,items[name]"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -260,8 +260,8 @@ with_mock_api({
     data <- tidyr::unnest(data, cols = items, names_sep = ".")
     testthat::expect_named(data, c("id", "items.name"))
     testthat::expect_equal(NROW(data), 3)
-    rm(data)    
-    
+    rm(data)
+
     # paste0("List Columns: ",
     #        "https://play.dhis2.org/2.33/api/dimensions.json?",
     #        "paging=false&filter=id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
@@ -270,7 +270,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = "items[name,id]"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -286,7 +286,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = "name,id,items[:all]"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -299,7 +299,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "indicators",
       "code:in:[IN_52462,IN_52486]",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = ":all"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -317,7 +317,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       id %.in% c("yY2bQYqNt0o", "gtuVl6NbXQV"),
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       fields = "name,id,code"
     )
     testthat::expect_s3_class(data, "data.frame")
@@ -334,26 +334,26 @@ with_mock_api({
 
     data <- getMetadata(
       end_point = "organisationUnitGroups",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     # data <- data[["organisationUnitGroups"]]
     testthat::expect_equal(NROW(data), 18)
     rm(data)
   })
-  
+
   test_that("as_vector parameter works: ", {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&fields=name")))
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroupSets.json?",
 #   "paging=false&fields=organisationUnitGroups[name]")))
-    
+
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       fields = "name",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     data2 <- getMetadata(
       end_point = "organisationUnitGroups",
@@ -365,22 +365,22 @@ with_mock_api({
     testthat::expect_named(data, NULL)
     testthat::expect_named(data2$data, NULL)
     rm(data)
-    
+
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       fields = "name",
       as_vector = FALSE,
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_equal(NROW(data), 18)
     testthat::expect_named(data, c("name"))
     rm(data)
-    
+
     data <- getMetadata(
       end_point = "organisationUnitGroupSets",
       fields = "organisationUnitGroups[name]",
-      base_url = "https://play.dhis2.org/2.33/")
-    
+      d2_session = play233)
+
     testthat::expect_equal(NROW(data), 15)
     testthat::expect_named(data, NULL)
     rm(data)
@@ -397,11 +397,11 @@ with_mock_api({
       end_point = "organisationUnits",
       organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
       fields = "id,name,level,ancestors[id,name]",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     # data <- data[["organisationUnits"]]
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_named(data, c("level", "name", 
+    testthat::expect_named(data, c("level", "name",
                                    "id", "ancestors"))
     rm(data)
   })
@@ -415,14 +415,14 @@ with_mock_api({
     "&fields=id,name,level,ancestors[id,name]"
   ), {
     # filters sent as list
-    data <- getMetadata(end_point="organisationUnits",c(
+    data <- getMetadata(end_point = "organisationUnits", c(
         "organisationUnitGroups.name:eq:District",
         "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"),
       fields = "id,name,level,ancestors[id,name]",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_equal(NROW(data), 2)
-    testthat::expect_named(data, c("level", "name", 
+    testthat::expect_named(data, c("level", "name",
                                    "id", "ancestors"))
     rm(data)
     # filters sent as ...
@@ -431,10 +431,10 @@ with_mock_api({
       "organisationUnitGroups.name:eq:District",
       "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
       fields = "id,name,level,ancestors[id,name]",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_equal(NROW(data), 2)
-    testthat::expect_named(data, c("level", "name", 
+    testthat::expect_named(data, c("level", "name",
                                    "id", "ancestors"))
     rm(data)
   })
@@ -448,7 +448,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = organisationUnits,
       name %.Like% "Baoma",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_equal(NROW(data), 10)
     rm(data)
@@ -463,7 +463,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = "organisationUnits",
       name %.Like% "Sierra Leone",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
 
     testthat::expect_equal(NROW(data), 1)
@@ -484,12 +484,12 @@ with_mock_api({
         "level:eq:3"
       ),
       fields = ":all",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
-    
+
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_equal(NCOL(data), 38)
-    
+
     rm(data)
   })
 
@@ -503,7 +503,7 @@ with_mock_api({
       end_point = "indicators",
       "id:eq:ReUHfIn0pTQ",
       fields = "name,id,numerator,denominator",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
 
     testthat::expect_equal(NROW(data), 1)
@@ -514,13 +514,14 @@ with_mock_api({
   })
 
  #httr::content(httr::GET(paste0(
-  #"https://play.dhis2.org/2.33/api/organisationUnits.json?paging=false&filter=organisationUnitGroups.id:eq:RpbiCJpIYEj&fields=id")))
+  #"https://play.dhis2.org/2.33/api/organisationUnits.json?",
+  #"paging=false&filter=organisationUnitGroups.id:eq:RpbiCJpIYEj&fields=id")))
   test_that("Return atomic response", {
  data <- getMetadata(
       end_point = "organisationUnits",
       organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
       fields = "id",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_identical(data, "ImspTQPwCqd")
     rm(data)

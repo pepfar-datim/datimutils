@@ -26,6 +26,7 @@ Icon
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
+.Rprofile
 
 # Directories potentially created on remote AFP share
 .AppleDB
@@ -157,3 +158,6 @@ fabric.properties
 .idea/rpackages.xml
 .idea/vcs.xml
 R/scratch.R
+
+#Renv local packages
+renv/

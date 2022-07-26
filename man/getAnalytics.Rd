@@ -16,10 +16,11 @@ getAnalytics(
   co_f = NULL,
   ao = NULL,
   ao_f = NULL,
-  return_names = F,
-  base_url = getOption("baseurl"),
+  return_names = FALSE,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  timeout = 60,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -51,7 +52,8 @@ list(startDate = "2018-01-01", endDate = "2018-06-01")]}
 
 \item{return_names}{FALSE for uids, TRUE for names}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{retry}
 

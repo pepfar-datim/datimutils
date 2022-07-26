@@ -12,6 +12,7 @@
 \alias{getDataElementGroups}
 \alias{getDataElements}
 \alias{getDataSets}
+\alias{getUserGroups}
 \alias{getIndicatorGroupSets}
 \alias{getIndicatorGroups}
 \alias{getIndicators}
@@ -25,237 +26,246 @@
 \alias{getDimensions}
 \title{getMetadataEndpoint}
 \usage{
-.getMetadataEndpoint(end_point, values, by, fields, base_url, retry, verbose)
+.getMetadataEndpoint(end_point, values, by, fields, d2_session, retry, verbose)
 
-getCategories(values, by, fields, base_url, retry, verbose)
+getCategories(values, by, fields, d2_session, retry, verbose)
 
-getCatCombos(values, by, fields, base_url, retry, verbose)
+getCatCombos(values, by, fields, d2_session, retry, verbose)
 
-getCatOptionCombos(values, by, fields, base_url, retry, verbose)
+getCatOptionCombos(values, by, fields, d2_session, retry, verbose)
 
-getCatOptionGroupSets(values, by, fields, base_url, retry, verbose)
+getCatOptionGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getCatOptionGroups(values, by, fields, base_url, retry, verbose)
+getCatOptionGroups(values, by, fields, d2_session, retry, verbose)
 
-getCatOptions(values, by, fields, base_url, retry, verbose)
+getCatOptions(values, by, fields, d2_session, retry, verbose)
 
-getDataElementGroupSets(values, by, fields, base_url, retry, verbose)
+getDataElementGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getDataElementGroups(values, by, fields, base_url, retry, verbose)
+getDataElementGroups(values, by, fields, d2_session, retry, verbose)
 
-getDataElements(values, by, fields, base_url, retry, verbose)
+getDataElements(values, by, fields, d2_session, retry, verbose)
 
-getDataSets(values, by, fields, base_url, retry, verbose)
+getDataSets(values, by, fields, d2_session, retry, verbose)
 
-getIndicatorGroupSets(values, by, fields, base_url, retry, verbose)
+getIndicatorGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getIndicatorGroups(values, by, fields, base_url, retry, verbose)
+getIndicatorGroups(values, by, fields, d2_session, retry, verbose)
 
-getIndicators(values, by, fields, base_url, retry, verbose)
+getIndicators(values, by, fields, d2_session, retry, verbose)
 
-getOptionGroupSets(values, by, fields, base_url, retry, verbose)
+getOptionGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getOptionGroups(values, by, fields, base_url, retry, verbose)
+getOptionGroups(values, by, fields, d2_session, retry, verbose)
 
-getOptionSets(values, by, fields, base_url, retry, verbose)
+getOptionSets(values, by, fields, d2_session, retry, verbose)
 
-getOptions(values, by, fields, base_url, retry, verbose)
+getOptions(values, by, fields, d2_session, retry, verbose)
 
-getOrgUnitGroupSets(values, by, fields, base_url, retry, verbose)
+getOrgUnitGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getOrgUnitGroups(values, by, fields, base_url, retry, verbose)
+getOrgUnitGroups(values, by, fields, d2_session, retry, verbose)
 
-getOrgUnits(values, by, fields, base_url, retry, verbose)
+getOrgUnits(values, by, fields, d2_session, retry, verbose)
 
-getDimensions(values, by, fields, base_url, retry, verbose)
+getDimensions(values, by, fields, d2_session, retry, verbose)
 
 getCategories(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getCatCombos(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getCatOptionCombos(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getCatOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getCatOptionGroups(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getCatOptions(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getDataElementGroupSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getDataElementGroups(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getDataElements(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getDataSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
+)
+
+getUserGroups(
+  values,
+  by = "id",
+  fields = NULL,
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
+  retry = 1,
+  verbose = FALSE
 )
 
 getIndicatorGroupSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getIndicatorGroups(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getIndicators(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOptionGroupSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOptionGroups(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOptionSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOptions(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOrgUnitGroupSets(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOrgUnitGroups(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getOrgUnits(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 
 getDimensions(
   values,
   by = "id",
   fields = NULL,
-  base_url = getOption("baseurl"),
+  d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = F
+  verbose = FALSE
 )
 }
 \arguments{
@@ -269,7 +279,8 @@ e.g. vector of uids, names, or codes.}
 \item{fields}{- the fields, which can come in any formt as long as all
 components are present}
 
-\item{base_url}{string - base address of instance (text before api/ in URL)}
+\item{d2_session}{the d2Session object, default is "d2_default_session",
+it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{the number of times to try the call}
 

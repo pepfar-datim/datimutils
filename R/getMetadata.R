@@ -3,15 +3,14 @@
 #' @param resp raw text response recieved from datim api
 #' @return api response reduced to most simple data structure
 #'
-
 simplifyStructure <- function(resp) {
 
   # only enter if class is list and length one, otherwise it is already simplified
-  if (class(resp) == "list" &
-    length(resp) == 1 &
+  if (class(resp) == "list" &&
+    length(resp) == 1 &&
     length(resp[[1]]) != 0) {
     possible_resp <- resp
-    continue <- T
+    continue <- TRUE
 
     # the while block reduces the structure till it can't
     while (continue) {
@@ -19,13 +18,15 @@ simplifyStructure <- function(resp) {
         possible_resp <- possible_resp[[1]]
         dim1 <- dim(possible_resp)[1]
         dim2 <- dim(possible_resp)[2]
-        if(!(is.null(dim1)) && !(is.null(dim2))){
-       if (dim1 == 1 & dim2 == 1) {
+        if (!(is.null(dim1)) && !(is.null(dim2))) {
+       if (dim1 == 1 && dim2 == 1) {
         possible_resp <- possible_resp[[1]]
       }
-      }}else {
-        continue <- F
-      }}
+      }
+      } else {
+        continue <- FALSE
+      }
+    }
 
 
     # if it is a data frame check if it is nested or standard
@@ -34,14 +35,13 @@ simplifyStructure <- function(resp) {
         resp <- possible_resp
       } else {
         # unnest dataframe if has list type in columns
-        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)  & ncol(possible_resp) == 1) {
-          resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = T)
+        if (!(length(possible_resp[, sapply(possible_resp, class) == "list"][[1]]) == 0)  && ncol(possible_resp) == 1) {
+          resp <- try(tidyr::unnest(possible_resp, cols = colnames(possible_resp)), silent = TRUE)
         } else {
           resp <- possible_resp
         }
       }
-    } else if(is.atomic(possible_resp))
-      {
+    } else if (is.atomic(possible_resp)) {
       resp <- possible_resp
     }
   }
@@ -75,7 +75,8 @@ simplifyStructure <- function(resp) {
 #' c("name,id", "code")}
 #' @param as_vector attempt to return an atomic vector when only a single field
 #' is requested and returned. Defaults to TRUE.
-#' @param base_url string - base address of instance (text before api/ in URL)
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon logining in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
 #' @param verbose return raw content with data
@@ -85,8 +86,9 @@ simplifyStructure <- function(resp) {
 getMetadata <- function(end_point,
                         ...,
                         fields = "name,id",
-                        as_vector = T,
-                        base_url = getOption("baseurl"),
+                        as_vector = TRUE,
+                        d2_session = dynGet("d2_default_session",
+                                            inherits = TRUE),
                         retry = 1,
                         timeout = 180, verbose = F) {
   if (!is.character(fields)) {
@@ -110,19 +112,19 @@ getMetadata <- function(end_point,
   } else {
     # turn filters recieved as ... to a character vector of individual filters
     filters_chr <- unlist(list(...))
-    ex <- stringr::str_flatten(filters_chr, "&filter=")
+    ex <- stringi::stri_flatten(filters_chr, "&filter=")
     ex <- paste0("&filter=", ex)
   }
 
   # flattens fields and adds ?fields= if needed
-  ef <- stringr::str_flatten(fields, ",")
+  ef <- stringi::stri_flatten(fields, ",")
   ef <- paste0("&fields=", ef)
 
   # create final path
   path <- paste0(end_point, ex, ef)
   # pass path in api_get
   resp <- api_get(
-    path = path, base_url = base_url, retry = retry,
+    path = path, d2_session = d2_session, retry = retry,
     timeout = timeout,
     api_version = NULL,
     verbose = verbose

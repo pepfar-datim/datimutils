@@ -1,11 +1,14 @@
 context("make arbitrary api call DATIM")
 
-# library(httptest)
+library(httptest)
 
-# code to create/update mocks
+#code to create/update mocks
+
 # httptest::start_capturing(simplify = FALSE)
-# #not logged in for this one, fields there just to give the call a unique httptest ID
-# httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
+# #not logged in for this one, fields there just to give the call a unique
+# httptest ID
+# httr::GET(
+# "https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
 # httptest::stop_capturing()
 #
 # datapackcommons::DHISLogin_Play("2.33")
@@ -15,34 +18,44 @@ context("make arbitrary api call DATIM")
 # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
 # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false")
 # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=name")
-# httr::GET("https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
-# httr::GET("https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false")
+# httr::GET(
+# "https://play.dhis2.org/2.33/api/indicators.json?paging=false&fields=name")
+# httr::GET(
+# "https://play.dhis2.org/2.33/api/indicators/ReUHfIn0pTQ.json?paging=false")
 # httr::GET(
 #   paste0(
 #     "https://play.dhis2.org/2.33/api/indicators.json?paging=false",
-#     "&fields=name,id,translations[locale,value],indicatorGroups[id,name]&filter=name:ilike:anc"
+#     "&fields=name,id,translations[locale,value],indicatorGroups[id,name]
+#      &filter=name:ilike:anc"
 #   )
 # )
 # httr::GET("https://play.dhis2.org/2.33/api/30/smsCommands.json?paging=false")
-
+#
 # httptest::stop_capturing()
 
+
+################################################################################
+# TEST 1
+################################################################################
 # no mock for this test
-test_that("Can use timeout paramater", {
+testthat::test_that("Can use timeout paramater", {
   skip_if_disconnected()
   # timeout should be short enough to trip this error but
   # an internet connection is required
   expect_error(api_get(
     path = "organisationUnits?timeout",
-    base_url = "https://play.dhis2.org/2.33/",
+    d2_session = play233,
     timeout = .001
   ))
 })
 
+################################################################################
+# TEST 2
+################################################################################
 # no mock for this test - no httr requests should actually be issued
-# for these resonse formats
+# for these response formats
 # we expect only json requests
-test_that("We reject request for non-json response formats", {
+testthat::test_that("We reject request for non-json response formats", {
   formats <- c(
     ".jsonp", ".html", ".xml", ".pdf",
     ".xls", ".csv", ".html+css", ".adx"
@@ -57,7 +70,7 @@ test_that("We reject request for non-json response formats", {
           "&dimension=pe:LAST_12_MONTHS",
           "&filter=ou:ImspTQPwCqd"
         ),
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
     )
     # when run without_internet the error message should start with GET
@@ -66,44 +79,54 @@ test_that("We reject request for non-json response formats", {
   }
   without_internet(lapply(formats, helper))
 })
+################################################################################
 
+# API Testing begins using httptest package
 httptest::with_mock_api({
-  test_that("We handle anticipated api issues", {
+
+  # TEST 3
+  ##############################################################################
+  testthat::test_that("We handle anticipated api issues", {
     # non-json content type
     # mock built when not logged in resulting in content type of
     # html from the login page
     testthat::expect_error(
-      # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=false&fields=notloggedin")
+      # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=
+      # false&fields=notloggedin")
       api_get(
         path = "api/me?fields=notloggedin",
-        base_url = "https://play.dhis2.org/2.33/",
+        d2_session = play233,
         retry = 1, timeout = 60, api_version = NULL
       )
     )
     # no base_url
     testthat::expect_error(
-      api_get(path = "api/me2"))
+      api_get(path = "api/me2",
+              d2_session = NULL))
     # response status !=200
     testthat::expect_error(
       # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
       api_get(
         path = "apii/me",
-        base_url = "https://play.dhis2.org/2.33/",
-        retry = 1, timeout = 60,
+        d2_session = play233,
+        retry = 1,
+        timeout = 60,
         api_version = NULL
       ))
       testthat::expect_error(
         # httr::GET("http://httpstat.us/504")
-        api_get(path = "504",
-                base_url = "http://httpstat.us/"))
+        api_get(path = "504", retry = 2,
+                d2_session = list(base_url = "http://httpstat.us/")))
   })
 
-  test_that(
-    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false",
-    {
+  ##############################################################################
+  # TEST 4
+  ##############################################################################
+  testthat::test_that(
+    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
       user <- api_get(
         path = "api/me",
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(user$name, "John Traore")
       testthat::expect_identical(user$id, "xE7jOejl9FI")
@@ -111,43 +134,48 @@ httptest::with_mock_api({
 
       user <- api_get(
         path = "api/me.json",
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(user$name, "John Traore")
       rm(user)
 
       user <- api_get(
         path = "api/me.json?paging=false",
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(user$name, "John Traore")
       rm(user)
 
       user <- api_get(
         path = "api/me/",
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(user$name, "John Traore")
       rm(user)
     }
   )
 
-  test_that(
+  ##############################################################################
+  # TEST 5
+  ##############################################################################
+  testthat::test_that(
     paste0(
       "Specific id: https://play.dhis2.org/2.33/",
       "api/indicators/ReUHfIn0pTQ.json?paging=false"
-    ),
-    {
+    ), {
       ind <- api_get(
         path = "api/indicators/ReUHfIn0pTQ",
-        base_url = "https://play.dhis2.org/2.33/"
+        d2_session = play233
       )
       testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
       rm(ind)
     }
   )
 
-  test_that(paste0(
+  ##############################################################################
+  # TEST 6
+  ##############################################################################
+  testthat::test_that(paste0(
     "Nested fields: ",
     "https://play.dhis2.org/2.33/api/indicators.json?paging=false",
     "&fields=name,id,translations[locale,value],indicatorGroups[id,name]",
@@ -158,7 +186,7 @@ httptest::with_mock_api({
         "api/indicators&fields=name,id,translations[locale,value],",
         "indicatorGroups[id,name]&filter=name:ilike:anc"
       ),
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     expect_type(ind[["indicators"]][["translations"]][[1]], "list")
     expect_named(ind[["indicators"]][["indicatorGroups"]][[1]], c("name", "id"))
@@ -166,20 +194,26 @@ httptest::with_mock_api({
     rm(ind)
   })
 
-  test_that(paste0(
+  ##############################################################################
+  # TEST 7
+  ##############################################################################
+  testthat::test_that(paste0(
     "Specific field: https://play.dhis2.org/2.33/",
     "api/me.json?paging=false&fields=name"
   ), {
     user <- api_get(
       path = "api/me?fields=name",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_identical(user$name, "John Traore")
     testthat::expect_null(user$id)
     rm(user)
   })
 
-  test_that(paste0(
+  ##############################################################################
+  # TEST 8
+  ##############################################################################
+  testthat::test_that(paste0(
     "Pagination: https://play.dhis2.org/2.33/",
     "api/indicators.json?paging=false&fields=name"
   ), {
@@ -187,16 +221,19 @@ httptest::with_mock_api({
     # check we are not receiving paged results if we leave off paging=false
     ind <- api_get(
       path = "api/indicators?fields=name",
-      base_url = "https://play.dhis2.org/2.33/"
+      d2_session = play233
     )
     testthat::expect_null(ind$pager)
     rm(ind)
   })
 
-  test_that("Can use API versioning", {
+  ##############################################################################
+  # TEST 9
+  ##############################################################################
+  testthat::test_that("Can use API versioning", {
     data <- api_get(
       path = "smsCommands",
-      base_url = "https://play.dhis2.org/2.33/",
+      d2_session = play233,
       api_version = "30"
     )
     expect_gt(length(data), 0)
