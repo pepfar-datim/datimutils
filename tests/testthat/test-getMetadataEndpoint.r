@@ -115,14 +115,14 @@ httptest::with_mock_api({
              )
             data2 <- getOrgUnitGroups(
                "CHC", by = code,
-               base_url = "https://play.dhis2.org/2.33/", verbose = T
+               d2_session = play233, verbose = TRUE
              )
 
-             testthat::expect_equal(NROW(data), 1)
+            testthat::expect_equal(NROW(data), 1)
             testthat::expect_equal(NROW(data2$data), 1)
-             testthat::expect_equal(data, "CHC")
-             rm(data)
-              rm(data2)
+            testthat::expect_equal(data, "CHC")
+            rm(data)
+            rm(data2)
            }
   )
 
@@ -648,9 +648,9 @@ data <- getOrgUnits("Afro Arab Clinic",
     long_list <- getMetadata(organisationUnits,
                              d2_session = play233)
     long_list_ordered <- long_list[order(long_list$id), ]
-    
-    data <- getOrgUnits(c(long_list$id, 
-                          long_list_ordered$id), 
+
+    data <- getOrgUnits(c(long_list$id,
+                          long_list_ordered$id),
                         d2_session = play233)
     data2 <- getOrgUnits(c(long_list$id,
                           long_list_ordered$id),

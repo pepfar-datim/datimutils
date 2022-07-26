@@ -358,8 +358,8 @@ with_mock_api({
     data2 <- getMetadata(
       end_point = "organisationUnitGroups",
       fields = "name",
-      base_url = "https://play.dhis2.org/2.33/",
-      verbose = T
+      d2_session = play233,
+      verbose = TRUE
     )
     testthat::expect_equal(NROW(data), 18)
     testthat::expect_named(data, NULL)
