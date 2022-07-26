@@ -13,7 +13,7 @@
 api_get <- function(path,
                     d2_session,
                     retry = 1, timeout = 60,
-                    api_version = NULL, verbose = F) {
+                    api_version = NULL, verbose = FALSE) {
 
   base_url <- d2_session$base_url
   handle <- d2_session$handle
@@ -135,10 +135,11 @@ api_get <- function(path,
     flatten = TRUE
   )
 
-  if(verbose)
-  {
+  if (verbose) {
     return(list("data" = content, "api_responses" = resp))
-  } else{return(content)}
+  } else {
+    return(content)
+  }
 
 
 }

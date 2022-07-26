@@ -170,17 +170,17 @@ duplicateResponse <- function(resp, expand, by) {
      )})
 
     # bind the responses
-    if(verbose){
-    data <- do.call("rbind",lapply(data_list, `[[`, 1))} else{
-      data <- do.call("rbind",data_list)
+   if (verbose) {
+     data <- do.call("rbind", lapply(data_list, `[[`, 1))
+   } else {
+     data <- do.call("rbind", data_list)
+   }
+
+    if (verbose) {
+      data <- list("data" = data, "api_responses" = data_list$api_responses)
     }
 
-    if(verbose){
-    data <- list("data" = data, "api_responses" = data_list$api_responses)}
-
-  } else
-  #normal route
-  {
+  } else { #normal route
     filters <- metadataFilter(
       values = unique_values,
       property = by,
@@ -222,12 +222,17 @@ duplicateResponse <- function(resp, expand, by) {
   if (length(values) == 1
       && length(data) == 1
       && is.list(data)) {
-    if(verbose){return(list("data" = data[[1]], "api_responses" = meta_data))} else{
+    if (verbose) {
+      return(list("data" = data[[1]], "api_responses" = meta_data))
+    } else {
       return(data[[1]])
     }
   } else {
-    if(verbose){return(list("data" = data, "api_responses" = meta_data))} else{
-    return(data)}
+    if (verbose) {
+      return(list("data" = data, "api_responses" = meta_data))
+    } else {
+      return(data)
+    }
   }
 }
 

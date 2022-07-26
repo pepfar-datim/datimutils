@@ -83,8 +83,7 @@ getAnalytics <-  function(...,
                   timeout = timeout,
                   verbose = verbose)
 
-    if(verbose)
-  {
+  if (verbose) {
     meta_data <- resp$api_responses
     resp <- resp$data
   }

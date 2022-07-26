@@ -25,14 +25,14 @@ test_that("all arguments in getAnalytics function: ", {
 #"dimension=ou:ImspTQPwCqd;LEVEL-4&displayProperty=NAME&hierarchyMeta=true&outputIdScheme=UID")))
 
 data <- getAnalytics("displayProperty=NAME", "hierarchyMeta=true",
-                     dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
-                     pe = c("THIS_YEAR","LAST_YEAR"),
-                     ou = c("ImspTQPwCqd","LEVEL-4"),
+                     dx = c("fbfJHSPpUQD", "cYeuwXTCPkU"),
+                     pe = c("THIS_YEAR", "LAST_YEAR"),
+                     ou = c("ImspTQPwCqd", "LEVEL-4"),
                      d2_session = play2335, timeout = 80)
 data2 <- getAnalytics("displayProperty=NAME", "hierarchyMeta=true",
-                      dx = c("fbfJHSPpUQD","cYeuwXTCPkU"),
-                      pe = c("THIS_YEAR","LAST_YEAR"),
-                      ou = c("ImspTQPwCqd","LEVEL-4"),
+                      dx = c("fbfJHSPpUQD", "cYeuwXTCPkU"),
+                      pe = c("THIS_YEAR", "LAST_YEAR"),
+                      ou = c("ImspTQPwCqd", "LEVEL-4"),
                       d2_session = play2335, timeout = 80,
                       verbose = TRUE)
 

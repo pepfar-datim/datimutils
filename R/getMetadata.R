@@ -90,7 +90,7 @@ getMetadata <- function(end_point,
                         d2_session = dynGet("d2_default_session",
                                             inherits = TRUE),
                         retry = 1,
-                        timeout = 180, verbose = F) {
+                        timeout = 180, verbose = FALSE) {
   if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
@@ -130,8 +130,7 @@ getMetadata <- function(end_point,
     verbose = verbose
   )
 
-    if(verbose)
-  {
+  if (verbose) {
     meta_data <- resp$api_responses
     resp <- resp$data
   }
@@ -159,12 +158,18 @@ getMetadata <- function(end_point,
           fixed = TRUE
         )
     )) {
-    if(verbose){return(list("data" = resp[[1]], "api_responses" = meta_data))} else{
-    return(resp[[1]])
-  }}
+    if (verbose) {
+      return(list("data" = resp[[1]], "api_responses" = meta_data))
+    } else {
+      return(resp[[1]])
+    }
+  }
 
-  if(verbose){return(list("data" = resp, "api_responses" = meta_data))} else{
-  return(resp)}
+  if (verbose) {
+    return(list("data" = resp, "api_responses" = meta_data))
+  } else {
+    return(resp)
+  }
 }
 
 #' @export
