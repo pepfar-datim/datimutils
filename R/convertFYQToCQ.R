@@ -6,9 +6,11 @@
 #' @return "yyyyQQ"
 #' @example convertFYQToCQ(1995,1)
 convertFYQToCQ <- function(fiscal_yyyy_int, fiscal_q_int) {
-  fiscal_yyyy_int<-as.integer(fiscal_yyyy_int)
-  fiscal_q_int<-as.integer(fiscal_q_int)
-  if ( !( fiscal_q_int %in% c(1,2,3,4) ) ) {stop("Invalid fiscal quarter")}
+  fiscal_yyyy_int <- as.integer(fiscal_yyyy_int)
+  fiscal_q_int <- as.integer(fiscal_q_int)
+  if (!(fiscal_q_int %in% c(1, 2, 3, 4))) {
+    stop("Invalid fiscal quarter")
+    }
   if (fiscal_q_int == 1) {
     calendar_q_int  <-  4
     calendar_yyyy_int <- fiscal_yyyy_int - 1
@@ -16,6 +18,5 @@ convertFYQToCQ <- function(fiscal_yyyy_int, fiscal_q_int) {
     calendar_q_int <- fiscal_q_int - 1
     calendar_yyyy_int <- fiscal_yyyy_int
   }
-  return(paste0(calendar_yyyy_int,"Q",calendar_q_int))
+  return(paste0(calendar_yyyy_int, "Q", calendar_q_int))
 }
-
