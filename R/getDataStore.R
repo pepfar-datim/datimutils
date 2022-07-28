@@ -43,7 +43,7 @@ if (!isSimpleString(namespace) || !isSimpleString(key)) {
     
     if (is.null(resp)) {
       next
-    
+    }
     response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
