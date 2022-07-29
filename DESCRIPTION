@@ -1,8 +1,8 @@
 Package: datimutils
 Type: Package
 Title: Utilities for interacting with the DATIM api from R
-Version: 0.4.0
-Date: 2022-07-22
+Version: 0.5.0
+Date: 2022-07-29
 Authors@R: 
     c(
     person("Scott", "Jackson", email = "sjackson@baosystems.com",
@@ -14,7 +14,9 @@ Authors@R:
     person("Jordan", "Bales", email = "jbales@baosystems.com",
         role = c("aut")),
     person("Fausto", "Lopez", email = "flopez@baosystems.com",
-        role = c("aut"))
+        role = c("aut")),
+    person("Chris", "Nemarich", email = "cnemarich@guidehouse.com",
+        role = c("ctb"))
   )
 Description: General utilities for interacting with the DATIM api from R.
 URL: https://github.com/pepfar-datim/datimutils
