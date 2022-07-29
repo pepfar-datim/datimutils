@@ -28,7 +28,7 @@ it will be made upon login in to DATIM with loginToDATIM}
 \item{timeout}{Timeout in number of seconds}
 }
 \value{
-A list if the request is successful. A data frame may be returned if 
+A list if the request is successful. A data frame may be returned if
 the simiplify paramater is set to TRUE, but it depends on the intrinsic structure
 of the key itself.
 }
