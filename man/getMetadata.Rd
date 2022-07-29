@@ -8,7 +8,7 @@ getMetadata(
   end_point,
   ...,
   fields = "name,id",
-  as_vector = T,
+  as_vector = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 180

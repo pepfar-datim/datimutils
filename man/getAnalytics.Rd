@@ -16,7 +16,7 @@ getAnalytics(
   co_f = NULL,
   ao = NULL,
   ao_f = NULL,
-  return_names = F,
+  return_names = FALSE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 60

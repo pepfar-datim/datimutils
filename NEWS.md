@@ -1,3 +1,9 @@
+# datimutils 0.5.0
+
+## New features
+* Adds `getDataStoreKey` (DP-533)
+* Adds `convertFYQToCQ` (DP-132)
+
 # datimutils 0.4.0
 
 ## New features
