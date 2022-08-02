@@ -12,7 +12,8 @@ getMetadata(
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 180,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
@@ -51,6 +52,8 @@ it will be made upon logining in to datim with loginToDATIM}
 \item{timeout}{integer - seconds to wait for a response, default = 180}
 
 \item{verbose}{return raw content with data}
+
+\item{quiet}{Echo the URL which is called to the console if TRUE.}
 }
 \value{
 the metadata response in json format and flattened

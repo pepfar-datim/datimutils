@@ -12,7 +12,8 @@ getSqlView(
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 180,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
@@ -35,6 +36,8 @@ it will be made upon logging in to datim with loginToDATIM}
 \item{timeout}{number of seconds to wait during call}
 
 \item{verbose}{return raw content with data}
+
+\item{quiet}{Echo the URL which is called if TRUE.}
 }
 \value{
 dataframe with the results of the sql view

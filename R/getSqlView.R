@@ -16,6 +16,7 @@
 #' @param retry number of times to retry
 #' @param timeout number of seconds to wait during call
 #' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called if TRUE.
 #' @return dataframe with the results of the sql view
 
 getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
@@ -23,7 +24,8 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
                        d2_session = dynGet("d2_default_session",
                                            inherits = TRUE),
                        retry = 1, timeout = 180,
-                       verbose = FALSE) {
+                       verbose = FALSE,
+                       quiet = TRUE) {
 
   assertthat::assert_that(length(variable_keys) == length(variable_values))
 
@@ -55,7 +57,8 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
     d2_session = d2_session,
     retry = retry,
     timeout = timeout,
-    verbose = verbose
+    verbose = verbose,
+    quiet = quiet
   )
 
   if (verbose) {

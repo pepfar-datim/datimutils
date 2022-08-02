@@ -11,6 +11,7 @@
 #' @param retry number of times to retry
 #' @param timeout number of seconds to wait during call
 #' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called to the console if TRUE.
 #' @return  Data frame with the data requested
 #'
 getDataValueSets <- function(variable_keys = NULL, #keys,
@@ -18,7 +19,8 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
                              d2_session = dynGet("d2_default_session",
                                                  inherits = TRUE),
                              retry = 1, timeout = 180,
-                             verbose = FALSE) {
+                             verbose = FALSE,
+                             quiet = TRUE) {
 
   #Test that the provided variables have their associated values used for
   # munging
@@ -80,7 +82,8 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
       d2_session = d2_session,
       retry = retry,
       timeout = timeout,
-      verbose = verbose
+      verbose = verbose,
+      quiet = quiet
     )
 
     if (verbose) {

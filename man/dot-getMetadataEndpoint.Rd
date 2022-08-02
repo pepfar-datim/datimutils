@@ -76,7 +76,8 @@ getCategories(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatCombos(
@@ -85,7 +86,8 @@ getCatCombos(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptionCombos(
@@ -94,7 +96,8 @@ getCatOptionCombos(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptionGroupSets(
@@ -103,7 +106,8 @@ getCatOptionGroupSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptionGroups(
@@ -112,7 +116,8 @@ getCatOptionGroups(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptions(
@@ -121,7 +126,8 @@ getCatOptions(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataElementGroupSets(
@@ -130,7 +136,8 @@ getDataElementGroupSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataElementGroups(
@@ -139,7 +146,8 @@ getDataElementGroups(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataElements(
@@ -148,7 +156,8 @@ getDataElements(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataSets(
@@ -157,7 +166,8 @@ getDataSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getUserGroups(
@@ -166,7 +176,8 @@ getUserGroups(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getIndicatorGroupSets(
@@ -175,7 +186,8 @@ getIndicatorGroupSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getIndicatorGroups(
@@ -184,7 +196,8 @@ getIndicatorGroups(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getIndicators(
@@ -193,7 +206,8 @@ getIndicators(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptionGroupSets(
@@ -202,7 +216,8 @@ getOptionGroupSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptionGroups(
@@ -211,7 +226,8 @@ getOptionGroups(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptionSets(
@@ -220,7 +236,8 @@ getOptionSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptions(
@@ -229,7 +246,8 @@ getOptions(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOrgUnitGroupSets(
@@ -238,7 +256,8 @@ getOrgUnitGroupSets(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOrgUnitGroups(
@@ -247,7 +266,8 @@ getOrgUnitGroups(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOrgUnits(
@@ -256,7 +276,8 @@ getOrgUnits(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDimensions(
@@ -265,7 +286,8 @@ getDimensions(
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{

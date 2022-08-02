@@ -80,6 +80,7 @@ simplifyStructure <- function(resp) {
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
 #' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called to the console if TRUE.
 #' @return the metadata response in json format and flattened
 #'
 
@@ -90,7 +91,9 @@ getMetadata <- function(end_point,
                         d2_session = dynGet("d2_default_session",
                                             inherits = TRUE),
                         retry = 1,
-                        timeout = 180, verbose = FALSE) {
+                        timeout = 180, 
+                        verbose = FALSE,
+                        quiet = TRUE) {
   if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
@@ -127,7 +130,8 @@ getMetadata <- function(end_point,
     path = path, d2_session = d2_session, retry = retry,
     timeout = timeout,
     api_version = NULL,
-    verbose = verbose
+    verbose = verbose,
+    quiet = quiet
   )
 
   if (verbose) {
