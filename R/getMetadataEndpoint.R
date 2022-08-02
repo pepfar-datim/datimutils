@@ -193,8 +193,8 @@ duplicateResponse <- function(resp, expand, by) {
       end_point = !!end_point,
       d2_session = d2_session,
       filters,
-      fields = default_fields, 
-      retry = retry, 
+      fields = default_fields,
+      retry = retry,
       verbose = verbose,
       quiet = quiet
     )

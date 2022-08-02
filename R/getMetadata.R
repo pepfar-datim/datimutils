@@ -91,7 +91,7 @@ getMetadata <- function(end_point,
                         d2_session = dynGet("d2_default_session",
                                             inherits = TRUE),
                         retry = 1,
-                        timeout = 180, 
+                        timeout = 180,
                         verbose = FALSE,
                         quiet = TRUE) {
   if (!is.character(fields)) {
