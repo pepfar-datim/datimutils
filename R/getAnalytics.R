@@ -20,6 +20,7 @@
 #' @param d2_session the d2Session object, default is "d2_default_session",
 #' it will be made upon logining in to datim with loginToDATIM
 #' @param retry retry
+#' @param verbose return raw content with data
 #' @return data frame with the rows of the response
 
 getAnalytics <-  function(...,
@@ -31,7 +32,8 @@ getAnalytics <-  function(...,
                           return_names = FALSE,
                           d2_session = dynGet("d2_default_session", inherits = TRUE),
                           retry = 1,
-                          timeout = 60) {
+                          timeout = 60,
+                          verbose = FALSE) {
 
   # cap time out at 5 minutes
   if (timeout > 300) {
@@ -78,7 +80,13 @@ getAnalytics <-  function(...,
   resp <- api_get(path = path,
                   d2_session = d2_session,
                   retry = retry,
-                  timeout = timeout)
+                  timeout = timeout,
+                  verbose = verbose)
+
+  if (verbose) {
+    meta_data <- resp$api_responses
+    resp <- resp$data
+  }
 
   if (NROW(resp$rows) == 0) {
     return(NULL)
@@ -103,8 +111,11 @@ getAnalytics <-  function(...,
 
   #change data types to numeric where possible
   resp[, coercions == "NUMBER"] <- sapply(resp[, coercions == "NUMBER"], as.numeric)
-
-  return(resp)
+  if (verbose) {
+    return(list("data" = resp, "api_responses" = meta_data))
+  } else {
+    return(resp)
+  }
 }
 
 

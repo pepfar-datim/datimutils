@@ -7,12 +7,13 @@
 #' default will not try again
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
+#' @param verbose return raw content with data
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path,
                     d2_session,
                     retry = 1, timeout = 60,
-                    api_version = NULL) {
+                    api_version = NULL, verbose = FALSE) {
 
   base_url <- d2_session$base_url
   handle <- d2_session$handle
@@ -129,10 +130,16 @@ api_get <- function(path,
   }
 
   # extract text response from api response
-  resp <- jsonlite::fromJSON(httr::content(resp, as = "text"),
+  content <- jsonlite::fromJSON(httr::content(resp, as = "text"),
     simplifyDataFrame = TRUE,
     flatten = TRUE
   )
 
-  return(resp)
+  if (verbose) {
+    return(list("data" = content, "api_responses" = resp))
+  } else {
+    return(content)
+  }
+
+
 }

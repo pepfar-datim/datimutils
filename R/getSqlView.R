@@ -15,13 +15,15 @@
 #' it will be made upon logging in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout number of seconds to wait during call
+#' @param verbose return raw content with data
 #' @return dataframe with the results of the sql view
 
 getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
                        variable_values = NULL,
                        d2_session = dynGet("d2_default_session",
                                            inherits = TRUE),
-                       retry = 1, timeout = 180) {
+                       retry = 1, timeout = 180,
+                       verbose = FALSE) {
 
   assertthat::assert_that(length(variable_keys) == length(variable_values))
 
@@ -52,8 +54,14 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
     path = path,
     d2_session = d2_session,
     retry = retry,
-    timeout = timeout
+    timeout = timeout,
+    verbose = verbose
   )
+
+  if (verbose) {
+    meta_data <- resp$api_responses
+    resp <- resp$data
+  }
 
   x <- resp$listGrid$headers$name
 
@@ -77,7 +85,11 @@ getSqlView <- function(..., sql_view_uid, variable_keys = NULL,
 
   colnames(resp) <- x
 
-  return(resp)
+  if (verbose) {
+    return(list("data" = resp, "api_responses" = meta_data))
+  } else {
+    return(resp)
+  }
 }
 
 #' @export

@@ -27,6 +27,25 @@ test_that("GetDataValueSets", {
                                    "comment",
                                    "followup"))
     testthat::expect_equal(NROW(data), 3)
+
+    data2 <- getDataValueSets(c("dataSet", "period", "orgUnit"),
+                              c("pBOMPrpg1QX", "202201", "DiszpKrYNg8"),
+                              d2_session = play2372,
+                              verbose = TRUE)
+    testthat::expect_type(data2, "list")
+    testthat::expect_named(data2$data, c("dataElement",
+                                         "period",
+                                         "orgUnit",
+                                         "categoryOptionCombo",
+                                         "attributeOptionCombo",
+                                         "value",
+                                         "storedBy",
+                                         "created",
+                                         "lastUpdated",
+                                         "comment",
+                                         "followup"))
+    testthat::expect_equal(NROW(data2$data), 3)
+
     testthat::expect_error(getDataValueSets(c("limit"),
                                             c("3"),
                                             play2372),

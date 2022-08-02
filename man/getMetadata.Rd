@@ -11,7 +11,8 @@ getMetadata(
   as_vector = TRUE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  timeout = 180
+  timeout = 180,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -48,6 +49,8 @@ it will be made upon logining in to datim with loginToDATIM}
 \item{retry}{number of times to retry}
 
 \item{timeout}{integer - seconds to wait for a response, default = 180}
+
+\item{verbose}{return raw content with data}
 }
 \value{
 the metadata response in json format and flattened
