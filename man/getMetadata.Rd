@@ -12,7 +12,7 @@ getMetadata(
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 180,
-  verbose = F
+  verbose = FALSE
 )
 }
 \arguments{
