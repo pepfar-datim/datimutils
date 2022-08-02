@@ -8,12 +8,15 @@
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
 #' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called to the console.  
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path,
                     d2_session,
                     retry = 1, timeout = 60,
-                    api_version = NULL, verbose = FALSE) {
+                    api_version = NULL, 
+                    verbose = FALSE,
+                    quiet = TRUE) {
 
   base_url <- d2_session$base_url
   handle <- d2_session$handle
@@ -77,7 +80,10 @@ api_get <- function(path,
 
   # removes whitespace
   url <- gsub(" ", "", url)
-  print(url)
+  if (!quiet) {
+    print(url)
+  }
+
   # retry api get block, only retries if reponse code not in 400s
   i <- 1
   response_code <- 5
