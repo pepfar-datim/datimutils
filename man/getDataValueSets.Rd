@@ -9,7 +9,9 @@ getDataValueSets(
   variable_values = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  timeout = 180
+  timeout = 180,
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
@@ -19,6 +21,10 @@ with DATIM}
 \item{retry}{number of times to retry}
 
 \item{timeout}{number of seconds to wait during call}
+
+\item{verbose}{return raw content with data}
+
+\item{quiet}{Echo the URL which is called to the console if TRUE.}
 
 \item{keys}{character vector - data value set parameter keys
 (e.g. "dataSet", "period")}

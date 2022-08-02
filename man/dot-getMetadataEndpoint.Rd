@@ -26,56 +26,58 @@
 \alias{getDimensions}
 \title{getMetadataEndpoint}
 \usage{
-.getMetadataEndpoint(end_point, values, by, fields, d2_session, retry)
+.getMetadataEndpoint(end_point, values, by, fields, d2_session, retry, verbose)
 
-getCategories(values, by, fields, d2_session, retry)
+getCategories(values, by, fields, d2_session, retry, verbose)
 
-getCatCombos(values, by, fields, d2_session, retry)
+getCatCombos(values, by, fields, d2_session, retry, verbose)
 
-getCatOptionCombos(values, by, fields, d2_session, retry)
+getCatOptionCombos(values, by, fields, d2_session, retry, verbose)
 
-getCatOptionGroupSets(values, by, fields, d2_session, retry)
+getCatOptionGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getCatOptionGroups(values, by, fields, d2_session, retry)
+getCatOptionGroups(values, by, fields, d2_session, retry, verbose)
 
-getCatOptions(values, by, fields, d2_session, retry)
+getCatOptions(values, by, fields, d2_session, retry, verbose)
 
-getDataElementGroupSets(values, by, fields, d2_session, retry)
+getDataElementGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getDataElementGroups(values, by, fields, d2_session, retry)
+getDataElementGroups(values, by, fields, d2_session, retry, verbose)
 
-getDataElements(values, by, fields, d2_session, retry)
+getDataElements(values, by, fields, d2_session, retry, verbose)
 
-getDataSets(values, by, fields, d2_session, retry)
+getDataSets(values, by, fields, d2_session, retry, verbose)
 
-getIndicatorGroupSets(values, by, fields, d2_session, retry)
+getIndicatorGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getIndicatorGroups(values, by, fields, d2_session, retry)
+getIndicatorGroups(values, by, fields, d2_session, retry, verbose)
 
-getIndicators(values, by, fields, d2_session, retry)
+getIndicators(values, by, fields, d2_session, retry, verbose)
 
-getOptionGroupSets(values, by, fields, d2_session, retry)
+getOptionGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getOptionGroups(values, by, fields, d2_session, retry)
+getOptionGroups(values, by, fields, d2_session, retry, verbose)
 
-getOptionSets(values, by, fields, d2_session, retry)
+getOptionSets(values, by, fields, d2_session, retry, verbose)
 
-getOptions(values, by, fields, d2_session, retry)
+getOptions(values, by, fields, d2_session, retry, verbose)
 
-getOrgUnitGroupSets(values, by, fields, d2_session, retry)
+getOrgUnitGroupSets(values, by, fields, d2_session, retry, verbose)
 
-getOrgUnitGroups(values, by, fields, d2_session, retry)
+getOrgUnitGroups(values, by, fields, d2_session, retry, verbose)
 
-getOrgUnits(values, by, fields, d2_session, retry)
+getOrgUnits(values, by, fields, d2_session, retry, verbose)
 
-getDimensions(values, by, fields, d2_session, retry)
+getDimensions(values, by, fields, d2_session, retry, verbose)
 
 getCategories(
   values,
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatCombos(
@@ -83,7 +85,9 @@ getCatCombos(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptionCombos(
@@ -91,7 +95,9 @@ getCatOptionCombos(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptionGroupSets(
@@ -99,7 +105,9 @@ getCatOptionGroupSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptionGroups(
@@ -107,7 +115,9 @@ getCatOptionGroups(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getCatOptions(
@@ -115,7 +125,9 @@ getCatOptions(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataElementGroupSets(
@@ -123,7 +135,9 @@ getDataElementGroupSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataElementGroups(
@@ -131,7 +145,9 @@ getDataElementGroups(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataElements(
@@ -139,7 +155,9 @@ getDataElements(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDataSets(
@@ -147,7 +165,9 @@ getDataSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getUserGroups(
@@ -155,7 +175,9 @@ getUserGroups(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getIndicatorGroupSets(
@@ -163,7 +185,9 @@ getIndicatorGroupSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getIndicatorGroups(
@@ -171,7 +195,9 @@ getIndicatorGroups(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getIndicators(
@@ -179,7 +205,9 @@ getIndicators(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptionGroupSets(
@@ -187,7 +215,9 @@ getOptionGroupSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptionGroups(
@@ -195,7 +225,9 @@ getOptionGroups(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptionSets(
@@ -203,7 +235,9 @@ getOptionSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOptions(
@@ -211,7 +245,9 @@ getOptions(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOrgUnitGroupSets(
@@ -219,7 +255,9 @@ getOrgUnitGroupSets(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOrgUnitGroups(
@@ -227,7 +265,9 @@ getOrgUnitGroups(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getOrgUnits(
@@ -235,7 +275,9 @@ getOrgUnits(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 
 getDimensions(
@@ -243,7 +285,9 @@ getDimensions(
   by = "id",
   fields = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
-  retry = 1
+  retry = 1,
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
@@ -261,6 +305,8 @@ components are present}
 it will be made upon logining in to datim with loginToDATIM}
 
 \item{retry}{the number of times to try the call}
+
+\item{verbose}{return raw content with data}
 }
 \value{
 the metadata response in json format and flattened

@@ -1,3 +1,9 @@
+# datimutils 0.5.1
+
+## New features
+* Adds `verbose` parameter to all functions which returns entire response. Set to `FALSE` by default.
+* Adds `quiet` parameter to all functions which determines whether URL is printed. Set to `TRUE` by default.
+
 # datimutils 0.5.0
 
 ## New features

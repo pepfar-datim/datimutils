@@ -79,6 +79,8 @@ simplifyStructure <- function(resp) {
 #' it will be made upon logining in to datim with loginToDATIM
 #' @param retry number of times to retry
 #' @param timeout integer - seconds to wait for a response, default = 180
+#' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called to the console if TRUE.
 #' @return the metadata response in json format and flattened
 #'
 
@@ -89,7 +91,9 @@ getMetadata <- function(end_point,
                         d2_session = dynGet("d2_default_session",
                                             inherits = TRUE),
                         retry = 1,
-                        timeout = 180) {
+                        timeout = 180,
+                        verbose = FALSE,
+                        quiet = TRUE) {
   if (!is.character(fields)) {
     stop("The fields argument of getMetadata should be of type character")
   }
@@ -125,8 +129,15 @@ getMetadata <- function(end_point,
   resp <- api_get(
     path = path, d2_session = d2_session, retry = retry,
     timeout = timeout,
-    api_version = NULL
+    api_version = NULL,
+    verbose = verbose,
+    quiet = quiet
   )
+
+  if (verbose) {
+    meta_data <- resp$api_responses
+    resp <- resp$data
+  }
 
    # simplify data structure
   resp <- simplifyStructure(resp)
@@ -151,10 +162,18 @@ getMetadata <- function(end_point,
           fixed = TRUE
         )
     )) {
-    return(resp[[1]])
+    if (verbose) {
+      return(list("data" = resp[[1]], "api_responses" = meta_data))
+    } else {
+      return(resp[[1]])
+    }
   }
 
-  return(resp)
+  if (verbose) {
+    return(list("data" = resp, "api_responses" = meta_data))
+  } else {
+    return(resp)
+  }
 }
 
 #' @export
