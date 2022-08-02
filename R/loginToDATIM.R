@@ -25,8 +25,6 @@ d2Session <- R6::R6Class("d2Session",
                            #' @param handle httr handle to be used for dhis2
                            #' connections
                            #' @param me DHIS2 me response object
-                           #' @param max_cache_age cache expiry currently used
-                           #' by datim validation
                            initialize = function(config_path = NA_character_,
                                                  base_url,
                                                  handle,

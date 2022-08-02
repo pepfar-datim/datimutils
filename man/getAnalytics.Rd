@@ -20,7 +20,8 @@ getAnalytics(
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
   timeout = 60,
-  verbose = FALSE
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
@@ -58,6 +59,8 @@ it will be made upon logining in to datim with loginToDATIM}
 \item{retry}{retry}
 
 \item{verbose}{return raw content with data}
+
+\item{quiet}{Echo the URL which is called to the console if TRUE.}
 }
 \value{
 data frame with the rows of the response
