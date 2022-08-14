@@ -96,7 +96,7 @@ api_get <- function(path,
                       handle = handle)
       )
 
-    if (is.null(resp) & class(resp) != "try-error") {
+    if (is.null(resp) | class(resp) != "try-error") {
       next
     }
 
