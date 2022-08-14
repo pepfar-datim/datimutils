@@ -96,8 +96,10 @@ api_get <- function(path,
                       handle = handle)
       )
 
-    if (is.null(resp) | class(resp) != "try-error") {
+    if (is.null(resp)) {
       next
+    } else if (class(resp) == "try-error") {
+      stop("There is an issue with the API, try again.")
     }
 
     response_code <- httr::status_code(resp)
