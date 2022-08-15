@@ -98,6 +98,17 @@ api_get <- function(path,
 
     # try is added in order to handle if resp comes back as a "try-error" class
     response_code <- try(httr::status_code(resp))
+    
+    if(is(response_code, "try-error")) {
+      message(
+        paste0(
+          "api call to server failed on attempt ",
+          i,
+          " trying again ..."
+        )
+        )
+    }
+    
     Sys.sleep(i - 1)
     i <- i + 1
     
