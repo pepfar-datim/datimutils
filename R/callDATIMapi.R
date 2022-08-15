@@ -84,7 +84,7 @@ api_get <- function(path,
     print(url)
   }
 
-  # retry api get block, only retries if reponse code not in 400s
+  # retry api get block, only retries if response code not in 400s
   i <- 1
   response_code <- 5
 
@@ -96,11 +96,9 @@ api_get <- function(path,
                       handle = handle)
       )
 
-    if (is.null(resp)) {
+    if (is.null(resp) && class(resp) != "try-error") {
       next
-    } else if (class(resp) == "try-error") {
-      stop("There is an issue with the API, try again.")
-    }
+    } 
 
     response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
