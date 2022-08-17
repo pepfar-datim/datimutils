@@ -84,7 +84,7 @@ api_get <- function(path,
     print(url)
   }
 
-  # retry api get block, only retries if reponse code not in 400s
+  # retry api get block, only retries if response code not in 400s
   i <- 1
   response_code <- 5
 
@@ -96,13 +96,22 @@ api_get <- function(path,
                       handle = handle)
       )
 
-    if (is.null(resp)) {
-      next
+    # try is added in order to handle if resp comes back as a "try-error" class
+    response_code <- try(httr::status_code(resp), silent = TRUE)
+
+    if (is(response_code, "try-error")) {
+      message(
+        paste0(
+          "Api call to server failed on attempt ",
+          i,
+          " trying again ..."
+        )
+        )
     }
 
-    response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
+
     if (response_code == 200L &&
         stringi::stri_replace(resp$url, regex = ".*/api/", replacement = "") ==
         stringi::stri_replace(url, regex = ".*/api/", replacement = "") &&
@@ -110,6 +119,18 @@ api_get <- function(path,
       break
     }
 
+  }
+
+  # let user know that by the last attempt the api continues to return an error, this should break before status code
+  # as a status code cannot be pulled from a failed api grab
+  if (class(resp) == "try-error") {
+    stop(
+      paste0(
+        "Server returned no response even on the last retry,
+        this could a malformed link or a server issue, otherwise try again ",
+        url
+      )
+    )
   }
 
   # unknown error catching which returns message and response code
