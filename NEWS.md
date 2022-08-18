@@ -1,3 +1,9 @@
+# datimutils 0.5.2
+
+## Bug fixes
+* Fixes is timeout error handling in API calls.
+
+
 # datimutils 0.5.1
 
 ## New features
