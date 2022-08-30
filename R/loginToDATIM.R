@@ -18,6 +18,7 @@ d2Session <- R6::R6Class("d2Session",
                            #' @field me dhis2 api/me response
                            me  = NULL,
                            max_cache_age  = NULL,
+                           token = NULL,
                            #' @description
                            #' Create a new DHISLogin object
                            #' @param config_path Configuration file path
@@ -25,16 +26,19 @@ d2Session <- R6::R6Class("d2Session",
                            #' @param handle httr handle to be used for dhis2
                            #' connections
                            #' @param me DHIS2 me response object
+                           #' @param token OAUTH2 token 
                            initialize = function(config_path = NA_character_,
                                                  base_url,
                                                  handle,
-                                                 me) {
+                                                 me,
+                                                 token) {
                              self$config_path <- config_path
                              self$me <- me
                              self$user_orgunit <- me$organisationUnits$id
                              self$base_url <- base_url
                              self$username <- me$userCredentials$username
                              self$handle <- handle
+                             self$token <- token
                              }
                        )
 )
