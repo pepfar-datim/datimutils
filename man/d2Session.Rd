@@ -32,17 +32,17 @@ with the DHIS2 instance.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{d2Session$new()}}
-\item \href{#method-clone}{\code{d2Session$clone()}}
+\item \href{#method-d2Session-new}{\code{d2Session$new()}}
+\item \href{#method-d2Session-clone}{\code{d2Session$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-d2Session-new"></a>}}
+\if{latex}{\out{\hypertarget{method-d2Session-new}{}}}
 \subsection{Method \code{new()}}{
 Create a new DHISLogin object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{d2Session$new(config_path = NA_character_, base_url, handle, me)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{d2Session$new(config_path = NA_character_, base_url, handle, me, token)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -57,15 +57,14 @@ connections}
 
 \item{\code{me}}{DHIS2 me response object}
 
-\item{\code{max_cache_age}}{cache expiry currently used
-by datim validation}
+\item{\code{token}}{OAUTH2 token}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-d2Session-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-d2Session-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
