@@ -2,7 +2,13 @@
 % Please edit documentation in R/loginToDATIM.R
 \name{loginToDATIMOAuth}
 \alias{loginToDATIMOAuth}
-\title{Title}
+\title{datimutils::loginToDATIMOAuth(base_url =  Sys.getenv("BASE_URL"),
+token = token,
+app = oauth_app,
+api = oauth_api,
+redirect_uri= APP_URL,
+scope = oauth_scope,
+d2_session_envir = parent.env(environment()))}
 \usage{
 loginToDATIMOAuth(
   base_url = NULL,
@@ -16,22 +22,35 @@ loginToDATIMOAuth(
 )
 }
 \arguments{
-\item{base_url}{}
+\item{base_url}{URL of the DHIS2 server}
 
-\item{token}{}
+\item{token}{An OAUTH2.0 token object. Will be created if not supplied.}
 
-\item{redirect_uri}{}
+\item{redirect_uri}{The redirect URI which should be used after 
+successful authentication with the server.}
 
-\item{app}{}
+\item{app}{An httr OAUTH app object.}
 
-\item{api}{}
+\item{api}{An hjttr OAUTH endpoint.}
 
-\item{scope}{}
+\item{scope}{A character vector of scopes which should be requested.}
 
-\item{d2_session_name}{}
+\item{d2_session_name}{the variable name for the d2Session object.
+The default name is d2_default_session and will be used by other datimutils
+functions by default when connecting to datim. Generally a custom name
+should only be needed if you need to log into two seperate DHIS2 instances
+at the same time. If you create a d2Session object with a custom name then
+this object must be passed to other datimutils functions explicitly}
 
-\item{d2_session_envir}{}
+\item{d2_session_envir}{the environment in which to place the R6 login
+object, default is the immediate calling environment}
 }
 \description{
-Title
+datimutils::loginToDATIMOAuth(base_url =  Sys.getenv("BASE_URL"),
+token = token,
+app = oauth_app,
+api = oauth_api,
+redirect_uri= APP_URL,
+scope = oauth_scope,
+d2_session_envir = parent.env(environment()))
 }

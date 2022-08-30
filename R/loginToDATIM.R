@@ -17,7 +17,9 @@ d2Session <- R6::R6Class("d2Session",
                            handle = NULL,
                            #' @field me dhis2 api/me response
                            me  = NULL,
+                           #' @field max_cache_age Maximum time responses should be cached
                            max_cache_age  = NULL,
+                           #' @field token An httr OAUTH2 token
                            token = NULL,
                            #' @description
                            #' Create a new DHISLogin object
@@ -26,7 +28,7 @@ d2Session <- R6::R6Class("d2Session",
                            #' @param handle httr handle to be used for dhis2
                            #' connections
                            #' @param me DHIS2 me response object
-                           #' @param token OAUTH2 token 
+                           #' @param token OAUTH2 token
                            initialize = function(config_path = NA_character_,
                                                  base_url,
                                                  handle,
@@ -228,37 +230,56 @@ loginToDATIM <- function(config_path = NULL,
 
 
 
-#' Title
+#' @title       datimutils::loginToDATIMOAuth(base_url =  Sys.getenv("BASE_URL"),
+#' token = token,
+#' app = oauth_app,
+#' api = oauth_api,
+#' redirect_uri= APP_URL,
+#' scope = oauth_scope,
+#' d2_session_envir = parent.env(environment()))
 #'
-#' @param base_url 
-#' @param token 
-#' @param redirect_uri 
-#' @param app 
-#' @param api 
-#' @param scope 
-#' @param d2_session_name 
-#' @param d2_session_envir 
+#' @param base_url URL of the DHIS2 server
+#' @param token An OAUTH2.0 token object. Will be created if not supplied.
+#' @param redirect_uri The redirect URI which should be used after
+#' successful authentication with the server.
+#' @param app An httr OAUTH app object.
+#' @param api An hjttr OAUTH endpoint.
+#' @param scope A character vector of scopes which should be requested.
+#' @param d2_session_name the variable name for the d2Session object.
+#' The default name is d2_default_session and will be used by other datimutils
+#' functions by default when connecting to datim. Generally a custom name
+#' should only be needed if you need to log into two seperate DHIS2 instances
+#' at the same time. If you create a d2Session object with a custom name then
+#' this object must be passed to other datimutils functions explicitly
+#' @param d2_session_envir the environment in which to place the R6 login
+#' object, default is the immediate calling environment
 #'
-#' @return
 #' @export
 #'
-#' @examples
+
 loginToDATIMOAuth <- function(
     base_url = NULL,
     token = NULL,
-    redirect_uri= NULL,
-    app= NULL,
-    api= NULL,
-    scope= NULL,
+    redirect_uri = NULL,
+    app = NULL,
+    api = NULL,
+    scope = NULL,
     d2_session_name = "d2_default_session",
     d2_session_envir = parent.frame()) {
-  
+
   if (is.null(token)) {
-    token <- getOAuthToken(redirect_uri, app, api, scope)
+    token <- httr::oauth2.0_token(
+      app = app,
+      endpoint = api,
+      scope = scope,
+      use_basic_auth = TRUE,
+      oob_value = redirect_uri,
+      cache = FALSE
+    )
   } else {
     token <- token #For Shiny
   }
-  
+
   # form url
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
   handle <- httr::handle(base_url)
@@ -269,7 +290,7 @@ loginToDATIMOAuth <- function(
     httr::timeout(60),
     handle = handle
   )
-  
+
   if (r$status_code != 200L) {
     stop("Could not authenticate you with the server!")
   } else {
@@ -282,6 +303,4 @@ loginToDATIMOAuth <- function(
                          token = token),
            envir = d2_session_envir)
   }
-  
-  
 }

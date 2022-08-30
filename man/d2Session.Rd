@@ -26,6 +26,10 @@ organisation unit}
 with the DHIS2 instance.}
 
 \item{\code{me}}{dhis2 api/me response}
+
+\item{\code{max_cache_age}}{Maximum time responses should be cached}
+
+\item{\code{token}}{An httr OAUTH2 token}
 }
 \if{html}{\out{</div>}}
 }
