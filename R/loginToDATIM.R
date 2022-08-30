@@ -225,3 +225,63 @@ loginToDATIM <- function(config_path = NULL,
     stop("An unknowon error has occured during authentication!")
   }
 }
+
+
+
+#' Title
+#'
+#' @param base_url 
+#' @param token 
+#' @param redirect_uri 
+#' @param app 
+#' @param api 
+#' @param scope 
+#' @param d2_session_name 
+#' @param d2_session_envir 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+loginToDATIMOAuth <- function(
+    base_url = NULL,
+    token = NULL,
+    redirect_uri= NULL,
+    app= NULL,
+    api= NULL,
+    scope= NULL,
+    d2_session_name = "d2_default_session",
+    d2_session_envir = parent.frame()) {
+  
+  if (is.null(token)) {
+    token <- getOAuthToken(redirect_uri, app, api, scope)
+  } else {
+    token <- token #For Shiny
+  }
+  
+  # form url
+  url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
+  handle <- httr::handle(base_url)
+  #Get Request
+  r <- httr::GET(
+    url,
+    httr::config(token = token),
+    httr::timeout(60),
+    handle = handle
+  )
+  
+  if (r$status_code != 200L) {
+    stop("Could not authenticate you with the server!")
+  } else {
+    me <- jsonlite::fromJSON(httr::content(r, as = "text"))
+    # create the session object in the calling environment of the login function
+    assign(d2_session_name,
+           d2Session$new(base_url = base_url,
+                         handle = handle,
+                         me = me,
+                         token = token),
+           envir = d2_session_envir)
+  }
+  
+  
+}
