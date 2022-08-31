@@ -39,7 +39,8 @@ Suggests:
     knitr,
     rmarkdown,
     assertthat,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    lintr(>= 3.0.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
