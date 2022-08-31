@@ -1,6 +1,5 @@
-
 #' @import R6
-#' 
+#'
 d2Session <- R6::R6Class("d2Session",
                          #' @title d2Session
                          public = list(
@@ -213,7 +212,7 @@ loginToDATIM <- function(config_path = NULL,
                          base_url = base_url,
                          handle = handle,
                          me = me,
-                         token = NULL ),
+                         token = NULL),
            envir = d2_session_envir)
   } else if (r$status == 302L) {
     stop("Unable to authenticate due to DATIM currently undergoing maintenance.
