@@ -209,7 +209,8 @@ loginToDATIM <- function(config_path = NULL,
            d2Session$new(config_path = config_path,
                          base_url = base_url,
                          handle = handle,
-                         me = me),
+                         me = me,
+                         token = NULL ),
            envir = d2_session_envir)
   } else if (r$status == 302L) {
     stop("Unable to authenticate due to DATIM currently undergoing maintenance.

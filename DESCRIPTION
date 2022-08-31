@@ -28,7 +28,8 @@ Imports:
     stringi (>= 1.7.6),
     httr (>= 1.4.0),
     keyring,
-    rlang
+    rlang,
+    R6
 Suggests:
     devtools (>= 2.0.1),
     dplyr (>= 0.8.3),

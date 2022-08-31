@@ -26,7 +26,7 @@ loginToDATIMOAuth(
 
 \item{token}{An OAUTH2.0 token object. Will be created if not supplied.}
 
-\item{redirect_uri}{The redirect URI which should be used after 
+\item{redirect_uri}{The redirect URI which should be used after
 successful authentication with the server.}
 
 \item{app}{An httr OAUTH app object.}
