@@ -1,3 +1,6 @@
+
+#' @import R6
+#' 
 d2Session <- R6::R6Class("d2Session",
                          #' @title d2Session
                          public = list(
