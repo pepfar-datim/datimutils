@@ -37,8 +37,9 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
   #Requirements
   # The following constraints apply to the data value sets resource:
 
-  #1 At least one data set must be specified.
-  if (!(is.element("dataSet", variable_keys))) {
+  #1 At least one data set must be specified OR a dataElementGroup.
+  if (!(is.element("dataSet", variable_keys)) == TRUE &
+      !(is.element("dataElementGroup", variable_keys)) == TRUE) {
     stop("At least one data set must be specified.")
   }
 
@@ -54,7 +55,8 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
   }
 
   #3 At least one organisation unit must be specified.
-  if (!(is.element("orgUnit", variable_keys))) {
+  if (!(is.element("orgUnit", variable_keys)) == TRUE &
+      !(is.element("orgUnitGroup", variable_keys)) == TRUE) {
     stop("At least one organisation unit must be specified.")
   }
 
