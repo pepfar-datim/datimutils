@@ -11,8 +11,8 @@ test_that("GetDataValueSets", {
   #correct file
 
   with_mock_api({
-    data <- getDataValueSets(c("dataSet", "period", "orgUnit"),
-                             c("pBOMPrpg1QX", "202201", "DiszpKrYNg8"),
+    data <- getDataValueSets(variable_keys = c("dataSet", "period", "orgUnit"),
+                             variable_values = c("pBOMPrpg1QX", "202201", "DiszpKrYNg8"),
                              d2_session = play2372)
 
     testthat::expect_named(data, c("dataElement",
@@ -28,8 +28,8 @@ test_that("GetDataValueSets", {
                                    "followup"))
     testthat::expect_equal(NROW(data), 3)
 
-    data2 <- getDataValueSets(c("dataSet", "period", "orgUnit"),
-                              c("pBOMPrpg1QX", "202201", "DiszpKrYNg8"),
+    data2 <- getDataValueSets(variable_keys = c("dataSet", "period", "orgUnit"),
+                              variable_values = c("pBOMPrpg1QX", "202201", "DiszpKrYNg8"),
                               d2_session = play2372,
                               verbose = TRUE)
     testthat::expect_type(data2, "list")
@@ -46,10 +46,20 @@ test_that("GetDataValueSets", {
                                          "followup"))
     testthat::expect_equal(NROW(data2$data), 3)
 
-    testthat::expect_error(getDataValueSets(c("limit"),
-                                            c("3"),
-                                            play2372),
-                           "At least one data set must be specified.",
+    # test missing data set or data element group
+    testthat::expect_error(getDataValueSets(variable_keys = c("limit"),
+                                            variable_values = c("3"),
+                                            d2_session = play2372),
+                           "At least one data set or data element group must be specified.",
                            fixed = TRUE)
+    
+    # test missing orgunit or orgunit group
+    testthat::expect_error(getDataValueSets(variable_keys = c("dataSet", "period"),
+                                            variable_values = c("pBOMPrpg1QX", "202201"),
+                                            d2_session = play2372),
+                           "At least one organisation unit or organisation unit group must be specified.",
+                           fixed = TRUE)
+    
+    
   })
 })
