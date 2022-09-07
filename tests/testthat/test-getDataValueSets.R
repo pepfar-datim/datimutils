@@ -52,14 +52,14 @@ test_that("GetDataValueSets", {
                                             d2_session = play2372),
                            "At least one data set or data element group must be specified.",
                            fixed = TRUE)
-    
+
     # test missing orgunit or orgunit group
     testthat::expect_error(getDataValueSets(variable_keys = c("dataSet", "period"),
                                             variable_values = c("pBOMPrpg1QX", "202201"),
                                             d2_session = play2372),
                            "At least one organisation unit or organisation unit group must be specified.",
                            fixed = TRUE)
-    
-    
+
+
   })
 })
