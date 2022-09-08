@@ -1,3 +1,8 @@
+# datimutils 0.5.3
+
+## Bug fixes
+* Fixes error conditions in getDataValueSets.
+
 # datimutils 0.5.2
 
 ## Bug fixes
