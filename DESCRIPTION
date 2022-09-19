@@ -1,8 +1,8 @@
 Package: datimutils
 Type: Package
 Title: Utilities for interacting with the DATIM api from R
-Version: 0.5.3
-Date: 2022-09-08
+Version: 0.6.0
+Date: 2022-09-19
 Authors@R: 
     c(
     person("Scott", "Jackson", email = "sjackson@baosystems.com",
@@ -21,14 +21,15 @@ Authors@R:
 Description: General utilities for interacting with the DATIM api from R.
 URL: https://github.com/pepfar-datim/datimutils
 BugReports: https://github.com/pepfar-datim/datimutils
-Depends: R (>= 3.6.0)
+Depends: R (>= 4.1.1)
 Imports:
     tidyr (>= 0.8.3),
     jsonlite (>= 1.6),
     stringi (>= 1.7.6),
     httr (>= 1.4.0),
     keyring,
-    rlang
+    rlang,
+    R6 (>= 2.5.1)
 Suggests:
     devtools (>= 2.0.1),
     dplyr (>= 0.8.3),
@@ -38,9 +39,10 @@ Suggests:
     knitr,
     rmarkdown,
     assertthat,
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    lintr(>= 3.0.0)
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
