@@ -1,5 +1,4 @@
-# datimutils 0.5.4
-
+# datimutils 0.6.0
 
 ## New features
 * Adds `loginToDATIMOAuth` function to assist with OAUTH2.0 authentication. 
