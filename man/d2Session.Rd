@@ -61,7 +61,9 @@ connections}
 
 \item{\code{me}}{DHIS2 me response object}
 
+
 \item{\code{token}}{OAUTH2 token}
+
 }
 \if{html}{\out{</div>}}
 }
