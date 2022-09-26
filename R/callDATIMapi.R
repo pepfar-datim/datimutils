@@ -89,17 +89,18 @@ api_get <- function(path,
   response_code <- 5
 
   while (i <= retry && (response_code < 400 || response_code >= 500)) {
-    resp <- NULL
-    resp <-
-      try(
-      httr::GET(url, httr::timeout(timeout),
+
+    resp <- tryCatch(
+        {
+          httr::GET(url, httr::timeout(timeout),
                       handle = handle)
-      )
+        },
+        error = function(e) {
+          NULL
+        })
+    
 
-    # try is added in order to handle if resp comes back as a "try-error" class
-    response_code <- try(httr::status_code(resp), silent = TRUE)
-
-    if (is(response_code, "try-error")) {
+    if (is.null(resp)) {
       message(
         paste0(
           "Api call to server failed on attempt ",
@@ -123,7 +124,7 @@ api_get <- function(path,
 
   # let user know that by the last attempt the api continues to return an error, this should break before status code
   # as a status code cannot be pulled from a failed api grab
-  if (class(resp) == "try-error") {
+  if (is.null(resp)) {
     stop(
       paste0(
         "Server returned no response even on the last retry,
