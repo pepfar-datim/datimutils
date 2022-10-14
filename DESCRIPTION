@@ -40,7 +40,8 @@ Suggests:
     rmarkdown,
     assertthat,
     testthat (>= 2.1.0),
-    lintr(>= 3.0.0)
+    lintr (>= 3.0.0),
+    shiny
 License: GPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
