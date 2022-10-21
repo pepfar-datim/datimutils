@@ -129,7 +129,7 @@ shinyServer(function(input, output, session) {
     output$authenticated <- renderUI({
         
         fluidPage(
-            titlePanel("OAuth or PW Login Template"),
+            titlePanel("Datimutils OAuth Example App"),
             DT::dataTableOutput("mytable"),
             actionButton("logout",
                          "Return to Login Page",
