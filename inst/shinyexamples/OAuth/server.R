@@ -37,35 +37,33 @@ if (interactive()) {
     APP_URL <- Sys.getenv("APP_URL") #This will be your shiny server path
 }
 
-{
-    
-    oauth_app <- httr::oauth_app(Sys.getenv("OAUTH_APPNAME"),
+ oauth_app <- httr::oauth_app(Sys.getenv("OAUTH_APPNAME"),
                                  key = Sys.getenv("OAUTH_KEYNAME"), # dhis2 = Client ID
                                  secret = Sys.getenv("OAUTH_SECRET"), #dhis2 = Client Secret
                                  redirect_uri = APP_URL
     )
-    
-    oauth_api <- httr::oauth_endpoint(base_url = paste0(Sys.getenv("BASE_URL"),"uaa/oauth"),
-                                      request=NULL,
+
+    oauth_api <- httr::oauth_endpoint(base_url = paste0(Sys.getenv("BASE_URL"), "uaa/oauth"),
+                                      request = NULL,
                                       authorize = "authorize",
-                                      access="token"
+                                      access = "token"
     )
-    
+
     oauth_scope <- "ALL"
-}
+
 
 has_auth_code <- function(params) {
-    
+
     return(!is.null(params$code))
 }
 
 ###  Begin Shiny Web app items
 shinyServer(function(input, output, session) {
-    
+
     validation_results <- reactive({ validate() }) # nolint
-    
+
     ready <- reactiveValues(ok = FALSE)
-    
+
     user_input <- reactiveValues(authenticated = FALSE,
                                  status = "",
                                  d2_session = NULL,
@@ -76,7 +74,7 @@ shinyServer(function(input, output, session) {
     observeEvent(input$logout, {
         req(input$logout)
         # Returns to the log in screen without the authorization code at top
-        updateQueryString("?",mode="replace",session=session)
+        updateQueryString("?", mode = "replace", session = session)
         flog.info(paste0("User ", user_input$d2_session$me$userCredentials$username, " logged out."))
         ready$ok <- FALSE
         user_input$authenticated <- FALSE
@@ -87,10 +85,10 @@ shinyServer(function(input, output, session) {
         gc()
         session$reload()
     })
- 
-###  Logic for which UI to display       
+
+###  Logic for which UI to display
     output$ui <- renderUI({
-        
+
         if (user_input$authenticated == FALSE) {
             # References the UI code for log in page, could be combined
             fluidPage(
@@ -110,14 +108,14 @@ shinyServer(function(input, output, session) {
 ### UI code for log in screen
     # Username and password text fields, log in button
     output$uiLogin <- renderUI({
-        
+
         wellPanel(fluidRow(
             tags$head(tags$script(HTML(jscode_login))), # enter button functionality for login button
             #tags$div(HTML('<center><img src="pepfar.png"></center>')), #Can add logo
             h4("Welcome to the Datimutils OAuth Example App. Please login with your DATIM credentials:")
         ),
         fluidRow(
-            actionButton("login_button_oauth","Log in with DATIM"),
+            actionButton("login_button_oauth", "Log in with DATIM"),
             uiOutput("ui_hasauth"),
             uiOutput("ui_redirect")
         ),
@@ -125,23 +123,23 @@ shinyServer(function(input, output, session) {
         )
     })
 
-### UI code for after log in      
+### UI code for after log in
     output$authenticated <- renderUI({
-        
+
         fluidPage(
             titlePanel("Datimutils OAuth Example App"),
             DT::dataTableOutput("mytable"),
             actionButton("logout",
                          "Return to Login Page",
-                         icon=icon("sign-out"))
+                         icon = icon("sign-out"))
         )
     })
 
  #UI that will display when redirected to OAuth login agent
-    output$ui_redirect = renderUI({
+    output$ui_redirect <- renderUI({
         #print(input$login_button_oauth) useful for debugging
-        if(!is.null(input$login_button_oauth)){
-            if(input$login_button_oauth>0){
+        if (!is.null(input$login_button_oauth)) { # nolint
+            if (input$login_button_oauth > 0) { # nolint
                 url <- httr::oauth2.0_authorize_url(oauth_api, oauth_app, scope = oauth_scope)
                 redirect <- sprintf("location.replace(\"%s\");", url)
                 tags$script(HTML(redirect))
@@ -150,13 +148,13 @@ shinyServer(function(input, output, session) {
     })
 
 ### Login Button oauth Checks
-    observeEvent(input$login_button_oauth > 0,{
-        
+    observeEvent(input$login_button_oauth > 0, {
+
         #Grabs the code from the url
         params <- parseQueryString(session$clientData$url_search)
         #Wait until the auth code actually exists
         req(has_auth_code(params))
-        
+
         #Manually create a token
         token <- httr::oauth2.0_token(
             app = oauth_app,
@@ -170,14 +168,14 @@ shinyServer(function(input, output, session) {
                                                       code = params$code,
                                                       use_basic_auth = TRUE)
         )
-        
+
         loginAttempt <- tryCatch({
             user_input$uuid <- uuid::UUIDgenerate()
             datimutils::loginToDATIMOAuth(base_url =  Sys.getenv("BASE_URL"),
                                           token = token,
                                           app = oauth_app,
                                           api = oauth_api,
-                                          redirect_uri= APP_URL,
+                                          redirect_uri = APP_URL,
                                           scope = oauth_scope,
                                           d2_session_envir = parent.env(environment())
             ) },
@@ -186,13 +184,13 @@ shinyServer(function(input, output, session) {
                 flog.info(paste0("User ", input$user_name, " login failed. ", e$message), name = "datimutils")
             }
         )
-        
+
         if (exists("d2_default_session")) {
-            
+
             user_input$authenticated  <-  TRUE
             user_input$d2_session  <-  d2_default_session$clone()
             d2_default_session <- NULL
-            
+
             #Need to check the user is a member of the PRIME Data Systems Group, COP Memo group, or a super user
             user_input$memo_authorized <-
                 grepl("VDEqY8YeCEk|ezh8nmc4JbX", user_input$d2_session$me$userGroups) |
@@ -208,8 +206,8 @@ shinyServer(function(input, output, session) {
                 ),
                 name = "datimutils"
             )
-            
-            
+
+
             flog.info(
                 paste0(
                     "User ",
@@ -219,14 +217,14 @@ shinyServer(function(input, output, session) {
                 name = "datimutils"
             )
         }
-        
+
     })
 
 ########## Below this line is your standard server code ##########
-### Controls Data Table   
-    output$mytable = DT::renderDataTable({
-        
-        df=getMetadata(
+### Controls Data Table
+    output$mytable <- DT::renderDataTable({
+
+        df <- getMetadata(
             end_point = "organisationUnitGroups",
             fields = "id,name",
             d2_session = user_input$d2_session

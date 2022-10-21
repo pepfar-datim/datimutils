@@ -111,7 +111,7 @@ It is important to note that an Oauth client will need to be configured in your 
 An example app can be found inside this package by running the below command. The environment variables will need to be set before the app will launch, but is not required for explaining the app's architecture.
 
 ```{r}
-list.files(system.file('shiny-examples','OAuth', package = 'datimutils'))
+list.files(system.file("shiny-examples", "OAuth", package = "datimutils"))
 ```
 
 ## Features for working with DATIM/DHIS2 metadata
