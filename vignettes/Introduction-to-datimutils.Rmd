@@ -59,7 +59,7 @@ loginToDATIM(
 
 ### Methods 2 and 3 - Configuration Files
 
-The next two log in methods require the user to create a reusable configuration file in the format below. The location of this configuration file on the users's machine will be passed to the `loginToDATIM` function. If a user wants the ability to quickly log into multiple different servers, they can have a config file for each server instance.
+The next two log in methods require the user to create a reusable configuration file in the format below. The location of this configuration file on the user's machine will be passed to the `loginToDATIM` function. If a user wants the ability to quickly log into multiple different servers, they can have a config file for each server instance.
 
 In this vignette, the example config file is part of the package, *play.json*.
 
@@ -104,11 +104,15 @@ loginToDATIM(config_path = "play.json")
 
 The final log in method is `loginToDATIMOAuth`. It uses DATIM, or your chosen DHIS2 instance, to authenticate via OAuth. This function will send the user to the chosen instance based upon the baseurl provided in order to retrieve an authentication code.
 
-This function is useful for Shiny web applications as the process of exchanging the code for a token is automated. While not recommended it can be used with the command line, however the code found after logging in will have to be manually entered when prompted. This code can be found at the end of the url in your browser.
+This function is useful for Shiny web applications as the process of exchanging the code for a token is automated. While not recommended, it can be used with the command line, however the code found after logging in will have to be manually entered when prompted. This code can be found at the end of the url in your browser.
 
 It is important to note that an Oauth client will need to be configured in your chosen DHIS2 instance in order to utilize this functionality. Depending upon your access in the aforementioned DHIS2 instance you can do this by logging in \> navigating to "System Settings" in the menu \> selecting "OAuth2 Clients" on the left \> clicking the blue "+" button. If you do not see these options please contact your system admin. You will need the name, client ID, Client Secret, and Redirect URIs to configure your Shiny application.
 
-An example app can be found inside this package by running enter command here.
+An example app can be found inside this package by running the below command. The environment variables will need to be set before the app will launch, but is not required for explaining the app's architecture.
+
+```{r}
+list.files(system.file('shiny-examples','OAuth', package = 'datimutils'))
+```
 
 ## Features for working with DATIM/DHIS2 metadata
 
