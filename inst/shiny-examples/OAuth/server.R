@@ -29,9 +29,9 @@ flog.appender(appender.console(), name = "datimutils")
 
 ### OAuth Client information
 if (interactive()) {
-    # NOTE: The line below must be ran manually to set the port  
-    # OR this line can be added to .Rprofile. 
-    # This is not an issue when using a single file version of shiny, ie app.R 
+    # NOTE: The line below must be ran manually to set the port
+    # OR this line can be added to .Rprofile.
+    # This is not an issue when using a single file version of shiny, ie app.R
     # The order by which the files execute is the reasoning behind this.
     options(shiny.port = 3123)
     # testing url
