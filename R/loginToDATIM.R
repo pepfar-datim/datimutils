@@ -191,6 +191,11 @@ loginToDATIM <- function(config_path = NULL,
     base_url <- credentials[["baseurl"]]
   }
 
+  if (!validate_base_url(base_url)) {
+    stop("The base_url must be of the form http(s)://myserver.org/ including a final forward slash")
+  }
+  
+  
   # form url
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
   handle <- httr::handle(base_url)
@@ -283,6 +288,10 @@ loginToDATIMOAuth <- function(
     token <- token #For Shiny
   }
 
+  if (!validate_base_url(base_url)) {
+    stop("The base_url must be of the form http(s)://xxxx.xxx/ including a final forward slash")
+  }
+  
   # form url
   url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
   handle <- httr::handle(base_url)

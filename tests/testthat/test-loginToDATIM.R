@@ -147,3 +147,19 @@ httptest::with_mock_api({
               )
             })
 })
+
+
+test_that("Can validate a base url", {
+
+  expect_false(validate_base_url())
+  expect_false(validate_base_url(NA))
+  expect_false(validate_base_url("foo"))
+  expect_false(validate_base_url(c("foo", "bar")))
+  expect_true(validate_base_url("https://www.datim.org/"))
+  expect_false(validate_base_url("http://www.datim.org"))
+  expect_true(validate_base_url("https://play.dhis2.org/"))
+  expect_true(validate_base_url("https://play.dhis2.org/dev/"))
+  expect_true(validate_base_url("http://127.0.0.1/"))
+  expect_true(validate_base_url("http://localhost/"))
+
+})
