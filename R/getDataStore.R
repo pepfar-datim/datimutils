@@ -34,8 +34,25 @@ if (!isSimpleString(namespace) || !isSimpleString(key)) {
   response_code <- 5
 
   while (i <= retry && (response_code < 400 || response_code >= 500)) {
-    resp <- httr::GET(url, httr::timeout(timeout),
-                      handle = d2_session$handle)
+
+    resp <- NULL
+    resp <-
+      try(#Is we are using an OAUTH token, we need to put the authorization code in the header.
+        #Otherwise, just use the cookie.
+        if (is.null(d2_session$token)) {
+          httr::GET(url, httr::timeout(timeout),
+                    handle = d2_session$handle)
+        } else {
+          httr::GET(
+            url,
+            httr::timeout(timeout),
+            handle = d2_session$handle,
+            httr::add_headers(
+              Authorization = paste("Bearer", d2_session$token$credentials$access_token, sep = " ")
+            )
+          )
+        })
+
     response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
