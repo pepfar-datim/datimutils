@@ -99,7 +99,6 @@ api_get <- function(path,
           httr::GET(url, httr::timeout(timeout),
                     handle = handle)
         } else {
-          print("Using token")
           httr::GET(url,
                     httr::timeout(timeout),
                     handle = handle,
