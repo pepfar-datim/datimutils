@@ -92,16 +92,19 @@ api_get <- function(path,
     resp <- NULL
     resp <-
       try(
-        
+        #Is we are using an OAUTH token, we need to
+        #put the authorization code in the header.
+        #Otherwise, just use the cookie.
         if (is.null(d2_session$token)) {
           httr::GET(url, httr::timeout(timeout),
                     handle = handle)
         } else {
-          print("Using token")
           httr::GET(url,
                     httr::timeout(timeout),
                     handle = handle,
-                    httr::add_headers(Authorization = paste("Bearer", d2_session$token$credentials$access_token, sep = " ")))
+                    httr::add_headers(Authorization =
+                                        paste("Bearer",
+                                              d2_session$token$credentials$access_token, sep = " ")))
         }
 
       )
