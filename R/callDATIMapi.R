@@ -92,8 +92,18 @@ api_get <- function(path,
     resp <- NULL
     resp <-
       try(
-      httr::GET(url, httr::timeout(timeout),
-                      handle = handle)
+        
+        if (is.null(d2_session$token)) {
+          httr::GET(url, httr::timeout(timeout),
+                    handle = handle)
+        } else {
+          print("Using token")
+          httr::GET(url,
+                    httr::timeout(timeout),
+                    handle = handle,
+                    add_headers(Authorization = paste("Bearer", d2_session$token$credentials$access_key, sep = " ")))
+        }
+
       )
 
     # try is added in order to handle if resp comes back as a "try-error" class
