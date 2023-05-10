@@ -1,0 +1,17 @@
+[
+    "weeklyMaintenance",
+    "approvals",
+    "accessRequests",
+    "dataSetAssignments",
+    "approvalsDashboard",
+    "register",
+    "integrityChecks",
+    "dashboard-information",
+    "CSD-Loader-Last-Import",
+    "hrhProcessor",
+    "tracker-capture",
+    "dhiApp",
+    "dedupe",
+    "erbProcessor",
+    "dataElementCadence"
+]

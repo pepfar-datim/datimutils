@@ -1,4 +1,29 @@
+isSimpleString <- function(x) {
+  !(is.na(x) || x == "" || is.null(x)) & typeof(x) == "character"
+}
 
+.handleDataStoreResponse <- function(path, d2_session, retry, timeout) {
+  resp <-
+    tryCatch({
+      api_get(
+        path,
+        d2_session = d2_session,
+        retry = retry,
+        timeout = timeout,
+        verbose = TRUE
+      )
+    },
+    error = function(e) {
+      warning(paste(path, "could not be retreived from the server"))
+      return(NULL)
+    })
+
+  if (inherits(resp, "list")) {
+    jsonlite::parse_json(httr::content(resp$api_responses, type = "text"), simplifyVector = FALSE)
+  } else {
+    return(NULL)
+  }
+}
 #' @title getDataStoreKey returns a particular key from the datastore
 #' @description The DHIS2 datastore can be used to store arbitrary JSON objects.
 #' @param namespace Namespace of the datastore
@@ -20,53 +45,58 @@ getDataStoreKey <- function(namespace, key, simplify = FALSE,
                             retry  = 3,
                             timeout = 60) {
 
-isSimpleString <- function(x) {
-  !(is.na(x) || x == "" || is.null(x)) & typeof(x) == "character"
-}
 
 if (!isSimpleString(namespace) || !isSimpleString(key)) {
   stop("Please specify the namespace and key!")
 }
-  url <- paste0(d2_session$base_url, "api/dataStore/", namespace, "/", key)
+  path <- paste0("api/dataStore/", namespace, "/", key)
 
-  # retry api get block, only retries if reponse code not in 400s
-  i <- 1
-  response_code <- 5
+  .handleDataStoreResponse(path, d2_session, retry, timeout)
+}
 
-  while (i <= retry && (response_code < 400 || response_code >= 500)) {
 
-    resp <- NULL
-    resp <-
-      try(#Is we are using an OAUTH token, we need to put the authorization code in the header.
-        #Otherwise, just use the cookie.
-        if (is.null(d2_session$token)) {
-          httr::GET(url, httr::timeout(timeout),
-                    handle = d2_session$handle)
-        } else {
-          httr::GET(
-            url,
-            httr::timeout(timeout),
-            handle = d2_session$handle,
-            httr::add_headers(
-              Authorization = paste("Bearer", d2_session$token$credentials$access_token, sep = " ")
-            )
-          )
-        })
 
-    response_code <- httr::status_code(resp)
-    Sys.sleep(i - 1)
-    i <- i + 1
-    if (response_code == 200 &&
-        resp$url == url &&
-        httr::http_type(resp) == "application/json") {
-      break
-    }
+#' Title getDataStoreNamespaceKeys returns all keys for a given name space
+#'
+#' @param namespace The name of the namespace as a string
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon login in to DATIM with loginToDATIM
+#' @param retry Number of times to retry the request
+#' @param timeout Timeout in number of seconds
+#' @return A character vector of strings contained in the namespace.
+#'
+#' @export
+#'
+getDataStoreNamespaceKeys <- function(namespace,
+                                      d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                      retry  = 3,
+                                      timeout = 60)  {
+
+  if (!isSimpleString(namespace)) {
+    stop("Please specify the namespace as a string!")
   }
 
-    if (response_code == 404L) {
-      warning("The requested datastore object could not be found")
-      return(NULL)
-    }
+  path <- paste0("api/dataStore/", namespace)
 
-    jsonlite::parse_json(httr::content(resp, type = "text"), simplifyVector = simplify)
+  .handleDataStoreResponse(path, d2_session, retry, timeout)
+}
+
+#' Title getDataStoreNamespaceKeys returns all keys for a given name space
+#'
+#' @param namespace The name of the namespace as a string
+#' @param d2_session the d2Session object, default is "d2_default_session",
+#' it will be made upon login in to DATIM with loginToDATIM
+#' @param retry Number of times to retry the request
+#' @param timeout Timeout in number of seconds
+#' @return A character vector of strings contained in the namespace.
+#'
+#' @export
+#'
+getDataStoreNamespaces <- function(d2_session = dynGet("d2_default_session", inherits = TRUE),
+                                      retry  = 3,
+                                      timeout = 60)  {
+
+  path <- paste0("api/dataStore.json")
+
+  .handleDataStoreResponse(path, d2_session, retry, timeout)
 }
