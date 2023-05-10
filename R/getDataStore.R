@@ -81,14 +81,13 @@ getDataStoreNamespaceKeys <- function(namespace,
   .handleDataStoreResponse(path, d2_session, retry, timeout)
 }
 
-#' Title getDataStoreNamespaceKeys returns all keys for a given name space
+#' Title getDataStoreNamespaces returns a list of all namespaces present in the datastore
 #'
-#' @param namespace The name of the namespace as a string
 #' @param d2_session the d2Session object, default is "d2_default_session",
 #' it will be made upon login in to DATIM with loginToDATIM
 #' @param retry Number of times to retry the request
 #' @param timeout Timeout in number of seconds
-#' @return A character vector of strings contained in the namespace.
+#' @return A character vector of strings of the namespaces in the dataStore.
 #'
 #' @export
 #'
