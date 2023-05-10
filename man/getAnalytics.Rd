@@ -19,7 +19,7 @@ getAnalytics(
   return_names = FALSE,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  timeout = 60,
+  timeout = 180,
   verbose = FALSE,
   quiet = TRUE
 )
