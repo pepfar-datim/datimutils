@@ -19,24 +19,37 @@ with_mock_api({
 
   test_that("Get a datstore object ", {
 
-    data <- getDataStoreKey("metabase", "repositories", d2_session = play2363)
+    data <- getDataStoreKey("dedupe", "periodSettings", d2_session = test)
 
-    testthat::expect_type(data, "list")
-    testthat::expect_equal(length(data), 2)
-    rm(data) })
+    expect_named(data, c("RESULTS", "TARGETS"))
+
+    expect_type(data, "list")
+    expect_equal(length(data), 2)
+     })
 
   test_that("Can error with missing namespace", {
-    expect_error(getDataStoreKey(NA, "repositories", d2_session = play2363))
+    expect_error(getDataStoreKey(NA, "bar", d2_session = test))
   })
 
   test_that("Can error with missing key", {
-    expect_error(getDataStoreKey("repositories", NA, d2_session = play2363))
+    expect_error(getDataStoreKey("foo", NA, d2_session = test))
   })
 
   test_that("Can error with a list as namespace", {
-    expect_warning(data <- getDataStoreKey("metabase", "foo", d2_session = play2363),
-                   "The requested datastore object could not be found")
+    expect_warning(data <- getDataStoreKey("dataQualityTool", "foo", d2_session = test),
+                   "api/dataStore/dataQualityTool/foo could not be retreived from the server")
     expect_null(data)
+
+  test_that("Can get a list of namespace keys", {
+    mykeys <- getDataStoreNamespaceKeys("dedupe",  d2_session = test)
+    expect_setequal(mykeys, c("crosswalks", "periodSettings", "report", "reportSettings"))
+  })
+
+  test_that("Can get a list of namespaces from the datastore", {
+            mynamespaces <- getDataStoreNamespaces(d2_session = test)
+            expect_true(inherits(mynamespaces, "list"))
+            })
+
   })
 
 
