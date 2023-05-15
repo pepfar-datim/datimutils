@@ -730,3 +730,11 @@ test_that(
       testthat::expect_s3_class(resp, "data.frame")
       rm(resp)
          })
+
+# test NAs are handled properly
+httptest::with_mock_api({
+  # na value is passed to the api to test handling
+  age_option_uid <- c(NA, "R32YPF38CJJ", "jcGQdcpPSJP")
+  res <- datimutils::getCatOptions(age_option_uid, d2_session = play2372)
+  testthat::expect_identical(res, c(NA, "35-39", "10-14"))
+})
