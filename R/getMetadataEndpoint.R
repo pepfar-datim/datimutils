@@ -149,7 +149,7 @@ duplicateResponse <- function(resp, expand, by) {
   unique_values <- unique(values)
 
   #break up url to multiple calls if needed
-  if (sum(nchar(unique_values)) > 2000) {
+  if (sum(nchar(unique_values), na.rm = TRUE) > 2000) {
 
     values_list <- .splitUrlComponent(unique_values, 2000)
 
