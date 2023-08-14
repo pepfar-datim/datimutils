@@ -9,19 +9,28 @@ getDataValueSets(
   variable_values = NULL,
   d2_session = dynGet("d2_default_session", inherits = TRUE),
   retry = 1,
-  timeout = 180
+  timeout = 180,
+  verbose = FALSE,
+  quiet = TRUE
 )
 }
 \arguments{
-\item{d2_session}{R6 datimutils object which handles authentication with DATIM}
+\item{d2_session}{R6 datimutils object which handles authentication
+with DATIM}
 
 \item{retry}{number of times to retry}
 
 \item{timeout}{number of seconds to wait during call}
 
-\item{keys}{character vector - data value set parameter keys (e.g. "dataSet", "period")}
+\item{verbose}{return raw content with data}
 
-\item{values}{character vector - values marching the key from keys (e.g. "Abcde123456", "2019Q1"}
+\item{quiet}{Echo the URL which is called to the console if TRUE.}
+
+\item{keys}{character vector - data value set parameter keys
+(e.g. "dataSet", "period")}
+
+\item{values}{character vector - values marching the key from keys
+(e.g. "Abcde123456", "2019Q1"}
 }
 \value{
 Data frame with the data requested

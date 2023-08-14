@@ -44,6 +44,19 @@ testthat::expect_s3_class(data, "data.frame")
 testthat::expect_equal(NROW(data), 172)
 rm(data) })
 
+test_that("getSqlView verbose: ", {
+  data2 <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
+                      variable_keys = c("valuetype"),
+                      variable_values = c("TEXT"),
+                      valuetype %.like% "TEXT",
+                      d2_session = play2335,
+                      verbose = TRUE)
+
+  testthat::expect_type(data2, "list")
+  testthat::expect_s3_class(data2$data, "data.frame")
+  testthat::expect_equal(NROW(data2$data), 172)
+  rm(data2) })
+
 # https://play.dhis2.org/2.35.13/api/sqlViews/QAlOivHBY3a/data.json?paging=false
 test_that("We can fetch a SQL view without nested lists", {
   test_dataset <-  getSqlView(sql_view_uid = "QAlOivHBY3a",

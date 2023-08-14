@@ -7,12 +7,16 @@
 #' default will not try again
 #' @param timeout how long should a reponse be waited for
 #' @param api_version defaults to current but can pass in version number
+#' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called to the console.
 #' @return Result of DATIM API query returned as named list.
 #'
 api_get <- function(path,
                     d2_session,
                     retry = 1, timeout = 60,
-                    api_version = NULL) {
+                    api_version = NULL,
+                    verbose = FALSE,
+                    quiet = TRUE) {
 
   base_url <- d2_session$base_url
   handle <- d2_session$handle
@@ -76,8 +80,11 @@ api_get <- function(path,
 
   # removes whitespace
   url <- gsub(" ", "", url)
-  print(url)
-  # retry api get block, only retries if reponse code not in 400s
+  if (!quiet) {
+    print(url)
+  }
+
+  # retry api get block, only retries if response code not in 400s
   i <- 1
   response_code <- 5
 
@@ -85,17 +92,39 @@ api_get <- function(path,
     resp <- NULL
     resp <-
       try(
-      httr::GET(url, httr::timeout(timeout),
-                      handle = handle)
+        #Is we are using an OAUTH token, we need to
+        #put the authorization code in the header.
+        #Otherwise, just use the cookie.
+        if (is.null(d2_session$token)) {
+          httr::GET(url, httr::timeout(timeout),
+                    handle = handle)
+        } else {
+          httr::GET(url,
+                    httr::timeout(timeout),
+                    handle = handle,
+                    httr::add_headers(Authorization =
+                                        paste("Bearer",
+                                              d2_session$token$credentials$access_token, sep = " ")))
+        }
+
       )
 
-    if (is.null(resp)) {
-      next
+    # try is added in order to handle if resp comes back as a "try-error" class
+    response_code <- try(httr::status_code(resp), silent = TRUE)
+
+    if (is(response_code, "try-error")) {
+      message(
+        paste0(
+          "Api call to server failed on attempt ",
+          i,
+          " trying again ..."
+        )
+        )
     }
 
-    response_code <- httr::status_code(resp)
     Sys.sleep(i - 1)
     i <- i + 1
+
     if (response_code == 200L &&
         stringi::stri_replace(resp$url, regex = ".*/api/", replacement = "") ==
         stringi::stri_replace(url, regex = ".*/api/", replacement = "") &&
@@ -103,6 +132,18 @@ api_get <- function(path,
       break
     }
 
+  }
+
+  # let user know that by the last attempt the api continues to return an error, this should break before status code
+  # as a status code cannot be pulled from a failed api grab
+  if (class(resp) == "try-error") {
+    stop(
+      paste0(
+        "Server returned no response even on the last retry,
+        this could a malformed link or a server issue, otherwise try again ",
+        url
+      )
+    )
   }
 
   # unknown error catching which returns message and response code
@@ -129,10 +170,16 @@ api_get <- function(path,
   }
 
   # extract text response from api response
-  resp <- jsonlite::fromJSON(httr::content(resp, as = "text"),
+  content <- jsonlite::fromJSON(httr::content(resp, as = "text"),
     simplifyDataFrame = TRUE,
     flatten = TRUE
   )
 
-  return(resp)
+  if (verbose) {
+    return(list("data" = content, "api_responses" = resp))
+  } else {
+    return(content)
+  }
+
+
 }

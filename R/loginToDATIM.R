@@ -1,3 +1,5 @@
+#' @import R6
+#'
 d2Session <- R6::R6Class("d2Session",
                          #' @title d2Session
                          public = list(
@@ -17,7 +19,10 @@ d2Session <- R6::R6Class("d2Session",
                            handle = NULL,
                            #' @field me dhis2 api/me response
                            me  = NULL,
+                           #' @field max_cache_age Maximum time responses should be cached
                            max_cache_age  = NULL,
+                           #' @field token An httr OAUTH2 token
+                           token = NULL,
                            #' @description
                            #' Create a new DHISLogin object
                            #' @param config_path Configuration file path
@@ -25,18 +30,19 @@ d2Session <- R6::R6Class("d2Session",
                            #' @param handle httr handle to be used for dhis2
                            #' connections
                            #' @param me DHIS2 me response object
-                           #' @param max_cache_age cache expiry currently used
-                           #' by datim validation
+                           #' @param token OAUTH2 token
                            initialize = function(config_path = NA_character_,
                                                  base_url,
                                                  handle,
-                                                 me) {
+                                                 me,
+                                                 token) {
                              self$config_path <- config_path
                              self$me <- me
                              self$user_orgunit <- me$organisationUnits$id
                              self$base_url <- base_url
                              self$username <- me$userCredentials$username
                              self$handle <- handle
+                             self$token <- token
                              }
                        )
 )
@@ -205,7 +211,8 @@ loginToDATIM <- function(config_path = NULL,
            d2Session$new(config_path = config_path,
                          base_url = base_url,
                          handle = handle,
-                         me = me),
+                         me = me,
+                         token = NULL),
            envir = d2_session_envir)
   } else if (r$status == 302L) {
     stop("Unable to authenticate due to DATIM currently undergoing maintenance.
@@ -221,5 +228,82 @@ loginToDATIM <- function(config_path = NULL,
          Please update your credentials and try again.")
   } else {
     stop("An unknowon error has occured during authentication!")
+  }
+}
+
+
+
+#' @title       datimutils::loginToDATIMOAuth(base_url =  Sys.getenv("BASE_URL"),
+#' token = token,
+#' app = oauth_app,
+#' api = oauth_api,
+#' redirect_uri= APP_URL,
+#' scope = oauth_scope,
+#' d2_session_envir = parent.env(environment()))
+#'
+#' @param base_url URL of the DHIS2 server
+#' @param token An OAUTH2.0 token object. Will be created if not supplied.
+#' @param redirect_uri The redirect URI which should be used after
+#' successful authentication with the server.
+#' @param app An httr OAUTH app object.
+#' @param api An hjttr OAUTH endpoint.
+#' @param scope A character vector of scopes which should be requested.
+#' @param d2_session_name the variable name for the d2Session object.
+#' The default name is d2_default_session and will be used by other datimutils
+#' functions by default when connecting to datim. Generally a custom name
+#' should only be needed if you need to log into two seperate DHIS2 instances
+#' at the same time. If you create a d2Session object with a custom name then
+#' this object must be passed to other datimutils functions explicitly
+#' @param d2_session_envir the environment in which to place the R6 login
+#' object, default is the immediate calling environment
+#'
+#' @export
+#'
+
+loginToDATIMOAuth <- function(
+    base_url = NULL,
+    token = NULL,
+    redirect_uri = NULL,
+    app = NULL,
+    api = NULL,
+    scope = NULL,
+    d2_session_name = "d2_default_session",
+    d2_session_envir = parent.frame()) {
+
+  if (is.null(token)) {
+    token <- httr::oauth2.0_token(
+      app = app,
+      endpoint = api,
+      scope = scope,
+      use_basic_auth = TRUE,
+      oob_value = redirect_uri,
+      cache = FALSE
+    )
+  } else {
+    token <- token #For Shiny
+  }
+
+  # form url
+  url <- utils::URLencode(URL = paste0(base_url, "api", "/me"))
+  handle <- httr::handle(base_url)
+  #Get Request
+  r <- httr::GET(
+    url,
+    httr::config(token = token),
+    httr::timeout(60),
+    handle = handle
+  )
+
+  if (r$status_code != 200L) {
+    stop("Could not authenticate you with the server!")
+  } else {
+    me <- jsonlite::fromJSON(httr::content(r, as = "text"))
+    # create the session object in the calling environment of the login function
+    assign(d2_session_name,
+           d2Session$new(base_url = base_url,
+                         handle = handle,
+                         me = me,
+                         token = token),
+           envir = d2_session_envir)
   }
 }

@@ -10,13 +10,17 @@
 #'  with DATIM
 #' @param retry number of times to retry
 #' @param timeout number of seconds to wait during call
+#' @param verbose return raw content with data
+#' @param quiet Echo the URL which is called to the console if TRUE.
 #' @return  Data frame with the data requested
 #'
 getDataValueSets <- function(variable_keys = NULL, #keys,
                              variable_values = NULL, #values,
                              d2_session = dynGet("d2_default_session",
                                                  inherits = TRUE),
-                             retry = 1, timeout = 180) {
+                             retry = 1, timeout = 180,
+                             verbose = FALSE,
+                             quiet = TRUE) {
 
   #Test that the provided variables have their associated values used for
   # munging
@@ -33,9 +37,10 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
   #Requirements
   # The following constraints apply to the data value sets resource:
 
-  #1 At least one data set must be specified.
-  if (!(is.element("dataSet", variable_keys))) {
-    stop("At least one data set must be specified.")
+  #1 At least one data set must be specified OR a dataElementGroup.
+  if (!(is.element("dataSet", variable_keys)) == TRUE &&
+      !(is.element("dataElementGroup", variable_keys)) == TRUE) {
+    stop("At least one data set or data element group must be specified.")
   }
 
   #2 Either at least one period or a start date and end date must be specified.
@@ -50,8 +55,9 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
   }
 
   #3 At least one organisation unit must be specified.
-  if (!(is.element("orgUnit", variable_keys))) {
-    stop("At least one organisation unit must be specified.")
+  if (!(is.element("orgUnit", variable_keys)) == TRUE &&
+      !(is.element("orgUnitGroup", variable_keys)) == TRUE) {
+    stop("At least one organisation unit or organisation unit group must be specified.")
   }
 
   #4 Organisation units must be within the hierarchy of the organisation units
@@ -77,10 +83,22 @@ getDataValueSets <- function(variable_keys = NULL, #keys,
       path = path,
       d2_session = d2_session,
       retry = retry,
-      timeout = timeout
+      timeout = timeout,
+      verbose = verbose,
+      quiet = quiet
     )
+
+    if (verbose) {
+      meta_data <- resp$api_responses
+      resp <- resp$data
+    }
 
     #Create Dataframe from api response
     resp <- as.data.frame(resp$dataValues, stringsAsFactors = FALSE)
 
+    if (verbose) {
+      return(list("data" = resp, "api_responses" = meta_data))
+    } else {
+      return(resp)
+    }
 }

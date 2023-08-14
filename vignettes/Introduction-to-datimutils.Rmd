@@ -39,9 +39,9 @@ httptest::start_vignette("play.dhis2.org")
 
 ## Logging into DATIM
 
-Before querying the DATIM api, the user must log into a DATIM instance. There are three basic ways to accomplish this with datimutils. All three methods utilize the `loginToDATIM` function. NOTE this function can log into any DHIS2 instance, not just DATIM, based on the provided baseurl.
+Before querying the DATIM api, the user must log into a DATIM instance. There are four basic ways to accomplish this with datimutils. Three methods utilize the `loginToDATIM` function and the final method utilizes `loginToDATIMOAuth` . NOTE these two functions can log into any DHIS2 instance, not just DATIM, based on the provided baseurl.
 
-By default the `loginToDATIM` function will create an R object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` function is called. In this vignette we are assuming the user is logging in from the global environment. All `datimutils` functions will search for the d2_default_session by default, thus enabling the user to make multiple DATIM api requests through `datimutils` without individually specifying unique login objects with each request.
+By default the `loginToDATIM` and `loginToDATIMOAuth` function will create an R object containing details about the session. This object is named *d2_default_session*, and it is created in the environment from which the `loginToDATIM` or `loginToDATIMOAuth`function is called. In this vignette we are assuming the user is logging in from the global environment. All `datimutils` functions will search for the d2_default_session by default, thus enabling the user to make multiple DATIM api requests through `datimutils` without individually specifying unique login objects with each request.
 
 > Note: By default, this DHIS2 session will expire after 60 minutes. When it does, the user will need to re-authenticate
 
@@ -59,7 +59,7 @@ loginToDATIM(
 
 ### Methods 2 and 3 - Configuration Files
 
-The other two log in methods require the user to create a reusable configuration file in the format below. The location of this configuration file on the users's machine will be passed to the `loginToDATIM` function. If a user wants the ability to quickly log into multiple different servers, they can have a config file for each server instance.
+The next two log in methods require the user to create a reusable configuration file in the format below. The location of this configuration file on the user's machine will be passed to the `loginToDATIM` function. If a user wants the ability to quickly log into multiple different servers, they can have a config file for each server instance.
 
 In this vignette, the example config file is part of the package, *play.json*.
 
@@ -91,13 +91,27 @@ Alternatively, the the entry for password can be blank such that the file resemb
 
 The function will look in the users keyring/credential store for the aforementioned password, if not found, the user will be prompted to enter a password that will store automatically under that username and service (baseurl) for the next log in. A user may prefer storing their passwords in their operating systems credential store due to the fact it enables them to avoid storing this data in a plain text fomat on their computer, which is a potential security risk.
 
->Note: keyrings operate differently on different operating systems
+> Note: keyrings operate differently on different operating systems
 
 In both methods, call the `loginToDATIM` function as so: \> Note: replace `play.json` with the path of your config file
 
 ```{r}
 # logging in generates a cookie so the other functions can be used freely without credentials
 loginToDATIM(config_path = "play.json")
+```
+
+### Method 4 - OAuth
+
+The final log in method is `loginToDATIMOAuth`. It uses DATIM, or your chosen DHIS2 instance, to authenticate via OAuth. This function will send the user to the chosen instance based upon the baseurl provided in order to retrieve an authentication code.
+
+This function is useful for Shiny web applications as the process of exchanging the code for a token is automated. While not recommended, it can be used with the command line, however the code found after logging in will have to be manually entered when prompted. This code can be found at the end of the url in your browser.
+
+It is important to note that an Oauth client will need to be configured in your chosen DHIS2 instance in order to utilize this functionality. Depending upon your access in the aforementioned DHIS2 instance you can do this by logging in \> navigating to "System Settings" in the menu \> selecting "OAuth2 Clients" on the left \> clicking the blue "+" button. If you do not see these options please contact your system admin. You will need the name, client ID, Client Secret, and Redirect URIs to configure your Shiny application.
+
+An example app can be found inside this package by running the below command. The environment variables will need to be set before the app will launch, but is not required for explaining the app's architecture.
+
+```{r}
+list.files(system.file("shiny-examples", "OAuth", package = "datimutils"))
 ```
 
 ## Features for working with DATIM/DHIS2 metadata
@@ -119,7 +133,7 @@ print(data)
 
 ### Metadata helpers when a user has a vector of identifiers (e.g. uids or names)
 
-`Datimutils` provides a number of high level metadata helpers for obtaining details (properties) of the different types of metadata. These helpers are designed assuming the user has a vector of identifiers for a particular type of metadata (e.g. uids) and wishes to look up one or more other properties for each element of the vector.  There is a helper for each of the main metadata categories in DHIS2, in fact auto complete in the users R IDE will often make typing these very fast. This is the list of the numerous high level metadata helpers in `datimutils`.
+`Datimutils` provides a number of high level metadata helpers for obtaining details (properties) of the different types of metadata. These helpers are designed assuming the user has a vector of identifiers for a particular type of metadata (e.g. uids) and wishes to look up one or more other properties for each element of the vector. There is a helper for each of the main metadata categories in DHIS2, in fact auto complete in the users R IDE will often make typing these very fast. This is the list of the numerous high level metadata helpers in `datimutils`.
 
 ```{r table1, echo=FALSE, message=FALSE, warnings=FALSE, results='asis'}
 tabl <- "
@@ -250,6 +264,7 @@ head(data)
 ```
 
 Though the return of these commands includes list columns which may require further processing to be used in an application, `datimutils` does an amazing job at organizing and presenting the queried data when compared to the query's raw JSON which might look like the example below with its own nested elements<!-- "This XML file does not appear to have any style information associated with it. The document tree is shown below."--> :
+
 ```{=html}
     {
     "organisationUnits": [
@@ -365,9 +380,8 @@ Though the return of these commands includes list columns which may require furt
     ]
     }
 ```
-
-
 In the case of returning a single column of data, `getMetadata` will try to return a vector as opposed to a data frame:
+
 ```{r}
 # returns a vector
 data <- getMetadata(
@@ -378,6 +392,7 @@ print(data)
 ```
 
 many different types of calls can be made, below are two filters passed in as a vector. This call returns a nested data frame
+
 ```{r}
 data <- getMetadata(
   end_point = "organisationUnits",
