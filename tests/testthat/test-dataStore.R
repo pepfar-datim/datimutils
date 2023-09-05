@@ -52,6 +52,21 @@ with_mock_api({
 
   })
 
+  test_that("Get a datstore object ", {
+
+    data <- getDataStoreKey("dataQualityTool", "settings", d2_session = play40.0.1)
+
+    testthat::expect_type(data, "list")
+    testthat::expect_equal(length(data), 9)
+    rm(data) })
+
+  test_that("Can error with missing namespace", {
+    expect_error(getDataStoreKey(NA, "settings", d2_session = play40.0.1))
+  })
+
+  test_that("Can error with missing key", {
+    expect_error(getDataStoreKey("dataQualityTool", NA, d2_session = play40.0.1))
+  })
 
 
 })
