@@ -516,70 +516,70 @@ httptest::with_mock_api({
     
     data <- getCategories(
       "KfdsGBcoiCa"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Births attended by")
     rm(data)
     
     data <- getCatCombos(
       "m2jTvAj5kkm"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Births")
     rm(data)
     
     data <- getCatOptionCombos(
       "sqGRzCziswD"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "0-11m")
     rm(data)
     
     data <- getCatOptionGroupSets(
       "C31vHZqu0qU"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Donor")
     rm(data)
     
     data <- getCatOptionGroups(
       "OK2Nr4wdfrZ"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "CDC")
     rm(data)
     
     data <- getCatOptions(
       "FbLZS3ueWbQ"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "0-11m")
     rm(data)
     
     data <- getDataElementGroupSets(
       "jp826jAJHUc"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Diagnosis")
     rm(data)
     
     data <- getDataElementGroups(
       "oDkJh5Ddh7d"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Acute Flaccid Paralysis (AFP) ")
     rm(data)
     
     data <- getDataElements(
       "FTRrcoaog83"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Accute Flaccid Paralysis (Deaths < 5 yrs)")
     rm(data)
     
     data <- getDataSets(
       "lyLU2wR22tC"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ART monthly summary")
     rm(data)
@@ -593,70 +593,70 @@ httptest::with_mock_api({
     
     data <- getIndicatorGroupSets(
       "tOwnTs7TL3Y"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Child health")
     rm(data)
     
     data <- getIndicatorGroups(
       "oehv9EO3vP7"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ANC")
     rm(data)
     
     data <- getIndicators(
       "ReUHfIn0pTQ"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ANC 1-3 Dropout Rate")
     rm(data)
     
     data <- getOptionGroupSets(
-      "Wonln7Yg5Am"
-      , d2_session = play235
+      "MbTK62Jq5pK"
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "test")
     rm(data)
     
     data <- getOptionGroups(
       "hTDovVfKAuN"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, NULL)
     rm(data)
     
     data <- getOptionSets(
       "VQ2lai3OfVG"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Age category")
     rm(data)
     
     data <- getOptions(
       "Y1ILwhy5VDY"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "0-14 years")
     rm(data)
     
     data <- getOrgUnitGroupSets(
       "uIuxlbV1vRT"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Area")
     rm(data)
     
     data <- getOrgUnits(
       "Rp268JB6Ne4"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Adonkia CHP")
     rm(data)
     
     data <- getDimensions(
       "yY2bQYqNt0o"
-      , d2_session = play235
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Project")
     rm(data)
@@ -666,7 +666,7 @@ httptest::with_mock_api({
   test_that("check getorgunitgroups on datim api", {
     data <- getOrgUnitGroups("Country", by = name,
                              fields = "organisationUnits[id,name,level,ancestors[id,name]]"
-                             , d2_session = play235
+                             , d2_session = play40.0.1
     )
     testthat::expect_equal(NROW(data), 1)
     rm(data)
