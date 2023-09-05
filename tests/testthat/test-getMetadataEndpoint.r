@@ -46,11 +46,11 @@ httptest::with_mock_api({
     
     data <- getOrgUnitGroups(
       "CXw2yu5fodb"
-      , d2_session = play233
+      , d2_session = play40.0.1
     )
     data2  <- getOrgUnitGroups(
       "CXw2yu5fodb",
-      d2_session = play233,
+      d2_session = play40.0.1,
       verbose = TRUE)
     testthat::expect_equal(data, "CHC")
     testthat::expect_equal(data2$data, "CHC")
@@ -68,11 +68,11 @@ httptest::with_mock_api({
              
              data <- getOrgUnitGroups(
                "CHC", by = "name"
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              data2 <- getOrgUnitGroups(
                "CHC", by = "name"
-               , d2_session = play233
+               , d2_session = play40.0.1
                , verbose = TRUE
              )
              
@@ -93,7 +93,7 @@ httptest::with_mock_api({
       
       data <- getOrgUnitGroups(
         "CHC", by = name
-        , d2_session = play233
+        , d2_session = play40.0.1
       )
       
       testthat::expect_equal(data, "CXw2yu5fodb")
@@ -112,12 +112,12 @@ httptest::with_mock_api({
              
              data <- getOrgUnitGroups(
                "CHC", by = code
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              data2 <- getOrgUnitGroups(
                "CHC"
                , by = code
-               , d2_session = play233
+               , d2_session = play40.0.1
                , verbose = TRUE
              )
              
@@ -141,7 +141,7 @@ httptest::with_mock_api({
              data <- getOrgUnitGroups(c("Country", "CHC"),
                                       by = code,
                                       fields = "id"
-                                      , d2_session = play233
+                                      , d2_session = play40.0.1
              )
              testthat::expect_equal(data, c("RpbiCJpIYEj",
                                             "CXw2yu5fodb"))
@@ -157,7 +157,7 @@ httptest::with_mock_api({
                c("Country", "CHC", "Country"),
                by = shortName,
                fields = "code, id, name, shortName"
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              testthat::expect_equal(NROW(data), 3)
              testthat::expect_named(data, c("code",
@@ -179,7 +179,7 @@ httptest::with_mock_api({
                c("CHC", "Country"),
                by = shortName,
                fields = "id, code"
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              testthat::expect_equal(NROW(data), 2)
              testthat::expect_named(data, c("id",
@@ -221,7 +221,7 @@ httptest::with_mock_api({
              
              data <- getOrgUnitGroups(
                c("w1Atoz18PCL", "CXw2yu5fodb")
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              testthat::expect_identical(data, c("District", "CHC"))
              rm(data)
@@ -240,7 +240,7 @@ httptest::with_mock_api({
                c("w1Atoz18PCL", "CXw2yu5fodb",
                  "w1Atoz18PCL", "w1Atoz18PCL",
                  "CXw2yu5fodb", "CXw2yu5fodb")
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              testthat::expect_identical(data, c("District", "CHC",
                                                 "District", "District",
@@ -262,7 +262,7 @@ httptest::with_mock_api({
              
              data <- getOrgUnitGroups(
                c("District", "CHC"), by = name
-               , d2_session = play233
+               , d2_session = play40.0.1
              )
              testthat::expect_identical(data,  c("w1Atoz18PCL", "CXw2yu5fodb"))
              rm(data)
@@ -281,7 +281,7 @@ httptest::with_mock_api({
         c("CHP", "Rural"),
         by = "name",
         fields = c("id", "code")
-        , d2_session = play233
+        , d2_session = play40.0.1
       )
     testthat::expect_equal(NROW(data), 2)
     testthat::expect_named(data, c("id", "code"))
@@ -305,7 +305,7 @@ httptest::with_mock_api({
           "name", "id", "organisationUnits[name,id]",
           "groupSets[name,id]"
         )
-        , d2_session = play233
+        , d2_session = play40.0.1
       )
     
     testthat::expect_s3_class(data, "data.frame")
@@ -421,7 +421,7 @@ httptest::with_mock_api({
                getOrgUnitGroups(
                  groups,
                  fields = "code,name,id"
-                 , d2_session = play233
+                 , d2_session = play40.0.1
                )
              
              testthat::expect_equal(NROW(data), 120)
@@ -507,7 +507,7 @@ httptest::with_mock_api({
     data <- getOrgUnitGroups(c("Country", "Facility")
                              , by = name
                              , fields = "name,organisationUnits[id]"
-                             , d2_session = play233
+                             , d2_session = play40.0.1
     )
     testthat::expect_equal(NROW(data), 2)
     testthat::expect_named(data, c("name",
@@ -679,21 +679,21 @@ httptest::with_mock_api({
   test_that(
     paste0("Urls that are over 3000 characters"), {
       long_list <- getMetadata(organisationUnits
-                               , d2_session = play233
+                               , d2_session = play40.0.1
       )
       long_list_ordered <- long_list[order(long_list$id), ]
       
       data <- getOrgUnits(c(long_list$id,
                             long_list_ordered$id)
-                          , d2_session = play233
+                          , d2_session = play40.0.1
       )
       data2 <- getOrgUnits(c(long_list$id,
                              long_list_ordered$id)
-                           , d2_session = play233
+                           , d2_session = play40.0.1
                            , verbose = TRUE
       )
-      testthat::expect_equal(length(data), 2664)
-      testthat::expect_equal(length(data2$data), 2664)
+      testthat::expect_equal(length(data), 2666)
+      testthat::expect_equal(length(data2$data), 2666)
       testthat::expect_identical(data, c(long_list$name,
                                          long_list_ordered$name))
       rm(data)
@@ -705,7 +705,7 @@ httptest::with_mock_api({
     paste0("splitUrlComponent splits up a large vector into smaller vectors"), {
       long_list <- getMetadata(organisationUnits,
                                fields = "id"
-                               , d2_session = play233
+                               , d2_session = play40.0.1
       )
       values <- long_list
       resp <- .splitUrlComponent(long_list, 2000)
