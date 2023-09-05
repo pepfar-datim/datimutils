@@ -198,11 +198,11 @@ httptest::with_mock_api({
                c("CHC", "Country"),
                by = shortName,
                fields = ":all"
-               , d2_session = play234
+               , d2_session = play40.0.1
              )
              
              testthat::expect_equal(NROW(data), 2)
-             testthat::expect_equal(NCOL(data), 30)
+             testthat::expect_equal(NCOL(data), 42)
              rm(data)
            })
   
@@ -333,12 +333,12 @@ httptest::with_mock_api({
         organisationUnits,
         name %.in% org_units,
         fields = "name,organisationUnitGroups[name]"
-        , d2_session = play234
+        , d2_session = play40.0.1
       )[["organisationUnitGroups"]],
       getOrgUnits(org_units,
                   by = name,
                   fields = "organisationUnitGroups[name]"
-                  , d2_session = play234
+                  , d2_session = play40.0.1
       )
     )
     
@@ -351,12 +351,12 @@ httptest::with_mock_api({
         organisationUnits,
         name %.in% org_units,
         fields = "name,organisationUnitGroups[name,id]"
-        , d2_session = play234
+        , d2_session = play40.0.1
       )[["organisationUnitGroups"]],
       getOrgUnits(org_units,
                   by = name,
                   fields = "organisationUnitGroups[name,id]"
-                  , d2_session = play234
+                  , d2_session = play40.0.1
       )
     )
     
@@ -374,12 +374,12 @@ httptest::with_mock_api({
                   name %.in% org_units,
                   fields =
                     "organisationUnitGroups[name,id],ancestors[name,id]"
-                  , d2_session = play234
+                  , d2_session = play40.0.1
       ),
       getOrgUnits(org_units,
                   by = name,
                   fields = "organisationUnitGroups[name,id],ancestors[name,id]"
-                  , d2_session = play234
+                  , d2_session = play40.0.1
       )
     )
     
@@ -390,7 +390,7 @@ httptest::with_mock_api({
     data <- getOrgUnits("Afro Arab Clinic",
                         by = name,
                         fields = "organisationUnitGroups[name,id]"
-                        , d2_session = play234
+                        , d2_session = play40.0.1
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 2)

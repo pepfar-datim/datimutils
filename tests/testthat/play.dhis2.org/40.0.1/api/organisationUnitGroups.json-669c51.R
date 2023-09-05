@@ -1,16 +1,16 @@
 structure(list(url = "https://play.dhis2.org/40.0.1/api/organisationUnitGroups.json?paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]&fields=code,name,id", 
     status_code = 200L, headers = structure(list(server = "nginx", 
-        date = "Tue, 05 Sep 2023 10:39:57 GMT", `content-type` = "application/json;charset=UTF-8", 
+        date = "Tue, 05 Sep 2023 13:27:49 GMT", `content-type` = "application/json;charset=UTF-8", 
         `content-security-policy` = "frame-ancestors 'self' http://localhost:8083 http://localhost:8080 http://localhost:8082 http://localhost:8081 https://dhis2.stoplight.io http://localhost:3000 http://localhost:9000;", 
         `cache-control` = "no-cache, private", etag = "W/\"0d0bd5b2eb5d0e8f656a7077b9a7fcf61\"", 
         `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
         `strict-transport-security` = "max-age=15768000", `content-encoding` = "gzip"), class = c("insensitive", 
     "list")), all_headers = list(list(status = 301L, version = "HTTP/1.1", 
-        headers = structure(list(server = "nginx", date = "Tue, 05 Sep 2023 10:39:57 GMT", 
+        headers = structure(list(server = "nginx", date = "Tue, 05 Sep 2023 13:27:49 GMT", 
             `content-type` = "text/html", `content-length` = "162", 
             connection = "keep-alive", location = "https://play.dhis2.org/40.0.1/api/organisationUnitGroups.json?paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]&fields=code,name,id"), class = c("insensitive", 
         "list"))), list(status = 200L, version = "HTTP/2", headers = structure(list(
-        server = "nginx", date = "Tue, 05 Sep 2023 10:39:57 GMT", 
+        server = "nginx", date = "Tue, 05 Sep 2023 13:27:49 GMT", 
         `content-type` = "application/json;charset=UTF-8", `content-security-policy` = "frame-ancestors 'self' http://localhost:8083 http://localhost:8080 http://localhost:8082 http://localhost:8081 https://dhis2.stoplight.io http://localhost:3000 http://localhost:9000;", 
         `cache-control` = "no-cache, private", etag = "W/\"0d0bd5b2eb5d0e8f656a7077b9a7fcf61\"", 
         `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
@@ -19,7 +19,7 @@ structure(list(url = "https://play.dhis2.org/40.0.1/api/organisationUnitGroups.j
         flag = FALSE, path = "/40.0.1", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
         "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
     -1L), class = "data.frame"), content = charToRaw("{\"organisationUnitGroups\":[{\"code\":\"CHC\",\"name\":\"CHC\",\"id\":\"CXw2yu5fodb\"},{\"code\":\"Chiefdom\",\"name\":\"Chiefdom\",\"id\":\"gzcv65VyaGq\"},{\"code\":\"CHP\",\"name\":\"CHP\",\"id\":\"uYxK4wmcPqA\"},{\"code\":\"Clinic\",\"name\":\"Clinic\",\"id\":\"RXL3lPSK8oG\"},{\"code\":\"Country\",\"name\":\"Country\",\"id\":\"RpbiCJpIYEj\"},{\"code\":\"District\",\"name\":\"District\",\"id\":\"w1Atoz18PCL\"}]}"), 
-    date = structure(1693910397, class = c("POSIXct", "POSIXt"
-    ), tzone = "GMT"), times = c(redirect = 0.050753, namelookup = 9e-05, 
-    connect = 0, pretransfer = 0.000264, starttransfer = 0.108214, 
-    total = 0.108361)), class = "response")
+    date = structure(1693920469, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0.201887, namelookup = 9.8e-05, 
+    connect = 0, pretransfer = 0.000299, starttransfer = 0.271224, 
+    total = 0.271366)), class = "response")

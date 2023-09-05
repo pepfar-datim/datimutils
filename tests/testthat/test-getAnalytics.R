@@ -161,7 +161,7 @@ rm(data)
   #"paging=false&dimension=dx:fbfJHSPpUQD&startDate=2019-01-01&endDate=2019-01-01&outputIdScheme=UID")))
       data <- getAnalytics("startDate=2019-01-01&endDate=2019-01-01",
                      dx = "fbfJHSPpUQD",
-                     d2_session = play2341)
+                     d2_session = play40.0.1)
   testthat::expect_identical(data, NULL)
   rm(data)
 })
@@ -175,7 +175,7 @@ test_that("use of 'all' argument: ", {
                        co = "all",
                        pe = "LAST_12_MONTHS",
                        ou_f = c("g8upMTyEZGZ", "DiszpKrYNg8", "egv5Es0QlQP"),
-                     d2_session = play2341)
+                     d2_session = play40.0.1)
   testthat::expect_equal(NROW(data), 28)
 
   #httr::content(httr::GET("https://play.dhis2.org/2.34.1/api/analytics.json?",
@@ -187,7 +187,7 @@ test_that("use of 'all' argument: ", {
                        co = "all",
                        pe = "201601",
                        ou = c("O6uvpzGd5pu", "lc3eMKXaEfw"),
-                     d2_session = play2341)
+                     d2_session = play40.0.1)
 
   testthat::expect_identical(data, NULL)
 })
