@@ -34,20 +34,17 @@ test_that("getSqlView: ", {
 #"https://play.dhis2.org/2.35.6/api/sqlViews/tw3A6ZXOdbA/data.json?",
 #"paging=false&var=valuetype:TEXT&filter=valuetype:ilike:TEXT")))
 
-data <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
-                  variable_keys = c("valuetype"),
+data <- getSqlView(sql_view_uid = "qMYMT0iUGkG",
+                  variable_keys = c("valueType"),
                   variable_values = c("TEXT"),
-                  valuetype %.like% "TEXT",
                   d2_session = play2.37.10)
 
 testthat::expect_s3_class(data, "data.frame")
-testthat::expect_equal(NROW(data), 174)
+testthat::expect_equal(NROW(data), 161)
 rm(data) })
 
 test_that("getSqlView verbose: ", {
   data2 <- getSqlView(sql_view_uid = "tw3A6ZXOdbA",
-                      variable_keys = c("valuetype"),
-                      variable_values = c("TEXT"),
                       valuetype %.like% "TEXT",
                       d2_session = play2.37.10,
                       verbose = TRUE)
