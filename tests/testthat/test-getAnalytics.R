@@ -3,7 +3,6 @@
 #httptest::stop_capturing()
 
 with_mock_api({
-  
   test_that("package stops when timeout is too high: ", {
 #httr::content(httr::GET(paste0(
     #"https://play.dhis2.org/2.33.5/api/analytics.json?paging=false&dimension=Data:fbfJHSPpUQD;cYeuwXTCPkU",
@@ -40,7 +39,7 @@ testthat::expect_s3_class(data, "data.frame")
   testthat::expect_type(data2, "list")
 testthat::expect_equal(NROW(data), 4394)
 testthat::expect_named(data, c("Data", "Period", "Organisation unit", "Value"))
-rm(data) 
+rm(data)
 })
 test_that("other arguments: ", {
 #httr::content(httr::GET(paste0(

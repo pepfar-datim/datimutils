@@ -33,7 +33,7 @@ context("make arbitrary api call with getorgunitgroups")
 
 httptest::with_mock_api({
   test_that(paste0("Default behavior, given id return name"), {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=name,id")))
@@ -43,7 +43,7 @@ httptest::with_mock_api({
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[CXw2yu5fodb]&fields=id,name")))
-    
+
     data <- getOrgUnitGroups(
       "CXw2yu5fodb"
       , d2_session = play40.0.1
@@ -57,15 +57,14 @@ httptest::with_mock_api({
     rm(data)
     rm(data2)
   })
-  
+
   test_that(
     paste0("Default behavior, given name return id (using standard",
            "evaluation of by): "), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHC]&fields=id,name")))
-             
              data <- getOrgUnitGroups(
                "CHC", by = "name"
                , d2_session = play40.0.1
@@ -75,41 +74,40 @@ httptest::with_mock_api({
                , d2_session = play40.0.1
                , verbose = TRUE
              )
-             
              testthat::expect_equal(data, "CXw2yu5fodb")
              testthat::expect_equal(data2$data, "CXw2yu5fodb")
              rm(data)
            }
   )
-  
+
   test_that(
     paste0("Default behavior, provide name get back id ",
            "(non standard evaluation of by):"
     ), {
-      
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=name:in:[CHC]&fields=name,id")))
-      
+
       data <- getOrgUnitGroups(
         "CHC", by = name
         , d2_session = play40.0.1
       )
-      
+
       testthat::expect_equal(data, "CXw2yu5fodb")
       rm(data)
     }
   )
-  
+
   test_that(
     paste0("Default behavior, if provide filter property other than name or ",
            "id then name returned by default: "), {
-             
+
 # httr::content(httr::GET(
 #   paste0(
 #          "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #          "paging=false&filter=code:in:[CHC]&fields=code,name")))
-             
+
              data <- getOrgUnitGroups(
                "CHC", by = code
                , d2_session = play40.0.1
@@ -120,7 +118,7 @@ httptest::with_mock_api({
                , d2_session = play40.0.1
                , verbose = TRUE
              )
-             
+
              testthat::expect_equal(NROW(data), 1)
              testthat::expect_equal(NROW(data2$data), 1)
              testthat::expect_equal(data, "CHC")
@@ -128,16 +126,16 @@ httptest::with_mock_api({
              rm(data2)
            }
   )
-  
+
   test_that(
     paste0("If provide filter property other than name or ",
            "id then can get back other fields: "), {
-             
+
 #httr::content(httr::GET(
 #  paste0(
 #         "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #         "paging=false&filter=code:in:[Country,CHC]&fields=code,id,name")))
-             
+
              data <- getOrgUnitGroups(c("Country", "CHC"),
                                       by = code,
                                       fields = "id"
@@ -146,13 +144,13 @@ httptest::with_mock_api({
              testthat::expect_equal(data, c("RpbiCJpIYEj",
                                             "CXw2yu5fodb"))
              rm(data)
-             
+
 #httr::content(httr::GET(
 #  paste0(
 #    "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #    "paging=false&filter=shortName:in:[Country,CHC]",
 #    "&fields=code,id,name,shortName")))
-             
+
              data <- getOrgUnitGroups(
                c("Country", "CHC", "Country"),
                by = shortName,
@@ -169,12 +167,12 @@ httptest::with_mock_api({
                                           "CXw2yu5fodb",
                                           "RpbiCJpIYEj"))
              rm(data)
-             
+
 #httr::content(httr::GET(
 # paste0(
 #  "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,id,code")))
-             
+
              data <- getOrgUnitGroups(
                c("CHC", "Country"),
                by = shortName,
@@ -188,28 +186,28 @@ httptest::with_mock_api({
                                         c("CXw2yu5fodb",
                                           "RpbiCJpIYEj"))
              rm(data)
-             
+
 #httr::content(httr::GET(
 #paste0(
 # "https://play.dhis2.org/2.34/api/organisationUnitGroups.json?",
 #  "paging=false&filter=shortName:in:[CHC,Country]&fields=shortName,:all,name")))
-             
+
              data <- getOrgUnitGroups(
                c("CHC", "Country"),
                by = shortName,
                fields = ":all"
                , d2_session = play40.0.1
              )
-             
+
              testthat::expect_equal(NROW(data), 2)
              testthat::expect_equal(NCOL(data), 42)
              rm(data)
            })
-  
+
   test_that(
     paste0("Provide vector of unique IDs and get back ordered",
            "character vector of names based on input order"), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
@@ -218,7 +216,7 @@ httptest::with_mock_api({
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
 #   "&fields=id,name")))
-             
+
              data <- getOrgUnitGroups(
                c("w1Atoz18PCL", "CXw2yu5fodb")
                , d2_session = play40.0.1
@@ -226,16 +224,16 @@ httptest::with_mock_api({
              testthat::expect_identical(data, c("District", "CHC"))
              rm(data)
            })
-  
+
   test_that(
     paste0("Provide vector of non-unique IDs and get back ordered",
            "character vector of names based on input order"), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=id:in:[w1Atoz18PCL,CXw2yu5fodb]",
 #   "&fields=name,id")))
-             
+
              data <- getOrgUnitGroups(
                c("w1Atoz18PCL", "CXw2yu5fodb",
                  "w1Atoz18PCL", "w1Atoz18PCL",
@@ -248,18 +246,18 @@ httptest::with_mock_api({
              rm(data)
            }
   )
-  
+
   test_that(
     paste0("Provide vector of non-repeating names and get back ordered",
            "character vector of ids: "), {
-             
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[District,CHC]&fields=id,name")))
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[District,CHC]&fields=id")))
-             
+
              data <- getOrgUnitGroups(
                c("District", "CHC"), by = name
                , d2_session = play40.0.1
@@ -268,14 +266,14 @@ httptest::with_mock_api({
              rm(data)
            }
   )
-  
+
   test_that("Can specify non-default fields", {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHP,Rural]",
 #   "&fields=name,id,code")))
-    
+
     data <-
       getOrgUnitGroups(
         c("CHP", "Rural"),
@@ -289,14 +287,14 @@ httptest::with_mock_api({
     rm(data)
   }
   )
-  
+
   test_that("Get collections as lists", {
-    
+
 # httr::content(httr::GET(paste0(
 #   "https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #   "paging=false&filter=name:in:[CHP,Rural]",
 #   "&fields=name,id,organisationUnits[name,id],groupSets[name,id]")))
-    
+
     data <-
       getOrgUnitGroups(
         c("CHP", "Rural"),
@@ -307,7 +305,7 @@ httptest::with_mock_api({
         )
         , d2_session = play40.0.1
       )
-    
+
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 2)
     testthat::expect_named(data, c(
@@ -322,7 +320,7 @@ httptest::with_mock_api({
       655
     )
     rm(data)
-    
+
     org_units <- c("Adonkia CHP", "Afro Arab Clinic")
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
@@ -341,7 +339,7 @@ httptest::with_mock_api({
                   , d2_session = play40.0.1
       )
     )
-    
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
@@ -359,7 +357,7 @@ httptest::with_mock_api({
                   , d2_session = play40.0.1
       )
     )
-    
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
@@ -368,7 +366,7 @@ httptest::with_mock_api({
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Adonkia%20CHP,Afro%20Arab%20Clinic]",
 #          "&fields=name,organisationUnitGroups[name,id],ancestors[name,id]")))
-    
+
     testthat::expect_identical(
       getMetadata(organisationUnits,
                   name %.in% org_units,
@@ -382,7 +380,7 @@ httptest::with_mock_api({
                   , d2_session = play40.0.1
       )
     )
-    
+
 # httr::content(httr::GET(
 #   paste0("https://play.dhis2.org/2.34/api/organisationUnits.json?",
 #          "paging=false&filter=name:in:[Afro%20Arab%20Clinic]",
@@ -397,22 +395,22 @@ httptest::with_mock_api({
     testthat::expect_named(data, c("name", "id"))
   }
   )
-  
+
   test_that(
     paste0("getOrgUnitGroups can handle repeated values and sorting based on input",
            "with multiple fields"), {
-             
+
              groups <- rep(c(
                "gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
                "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb"
              ), 19)
-             
+
              # randomize order of uids
              rows <- sample(length(groups))
              groups <- c("gzcv65VyaGq", "uYxK4wmcPqA", "RXL3lPSK8oG",
                          "RpbiCJpIYEj", "w1Atoz18PCL", "CXw2yu5fodb",
                          groups[rows])
-             
+
 # httr::GET(paste0("https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #        "paging=false&filter=id:in:[gzcv65VyaGq,uYxK4wmcPqA,",
 #        "RXL3lPSK8oG,RpbiCJpIYEj,w1Atoz18PCL,CXw2yu5fodb]",
@@ -423,15 +421,15 @@ httptest::with_mock_api({
                  fields = "code,name,id"
                  , d2_session = play40.0.1
                )
-             
+
              testthat::expect_equal(NROW(data), 120)
              testthat::expect_identical(groups, data$id)
              rm(data)
            }
   )
-  
+
   test_that("Test other metadata helpers", {
-    
+
 #httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33.5/api/categories.json?paging=false&filter=id:in:[KfdsGBcoiCa]&fields=id,name")))
 #
@@ -490,20 +488,20 @@ httptest::with_mock_api({
 #
 #        httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33.5/api/organisationUnits.json?paging=false&filter=id:in:[Rp268JB6Ne4]&fields=id,name")))
-    
+
 #httr::content(httr::GET(paste0(
 #  "https://play.dhis2.org/2.33.5/api/optionGroupSets.json?paging=false&filter=id:in:[Wonln7Yg5Am]&fields=id,name")))
 #
 #  httr::content(httr::GET(paste0(
 # "https://play.dhis2.org/2.33.5/api/optionGroups.json?paging=false&filter=id:in:[hTDovVfKAuN]&fields=id,name")))
-    
+
 # httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33.5/api/dimensions.json?paging=false&filter=id:in:[yY2bQYqNt0o]&fields=id,name")))
-    
+
 #httr::content(httr::GET(paste0(
 #"https://play.dhis2.org/2.33/api/organisationUnitGroups.json?",
 #"paging=false&filter=name:in:[Country,Facility]&fields=name,organisationUnits[id]")))
-    
+
     data <- getOrgUnitGroups(c("Country", "Facility")
                              , by = name
                              , fields = "name,organisationUnits[id]"
@@ -513,156 +511,156 @@ httptest::with_mock_api({
     testthat::expect_named(data, c("name",
                                    "organisationUnits"))
     rm(data)
-    
+
     data <- getCategories(
       "KfdsGBcoiCa"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Births attended by")
     rm(data)
-    
+
     data <- getCatCombos(
       "m2jTvAj5kkm"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Births")
     rm(data)
-    
+
     data <- getCatOptionCombos(
       "sqGRzCziswD"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "0-11m")
     rm(data)
-    
+
     data <- getCatOptionGroupSets(
       "C31vHZqu0qU"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Donor")
     rm(data)
-    
+
     data <- getCatOptionGroups(
       "OK2Nr4wdfrZ"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "CDC")
     rm(data)
-    
+
     data <- getCatOptions(
       "FbLZS3ueWbQ"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "0-11m")
     rm(data)
-    
+
     data <- getDataElementGroupSets(
       "jp826jAJHUc"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Diagnosis")
     rm(data)
-    
+
     data <- getDataElementGroups(
       "oDkJh5Ddh7d"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Acute Flaccid Paralysis (AFP) ")
     rm(data)
-    
+
     data <- getDataElements(
       "FTRrcoaog83"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Accute Flaccid Paralysis (Deaths < 5 yrs)")
     rm(data)
-    
+
     data <- getDataSets(
       "lyLU2wR22tC"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ART monthly summary")
     rm(data)
-    
+
     data <- getUserGroups(
       "ZrsVF7IJ93y"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Family Health Partner")
     rm(data)
-    
+
     data <- getIndicatorGroupSets(
       "tOwnTs7TL3Y"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Child health")
     rm(data)
-    
+
     data <- getIndicatorGroups(
       "oehv9EO3vP7"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ANC")
     rm(data)
-    
+
     data <- getIndicators(
       "ReUHfIn0pTQ"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ANC 1-3 Dropout Rate")
     rm(data)
-    
+
     data <- getOptionGroupSets(
       "MbTK62Jq5pK"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "test")
     rm(data)
-    
+
     data <- getOptionGroups(
       "hTDovVfKAuN"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, NULL)
     rm(data)
-    
+
     data <- getOptionSets(
       "VQ2lai3OfVG"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Age category")
     rm(data)
-    
+
     data <- getOptions(
       "Y1ILwhy5VDY"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "0-14 years")
     rm(data)
-    
+
     data <- getOrgUnitGroupSets(
       "uIuxlbV1vRT"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Area")
     rm(data)
-    
+
     data <- getOrgUnits(
       "Rp268JB6Ne4"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Adonkia CHP")
     rm(data)
-    
+
     data <- getDimensions(
       "yY2bQYqNt0o"
       , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Project")
     rm(data)
-    
+
   })
-  
+
   test_that("check getorgunitgroups on datim api", {
     data <- getOrgUnitGroups("Country", by = name,
                              fields = "organisationUnits[id,name,level,ancestors[id,name]]"
@@ -682,7 +680,7 @@ httptest::with_mock_api({
                                , d2_session = play40.0.1
       )
       long_list_ordered <- long_list[order(long_list$id), ]
-      
+
       data <- getOrgUnits(c(long_list$id,
                             long_list_ordered$id)
                           , d2_session = play40.0.1
@@ -699,7 +697,7 @@ httptest::with_mock_api({
       rm(data)
       rm(data2)
     })
-  
+
   #test for split url component function
   test_that(
     paste0("splitUrlComponent splits up a large vector into smaller vectors"), {
@@ -718,11 +716,11 @@ httptest::with_mock_api({
       testthat::expect_lt(sum(nchar(resp[[6]])), 2000)
       testthat::expect_lt(sum(nchar(resp[[7]])), 2000)
       testthat::expect_lt(sum(nchar(resp[[8]])), 2000)
-      
+
       rm(resp)
       rm(long_list)
     })
-  
+
 })
 
 test_that(
