@@ -586,7 +586,7 @@ httptest::with_mock_api({
     
     data <- getUserGroups(
       "ZrsVF7IJ93y"
-      , d2_session = play2372
+      , d2_session = play40.0.1
     )
     testthat::expect_identical(data, "Family Health Partner")
     rm(data)
@@ -770,9 +770,9 @@ test_that(
 # test NAs are handled properly
 httptest::with_mock_api({
   # na value is passed to the api to test handling
-  age_option_uid <- c(NA, "R32YPF38CJJ", "jcGQdcpPSJP")
+  age_option_uid <- c(NA, "FbLZS3ueWbQ", "K4gwuiVvW3z")
   res <- datimutils::getCatOptions(age_option_uid
-                                   , d2_session = play2372
+                                   , d2_session = play40.0.1
   )
-  testthat::expect_identical(res, c(NA, "35-39", "10-14"))
+  testthat::expect_identical(res, c(NA, "0-11m", "0-4y"))
 })
