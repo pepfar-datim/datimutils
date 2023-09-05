@@ -1,0 +1,26 @@
+structure(list(url = "https://play.dhis2.org/40.0.1/api/me", 
+    status_code = 401L, headers = structure(list(server = "nginx", 
+        date = "Tue, 05 Sep 2023 13:55:55 GMT", `content-type` = "application/xml;charset=UTF-8", 
+        `set-cookie` = "REDACTED", `content-security-policy` = "frame-ancestors 'self' http://localhost:8083 http://localhost:8080 http://localhost:8082 http://localhost:8081 https://dhis2.stoplight.io http://localhost:3000 http://localhost:9000;", 
+        `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block"), class = c("insensitive", 
+    "list")), all_headers = list(list(status = 301L, version = "HTTP/1.1", 
+        headers = structure(list(server = "nginx", date = "Tue, 05 Sep 2023 13:55:55 GMT", 
+            `content-type` = "text/html", `content-length` = "162", 
+            connection = "keep-alive", location = "https://play.dhis2.org/40/api/me"), class = c("insensitive", 
+        "list"))), list(status = 302L, version = "HTTP/2", headers = structure(list(
+        server = "nginx", date = "Tue, 05 Sep 2023 13:55:55 GMT", 
+        `content-type` = "text/html", `content-length` = "138", 
+        location = "https://play.dhis2.org/40.0.1/api/me", `strict-transport-security` = "max-age=15768000"), class = c("insensitive", 
+    "list"))), list(status = 401L, version = "HTTP/2", headers = structure(list(
+        server = "nginx", date = "Tue, 05 Sep 2023 13:55:55 GMT", 
+        `content-type` = "application/xml;charset=UTF-8", `set-cookie` = "REDACTED", 
+        `content-security-policy` = "frame-ancestors 'self' http://localhost:8083 http://localhost:8080 http://localhost:8082 http://localhost:8081 https://dhis2.stoplight.io http://localhost:3000 http://localhost:9000;", 
+        `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = "#HttpOnly_play.dhis2.org", 
+        flag = FALSE, path = "/40.0.1", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
+        "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
+    -1L), class = "data.frame"), content = charToRaw("<webMessage xmlns=\"http://dhis2.org/schema/dxf/2.0\" httpStatus=\"Unauthorized\" httpStatusCode=\"401\" status=\"ERROR\"><message>Unauthorized</message></webMessage>"), 
+    date = structure(1693922155, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0.098739, namelookup = 0.000103, 
+    connect = 0, pretransfer = 0.000344, starttransfer = 0.223686, 
+    total = 0.223867)), class = "response")
