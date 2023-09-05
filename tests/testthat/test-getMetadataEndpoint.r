@@ -729,7 +729,7 @@ test_that(
   paste0("getOrgUnitGroups returns error for unsupported",
          "by field"), {
            expect_error(
-             getOrgUnitGroups("foo", by = bar)
+             getOrgUnitGroups("foo", by = bar, d2_session = play40.0.1)
            )
          })
 
