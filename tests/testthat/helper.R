@@ -1,6 +1,6 @@
 library(httptest)
-play233 <- list(base_url = "https://play.dhis2.org/2.33/",
-                handle = httr::handle("https://play.dhis2.org/2.33/"))
+play40.0.1 = list(base_url = "https://play.dhis2.org/40.0.1/",
+                  handle = httr::handle("https://play.dhis2.org/40.0.1/"))
 play235 <- list(base_url = "https://play.dhis2.org/2.33.5/",
                 handle = httr::handle("https://play.dhis2.org/2.33.5/"))
 play234 <- list(base_url = "https://play.dhis2.org/2.34/",
