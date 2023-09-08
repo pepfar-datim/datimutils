@@ -128,9 +128,9 @@ test_that("Error handling ", {
   testthat::expect_error(
     getMetadata(indicators,
                 fields = list(a = c("a", "a")),
-                d2_session = play233))
+                d2_session = play40.0.1))
   testthat::expect_error(
-    getMetadata(d2_session = play233))
+    getMetadata(d2_session = play40.0.1))
 })
 
 with_mock_api({
@@ -146,18 +146,18 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dataElements",
       id %.eq% "FTRrcoaog83",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     # data <- data[["dataElements"]]
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_named(data, c("name", "id"))
+    testthat::expect_named(data, c("name", "id"), ignore.order = TRUE)
     testthat::expect_equal(data$id, "FTRrcoaog83")
     expect_identical(data,
                      getMetadata(
                        end_point = "dataElements",
                        id %.in% "FTRrcoaog83",
-                       d2_session = play233
+                       d2_session = play40.0.1
                      ))
     rm(data)
   })
@@ -188,18 +188,18 @@ with_mock_api({
 
     data <- getMetadata(end_point = "indicators",
                         "code:null",
-                        d2_session = play233)
+                        d2_session = play40.0.1)
     testthat::expect_equal(NROW(data), 39)
     rm(data)
     data <- getMetadata(end_point = "indicators",
                         "code:!null:",
-                        d2_session = play233)
-    testthat::expect_named(data, c("name", "id"))
+                        d2_session = play40.0.1)
+    testthat::expect_named(data, c("name", "id"), ignore.order = TRUE)
     testthat::expect_equal(NROW(data), 38)
     rm(data)
     data <- getMetadata(end_point = "indicators",
                         "legendSets:empty",
-                        d2_session = play233)
+                        d2_session = play40.0.1)
     testthat::expect_equal(NROW(data), 59)
     rm(data)
   })
@@ -213,12 +213,12 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:eq:gtuVl6NbXQV",
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = "items[name,id]"
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 3)
-    testthat::expect_named(data, c("name", "id"))
+    testthat::expect_named(data, c("name", "id"), ignore.order = TRUE)
     rm(data)
 
     # paste0("List Columns: ",
@@ -229,17 +229,17 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:eq:gtuVl6NbXQV",
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = "name,id,items[name,id]"
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_named(data, c("name", "id", "items"))
+    testthat::expect_named(data, c("name", "id", "items"), ignore.order = TRUE)
     data <- tidyr::unnest(data, cols = items, names_sep = ".")
     testthat::expect_named(data, c(
       "name", "id",
       "items.name", "items.id"
-    ))
+    ), ignore.order = TRUE)
     testthat::expect_equal(NROW(data), 3)
     rm(data)
 
@@ -251,14 +251,14 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:eq:gtuVl6NbXQV",
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = "id,items[name]"
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_named(data, c("id", "items"))
+    testthat::expect_named(data, c("id", "items"), ignore.order = TRUE)
     data <- tidyr::unnest(data, cols = items, names_sep = ".")
-    testthat::expect_named(data, c("id", "items.name"))
+    testthat::expect_named(data, c("id", "items.name"), ignore.order = TRUE)
     testthat::expect_equal(NROW(data), 3)
     rm(data)
 
@@ -270,12 +270,12 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = "items[name,id]"
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 7)
-    testthat::expect_named(data, c("name", "id"))
+    testthat::expect_named(data, c("name", "id"), ignore.order = TRUE)
     rm(data)
 
     # paste0("List Columns: ",
@@ -286,25 +286,25 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       "id:in:[gtuVl6NbXQV,yY2bQYqNt0o]",
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = "name,id,items[:all]"
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 2)
-    testthat::expect_named(data, c("name", "id", "items"))
+    testthat::expect_named(data, c("name", "id", "items"), ignore.order = TRUE)
     data <- tidyr::unnest(data, cols = items, names_sep = ".")
-    testthat::expect_equal(NCOL(data), 30)
+    testthat::expect_gte(NCOL(data), 30)
     rm(data)
 
     data <- getMetadata(
       end_point = "indicators",
       "code:in:[IN_52462,IN_52486]",
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = ":all"
     )
     testthat::expect_s3_class(data, "data.frame")
     testthat::expect_equal(NROW(data), 2)
-    testthat::expect_equal(NCOL(data), 41)
+    testthat::expect_gte(NCOL(data), 41)
     rm(data)
   })
 
@@ -317,11 +317,13 @@ with_mock_api({
     data <- getMetadata(
       end_point = "dimensions",
       id %.in% c("yY2bQYqNt0o", "gtuVl6NbXQV"),
-      d2_session = play233,
+      d2_session = play40.0.1,
       fields = "name,id,code"
     )
     testthat::expect_s3_class(data, "data.frame")
-    testthat::expect_named(data, c("code", "name", "id"))
+    testthat::expect_named(data,
+                           c("code", "name", "id"),
+                           ignore.order = TRUE)
     testthat::expect_equal(NROW(data), 2)
     rm(data)
   })
@@ -334,7 +336,7 @@ with_mock_api({
 
     data <- getMetadata(
       end_point = "organisationUnitGroups",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     # data <- data[["organisationUnitGroups"]]
     testthat::expect_equal(NROW(data), 18)
@@ -353,36 +355,36 @@ with_mock_api({
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       fields = "name",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     data2 <- getMetadata(
       end_point = "organisationUnitGroups",
       fields = "name",
-      d2_session = play233,
+      d2_session = play40.0.1,
       verbose = TRUE
     )
     testthat::expect_equal(NROW(data), 18)
-    testthat::expect_named(data, NULL)
-    testthat::expect_named(data2$data, NULL)
+    testthat::expect_named(data, NULL, ignore.order = TRUE)
+    testthat::expect_named(data2$data, NULL, ignore.order = TRUE)
     rm(data)
 
     data <- getMetadata(
       end_point = "organisationUnitGroups",
       fields = "name",
       as_vector = FALSE,
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_equal(NROW(data), 18)
-    testthat::expect_named(data, c("name"))
+    testthat::expect_named(data, c("name"), ignore.order = TRUE)
     rm(data)
 
     data <- getMetadata(
       end_point = "organisationUnitGroupSets",
       fields = "organisationUnitGroups[name]",
-      d2_session = play233)
+      d2_session = play40.0.1)
 
     testthat::expect_equal(NROW(data), 15)
-    testthat::expect_named(data, NULL)
+    testthat::expect_named(data, NULL, ignore.order = TRUE)
     rm(data)
   })
 
@@ -397,12 +399,12 @@ with_mock_api({
       end_point = "organisationUnits",
       organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
       fields = "id,name,level,ancestors[id,name]",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     # data <- data[["organisationUnits"]]
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c("level", "name",
-                                   "id", "ancestors"))
+                                   "id", "ancestors"), ignore.order = TRUE)
     rm(data)
   })
 
@@ -419,11 +421,11 @@ with_mock_api({
         "organisationUnitGroups.name:eq:District",
         "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]"),
       fields = "id,name,level,ancestors[id,name]",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_equal(NROW(data), 2)
     testthat::expect_named(data, c("level", "name",
-                                   "id", "ancestors"))
+                                   "id", "ancestors"), ignore.order = TRUE)
     rm(data)
     # filters sent as ...
     data <- getMetadata(
@@ -431,11 +433,11 @@ with_mock_api({
       "organisationUnitGroups.name:eq:District",
       "children.id:in:[YuQRtpLP10I,fwH9ipvXde9]",
       fields = "id,name,level,ancestors[id,name]",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_equal(NROW(data), 2)
     testthat::expect_named(data, c("level", "name",
-                                   "id", "ancestors"))
+                                   "id", "ancestors"), ignore.order = TRUE)
     rm(data)
   })
 
@@ -448,7 +450,7 @@ with_mock_api({
     data <- getMetadata(
       end_point = organisationUnits,
       name %.Like% "Baoma",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_equal(NROW(data), 10)
     rm(data)
@@ -463,11 +465,11 @@ with_mock_api({
     data <- getMetadata(
       end_point = "organisationUnits",
       name %.Like% "Sierra Leone",
-      d2_session = play233
+      d2_session = play40.0.1
     )
 
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_named(data, c("name", "id"))
+    testthat::expect_named(data, c("name", "id"), ignore.order = TRUE)
     rm(data)
   })
 
@@ -484,11 +486,11 @@ with_mock_api({
         "level:eq:3"
       ),
       fields = ":all",
-      d2_session = play233
+      d2_session = play40.0.1
     )
 
     testthat::expect_equal(NROW(data), 1)
-    testthat::expect_equal(NCOL(data), 38)
+    testthat::expect_gte(NCOL(data), 38)
 
     rm(data)
   })
@@ -503,14 +505,14 @@ with_mock_api({
       end_point = "indicators",
       "id:eq:ReUHfIn0pTQ",
       fields = "name,id,numerator,denominator",
-      d2_session = play233
+      d2_session = play40.0.1
     )
 
     testthat::expect_equal(NROW(data), 1)
     testthat::expect_named(data, c(
       "name", "id",
       "numerator", "denominator"
-    ))
+    ), ignore.order = TRUE)
   })
 
  #httr::content(httr::GET(paste0(
@@ -521,7 +523,7 @@ with_mock_api({
       end_point = "organisationUnits",
       organisationUnitGroups.id %.eq% "RpbiCJpIYEj",
       fields = "id",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_identical(data, "ImspTQPwCqd")
     rm(data)

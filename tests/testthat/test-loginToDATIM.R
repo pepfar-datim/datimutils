@@ -32,8 +32,7 @@ httptest::with_mock_api({
   test_that("We cannot get logged in successfully due to credentials", {
 
     testthat::expect_error(loginToDATIM(
-      #Found in folder 2.372/api/
-      base_url = "play.dhis2.org/2.372/",
+      base_url = "play.dhis2.org/40/",
       username = "admin",
       password = "test"
     ),
@@ -53,8 +52,7 @@ httptest::with_mock_api({
   test_that("We get logged in successfully", {
 
     x <- loginToDATIM(
-      #Found in folder 2.37/api/me.json
-      base_url = "play.dhis2.org/2.37/",
+      base_url = "play.dhis2.org/40.0.1/",
       username = "admin",
       password = "district"
     )
