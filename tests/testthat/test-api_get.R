@@ -44,7 +44,7 @@ testthat::test_that("Can use timeout paramater", {
   # an internet connection is required
   expect_error(api_get(
     path = "organisationUnits?timeout",
-    d2_session = play233,
+    d2_session = play40.0.1,
     timeout = .001
   ))
 })
@@ -70,7 +70,7 @@ testthat::test_that("We reject request for non-json response formats", {
           "&dimension=pe:LAST_12_MONTHS",
           "&filter=ou:ImspTQPwCqd"
         ),
-        d2_session = play233
+        d2_session = play40.0.1
       )
     )
     # when run without_internet the error message should start with GET
@@ -91,11 +91,11 @@ httptest::with_mock_api({
     # mock built when not logged in resulting in content type of
     # html from the login page
     testthat::expect_error(
-      # httr::GET("https://play.dhis2.org/2.33/api/me.json?paging=
+      # httr::GET("https://play.dhis2.org/40.0.1/api/me.json?paging=
       # false&fields=notloggedin")
       api_get(
         path = "api/me?fields=notloggedin",
-        d2_session = play233,
+        d2_session = play40.0.1,
         retry = 1, timeout = 60, api_version = NULL
       )
     )
@@ -108,7 +108,7 @@ httptest::with_mock_api({
       # httr::GET("https://play.dhis2.org/2.33/apii/me.json?paging=false")
       api_get(
         path = "apii/me",
-        d2_session = play233,
+        d2_session = play40.0.1,
         retry = 1,
         timeout = 60,
         api_version = NULL
@@ -123,10 +123,10 @@ httptest::with_mock_api({
   # TEST 4
   ##############################################################################
   testthat::test_that(
-    "basic calls: https://play.dhis2.org/2.33/api/me.json?paging=false", {
+    "basic calls: https://play.dhis2.org/40.0.1/api/me.json?paging=false", {
       user <- api_get(
         path = "api/me",
-        d2_session = play233
+        d2_session = play40.0.1
       )
       testthat::expect_identical(user$name, "John Traore")
       testthat::expect_identical(user$id, "xE7jOejl9FI")
@@ -134,21 +134,21 @@ httptest::with_mock_api({
 
       user <- api_get(
         path = "api/me.json",
-        d2_session = play233
+        d2_session = play40.0.1
       )
       testthat::expect_identical(user$name, "John Traore")
       rm(user)
 
       user <- api_get(
         path = "api/me.json?paging=false",
-        d2_session = play233
+        d2_session = play40.0.1
       )
       testthat::expect_identical(user$name, "John Traore")
       rm(user)
 
       user <- api_get(
         path = "api/me/",
-        d2_session = play233
+        d2_session = play40.0.1
       )
       testthat::expect_identical(user$name, "John Traore")
       rm(user)
@@ -165,7 +165,7 @@ httptest::with_mock_api({
     ), {
       ind <- api_get(
         path = "api/indicators/ReUHfIn0pTQ",
-        d2_session = play233
+        d2_session = play40.0.1
       )
       testthat::expect_identical(ind$name, "ANC 1-3 Dropout Rate")
       rm(ind)
@@ -186,7 +186,7 @@ httptest::with_mock_api({
         "api/indicators&fields=name,id,translations[locale,value],",
         "indicatorGroups[id,name]&filter=name:ilike:anc"
       ),
-      d2_session = play233
+      d2_session = play40.0.1
     )
     expect_type(ind[["indicators"]][["translations"]][[1]], "list")
     expect_named(ind[["indicators"]][["indicatorGroups"]][[1]], c("name", "id"))
@@ -203,7 +203,7 @@ httptest::with_mock_api({
   ), {
     user <- api_get(
       path = "api/me?fields=name",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_identical(user$name, "John Traore")
     testthat::expect_null(user$id)
@@ -221,7 +221,7 @@ httptest::with_mock_api({
     # check we are not receiving paged results if we leave off paging=false
     ind <- api_get(
       path = "api/indicators?fields=name",
-      d2_session = play233
+      d2_session = play40.0.1
     )
     testthat::expect_null(ind$pager)
     rm(ind)
@@ -233,7 +233,7 @@ httptest::with_mock_api({
   testthat::test_that("Can use API versioning", {
     data <- api_get(
       path = "smsCommands",
-      d2_session = play233,
+      d2_session = play40.0.1,
       api_version = "30"
     )
     expect_gt(length(data), 0)

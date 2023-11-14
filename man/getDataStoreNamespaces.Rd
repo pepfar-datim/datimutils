@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDataStore.R
 \name{getDataStoreNamespaces}
 \alias{getDataStoreNamespaces}
-\title{Title getDataStoreNamespaceKeys returns all keys for a given name space}
+\title{Title getDataStoreNamespaces returns a list of all namespaces present in the datastore}
 \usage{
 getDataStoreNamespaces(
   d2_session = dynGet("d2_default_session", inherits = TRUE),
@@ -17,12 +17,10 @@ it will be made upon login in to DATIM with loginToDATIM}
 \item{retry}{Number of times to retry the request}
 
 \item{timeout}{Timeout in number of seconds}
-
-\item{namespace}{The name of the namespace as a string}
 }
 \value{
-A character vector of strings contained in the namespace.
+A character vector of strings of the namespaces in the dataStore.
 }
 \description{
-Title getDataStoreNamespaceKeys returns all keys for a given name space
+Title getDataStoreNamespaces returns a list of all namespaces present in the datastore
 }

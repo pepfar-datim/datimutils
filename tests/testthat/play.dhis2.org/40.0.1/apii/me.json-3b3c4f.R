@@ -1,0 +1,23 @@
+structure(list(url = "https://play.dhis2.org/40.0.1/apii/me.json?paging=false", 
+    status_code = 404L, headers = structure(list(server = "nginx", 
+        date = "Tue, 05 Sep 2023 11:48:09 GMT", `content-type` = "text/html;charset=utf-8", 
+        `content-security-policy` = "frame-ancestors 'self' http://localhost:8083 http://localhost:8080 http://localhost:8082 http://localhost:8081 https://dhis2.stoplight.io http://localhost:3000 http://localhost:9000;", 
+        `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
+        `content-language` = "en", `content-encoding` = "gzip"), class = c("insensitive", 
+    "list")), all_headers = list(list(status = 301L, version = "HTTP/1.1", 
+        headers = structure(list(server = "nginx", date = "Tue, 05 Sep 2023 11:48:09 GMT", 
+            `content-type` = "text/html", `content-length` = "162", 
+            connection = "keep-alive", location = "https://play.dhis2.org/40.0.1/apii/me.json?paging=false"), class = c("insensitive", 
+        "list"))), list(status = 404L, version = "HTTP/2", headers = structure(list(
+        server = "nginx", date = "Tue, 05 Sep 2023 11:48:09 GMT", 
+        `content-type` = "text/html;charset=utf-8", `content-security-policy` = "frame-ancestors 'self' http://localhost:8083 http://localhost:8080 http://localhost:8082 http://localhost:8081 https://dhis2.stoplight.io http://localhost:3000 http://localhost:9000;", 
+        `x-content-type-options` = "nosniff", `x-xss-protection` = "1; mode=block", 
+        `content-language` = "en", `content-encoding` = "gzip"), class = c("insensitive", 
+    "list")))), cookies = structure(list(domain = "#HttpOnly_play.dhis2.org", 
+        flag = FALSE, path = "/40.0.1", secure = TRUE, expiration = structure(Inf, class = c("POSIXct", 
+        "POSIXt")), name = "JSESSIONID", value = "REDACTED"), row.names = c(NA, 
+    -1L), class = "data.frame"), content = charToRaw("<!doctype html><html lang=\"en\"><head><title>HTTP Status 404 – Not Found</title><style type=\"text/css\">body {font-family:Tahoma,Arial,sans-serif;} h1, h2, h3, b {color:white;background-color:#525D76;} h1 {font-size:22px;} h2 {font-size:16px;} h3 {font-size:14px;} p {font-size:12px;} a {color:black;} .line {height:1px;background-color:#525D76;border:none;}</style></head><body><h1>HTTP Status 404 – Not Found</h1><hr class=\"line\" /><p><b>Type</b> Status Report</p><p><b>Message</b> &#47;40.0.1&#47;apii&#47;me.json</p><p><b>Description</b> The origin server did not find a current representation for the target resource or is not willing to disclose that one exists.</p><hr class=\"line\" /><h3>Apache Tomcat/8.5.50</h3></body></html>"), 
+    date = structure(1693914489, class = c("POSIXct", "POSIXt"
+    ), tzone = "GMT"), times = c(redirect = 0.044075, namelookup = 5.9e-05, 
+    connect = 0, pretransfer = 0.00021, starttransfer = 0.090762, 
+    total = 0.090846)), class = "response")
