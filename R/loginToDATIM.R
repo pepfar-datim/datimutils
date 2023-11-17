@@ -275,7 +275,8 @@ loginToDATIMOAuth <- function(
       app = app,
       endpoint = api,
       scope = scope,
-      use_basic_auth = TRUE,
+      use_oob = TRUE,
+      use_basic_auth = FALSE,
       oob_value = redirect_uri,
       cache = FALSE
     )
